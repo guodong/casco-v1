@@ -14,7 +14,43 @@ Ext.define('casco.view.main.MainController', {
 		this.redirectTo('project/' + record.get('id'), true);
 		location.reload();
 	},
-
+    editUser:function(combo,record){
+      
+	
+	 if(record.get('name')=='1'){
+	 var  model= Ext.create('casco.model.User');
+     model.set(JSON.parse(localStorage.user));
+	 model.load();
+	  var win = Ext.create('casco.view.manage.Useradd', {user:model});
+	  win.down('form').loadRecord(model);
+	  win.show();}
+	  else if(record.get('name')=='2'){
+     
+        var me = this;
+    	var view = this.getView();
+    	Ext.Ajax.request({
+			url: API + 'logout',
+			withCredentials: true,
+			success: function(response){
+				var d = Ext.decode(response.responseText);
+			 
+				if(d.code != 0){
+					Ext.Msg.alert('Error', 'Logout failure.');
+				}else{
+					 //首先清空localsotrage
+	                localStorage.clear();
+					var main=location.hash;
+                    console.log(main);
+					loc=main.match(/^\#([a-z]*).*?$/);//蛋疼，表示project窗口不能销毁
+					me.getView().up(loc[1]).destroy();
+				    me.redirectTo('selectProject', true);
+    	            location.reload();
+			 
+				}
+            }//success
+       });//request
+	  }//else
+	},
 	manage : function() {
 		this.redirectTo('manage', true);
 		location.reload();

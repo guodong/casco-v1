@@ -7,10 +7,12 @@ Ext.define('casco.view.manage.Useradd', {
 	resizable: true,
 	maximizable: true,
 	modal: true,
-	title: 'Add User',
+	title:'Edit User',
 	width: 300,
 	initComponent: function() {
 		var me = this;
+	 	console.log(me.user);
+	   
 		me.projects = Ext.create('casco.store.Projects');  //作用？？？？？
 		if(me.user){
 			me.projects.setData(me.user.get('projects'));
@@ -28,6 +30,7 @@ Ext.define('casco.view.manage.Useradd', {
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'textfield',
+					
 					allowBlank: false
 				}, {
 					anchor: '100%',
@@ -60,7 +63,7 @@ Ext.define('casco.view.manage.Useradd', {
 					xtype: 'textfield',
 					inputType: 'password',
 					allowBlank: false,
-					hidden: me.user?true:false
+					//hidden: me.user?true:false
 				}, {
     				xtype: 'grid',
     				region: 'center',

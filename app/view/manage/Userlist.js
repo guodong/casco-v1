@@ -14,6 +14,7 @@ Ext.define('casco.view.manage.Userlist', {
 			text: 'Add User',
 			glyph: 0xf067,
 			handler: function() {
+				 
 				var win = Ext.create('casco.view.manage.Useradd', {store: store});
 				win.show();
 			}
@@ -72,7 +73,7 @@ Ext.define('casco.view.manage.Userlist', {
     listeners : {
         itemdblclick: function(dv, record, item, index, e) {
         	if(localStorage.role == 'staff') return;  //用户权限
-        	var win = Ext.create('casco.view.manage.Useradd', {user: record});//这里初始化的什么玩意
+			var win = Ext.create('casco.view.manage.Useradd', {user: record});//这里初始化的什么玩意
             win.down('form').loadRecord(record);
             win.show();
         }
