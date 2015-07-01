@@ -25,7 +25,8 @@ Ext.define('casco.view.main.MainController', {
 	  win.down('form').loadRecord(model);
 	  win.show();}
 	  else if(record.get('name')=='2'){
-     
+        
+	   Ext.Msg.confirm('Confirm', 'Are you sure to logout?', function(choice){if(choice == 'yes'){
         var me = this;
     	var view = this.getView();
     	Ext.Ajax.request({
@@ -42,13 +43,17 @@ Ext.define('casco.view.main.MainController', {
 					var main=location.hash;
                     console.log(main);
 					loc=main.match(/^\#([a-z]*).*?$/);//蛋疼，表示project窗口不能销毁
-					me.getView().up(loc[1]).destroy();
+					console.log(loc[1]);
+                    var parent=(loc[1]=="project")?"app-main":loc[1];
+                    me.getView().up(parent).destroy();
 				    me.redirectTo('selectProject', true);
+					
     	            location.reload();
 			 
 				}
             }//success
        });//request
+	   }}, this);//confirm
 	  }//else
 	},
 	manage : function() {
