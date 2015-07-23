@@ -14,8 +14,7 @@ Ext.define('casco.view.main.Main', {
         'Ext.window.MessageBox',
 
         'casco.view.main.MainController',
-        'casco.view.main.MainModel',
-        'casco.view.main.List'
+        'casco.view.main.MainModel'
     ],
 
     controller: 'main',

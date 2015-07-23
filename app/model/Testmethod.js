@@ -1,7 +1,7 @@
-Ext.define('casco.model.Rs', {
+Ext.define('casco.model.Testmethod', {
     extend: 'Ext.data.Model',
     proxy: {
         type: 'rest',
-        url: API+'rs'
+        url: API+'testmethod'
     }
 });
