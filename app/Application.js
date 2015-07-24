@@ -20,7 +20,7 @@ Ext.define('casco.Application', {
 	    	action: 'onProject'
 	    },
 	    'selectProject': {
-	    	before: 'onBeforeProject',
+	    	before: 'onBeforeSelect',
 	    	action: 'onSelect'
 	    },
 	},
@@ -41,6 +41,21 @@ Ext.define('casco.Application', {
     	Ext.widget('selectProject');
     },
 	onBeforeProject: function(id, action) {
+		Ext.Ajax.request({
+			url: API + 'session',
+			withCredentials: true,
+			success: function(response){
+				var d = Ext.decode(response.responseText);
+				if(d.code != 0){
+					action.stop(true);
+					Ext.widget('login');
+				}else{
+					action.resume();
+				}
+			}
+		});
+    },
+	onBeforeSelect: function(action) {
 		Ext.Ajax.request({
 			url: API + 'session',
 			withCredentials: true,
