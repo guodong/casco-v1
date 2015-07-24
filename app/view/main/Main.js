@@ -36,17 +36,21 @@ Ext.define('casco.view.main.Main', {
     items: [{
         region: 'north',
         xtype: 'top'
-    }, {
-        xtype: 'panel',
-        bind: {
-            title: '{name}'
-        },
+    },{
+        xtype: 'tree',
+        id: 'mtree',
+        itemId: 'mtree',
+        title: JSON.parse(localStorage.project).name,
         region: 'west',
-        width: 250,
+        width: 200,
         split: true,
+        collapsible: true,
+        editable: false,
     },{
         region: 'center',
         xtype: 'tabpanel',
+        title: '',
+        id: 'workpanel',
         items:[{
             title: 'Tab 1',
             html: '<h2>Content appropriate for the current navigation.</h2>'
