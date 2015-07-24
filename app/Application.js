@@ -19,7 +19,7 @@ Ext.define('casco.Application', {
 	    	before: 'onBeforeProject',
 	    	action: 'onProject'
 	    },
-	    'selectProject': 
+	    'selectProject': {
 	    	before: 'onBeforeProject',
 	    	action: 'onSelect'
 	    },
