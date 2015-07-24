@@ -8,7 +8,7 @@ Ext.define('casco.view.main.Top', {
     	var store = Ext.create('casco.store.Projects');
     	store.load({
     		params:{
-    			user_id: 'a7b12e32-b0f5-11e4-abb7-c17404b78885',//localStorage.uid
+    			user_id: JSON.parse(localStorage.user).id
     		}
     	});
     	this.items = [{
