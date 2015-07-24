@@ -32,27 +32,38 @@ Ext.define('casco.view.main.Main', {
     defaults: {
         bodyPadding: 10,
     },
-    items: [{
-        region: 'north',
-        xtype: 'top'
-    },{
-        xtype: 'tree',
-        id: 'mtree',
-        itemId: 'mtree',
-        title: JSON.parse(localStorage.project).name, 
-        region: 'west',
-        width: 200,
-        split: true,
-        collapsible: true,
-        editable: false,
-    },{
-        region: 'center',
-        xtype: 'tabpanel', 
-        title: '',
-        id: 'workpanel',
-        items:[{
-            title: 'Tab 1',
-            html: '<h2>Content appropriate for the current navigation.</h2>'
-        }]
-    }]
+    initComponent: function(){
+    	var me = this;
+    	var store = Ext.create('casco.store.TreeDocuments', {
+    		proxy: {
+    			extraParams: {
+    				project_id: me.project.get('id')
+    			}
+    		}
+    	});
+    	me.items = [{
+            region: 'north',
+            xtype: 'top'
+        },{
+            xtype: 'tree',
+            id: 'mtree',
+            store: store,
+            title: me.project.get('name'),
+            region: 'west',
+            width: 200,
+            split: true,
+            collapsible: true,
+            editable: false,
+        },{
+            region: 'center',
+            xtype: 'tabpanel',
+            title: '',
+            id: 'workpanel',
+            items:[{
+                title: 'Tab 1',
+                html: '<h2>Content appropriate for the current navigation.</h2>'
+            }]
+        }];
+    	this.callParent();
+    }
 });

@@ -8,15 +8,13 @@ Ext.application({
 
     extend: 'casco.Application',
 
-    requires: [
-        'casco.view.main.Main'
-    ],
     //autoCreateViewport: false,
     // The name of the initial view to create. With the classic toolkit this class
     // will gain a "viewport" plugin if it does not extend Ext.Viewport. With the
     // modern toolkit, the main view will be added to the Viewport.
     //
-    mainView: 'casco.view.main.Main'
+    //autoCreateViewport: false,
+    //mainView: 'casco.view.main.Main'
 
     //-------------------------------------------------------------------------
     // Most customizations should be made to casco.Application. If you need to
@@ -24,3 +22,4 @@ Ext.application({
     // of merge conflicts when upgrading to new versions of Sencha Cmd.
     //-------------------------------------------------------------------------
 });
+Ext.Ajax.withCredentials = true;

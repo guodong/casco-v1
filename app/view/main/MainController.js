@@ -8,14 +8,10 @@ Ext.define('casco.view.main.MainController', {
     extend: 'Ext.app.ViewController',
 
     alias: 'controller.main',
-
-    onItemSelected: function (sender, record) {
-        Ext.Msg.confirm('Confirm', 'Are you sure?', 'onConfirm', this);
-    },
-
-    onConfirm: function (choice) {
-        if (choice === 'yes') {
-            //
-        }
+    
+    switchProject: function(combo, record){
+		this.redirectTo('project/'+record.get('id'), true);
+		location.reload();
+		return;
     }
 });
