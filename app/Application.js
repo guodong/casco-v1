@@ -19,7 +19,10 @@ Ext.define('casco.Application', {
 	    	before: 'onBeforeProject',
 	    	action: 'onProject'
 	    },
-	    'selectProject': 'onSelect'
+	    'selectProject': 
+	    	before: 'onBeforeProject',
+	    	action: 'onSelect'
+	    },
 	},
 	defaultToken: 'selectProject',
 	listen: {
