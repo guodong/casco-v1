@@ -11,7 +11,6 @@ Ext.define('casco.view.main.Main', {
 
     requires: [
         'Ext.plugin.Viewport',
-        'Ext.window.MessageBox',
 
         'casco.view.main.MainController',
         'casco.view.main.MainModel'
