@@ -14,7 +14,6 @@ Ext.define('casco.view.main.Tree', {
     		casco.model.Document.load(record.get('id'), {
     			success: function(record){
     				tab = tabs.add({
-    					itemId: 'tab-' + record.get('id'),
     					id: 'tab-'+record.get('id'),
     					xtype: record.get('type'),
     					title: record.get('name'),
@@ -32,37 +31,14 @@ Ext.define('casco.view.main.Tree', {
     rootVisible : false,
     initComponent: function(){
     	var me = this;
-    	this.store = Ext.create('casco.store.TreeDocuments', {
-    		proxy: {
-    			extraParams: {
-    				project_id: JSON.parse(localStorage.project).id
-    			}
-    		}
-    	});
-    	if(this.editable){
-    		this.dockedItems = [{
-    	        xtype: 'toolbar',
-    	        dock: 'bottom',
-    	        style: {
-    	            background: '#eee'
-    	        },
-    	        items: [{
-    	            text: 'Document',
-    	            glyph: 0xf067,
-    	            handler: function() {
-    	                var win = Ext.create('widget.document.create', {project: me.project});
-    	                win.show();
-    	            }
-    	        }, {
-    	            text: 'Folder',
-    	            glyph: 0xf067,
-    	            handler: function() {
-    	                var win = Ext.create('widget.document.foldercreate', {project: me.project});
-    	                win.show();
-    	            }
-    	        }]
-    	    }]
-    	}
+//    	this.store = Ext.create('casco.store.TreeDocuments', {
+//    		proxy: {
+//    			extraParams: {
+//    				project_id: JSON.parse(localStorage.project).id
+//    			}
+//    		}
+//    	});
+    	
     	this.callParent();
     }
 })

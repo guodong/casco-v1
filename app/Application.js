@@ -1,28 +1,80 @@
 /**
- * The main application class. An instance of this class is created by app.js when it
- * calls Ext.application(). This is the ideal place to handle application launch and
- * initialization details.
+ * The main application class. An instance of this class is created by app.js
+ * when it calls Ext.application(). This is the ideal place to handle
+ * application launch and initialization details.
  */
 Ext.define('casco.Application', {
-    extend: 'Ext.app.Application',
-    
-    name: 'casco',
+	extend : 'Ext.app.Application',
 
-    stores: [
-        // TODO: add global / shared stores here
-    ],
-    
-    launch: function () {
-        // TODO - Launch the application
+	name : 'casco',
+	
+	requires: ['casco.view.auth.SelectProject'],
+
+	stores : [
+	// TODO: add global / shared stores here
+	],
+	
+	routes: {
+	    'project/:id': {
+	    	before: 'onBeforeProject',
+	    	action: 'onProject'
+	    },
+	    'selectProject': 'onSelect'
+	},
+	defaultToken: 'selectProject',
+	listen: {
+        controller: {
+            '#': {
+                unmatchedroute: 'onUnmatchedRoute'
+            }
+        }
     },
 
-    onAppUpdate: function () {
-        Ext.Msg.confirm('Application Update', 'This application has an update, reload?',
-            function (choice) {
-                if (choice === 'yes') {
-                    window.location.reload();
-                }
-            }
-        );
-    }
+    onUnmatchedRoute: function(hash) {
+        this.redirectTo('selectProject');
+        // Do something...
+    },
+	onSelect : function() {
+    	Ext.widget('selectProject');
+    },
+	onBeforeProject: function(id, action) {
+		Ext.Ajax.request({
+			url: API + 'session',
+			withCredentials: true,
+			success: function(response){
+				var d = Ext.decode(response.responseText);
+				if(d.code != 0){
+					action.stop(true);
+					Ext.widget('login');
+				}else{
+					action.resume();
+				}
+			}
+		});
+    },
+	onProject: function(id){
+		var me = this;
+		casco.model.Project.load(id, {
+    		success: function(project){
+    			Ext.widget('app-main', {project: project});
+    		}
+    	});
+	},
+	launch : function() {
+//		Ext.Ajax.request({
+//			url: API + 'session',
+//			withCredentials: true,
+//			success: function(response){
+//				var d = Ext.decode(response.responseText);
+//				if(d.code != 0){
+//					Ext.widget('login');
+//				}else{
+//					Ext.widget('selectProject');
+//				}
+//			}
+//		});
+
+		//Ext.widget(uid ? ((localStorage.view == 'manage') ? 'manage'
+			//	: 'app-main') : 'login');
+	}
 });

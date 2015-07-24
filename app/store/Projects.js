@@ -6,11 +6,6 @@ Ext.define('casco.store.Projects', {
     proxy: {
         type: 'rest',
         url: API+'project',
-        reader: {
-            type: 'json'
-        },
-        writer: {
-            type: 'json'
-        }
+        withCredentials: true
     }
 });
