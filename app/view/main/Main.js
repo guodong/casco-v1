@@ -39,7 +39,7 @@ Ext.define('casco.view.main.Main', {
         xtype: 'tree',
         id: 'mtree',
         itemId: 'mtree',
-        title: JSON.parse(localStorage.project).name,
+        title: JSON.parse(localStorage.project).name, 
         region: 'west',
         width: 200,
         split: true,
@@ -47,7 +47,7 @@ Ext.define('casco.view.main.Main', {
         editable: false,
     },{
         region: 'center',
-        xtype: 'tabpanel',
+        xtype: 'tabpanel', 
         title: '',
         id: 'workpanel',
         items:[{
