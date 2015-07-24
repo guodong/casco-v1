@@ -2,12 +2,13 @@ Ext.define('casco.view.main.Top', {
     extend: 'Ext.toolbar.Toolbar',
     alias: 'widget.top',
     
+    controller: 'main',
     style: {background: '#167abc',padding: '10px',color: '#fff'},
     initComponent: function(){
     	var store = Ext.create('casco.store.Projects');
     	store.load({
     		params:{
-    			user_id: 'a7b12e32-b0f5-11e4-abb7-c17404b78885'//localStorage.uid
+    			user_id: 'a7b12e32-b0f5-11e4-abb7-c17404b78885',//localStorage.uid
     		}
     	});
     	this.items = [{
@@ -50,12 +51,7 @@ Ext.define('casco.view.main.Top', {
             queryMode: 'local',
             emptyText: 'Switch Project',
             listeners: {
-            	select: function(combo, record){
-            		localStorage.project = JSON.stringify(record.getData());
-            		localStorage.view = 'test';
-            		location.reload();
-            		return;
-            	}
+            	select: 'switchProject'
             }
         }];
     	this.callParent();
