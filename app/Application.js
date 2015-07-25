@@ -23,6 +23,10 @@ Ext.define('casco.Application', {
 	    	before: 'onBeforeSelect',
 	    	action: 'onSelect'
 	    },
+	    'manage': {
+	    	before: null,
+	    	action: 'onManage'
+	    }
 	},
 	defaultToken: 'selectProject',
 	listen: {
@@ -77,6 +81,9 @@ Ext.define('casco.Application', {
     			Ext.widget('app-main', {project: project});
     		}
     	});
+	},
+	onManage: function(){
+		Ext.widget('manage');
 	},
 	launch : function() {
 //		Ext.Ajax.request({
