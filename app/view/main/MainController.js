@@ -9,9 +9,10 @@ Ext.define('casco.view.main.MainController', {
 
     alias: 'controller.main',
     
-    switchProject: function(combo, record){
-		this.redirectTo('project/'+record.get('id'), true);
-		location.reload();
-		return;
+     switchProject: function(combo, record){
+	//	this.redirectTo('project/'+record.get('id'), true);
+	//	location.reload();
+	//	return;
     }
+	
 });
