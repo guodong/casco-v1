@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="joint.min.css" />
+<script src="joint.min.js"></script>
+<script src="joint.shapes.fsa.js"></script>
+<style>
+body,html,#myholder{
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+button{
+	margin-top: 10px;
+	margin-left: 10px;
+	position: relative;
+display: inline-block;
+padding: 7px 12px;
+font-size: 13px;
+font-weight: bold;
+color: #333;
+text-shadow: 0 1px 0 rgba(255,255,255,0.9);
+white-space: nowrap;
+vertical-align: middle;
+cursor: pointer;
+background-color: #eee;
+background-image: -webkit-linear-gradient(#fcfcfc, #eee);
+background-image: linear-gradient(#fcfcfc, #eee);
+background-repeat: repeat-x;
+border: 1px solid #d5d5d5;
+border-radius: 3px;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+-webkit-appearance: none;
+text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+background-color: #60b044;
+background-image: -webkit-linear-gradient(#8add6d, #60b044);
+background-image: linear-gradient(#8add6d, #60b044);
+background-repeat: repeat-x;
+border-color: #5ca941;	
+	color: #fff;	
+}
+</style>
+<title>Insert title here</title>
+</head>
+<body>
+	<button id="move">Move</button>
+	<button id="add_link">Link</button>
+	<button id="save">Save</button>
+	<div id="myholder"></div>
+	<script>
+		//var API = 'http://localhost:8080/';
+		 var API = 'http://localhost:8080/';
+		//var API = "http://192.100.212.31:8080/";
+		var graph = new joint.dia.Graph;
+		var active = true;
+		var linkid;
+		var paper = new joint.dia.Paper({
+			el: $('#myholder'),
+			width: '100%',
+			height: '100%',
+			model: graph,
+			gridSize: 1,
+			interactive: function(cellView) {
+				if(active)return true;
+				if (cellView.model instanceof joint.dia.Link) {
+					// Disable the default vertex add functionality on pointerdown.
+					return {
+						vertexAdd: false
+					};
+				}
+				if (cellView.model instanceof joint.shapes.basic.Rect) {
+					return false;
+				}
+				//return active?true:false;
+			},
+		});
+		var project_id = location.href.substr(location.href.indexOf('?') + 1);
+		var url = API + 'project/' + project_id;
+		var initnew = function() {
+			var isnew = true;
+			$.ajax({
+				url: url,
+				success: function(project) {
+					if (project.graph) {
+						isnew = false;
+						graph.fromJSON(JSON.parse(project.graph));
+					}
+					var documents = project.documents;
+					var v_rs = v_tc = 70;
+					$.each(documents, function(index, document) {
+						var has = false;
+						$.each(graph.toJSON().cells, function(cell) {
+							if (cell.id == document.id) {
+								has = true;
+								return false;
+							}
+						});
+						if (has) {
+							if (document.type == 'rs')
+								v_rs += 70;
+							if (document.type == 'tc')
+								v_tc += 70;
+							return true;
+						}
+						if (document.type == 'rs') {
+							var rect = new joint.shapes.basic.Rect({
+								id: document.id,
+								position: {
+									x: 100,
+									y: isnew ? v_rs : 0
+								},
+								size: {
+									width: 150,
+									height: 30
+								},
+								attrs: {
+									rect: {
+										fill: '#E74C3C'
+									},
+									text: {
+										text: document.name,
+										fill: 'white'
+									}
+								}
+							});
+							graph.addCell(rect);
+							v_rs += 70;
+						} else if (document.type == 'tc') {
+							var rect = new joint.shapes.basic.Rect({
+								id: document.id,
+								position: {
+									x: 400,
+									y: isnew ? v_tc : 0
+								},
+								size: {
+									width: 150,
+									height: 30
+								},
+								attrs: {
+									rect: {
+										fill: '#8E44AD'
+									},
+									text: {
+										text: document.name,
+										fill: 'white'
+									}
+								}
+							});
+							graph.addCell(rect);
+							v_tc += 70;
+						}
+					});
+					paper.on('cell:pointerdown', function(cellView, event) {
+						if(active)return false;
+						if (!(cellView.model instanceof joint.shapes.basic.Rect))
+							return;
+						var link = new joint.shapes.fsa.Arrow({
+							target: {
+								x: 0,
+								y: 0
+							},
+							source: {
+								id: cellView.model.id
+							}
+						});
+						linkid = link.id;
+						graph.addCell(link);
+					});
+					paper.on('cell:pointermove', function(cellView, event) {
+						if(active)return false;
+						if (!(cellView.model instanceof joint.shapes.basic.Rect))
+							return;
+						var link = graph.getCell(linkid);
+						link.set('target', {
+							x: event.clientX-$('#myholder').offset().left,
+							y: event.clientY-$('#myholder').offset().top
+						})
+					});
+					paper.on('cell:pointerup', function(cellView, event) {
+						if(active)return false;
+						if (!(cellView.model instanceof joint.shapes.basic.Rect))
+							return;
+						var link = graph.getCell(linkid);
+						var x = event.clientX-$('#myholder').offset().left;
+						var y = event.clientY-$('#myholder').offset().top;
+						var target, elems = graph.getElements();
+						for(var i in elems){
+							var elem = elems[i];
+							target = paper.findViewsFromPoint({x:x,y:y});
+							console.log(target instanceof joint.shapes.basic.Rect);
+							console.log(target);
+							if(target.length) break;
+								
+						};
+						if(!target.length){
+							link.set('target', {x:x,y:y})
+						}else{
+							link.set('target', {
+								id: target[0].model.id,
+							})
+						}
+
+					});
+				}
+			});
+		};
+		$(function() {
+			initnew();
+
+			$("#add_link").click(function() {
+				active = false;
+			});
+
+			$("#move").click(function() {
+				active = true;
+			});
+			$("#save").click(function() {
+				$.ajax({
+					url: url,
+					method: 'PUT',
+					data: {
+						graph: JSON.stringify(graph.toJSON())
+					},
+					success: function() {
+						alert("Success");
+					}
+				});
+			})
+		})
+	</script>
+</body>
+</html>

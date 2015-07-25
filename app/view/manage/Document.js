@@ -4,7 +4,7 @@ Ext.define('casco.view.manage.Document', {
         'casco.view.main.MainController',
         'casco.view.main.MainModel',
         'casco.view.main.Top',
-        'casco.view.project.Project',
+        //'casco.view.project.Project',
         'casco.view.main.Tree',
         'casco.store.TcSteps'
     ],

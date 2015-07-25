@@ -1,0 +1,28 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is behind 'origin/master' by 9 commits, and can be fast-forwarded.
+#   (use "git pull" to update your local branch)
+#
+# Changes to be committed:
+#	modified:   app/view/main/MainController.js
+#	modified:   app/view/main/Top.js
+#	new file:   app/view/manage/Document.js
+#	new file:   app/view/manage/Manage.js
+#	new file:   app/view/manage/ManageController.js
+#	new file:   app/view/manage/ManageController.js.bak
+#	new file:   app/view/manage/Methodadd.js
+#	new file:   app/view/manage/Participants.js
+#	new file:   app/view/manage/Projectadd.js
+#	new file:   app/view/manage/Projectlist.js
+#	new file:   app/view/manage/Statistics.js
+#	new file:   app/view/manage/Testmethod.js
+#	new file:   app/view/manage/Useradd.js
+#	new file:   app/view/manage/Userlist.js
+#	new file:   app/view/manage/Userlist.js.bak
+#	new file:   app/view/manage/Vatstr.js
+#	new file:   app/view/manage/project/ContextMenu.js
+#	modified:   index.html
+#
+

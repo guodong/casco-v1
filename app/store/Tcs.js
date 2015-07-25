@@ -4,13 +4,7 @@ Ext.define('casco.store.Tcs', {
     pageSize: 0, //disable paging
     //autoLoad : true,
     proxy: {
-        type: 'ajax',
+        type: 'rest',
         url: API+'tc',
-        reader: {
-            type: 'json'
-        },
-        writer: {
-            type: 'json'
-        }
     }
 });

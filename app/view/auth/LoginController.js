@@ -28,5 +28,9 @@ Ext.define('casco.view.auth.LoginController', {
 		
     	this.redirectTo('project/'+project_id, true);
     	location.reload();
+    },
+    onManage: function(){
+    	this.redirectTo('manage', true);
+    	location.reload();
     }
 });

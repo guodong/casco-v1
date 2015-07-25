@@ -1,0 +1,275 @@
+<html>
+<head>
+<title>2-Way Tree</title>
+<script type="text/javascript" src="/jquery.min.js"></script>
+<script type="text/javascript" src="d3.v3.min.js"></script>
+<script type="text/javascript" src="d3.layout.js"></script>
+<link href="gh-buttons.css" media="screen" rel="stylesheet"
+	type="text/css" />
+</head>
+<style>
+body, html {
+	padding: 0;
+	margin: 0;
+	height: 100%;
+}
+
+.sidebar {
+	width: 190px;
+	border-right: 1px solid #ccc;
+	height: 100%;
+	float: left;
+}
+
+.inner {
+	padding: 50px 20px;
+}
+
+.main {
+	padding-left: 200px;
+}
+
+input[type=text] {
+	width: 150px;
+	height: 28px;
+	border: 1px solid #ccc;
+}
+
+label {
+	font-size: 12px;
+	margin-bottom: 5px;
+	display: block;
+}
+
+.link {
+	fill: none;
+	stroke: #ccc;
+	stroke-width: 2px;
+}
+path.link {
+	fill: none;
+	stroke: #ccc;
+	stroke-width: 1.5px;
+}
+line {
+	stroke: #000;
+	stroke-width: 1.5px;
+}
+.node circle {
+	fill: #fff;
+	stroke: steelblue;
+	stroke-width: 3px;
+}
+
+.node text {
+	font: 12px sans-serif;
+}
+
+.node {
+	cursor: pointer;
+}
+
+#chart {
+	padding-top: 20px;
+}
+</style>
+<body>
+	<div class="sidebar">
+		<div class="inner">
+			<label>Tag标签</label> <input type="text" id="tag"
+				placeholder="输入Tag标签">
+			<p></p>
+			<button class="button" style="margin-left: 40px" onclick="look()">查看</button>
+		</div>
+	</div>
+
+	<div class="main">
+		<div id="chart"></div>
+	</div>
+
+	<script>
+		$(function() {
+			var data;
+			$.ajax({
+				url: 'http://api.casco.me/dump?tag=' + location.hash.substr(1),
+				async: false,
+				dataType: 'json',
+				success: function(d) {
+					data = d;
+				}
+			});
+			var margin = {
+				top: 20,
+				right: 120,
+				bottom: 20,
+				left: 120
+			}, width = $("#chart").parent().width(), height = 600;
+			var zoom = d3.behavior.zoom().scaleExtent([0.1, 10]).on("zoom",
+					zoomed);
+			var wrapper = d3.select("#chart").append('svg').attr("width",
+					"100%").attr("height", "100%").call(zoom);
+			var svgg = wrapper.append("g").attr("transform",
+					"translate(0," + height / 2 + ")");
+			var svg = svgg.append('g');
+			function zoomed() {
+				svg.attr("transform", "translate(" + d3.event.translate
+						+ ")scale(" + d3.event.scale + ")");
+			}
+			var tree = d3.layout.tree().size([width, height]);
+			var svsg = d3.select("#chart").append("svg").attr("width", "100%")
+					.attr("height", "100%").append("g").call(
+							d3.behavior.zoom().scaleExtent([0.1, 5]).on("zoom",
+									zoom)).attr("width", "100%").attr("height",
+							"100%").attr("transform",
+							"translate(0," + height / 2 + ")");
+			var root = data;
+			root.x0 = 0;
+			root.y0 = width / 2;
+			var diagonal_parent = d3.svg.diagonal().projection(function(d) {
+				return [d.x, -d.y];
+			});
+			var diagonal_child = d3.svg.diagonal().projection(function(d) {
+				return [d.x, d.y];
+			});
+			var i = 0, duration = 750;
+
+			update(root);
+
+			function update(source) {
+				var nodes = tree.nodes(source).reverse(), links = tree
+						.links(nodes);console.log(nodes)
+				nodes.forEach(function(d) {
+					d.y = d.depth * 180;
+				});
+				var node = svg.selectAll("g.node").data(nodes, function(d) {
+					return d.id || (d.id = ++i);
+				});
+				var nodeEnter = node.enter().append("g").attr("class", "node")
+						.attr(
+								"transform",
+								function(d) {
+									return "translate(" + source.y0 + ","
+											+ source.x0 + ")";
+								}).on("click", click);
+
+				nodeEnter.append("circle").attr("r", 1e-6);
+
+				nodeEnter.append("text").attr("x", function(d) {
+					return 10;
+				}).attr("dy", ".35em").text(function(d) {
+					return d.name;
+				}).style("fill-opacity", 1e-6);
+
+				var nodeUpdate = node.transition().duration(duration).attr(
+						"transform", function(d) {
+							if (d.isparent)
+								return "translate(" + d.x + "," + -d.y + ")";
+							return "translate(" + d.x + "," + d.y + ")";
+						});
+
+				nodeUpdate.select("circle").attr("r", 5).style("fill",
+						function(d) {
+							return d._children ? "lightsteelblue" : "#fff";
+						});
+				nodeUpdate.select("text").style("fill-opacity", 1);
+				var link = svg.selectAll("path.link").data(tree.links_parents(nodes).concat(tree.links(nodes)), function(d) {
+					return d.target.id;
+				});
+				link.enter().insert("path", "g").attr("class", "link").attr(
+						"d", function(d) {
+							var o = {
+								x: source.y0,
+								y: source.x0
+							};
+							if (d.isparent) {
+								return diagonal_parent({
+									source: o,
+									target: o
+								});
+							} else {
+								return diagonal_child({
+									source: o,
+									target: o
+								});
+							}
+
+						});
+				link.transition().duration(duration).attr("d",
+						function(d){
+					var o = {
+							x: source.y0,
+							y: source.x0
+						};
+						if (d.isparent) {
+							return diagonal_parent({
+								source: o,
+								target: o
+							});
+						} else {
+							return diagonal_child({
+								source: o,
+								target: o
+							});
+						}
+				});
+				var nodeExit = node.exit().transition().duration(duration)
+						.attr(
+								"transform",
+								function(d) {
+									if (d.isparent)
+										return "translate(" + source.x + "," + -source.y + ")";
+									return "translate(" + source.x + "," + source.y + ")";
+								}).remove();
+
+				nodeExit.select("circle").attr("r", 1e-6);
+
+				nodeExit.select("text").style("fill-opacity", 1e-6);
+				link.exit().transition().duration(duration).attr("d",
+						function(d) {
+							var o = {
+								x: source.x,
+								y: source.y
+							};
+							if (d.isparent) {
+								return diagonal_parent({
+									source: o,
+									target: o
+								});
+							} else {
+								return diagonal_child({
+									source: o,
+									target: o
+								});
+							}
+						}).remove();
+				
+				nodes.forEach(function(d) {
+					d.x0 = d.x;
+					d.y0 = d.y;
+				});
+				return;
+			}
+
+			// Toggle children on click.
+			function click(d) {
+				if (d.children) {
+			        d._children = d.children;
+			        d.children = null;
+			      } else {
+			        d.children = d._children;
+			        d._children = null;
+			      }
+			      if (d.parents) {
+			        d._parents = d.parents;
+			        d.parents = null;
+			      } else {
+			        d.parents = d._parents;
+			        d._parents = null;
+			      }
+				update(d);
+			}
+
+		});
+	</script>
+</body>
+</html>

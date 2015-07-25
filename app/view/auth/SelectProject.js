@@ -31,7 +31,12 @@ Ext.define("casco.view.auth.SelectProject",{
 	            emptyText: 'Select Project',
 	            allowBlank: false
 	        }],
-	        buttons: [{
+	        buttons: [ {
+	            text: 'Manage',
+	            listeners: {
+	                click: 'onManage'
+	            }
+	        },{
 	            text: 'Select',
 	            formBind: true,
 	            listeners: {
