@@ -22,13 +22,36 @@ Ext.define('casco.view.manage.Userlist', {
 			text: 'Delete User',
 			glyph: 0xf068,
 			handler: function() {
+				Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
+		 
+	            var view=me.getView();
+                var selection =view.getSelectionModel().getSelection()[0];
+	            if (selection) {
+				selection.erase();
+			    //var user = view.user?view.user:Ext.create('casco.model.User');
+				//Ext.Msg.alert(selection.account);
+	            me.store.remove(selection);
+
+	            me.getView().refresh();
+	            }
+		       
+    	}}, this);
+        
+				
 
 			}
 		}];
 		me.callParent();  //???作用
 	},
-	columns: [{
+	columns: [
+	{   text:"id",
+		dataIndex:"id",
+		width:200,
+	    hidden:true
+	
+	},{
 		text: "account",
+		id:"account",
 		dataIndex: "account",
 		width: 130
 	}, {
