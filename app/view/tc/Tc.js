@@ -135,7 +135,7 @@ Ext.define('casco.view.tc.Tc', {
 		  );
 			return arr.join(', ');*/
 		}},
-		{text: "test method", dataIndex: "testmethod", width: 100, renderer: function(tm){return tm?tm.name:''}},
+		{text: "test method", dataIndex: "testmethods", width: 100, renderer: function(tm){console.log(tm);var str="";for(var i in tm){str+=tm[i].name}return str;}},
 		{text: "pre condition", dataIndex: "pre_condition", flex: 1},
 		];
     	me.callParent(arguments);
