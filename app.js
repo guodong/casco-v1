@@ -23,3 +23,4 @@ Ext.application({
     //-------------------------------------------------------------------------
 });
 Ext.Ajax.withCredentials = true;
+Ext.setGlyphFontFamily('FontAwesome');
