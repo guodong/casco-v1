@@ -1,7 +1,7 @@
 Ext.define('casco.view.testing.Test', {
 	extend: 'Ext.form.Panel',
 	alias: 'widget.test',
-	requires: ['casco.store.Tcs','casco.store.Documents','casco.store.Builds','Ext.layout.container.Column', 'casco.store.Versions'],
+	requires: ['casco.store.Tcs','casco.store.Documents','casco.store.Builds','Ext.layout.container.Column', 'casco.store.Versions','casco.view.testing.Testmore'],
 
 	bodyPadding: '10',
 	width: '100%',
@@ -15,21 +15,23 @@ Ext.define('casco.view.testing.Test', {
 			}
 		});
 		var rsdocs = Ext.create('casco.store.Documents');
-//		rsdocs.load({
-//			params: {
-//				project_id: me.project.get('id'),
-//				type: 'rs'
-//			}
-//		});
+		var resultStore = Ext.create('Ext.data.Store', {
+        	model: 'casco.model.Result',
+            data : [
+	                {label: 'untested',   value: 0},
+	                {label: 'passed',   value: 1},
+	                {label: 'failed',   value: 2},
+            ]
+        });
 		me.loadgrid = function(){
 			var tc_v_id = Ext.getCmp('test-tc-version').getValue();
 			var rs_v_id = Ext.getCmp('test-rs-version').getValue();
 			var build_v_id = Ext.getCmp('test-build-version').getValue();
 			if(tc_v_id && rs_v_id && build_v_id){
-				var store = Ext.create('casco.store.Tcs');
+				var store = Ext.create('casco.store.Results');
 				store.load({
 					params: {
-						version_id: tc_v_id,
+						tc_version_id: tc_v_id,
 						rs_version_id: rs_v_id,
 						build_id: build_v_id
 					},
@@ -181,6 +183,17 @@ Ext.define('casco.view.testing.Test', {
 				autoScroll: true,
 				scroll: true,
 				height: 600,
+				selModel: 'cellmodel',
+			    plugins: {
+			        ptype: 'cellediting',
+			        clicksToEdit: 1
+			    },
+				listeners : {
+			        celldblclick: function(a,b,c, record, item, index, e) {
+			        	var win = Ext.create('widget.testmore',{tc: record});
+			            win.show();
+			        }
+			    },
 				columns: [{
 					text: "tag",
 					dataIndex: "tag",
@@ -212,40 +225,43 @@ Ext.define('casco.view.testing.Test', {
 					}
 				}, {
 					text: "exe time",
-					dataIndex: "tag",
-				}, {
-					text: "result",
-					dataIndex: "result",
-					width: 230,
-					renderer: function(value, a, record) {
-						var str;
-						value *= 1; //转换为数字，在某版本pdo有bug
-						switch (value) {
-						case 0:
-							str = '<form><input onclick="setresult(\''+record.get('id')+'\',0)" type="radio" name="result" checked="checked">untested <input onclick="setresult(\''+record.get('id')+'\',1)" type="radio" name="result">passed <input onclick="setresult(\''+record.get('id')+'\',2)" type="radio" name="result">failed</form>';
-							break;
-						case 1:
-							str = '<form><input onclick="setresult(\''+record.get('id')+'\',0)" type="radio" name="result">untested <input onclick="setresult(\''+record.get('id')+'\',1)" type="radio" name="result" checked="checked">passed <input onclick="setresult(\''+record.get('id')+'\',2)" type="radio" name="result">failed</form>';
-							break;
-						case 2:
-							str = '<form><input onclick="setresult(\''+record.get('id')+'\',0)" type="radio" name="result">untested <input onclick="setresult(\''+record.get('id')+'\',1)" type="radio" name="result">passed <input onclick="setresult(\''+record.get('id')+'\',2)" type="radio" name="result" checked="checked">failed</form>';
-						}
-						return str;
+					dataIndex: "exe_at",
+					width: 140,
+					editor: {
+						xtype: 'datefield',
+						format: 'Y-m-d'
+					},
+					renderer: function(value){
+						return Ext.util.Format.date(value, 'Y-m-d');
 					}
+				},{
+				    xtype: 'gridcolumn',
+				    dataIndex: 'result',
+					width: 120,
+				    renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
+				        return resultStore.findRecord('value', value).get('label');
+				    },
+				    text: 'Result',
+				    editor: {
+				        xtype: 'combobox',
+				        queryMode: 'local',
+	    				displayField: 'label',
+	    				valueField: 'value',
+	    				editable: false,
+				        store: resultStore
+				    }
 				}, {
 					text: "cr",
-					dataIndex: "tag",
-				}, {
-					text: "comment",
-					dataIndex: "tag",
+					dataIndex: "cr",
 				}]
 			}]
 			
 		}];
+		
 		me.callParent(arguments);
 	}
 })
-function setresult(id, result){
+function setresult(id, result){return;
 	var tc_v_id = Ext.getCmp('test-tc-version').getValue();
 	var rs_v_id = Ext.getCmp('test-rs-version').getValue();
 	var build_v_id = Ext.getCmp('test-build-version').getValue();

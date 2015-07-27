@@ -150,7 +150,7 @@ Ext.define('casco.view.tc.Tc', {
 				window.open('/draw/graph2.html#'+record.get('tag'));
 				return;
 			}
-        	var win = Ext.create('widget.tcadd',{tc: record, document_id: this.document_id});
+        	var win = Ext.create('widget.tcadd',{tc: record, document_id: this.document_id, project: this.project});
             win.down('form').loadRecord(record);
             win.show();
         }

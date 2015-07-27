@@ -27,7 +27,7 @@ Ext.define('casco.Application', {
 	    	before: null,
 	    	action: 'onManage'
 	    },
-	    'test/:id': {
+	    'testing/:id': {
 	    	before: null,
 	    	action: 'onTest'
 	    }
@@ -89,8 +89,12 @@ Ext.define('casco.Application', {
 	onManage: function(){
 		Ext.widget('manage');
 	},
-	onTest: function() {
-		Ext.widget('test');
+	onTest: function(id) {
+		casco.model.Project.load(id, {
+    		success: function(project){
+    			Ext.widget('testing', {project: project});
+    		}
+    	});
 	},
 	launch : function() {
 //		Ext.Ajax.request({

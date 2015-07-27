@@ -19,7 +19,10 @@ Ext.define('casco.view.main.MainController', {
 		this.redirectTo('manage', true);
 		location.reload();
 	},
-	testing : function(project) {
+	testing : function() {
+		this.redirectTo('testing/' + this.getView().project.get('id'));
+		location.reload();
+		return;
 		var tabs = Ext.getCmp('workpanel');
 		var tab = tabs.child('#tab-testing');
 		if(!tab){
