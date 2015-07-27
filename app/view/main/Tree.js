@@ -27,20 +27,70 @@ Ext.define('casco.view.main.Tree', {
     			}
     		});
 
-    	}
-    },
-    displayField: 'name',
+    	},//itemdbclick
+		itemcontextmenu:function(menutree,record,items,index,e){
 
+			e.preventDefault();
+			e.stopEvent();
+			if(record.data.leaf==true){
+				var nodemenu=new Ext.menu.Menu({
+					floating:true,
+					items:[/*{
+						text:'select all',
+						handler:function(){
+						    console.log(items,index,record.id);
+							for(var i=0;i<record.data.children.length;i++){
+								record.childNodes[i].set('checked',true);
+							}
+						}
+					}, */{
+						text:'delete',
+						handler:function(){
+					    Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
+							
+                         record.remove(items[index]);
+					     var model = new casco.model.Document({id:record.id});
+					     model.erase();
+
+    	 
+    	                  }}, this);
+						//console.log(items,index,e,record);
+						 Ext.Msg.alert("delete successfully");
+						}
+					}/*,{
+						text:'reselect',
+						handler:function(){
+							for (var i=0;i<record.data.children;i++ )
+							{record.childNodes[i].set('checked',false);
+							}
+                        }//handler
+
+					}*/]
+
+				});//nodemenu
+
+				nodemenu.showAt(e.getXY());
+
+ 
+
+
+
+
+
+            }//if
+        }//itemmenu
+    },//lsiteners
+    displayField: 'name',
     rootVisible : false,
     initComponent: function(){
     	var me = this;
-//    	this.store = Ext.create('casco.store.TreeDocuments', {
-//    		proxy: {
-//    			extraParams: {
-//    				project_id: JSON.parse(localStorage.project).id
-//    			}
-//    		}
-//    	});
+	    this.store = Ext.create('casco.store.TreeDocuments', {
+    		proxy: {
+    			extraParams: {
+    				project_id: me.project.get('id')
+    			}
+    		}
+    	});
     	
     	this.callParent();
     }

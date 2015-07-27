@@ -75,21 +75,22 @@ Ext.define('casco.view.manage.ManageController', {
 			}
 		});
 	},
-	seldoc: function(view, record, item, index, e, eOpts){
+	seldoc: function(view, record, item, index, e, eOpts){//only leaf can  be listened
 		var json = record.data;
 		if(!record.data.leaf) return;
 		var tabs = this.lookupReference('main');
+	  
 		var tab = tabs.child('#tab-' + json.id);
 		if(!tab){
 			tab = tabs.add({
 				itemId: 'tab-' + json.id,
 				id: 'tab-'+json.id,
-				xtype: json.id,
+				xtype: json.id,//这个是存在的
 				title: json.text,
 				closable: true
 			});
 		}
-
+        
 		tabs.setActiveTab(tab);
 	}
 });

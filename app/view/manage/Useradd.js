@@ -44,14 +44,14 @@ Ext.define('casco.view.manage.Useradd', {
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'textfield'
-				},{                                        //用户角色
+				},/*{                                        //用户角色
 					anchor: '100%',
 					fieldLabel: 'role',
 					name: 'role',
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'textfield'
-				}, {
+				}, */ {
 					anchor: '100%',
 					fieldLabel: 'Password',
 					name: 'password',
