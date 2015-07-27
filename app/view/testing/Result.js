@@ -8,11 +8,11 @@ Ext.define('casco.view.testing.Result', {
         clicksToEdit: 1
     },
     listeners : {
-        celldblclick: function(a,b,c, record, item, index, e) {
-        	var win = Ext.create('widget.testmore',{result: record});
-        	win.down('form').loadRecord(record);
-            win.show();
-        }
+//        celldblclick: function(a,b,c, record, item, index, e) {
+//        	var win = Ext.create('widget.testmore',{result: record});
+//        	win.down('form').loadRecord(record);
+//            win.show();
+//        }
     },
 	title: 'Testing result',
 	store: Ext.create('casco.store.Results'),
@@ -84,7 +84,17 @@ Ext.define('casco.view.testing.Result', {
 				displayField: 'label',
 				valueField: 'value',
 				editable: false,
-		        store: resultStore
+		        store: resultStore,
+		        listeners: {
+		        	select: function(combo, r){
+		        		if(r.get('value') != 2){
+		        			return;
+		        		}
+		        		var win = Ext.create('widget.testmore',{result: Ext.getCmp('result-main').getSelectionModel().getSelection()[0]});
+		            	win.down('form').loadRecord(Ext.getCmp('result-main').getSelectionModel().getSelection()[0]);
+		                win.show();
+		        	}
+		        }
 		    }
 		}];
 		me.tbar = [{
