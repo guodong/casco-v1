@@ -1,0 +1,91 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Tree</title>
+</head>
+<style>
+.node circle {
+	fill: #fff;
+	stroke: steelblue;
+	stroke-width: 1.5px;
+}
+
+.node {
+	font: 12px sans-serif;
+}
+
+.link {
+	fill: none;
+	stroke: #ccc;
+	stroke-width: 1.5px;
+}
+</style>
+<body>
+	<script src="d3.v3.min.js"></script>
+	<script>
+		function getPar(par) {
+			//获取当前URL
+			var local_url = document.location.href;
+			//获取要取得的get参数位置
+			var get = local_url.indexOf(par + "=");
+			if (get == -1) {
+				return false;
+			}
+			//截取字符串
+			var get_par = local_url.slice(par.length + get + 1);
+			//判断截取后的字符串是否还有其他get参数
+			var nextPar = get_par.indexOf("&");
+			if (nextPar != -1) {
+				get_par = get_par.slice(0, nextPar);
+			}
+			return get_par;
+		}
+		var margin = {
+			top: 20,
+			right: 120,
+			bottom: 20,
+			left: 120
+		}, width = 960 - margin.right - margin.left, height = 700 - margin.top
+				- margin.bottom;
+		var mid = height/2;
+		var tree = d3.layout.tree().size([width, height]).separation(
+				function(a, b) {
+					return (a.parent == b.parent ? 1 : 2) / a.depth;
+				});
+		var diagonal = d3.svg.diagonal().projection(function(d) {
+			return [d.x, d.y];
+		});
+		var svg = d3.select("body").append("svg").attr("width",
+				width + margin.right + margin.left).attr("height",
+				height + margin.top + margin.bottom).append("g")
+			    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		d3
+				.json("http://192.168.44.129:8080/dump?document_id="
+						+ getPar('document_id'), function(error, root) {
+					var nodes = tree.nodes(root);
+					var links = tree.links(nodes);
+					var link = svg.selectAll(".link").data(links).enter()
+							.append("path").attr("class", "link").attr("d",
+									diagonal);
+					var node = svg.selectAll(".node").data(nodes).enter()
+							.append("g").attr("class", "node").attr(
+									"transform",
+									function(d) {
+										if(d.type)
+											return "translate(" + d.x0 + "," + d.y0
+											+ ")";
+										return "translate(" + d.x + "," + d.y
+												+ ")";
+									})
+					node.append("circle").attr("r", 4.5);
+					node.append("text").attr("dx", function(d) {
+						return d.children ? -8 : 8;
+					}).attr("dy", 3).style("text-anchor", function(d) {
+						return d.children ? "end" : "start";
+					}).text(function(d) {
+						return d.name;
+					});
+				});
+	</script>
+</body>
+</html>

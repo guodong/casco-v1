@@ -13,7 +13,7 @@ Ext.define('casco.view.main.Top', {
     	});
     	this.items = [{
             xtype: 'label',
-            html: 'CASCO TEST CENTER',
+            html: 'CASCO TEST CENTER HEHEDA',
             style: 'font-size: 27px;'
         },'->',{
             text: 'Manage',
