@@ -3,13 +3,13 @@ Ext.define('casco.view.rs.Rs', {
 	alias: 'widget.rs',
 	viewModel: 'main',
 	
-	requires: [
-	           'casco.store.Versions',
-	           'casco.store.Rss',
-	           'casco.view.rs.RsImport',
-	           'casco.view.rs.RsDetail',
-	           'casco.ux.StatusBar'
-	           ],
+//	requires: [
+//	           'casco.store.Versions',
+//	           'casco.store.Rss',
+//	           'casco.view.rs.RsImport',
+//	           'casco.view.rs.RsDetail',
+//	           'casco.ux.StatusBar'
+//	           ],
 	           
 //	autoHeight: true,
 //	allowDeselect: false,
@@ -17,15 +17,15 @@ Ext.define('casco.view.rs.Rs', {
     //search参数
 	searchValue:null,
 	matches:[],
-	//indexes:[],
 	//currentIndex:null,
 	searchRegExp:null,
 	//caseSensitive:false,
 	regExpMode:false,
 	//matched string css class
 	matchCls:'x-livesearch-match',
-	defaultStatusText:'Nothing Found',	           
+	defaultStatusText:'Nothing Found',
 	
+//	columnLines:true,
 		
 	initComponent: function() {
 		var me = this;
@@ -104,15 +104,17 @@ Ext.define('casco.view.rs.Rs', {
 			handler: function() {
 				window.open("/viewdoc.html?file="+me.curr_version.get('filename'),"_blank","width=800,height=900");
 			}
-		},'-',{
-			text: 'View Graph',
-			glyph: 0xf0e8,
-			scope: this,
-			handler: function() {
-				window.open('/draw/graph.html?document_id='+me.document_id);
-			},
-			hidden: true
-		},'-',{
+		},
+//		'-',{
+//			text: 'View Graph',
+//			glyph: 0xf0e8,
+//			scope: this,
+//			handler: function() {
+//				window.open('/draw/graph.html?document_id='+me.document_id);
+//			},
+//			hidden: true
+//		},
+		'-',{
 			text: 'View Statistics',
 			glyph: 0xf080,
 			scope: this,
@@ -133,41 +135,32 @@ Ext.define('casco.view.rs.Rs', {
                     buffer: 500
                 }
             }
+       },{
+           xtype: 'button',
+           text: '&lt;',
+           tooltip: 'Find Previous Row',
+           handler: me.onPreviousClick,
+           scope: me
+       },{
+           xtype: 'button',
+           text: '&gt;',
+           tooltip: 'Find Next Row',
+           handler: me.onNextClick,
+           scope: me
        }];
+		
+		me.bbar = ['-',{
+			summaryType: 'count',
+	        summaryRenderer: function(value, summaryData, dataIndex) {
+	            return Ext.String.format('{0} item{1}', value, value !== 1 ? 's' : '');
+	        }
+		}]
 		
 		me.bbar = Ext.create('casco.ux.StatusBar',{
 			defaultText:me.defaultStatusText,
 			name:'searchStatusBar'
 		});
-			
-		me.listeners = {
-			celldblclick: function(a,b,c,record){
-				if(c==0){
-					window.open('/draw/graph2.html#'+record.get('tag'));
-					return;
-				}
-				if(c==5||c==6){
-					var st = Ext.create('casco.store.Vat');
-					st.setData(record.get('vat'));
-					if(record.get('vatstr'))
-						st.add({id: record.get('vatstr').id, tag: record.get('vatstr').name});
-					var wd = Ext.create("casco.view.rs.vat.Add", {
-						vat: st,
-						document_id: me.document_id
-					});
-					wd.show();
-					return;
-				}
-				var win = Ext.create('widget.rs.rsdetail', {
-					rs: record,
-					editvat: c==6||c==5,
-					document_id: me.document_id
-				});
-				win.down('form').loadRecord(record);
-				win.show();
-			}
-		};
-		
+
 		me.columns = [{
 			text: "tag",
 			dataIndex: "tag",
@@ -183,14 +176,16 @@ Ext.define('casco.view.rs.Rs', {
 		}, {
 			text: "implement",
 			dataIndex: "implement",
-			width: 100,
-	        summaryRenderer: function(value, summaryData, dataIndex) {
-	            //return 'covered:' +cvd;
-	        }
+			flex:1,
+//			width: 100,
+//	        summaryRenderer: function(value, summaryData, dataIndex) {
+//	            //return 'covered:' +cvd;
+//	        }
 		}, {
 			text: "category",
 			dataIndex: "category",
-			width: 130
+			flex:1,
+//			width: 130,
 		}, {
 			text: "tcs",
 			dataIndex: "tcs",
@@ -222,6 +217,35 @@ Ext.define('casco.view.rs.Rs', {
 				return value?value.name:'';
 			}
 		}];
+		
+		me.listeners = {
+			celldblclick: function(a,b,c,record){
+				if(c==0){
+					window.open('/draw/graph2.html#'+record.get('tag'));
+					return;
+				}
+				if(c==5||c==6){
+					var st = Ext.create('casco.store.Vat');
+					st.setData(record.get('vat'));
+					if(record.get('vatstr'))
+						st.add({id: record.get('vatstr').id, tag: record.get('vatstr').name});
+					var wd = Ext.create("casco.view.rs.vat.Add", {
+						vat: st,
+						document_id: me.document_id
+					});
+					wd.show();
+					return;
+				}
+				var win = Ext.create('widget.rs.rsdetail', {
+					rs: record,
+					editvat: c==6||c==5,
+					document_id: me.document_id
+				});
+				win.down('form').loadRecord(record);
+				win.show();
+			}
+		};
+		
 		me.callParent(arguments);
 	},
 	
@@ -230,6 +254,7 @@ Ext.define('casco.view.rs.Rs', {
 		me.callParent(arguments);
 		me.textField= me.down('textfield[name = searchField]');
 		me.statusBar = me.down('statusbar[name = searchStatusBar]');
+		me.view.on('cellkeydown',me.focusTextField,me);
 	},
 	
 	focusTextField: function(view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
@@ -289,7 +314,7 @@ Ext.define('casco.view.rs.Rs', {
         });
 
         me.searchValue = me.getSearchValue();
-        me.indexes = [];
+        me.matches = [];
         me.currentIndex = null;
 
         if (me.searchValue !== null) {
@@ -347,9 +372,33 @@ Ext.define('casco.view.rs.Rs', {
              me.textField.focus();
          }
     },
+    
+    onPreviousClick: function() {
+        var me = this,
+            matches = me.matches,
+            len = matches.length,
+            idx = me.currentIndex;
+
+        if (len) {
+            me.currentIndex = idx === 0 ? len - 1 : idx - 1;
+            me.gotoCurrent();
+        }
+    },
+    
+    onNextClick: function() {
+        var me = this,
+            matches = me.matches,
+            len = matches.length,
+            idx = me.currentIndex;
+
+        if (len) {
+            me.currentIndex = idx === len - 1 ? 0 : idx + 1;
+            me.gotoCurrent();
+        }
+    },
 		
     viewConfig: { 
-        stripeRows: false, 
+        stripeRows: true, 
         getRowClass: function(record) {
         	if(record.get('tcs') == undefined)
         		return 'red';
