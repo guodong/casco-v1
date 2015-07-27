@@ -63,7 +63,7 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.json("http://api.casco.me/dump?document_id="+getPar('document_id'), function(error, flare) {
+d3.json("http://192.168.44.129:8080/dump?document_id="+getPar('document_id'), function(error, flare) {
   root = flare;
   root.x0 = height / 2;
   root.y0 = 0;

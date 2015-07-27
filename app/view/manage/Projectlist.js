@@ -62,13 +62,44 @@ Ext.define('casco.view.manage.Projectlist', {
             return Ext.String.format('<div id="{0}"></div>', id);
          }
       },{
+		  width:150,
+		  
+          renderer:function(val,meta,rec){
+        
+		  var id=Ext.id();
+		   Ext.defer(function(){
+			  Ext.widget('button', {
+			      renderTo:id,
+			      text:'Test Elements',
+				  glyph: 0xf040,
+                  scale: 'small',
+                  handler: function() {
+                  
+				 
+                  var win = Ext.create('casco.view.manage.Document', {project: rec});
+                  win.show();
+
+                  }
+		      });
+		   },50);
+		   
+          return Ext.String.format('<div id="{0}"></div>',id);
+
+          }
+		  
+		  
+		  
+		  
+		  
+	  },{
 		width: 110,
         renderer: function(val,meta,rec) {
             var id = Ext.id();
+			 
             Ext.defer(function() {
                Ext.widget('button', {
                   renderTo: id,
-                  text: 'Statistics',
+                  text: 'Statistic',
                   scale: 'small',
                   glyph: 0xf0ce,
                   handler: function() {
@@ -76,6 +107,7 @@ Ext.define('casco.view.manage.Projectlist', {
                       win.show();
                   }
                });
+			   
             }, 50);
             return Ext.String.format('<div id="{0}"></div>', id);
          }

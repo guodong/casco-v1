@@ -48,7 +48,8 @@ Ext.define('casco.view.main.Main', {
             xtype: 'tree',
             id: 'mtree',
             store: store,
-            title: me.project.get('name'),
+            title: me.project.get('id'),
+			 
             region: 'west',
             width: 200,
             split: true,

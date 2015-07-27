@@ -2,7 +2,7 @@ Ext.define('casco.view.manage.Userlist', {
 	extend: 'Ext.grid.Panel',
 	alias: 'widget.userlist',
 	requires: ['casco.view.manage.Useradd'],
-	id: 'userlist',
+	id: 'userlistt',
 	itemId: 'userlist',
 	initComponent: function() {
 		var me = this;
@@ -62,11 +62,11 @@ Ext.define('casco.view.manage.Userlist', {
 		text: "jobnumber",
 		dataIndex: "jobnumber",
 		width: 130
-	}, {
+	},/* {
 		text: "role",
 		dataIndex: "role",
 		width: 180
-	}, {
+	}, */{
 		text: "created time",
 		dataIndex: "created_at",
 		width: 180

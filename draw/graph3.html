@@ -91,7 +91,7 @@ line {
 		$(function() {
 			var data;
 			$.ajax({
-				url: 'http://api.casco.me/dump?tag=' + location.hash.substr(1),
+				url: 'http://192.128.44.129:8080/dump?tag=' + location.hash.substr(1),
 				async: false,
 				dataType: 'json',
 				success: function(d) {
