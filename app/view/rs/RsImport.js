@@ -37,17 +37,17 @@ Ext.define('casco.view.rs.RsImport', {
 						e.query = new RegExp(e.query.trim(), 'i');
 						e.forceAll = true;
 					},
-					blur:function(e){
-						var input = e.getRawValue().trim();
-						e.setRawValue(input);
-						if(input == '') 
-							Ext.Msg.alert('Error','Vesrion is NULL ！');
-						else if(e.store.find('name',input) == -1){
-							Ext.Msg.alert('Notice','New Version: '+ input);
-							me.aflag = input;
-						}
-							//else Ext.Msg.alert('Notice','Exist Version: '+ input);
-					}
+//					blur:function(e){
+//						var input = e.getRawValue().trim();
+//						e.setRawValue(input);
+//						if(input == '') 
+//							Ext.Msg.alert('Error','Vesrion is NULL ！');
+//						else if(e.store.find('name',input) == -1){
+//							Ext.Msg.alert('Notice','New Version: '+ input);
+//							me.aflag = input;
+//						}
+//							//else Ext.Msg.alert('Notice','Exist Version: '+ input);
+//					}
 				}
 			}, 
 			/*
