@@ -1,7 +1,7 @@
 Ext.define('casco.view.tc.Tc', {
     extend : 'Ext.grid.Panel',
     xtype : 'tc',
-    //requires: ['casco.view.tc.TcAdd', 'casco.store.Tcs'],
+    requires: ['casco.view.tc.TcAdd', 'casco.store.Tcs'],
     title : 'TSP-SyRTC',
     allowDeselect: true,
     

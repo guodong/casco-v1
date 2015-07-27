@@ -3,13 +3,13 @@ Ext.define('casco.view.rs.Rs', {
 	alias: 'widget.rs',
 	viewModel: 'main',
 	
-//	requires: [
-//	           'casco.store.Versions',
-//	           'casco.store.Rss',
-//	           'casco.view.rs.RsImport',
-//	           'casco.view.rs.RsDetail',
-//	           'casco.ux.StatusBar'
-//	           ],
+	requires: [
+	           'casco.store.Versions',
+	           'casco.store.Rss',
+	           'casco.view.rs.RsImport',
+	           'casco.view.rs.RsDetail',
+	           'casco.ux.StatusBar'
+	           ],
 	           
 //	autoHeight: true,
 //	allowDeselect: false,
