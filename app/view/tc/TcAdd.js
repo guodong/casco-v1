@@ -108,7 +108,8 @@ Ext.define('casco.view.tc.TcAdd', {
 	    	            handler: function(){
 	    					var wd = Ext.create("casco.view.tc.source.Add", {
 	    						sources: me.sources,
-	    						document_id: me.document_id
+	    						document_id: me.document_id,
+	    						project: me.project
 	    					});
 	    					wd.show();
 	    				}

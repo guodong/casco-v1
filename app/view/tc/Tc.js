@@ -165,7 +165,7 @@ Ext.define('casco.view.tc.Tc', {
 		  );
 			return arr.join(', ');*/
 		}},
-		{text: "test method", dataIndex: "testmethod", width: 100, renderer: function(tm){return tm?tm.name:''}},
+		{text: "test method", dataIndex: "testmethods", width: 100, renderer: function(tm){console.log(tm);var str="";for(var i in tm){str+=tm[i].name}return str;}},
 		{text: "pre condition", dataIndex: "pre_condition", flex: 1},
 		];
     	me.callParent(arguments);
@@ -329,7 +329,7 @@ Ext.define('casco.view.tc.Tc', {
 				window.open('/draw/graph2.html#'+record.get('tag'));
 				return;
 			}
-        	var win = Ext.create('widget.tcadd',{tc: record, document_id: this.document_id});
+        	var win = Ext.create('widget.tcadd',{tc: record, document_id: this.document_id, project: this.project});
             win.down('form').loadRecord(record);
             win.show();
         }

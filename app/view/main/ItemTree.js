@@ -11,7 +11,7 @@ Ext.define('casco.view.main.ItemTree', {
     	this.store = Ext.create('casco.store.TreeItems', {
     		proxy: {
     			extraParams: {
-    				project_id: localStorage.project_id,
+    				project_id: me.project.get('id'),
     				document_id: me.document_id //用于过滤与之相关的文档
     			}
     		}

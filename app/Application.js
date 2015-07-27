@@ -26,6 +26,10 @@ Ext.define('casco.Application', {
 	    'manage': {
 	    	before: null,
 	    	action: 'onManage'
+	    },
+	    'testing/:id': {
+	    	before: null,
+	    	action: 'onTest'
 	    }
 	},
 	defaultToken: 'selectProject',
@@ -84,6 +88,13 @@ Ext.define('casco.Application', {
 	},
 	onManage: function(){
 		Ext.widget('manage');
+	},
+	onTest: function(id) {
+		casco.model.Project.load(id, {
+    		success: function(project){
+    			Ext.widget('testing', {project: project});
+    		}
+    	});
 	},
 	launch : function() {
 //		Ext.Ajax.request({
