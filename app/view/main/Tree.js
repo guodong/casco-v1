@@ -5,6 +5,7 @@ Ext.define('casco.view.main.Tree', {
     requires: ['casco.view.tc.Tc'],
     listeners: {
         itemdblclick: function(view, record, item, index, e, eOpts){
+        	var me = this;
         	if(!record.get('leaf')) return;
     		var tabs = Ext.getCmp('workpanel');
     		var tab = tabs.child('#tab-' + record.get('id'));
@@ -19,7 +20,8 @@ Ext.define('casco.view.main.Tree', {
     					xtype: record.get('type'),
     					title: record.get('name'),
     					document: record,
-    					closable: true
+    					closable: true,
+    					project: me.project
     				});
     				tabs.setActiveTab(tab);
     			}

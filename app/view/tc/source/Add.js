@@ -15,7 +15,7 @@ Ext.define('casco.view.tc.source.Add', {
 		type: 'border'
 	},
 	initComponent: function() {
-		var me = this
+		var me = this;
 		me.addSources = function(record){
 			if(record.data.type != 'item'){
 				return;
@@ -30,6 +30,7 @@ Ext.define('casco.view.tc.source.Add', {
 	        collapsible: true,
 			autoScroll: true,
 			document_id: me.document_id,
+			project: me.project,
 			listeners: {
 				itemdblclick: function(view, record, item, index, e, eOpts){
 					me.addSources(record);

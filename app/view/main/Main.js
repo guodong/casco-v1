@@ -43,13 +43,14 @@ Ext.define('casco.view.main.Main', {
     	});
     	me.items = [{
             region: 'north',
-            xtype: 'top'
+            xtype: 'top',
+            project: me.project
         },{
             xtype: 'tree',
             id: 'mtree',
             store: store,
-            title: me.project.get('id'),
-			 
+            title: me.project.get('name'),
+            project: me.project,
             region: 'west',
             width: 200,
             split: true,
@@ -61,8 +62,8 @@ Ext.define('casco.view.main.Main', {
             title: '',
             id: 'workpanel',
             items:[{
-                title: 'Tab 1',
-                html: '<h2>Content appropriate for the current navigation.</h2>'
+                title: 'Overview',
+                html: '<iframe id="draw" src="/draw/noedit.html?'+me.project.get('id')+'" style="width:100%;height:100%;border:0"></iframe>'
             }]
         }];
     	this.callParent();
