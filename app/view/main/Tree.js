@@ -53,7 +53,7 @@ Ext.define('casco.view.main.Tree', {
                          Ext.Msg.alert("delete successfully");
     	                
     	                  }}, this);
-						//console.log(items,index,e,record);
+						 
 						
 						}
 					}/*,{
