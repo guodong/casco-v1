@@ -98,7 +98,29 @@ Ext.define('casco.view.tc.Tc', {
             text: 'Add Item',
             glyph: 0xf067, 
             handler : function() {
-                var win = Ext.create('widget.tcadd',{listeners:{scope: this}, version_id: me.curr_version.get('id')});
+                
+			    var tag='';
+				me.store.each(function(record){
+			    
+
+				if(record.get('tag')>tag)
+				 
+                tag=record.get('tag');
+				},this);
+				 
+                
+			    num=parseInt(tag.substring(tag.lastIndexOf('-')+1,tag.length-1))+1;
+				 
+			    tag='[TSP-SyRTC-'+num+']';
+		/*		 
+				 for (var i=0;i<record.length;i++)
+				 {
+                    if(tag<record[i].get('tag')){tag=record[i].get('tag')};
+					else continue;
+                  }
+
+		*/	 
+               var win = Ext.create('widget.tcadd',{listeners:{scope: this}, version_id: me.curr_version.get('id'),tag_id:tag});
                 win.show();
             }
         },'-',{

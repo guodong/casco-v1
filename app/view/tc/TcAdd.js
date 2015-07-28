@@ -15,6 +15,7 @@ Ext.define('casco.view.tc.TcAdd', {
 
 	initComponent: function() {
 		var me = this;
+	 
 		me.sources = Ext.create('casco.store.Sources');
 		me.steps = Ext.create('casco.store.TcSteps');
 		if(me.tc){
@@ -44,7 +45,8 @@ Ext.define('casco.view.tc.TcAdd', {
 				name : 'tag',
 				//labelAlign : 'top',
 				xtype : 'textfield',
-	            allowBlank: false
+	            allowBlank: false,
+				value: me.tag_id
 			}, {
 				anchor : '100%',
 				fieldLabel : 'Description',
