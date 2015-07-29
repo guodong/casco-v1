@@ -16,6 +16,7 @@ Ext.define('casco.view.testing.Result', {
     },
 	title: 'Testing result',
 	store: Ext.create('casco.store.Results'),
+	scrollable: true,
     initComponent: function(){
     	var me = this;
     	var resultStore = Ext.create('Ext.data.Store', {
@@ -33,6 +34,12 @@ Ext.define('casco.view.testing.Result', {
 				return v.tag
 			}
 		}, {
+			text: 'description',
+			dataIndex: 'tc',
+			renderer: function(v) {
+				return v.description
+			}
+		}, {
 			text: "sources",
 			dataIndex: "tc",
 			width: 200,
@@ -42,7 +49,7 @@ Ext.define('casco.view.testing.Result', {
 				var value = JSON.parse(value.source_json);
 				var arr = [];
 				Ext.Array.each(value, function(v) {
-					arr.push(v.tag);
+					arr.push(v);
 				});
 				return arr.join(', ');
 			}

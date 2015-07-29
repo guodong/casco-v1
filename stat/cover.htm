@@ -1,0 +1,290 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>测试需求统计</title>
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="highcharts.js"></script>
+</head>
+<body>
+	<div id="test" style="margin: 0 auto; text-align: center;">
+		<p>
+			<b>RS被TC覆盖统计情况</b>
+		</p>
+		<div id="container1" style="width: 50%; float: left"></div>
+		<div id="container2" style="margin-left: 50%;"></div>
+	</div>
+	<hr style="width: 100%">
+	<div id="test1" style="margin: 0 auto; text-align: center;margin-top:50px">
+		<p>
+			<b>RS被RS覆盖统计情况</b>
+		</p>
+		<div id="container3" style="width: 50%; float: left"></div>
+		<div id="container4" style="margin-left: 50%;"></div>
+	</div>
+	<hr style="width: 100%">
+	<div id="test1" style="margin: 0 auto; text-align: center;margin-top:50px">
+		<p>
+			<b>测试结果统计</b>
+		</p>
+		<div id="container5" style="width: 50%; float: left"></div>
+		<div id="container6" style="margin-left: 50%;"></div>
+	</div>
+	<script>
+		$(function() {
+
+			var API = 'http://api.casco.me/';
+			//var API = 'http://192.100.212.31:8080/';
+			//图标属性-柱状图
+			var makeChart = function(data) {
+				var chart1 = new Highcharts.Chart(
+						{
+							chart: {
+								renderTo: 'container1',
+								type: 'column',
+							},
+							title: {
+								text: '柱状图-覆盖数量'
+							},
+							xAxis: {
+								categories: ['已覆盖', '被VAT覆盖', '未覆盖']
+							},
+							yAxis: {
+								min: 0,
+								title: {
+									text: '数量(个)'
+								}
+							},
+							tooltip: {
+								headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+								pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>'
+										+ '<td style="padding:0"><b>{point.y}个</b></td></tr>',
+								footerFormat: '</table>',
+								shared: true,
+								useHTML: true
+							},
+							plotOptions: {
+								column: {
+									pointPadding: 0,
+									borderWidth: 50
+								}
+							},
+							credits: {
+								enabled: false
+							},
+							series: [{
+								name: '测试需求',
+								data: [['已覆盖', data.cvd],['被VAT覆盖', data.vat], ['未覆盖', data.ucvd]]
+							}]
+						});
+				//图标属性-饼图
+				var chart2 = new Highcharts.Chart(
+						{
+							chart: {
+								renderTo: 'container2',
+								type: 'pie',
+							},
+							title: {
+								text: '饼图-覆盖率'
+							},
+							tooltip: {
+								pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+							},
+							plotOptions: {
+								pie: {
+									allowPointSelect: true,
+									cursor: 'pointer',
+									dataLabels: {
+										enabled: true,
+										format: '<b>{point.name}</b>: {point.percentage:.1f}% ',
+									}
+								}
+							},
+							credits: {
+								enabled: false
+							},
+							series: [{
+								name: '测试需求',
+								data: [['被TC覆盖', data.cvd],['被VAT覆盖', data.vat], ['未覆盖', data.ucvd]]
+							}]
+						});
+				var chart3 = new Highcharts.Chart(
+						{
+							chart: {
+								renderTo: 'container3',
+								type: 'column',
+							},
+							title: {
+								text: '柱状图-覆盖数量'
+							},
+							xAxis: {
+								categories: ['已覆盖', '未覆盖']
+							},
+							yAxis: {
+								min: 0,
+								title: {
+									text: '数量(个)'
+								}
+							},
+							tooltip: {
+								headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+								pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>'
+										+ '<td style="padding:0"><b>{point.y}个</b></td></tr>',
+								footerFormat: '</table>',
+								shared: true,
+								useHTML: true
+							},
+							plotOptions: {
+								column: {
+									pointPadding: 0,
+									borderWidth: 50
+								}
+							},
+							credits: {
+								enabled: false
+							},
+							series: [{
+								name: '测试需求',
+								data: [['已覆盖', data.h_cvd], ['未覆盖', data.h_ucvd]]
+							}]
+						});
+				//图标属性-饼图
+				var chart4 = new Highcharts.Chart(
+						{
+							chart: {
+								renderTo: 'container4',
+								type: 'pie',
+							},
+							title: {
+								text: '饼图-覆盖率'
+							},
+							tooltip: {
+								pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+							},
+							plotOptions: {
+								pie: {
+									allowPointSelect: true,
+									cursor: 'pointer',
+									dataLabels: {
+										enabled: true,
+										format: '<b>{point.name}</b>: {point.percentage:.1f}% ',
+									}
+								}
+							},
+							credits: {
+								enabled: false
+							},
+							series: [{
+								name: '测试需求',
+								data: [['已覆盖', data.h_cvd], ['未覆盖', data.h_ucvd]]
+							}]
+						});
+				var chart5 = new Highcharts.Chart(
+						{
+							chart: {
+								renderTo: 'container5',
+								type: 'column',
+							},
+							title: {
+								text: '柱状图-测试结果统计'
+							},
+							xAxis: {
+								categories: ['已通过', '未通过', '未测试']
+							},
+							yAxis: {
+								min: 0,
+								title: {
+									text: '数量(个)'
+								}
+							},
+							tooltip: {
+								headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+								pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>'
+										+ '<td style="padding:0"><b>{point.y}个</b></td></tr>',
+								footerFormat: '</table>',
+								shared: true,
+								useHTML: true
+							},
+							plotOptions: {
+								column: {
+									pointPadding: 0,
+									borderWidth: 50
+								}
+							},
+							credits: {
+								enabled: false
+							},
+							series: [{
+								name: '测试需求',
+								data: [['已通过', data.passed], ['未通过', data.failed], ['未测试', data.untested]]
+							}]
+						});
+				//图标属性-饼图
+				var chart6 = new Highcharts.Chart(
+						{
+							chart: {
+								renderTo: 'container6',
+								type: 'pie',
+							},
+							title: {
+								text: '饼图-测试结果统计'
+							},
+							tooltip: {
+								pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+							},
+							plotOptions: {
+								pie: {
+									allowPointSelect: true,
+									cursor: 'pointer',
+									dataLabels: {
+										enabled: true,
+										format: '<b>{point.name}</b>: {point.percentage:.1f}% ',
+									}
+								}
+							},
+							credits: {
+								enabled: false
+							},
+							series: [{
+								name: '测试需求',
+								data: [['已通过', data.passed], ['未通过', data.failed], ['未测试', data.untested]]
+							}]
+						});
+			}
+
+
+			$.ajax({
+				type: 'get',
+				url: API + 'rs?document_id=' + location.hash.substr(1),
+				dataType: "json",
+				async: false,
+				success: function(d) {
+					var data = {cvd:0,ucvd: 0,vat: 0,h_cvd:0,h_ucvd:0,passed:0,failed:0,untested:0};
+					$.each(d, function(i, item) {
+						if (item.tcs.length )
+							data.cvd++;
+						else if(item.vat.length || item.vatstr)
+							data.vat++;
+						else
+							data.ucvd++;
+						
+						if(item.rss.length){
+							data.h_cvd++;
+						}else{
+							data.h_ucvd++;
+						}
+						if(item.result == 0)
+							data.untested++;
+						else if(item.result == 1)
+							data.passed++;
+						else
+							data.failed++;
+					});
+					makeChart(data);
+				}
+			});
+		})
+	</script>
+
+</body>
+</html>

@@ -2,7 +2,7 @@ Ext.define('casco.view.main.Tree', {
     extend: 'Ext.tree.Panel',
     alias: 'widget.tree',
 
-    requires: ['casco.view.tc.Tc'],
+    requires: ['casco.view.tc.Tc', 'casco.view.rs.Rs'],
     listeners: {
         itemdblclick: function(view, record, item, index, e, eOpts){
         	var me = this;

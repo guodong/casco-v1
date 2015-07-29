@@ -1,7 +1,7 @@
 Ext.define('casco.view.tc.Tc', {
     extend : 'Ext.grid.Panel',
     xtype : 'tc',
-    //requires: ['casco.view.tc.TcAdd', 'casco.store.Tcs'],
+    requires: ['casco.view.tc.TcAdd', 'casco.store.Tcs'],
     title : 'TSP-SyRTC',
     allowDeselect: true,
     
@@ -157,13 +157,13 @@ Ext.define('casco.view.tc.Tc', {
 		      return Ext.String.format('{0} item{1}', value, value !== 1 ? 's' : '');
 		  }},
 		{text: "source", dataIndex: "source_json", width: 200, autoShow: false, renderer : function(value) {
-			/*var arr = [];
+			var arr = [];
 			Ext.Array.each(value, function(v) {
-		      arr.push(v.tag);
+		      arr.push(v);
 		  }   //之前数组的处理
 		  
 		  );
-			return arr.join(', ');*/
+			return arr.join(', ');
 		}},
 		{text: "test method", dataIndex: "testmethods", width: 100, renderer: function(tm){console.log(tm);var str="";for(var i in tm){str+=tm[i].name}return str;}},
 		{text: "pre condition", dataIndex: "pre_condition", flex: 1},
