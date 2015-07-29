@@ -98,13 +98,51 @@ Ext.define('casco.view.tc.Tc', {
             text: 'Add Item',
             glyph: 0xf067, 
             handler : function() {
-                var win = Ext.create('widget.tcadd',{listeners:{scope: this}, version_id: me.curr_version.get('id')});
+                
+			    var tag='';
+				me.store.each(function(record){
+			  
+				if(record.get('tag')>tag)
+				 
+                tag=record.get('tag');
+				},this);
+				 
+                
+			    num=parseInt(tag.substring(tag.lastIndexOf('-')+1,tag.length-1))+1;
+				 
+			    tag='[TSP-SyRTC-'+num+']';
+		/*		 
+				 for (var i=0;i<record.length;i++)
+				 {
+                    if(tag<record[i].get('tag')){tag=record[i].get('tag')};
+					else continue;
+                  }
+
+		*/	 
+               var win = Ext.create('widget.tcadd',{listeners:{scope: this}, version_id: me.curr_version.get('id'),tag_id:tag,project:me.project, document_id:me.document.id});
                 win.show();
             }
         },'-',{
             text: 'Delete Item',
             glyph: 0xf068,
             handler : function() {
+
+                Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
+		 
+	            var view=me.getView();
+                var selection =view.getSelectionModel().getSelection()[0];
+	            if (selection) {
+				 
+				selection.erase();
+			    //var user = view.user?view.user:Ext.create('casco.model.User');
+				//Ext.Msg.alert(selection.account);
+	            me.store.remove(selection);
+
+	            me.getView().refresh();
+	            }
+		       
+    	}}, this);
+
 
             }
         },

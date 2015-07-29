@@ -75,6 +75,15 @@ Ext.define('casco.view.manage.ManageController', {
 			}
 		});
 	},
+	createDocument:function(){
+
+
+	
+
+
+
+
+	},
 	seldoc: function(view, record, item, index, e, eOpts){//only leaf can  be listened
 		var json = record.data;
 		if(!record.data.leaf) return;
