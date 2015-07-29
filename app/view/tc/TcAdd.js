@@ -25,7 +25,7 @@ Ext.define('casco.view.tc.TcAdd', {
 		var tm = Ext.create('casco.store.Testmethods');
 		tm.load({
 			params: {
-				project_id: localStorage.project_id
+				project_id: me.project.get('id')
 			}
 		});
 		me.items = [{
@@ -55,15 +55,19 @@ Ext.define('casco.view.tc.TcAdd', {
 				xtype : 'textarea',
 	            allowBlank: false
 			}, {
-				xtype : 'combobox',
+				xtype : 'tagfield',
+				//defaultType:'checkbox',
 				name : 'testmethod_id',
+			    queryMode: 'local',
+                  
 				anchor : '100%',
-				editable : false,
+				editable : true,
 				fieldLabel : 'Test Methods',
-				//labelAlign : 'top',
+			 
+				labelAlign : 'top',
 				displayField : 'name',
 				valueField : 'id',
-				store : tm,
+				store:tm,
 	            allowBlank: false
 			},{
 				anchor : '100%',
