@@ -101,8 +101,7 @@ Ext.define('casco.view.tc.Tc', {
                 
 			    var tag='';
 				me.store.each(function(record){
-			    
-
+			  
 				if(record.get('tag')>tag)
 				 
                 tag=record.get('tag');
@@ -120,13 +119,30 @@ Ext.define('casco.view.tc.Tc', {
                   }
 
 		*/	 
-               var win = Ext.create('widget.tcadd',{listeners:{scope: this}, version_id: me.curr_version.get('id'),tag_id:tag});
+               var win = Ext.create('widget.tcadd',{listeners:{scope: this}, version_id: me.curr_version.get('id'),tag_id:tag,project:me.project, document_id:me.document.id});
                 win.show();
             }
         },'-',{
             text: 'Delete Item',
             glyph: 0xf068,
             handler : function() {
+
+                Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
+		 
+	            var view=me.getView();
+                var selection =view.getSelectionModel().getSelection()[0];
+	            if (selection) {
+				 
+				selection.erase();
+			    //var user = view.user?view.user:Ext.create('casco.model.User');
+				//Ext.Msg.alert(selection.account);
+	            me.store.remove(selection);
+
+	            me.getView().refresh();
+	            }
+		       
+    	}}, this);
+
 
             }
         },
