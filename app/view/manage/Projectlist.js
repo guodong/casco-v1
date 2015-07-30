@@ -62,7 +62,7 @@ Ext.define('casco.view.manage.Projectlist', {
             return Ext.String.format('<div id="{0}"></div>', id);
          }
       },{
-		  width:150,
+		  width:130,
 		  
           renderer:function(val,meta,rec){
         
@@ -70,13 +70,13 @@ Ext.define('casco.view.manage.Projectlist', {
 		   Ext.defer(function(){
 			  Ext.widget('button', {
 			      renderTo:id,
-			      text:'Test Elements',
+			      text:'View   Build',
 				  glyph: 0xf040,
                   scale: 'small',
                   handler: function() {
                   
 				 
-                  var win = Ext.create('casco.view.manage.Document', {project: rec});
+                  var win = Ext.create('casco.view.testing.BuildCreate', {project: rec});
                   win.show();
 
                   }
