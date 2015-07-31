@@ -75,9 +75,11 @@ Ext.define('casco.view.manage.Projectlist', {
                   scale: 'small',
                   handler: function() {
                   
-				 
-                  var win = Ext.create('casco.view.testing.BuildCreate', {project: rec});
-                  win.show();
+				   
+	                var win = Ext.create('casco.view.manage.Buildlistwindow', {project: rec});
+			      
+			        win.show();
+
 
                   }
 		      });
