@@ -2,7 +2,7 @@ Ext.define('casco.view.manage.Userlist', {
 	extend: 'Ext.grid.Panel',
 	alias: 'widget.userlist',
 	requires: ['casco.view.manage.Useradd'],
-	id: 'userlistt',
+	id: 'userlist',
 	itemId: 'userlist',
 	initComponent: function() {
 		var me = this;
@@ -41,7 +41,7 @@ Ext.define('casco.view.manage.Userlist', {
 
 			}
 		}];
-		me.callParent();  //???作用
+		me.callParent();   
 	},
 	columns: [
 	{   text:"id",

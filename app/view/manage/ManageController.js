@@ -33,6 +33,25 @@ Ext.define('casco.view.manage.ManageController', {
     		}
     	});
     },
+	createFolder:function (){//build
+		var view = this.getView();
+    	var self = this;
+    	var form = this.lookupReference('build_create_form');//获取对应的form表单
+    	var build = view.build?view.build:Ext.create('casco.model.Build');
+    	build.set(form.getValues());
+    	build.save({
+    		callback: function(){
+    			Ext.Msg.alert('Message', 'Build manage successfully.', function(){
+    				var t = Ext.ComponentQuery.query("#build_list")[0];
+    				if(!view.user)t.store.add(build);
+    				form.up("window").destroy();
+		    	});
+    		}
+    	});
+
+
+
+	},
     createmethod: function () {
     	var view = this.getView();
     	var self = this;
@@ -88,7 +107,7 @@ Ext.define('casco.view.manage.ManageController', {
 		var json = record.data;
 		if(!record.data.leaf) return;
 		var tabs = this.lookupReference('main');
-	  
+	
 		var tab = tabs.child('#tab-' + json.id);
 		if(!tab){
 			tab = tabs.add({

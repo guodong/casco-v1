@@ -30,7 +30,7 @@ Ext.define('casco.view.manage.Document', {
 	        title: me.project.name,
 	        project: me.project,//parameters是可以自动设置从而调用的
 	        region: 'west',
-			    width: 200,
+			width: 200,
 	        split: true,
 	        collapsible: true,
 	        editable: true

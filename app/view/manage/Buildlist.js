@@ -4,7 +4,7 @@ Ext.define('casco.view.manage.Buildlist', {
 	alias: 'widget.buildlist',
 	requires: ['casco.view.testing.BuildCreate','casco.store.Builds'],
    
-	 
+	id:'build_list',
 	modal: true,
 	maximizable: true,
     
@@ -26,7 +26,7 @@ Ext.define('casco.view.manage.Buildlist', {
 			text: 'Add Build',
 			glyph: 0xf067,
 			handler: function() {
-				var win = Ext.create('casco.view.testing.BuildCreate', {store: store});
+				var win = Ext.create('casco.view.testing.BuildCreate', {project: me.project});
 				win.show();
 			}
 		}, {

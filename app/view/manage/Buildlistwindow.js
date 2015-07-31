@@ -16,7 +16,7 @@ Ext.define('casco.view.manage.Buildlistwindow', {
 			items: [{
 				xtype: 'buildlist',
 				project:me.project,
-			    
+			    id:'build_list',
 				anchor: '100%'
 				 
 			}]

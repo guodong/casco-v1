@@ -6,7 +6,7 @@ Ext.define('casco.view.testing.BuildCreate', {
     modal: true,
     title: 'Create Build Version',
     width: 300,
-    
+    controller: 'manage',
     initComponent: function(){
     	var me = this;
     	me.items = [{
@@ -16,11 +16,11 @@ Ext.define('casco.view.testing.BuildCreate', {
 	    	items: [{
 	            fieldLabel: 'Version',
 	            msgTarget: 'under',
-	            name: 'name',
+	            name: 'version',
 	            xtype: 'textfield'
 	        },{
 	            name: 'project_id',
-	            value: localStorage.project_id,
+	            value: me.project.get('id'),
 	            xtype: 'hiddenfield'
 	        }]
 	    }];
