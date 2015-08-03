@@ -17,7 +17,7 @@ Ext.define('casco.view.tc.TcStep', {
     },{
         text: 'Actions',
         width: '45%',
-        sortable: true,
+//        sortable: true,
         resizable: false,
         draggable: false,
         hideable: false,

@@ -3,6 +3,7 @@ Ext.define('casco.view.rs.vat.Add', {
 
 	alias: 'widget.rs.vat.add',
 	requires: ['casco.view.main.ItemTree'],
+	
 	resizable: true,
 	maximizable: true,
 	modal: true,

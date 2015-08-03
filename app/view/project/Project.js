@@ -41,6 +41,4 @@ Ext.define("casco.view.project.Project", {
 	    }
 		this.callParent();
 	}
-	
-
 });

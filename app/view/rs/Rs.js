@@ -224,22 +224,23 @@ Ext.define('casco.view.rs.Rs', {
 					window.open('/draw/graph2.html#'+record.get('tag'));
 					return;
 				}
-				if(c==5||c==6){
-					var st = Ext.create('casco.store.Vat');
-					st.setData(record.get('vat'));
-					if(record.get('vatstr'))
-						st.add({id: record.get('vatstr').id, tag: record.get('vatstr').name});
-					var wd = Ext.create("casco.view.rs.vat.Add", {
-						vat: st,
-						document_id: me.document_id
-					});
-					wd.show();
-					return;
-				}
-				var win = Ext.create('widget.rs.rsdetail', {
+//				if(c==5||c==6){
+//					var st = Ext.create('casco.store.Vat');
+//					st.setData(record.get('vat'));
+//					if(record.get('vatstr'))
+//						st.add({id: record.get('vatstr').id, tag: record.get('vatstr').name});
+//					var wd = Ext.create("casco.view.rs.vat.Add", {
+//						vat: st,
+//						document_id: me.document_id
+//					});
+//					wd.show();
+//					return;
+//				}
+				var win = Ext.create('widget.rs.rsdetails', {
 					rs: record,
-					editvat: c==6||c==5,
-					document_id: me.document_id
+//					editvat: c==6||c==5,
+					document_id: me.document_id,
+					project:me.project,
 				});
 				win.down('form').loadRecord(record);
 				win.show();
