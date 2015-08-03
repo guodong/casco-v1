@@ -11,7 +11,17 @@ Ext.define('casco.view.manage.Documentadd', {
 	width: 300,
 	initComponent: function() {
 		var me = this;
-		var project_id=me.project_id;
+		var type= Ext.create('Ext.data.Store', {
+        fields: ['text', 'value'],
+        data:[
+        ['rs','rs'],
+		['tc','tc'],
+		['ad','ad'],
+	    ['tr','tr']
+         ]
+         });
+		var project_id=me.project.get('id');
+	 
 		me.projects = Ext.create('casco.store.Projects');
 		if(me.user){
 			me.projects.setData(me.user.get('projects'));
@@ -36,8 +46,15 @@ Ext.define('casco.view.manage.Documentadd', {
 					name: 'type',
 					labelAlign: 'top',
 					msgTarget: 'under',
-				 
-           renderer: function(val,meta,rec) {
+				    xtype : 'combobox',
+				//defaultType:'checkbox',
+				    queryMode: 'local',
+                    editable : true,
+					valueField : 'value',
+				    store:type,
+	                allowBlank: false
+				    
+         /*  renderer: function(val,meta,rec) {
               var id = Ext.id(); //rs','tc','ad','tr','folder
                Ext.defer(function() {
 				var data=[
@@ -59,9 +76,10 @@ Ext.define('casco.view.manage.Documentadd', {
 						displayField:'text',
 						triggerAction:'query',
 						value:'value1',
-						rend
+						renderTo:id
+					});
              
-			 
+			
 			 
 			 
 			 
@@ -74,7 +92,7 @@ Ext.define('casco.view.manage.Documentadd', {
                    
 
 
-
+ */
 
 
 
@@ -97,7 +115,7 @@ Ext.define('casco.view.manage.Documentadd', {
 					value:project_id,
 					allowBlank: false,
 					editable:false,
-					hidden: me.user?true:false
+					hidden: true//me.user?true:false
 				}, {
 					anchor: '100%',
 					fieldLabel: 'build_version',
@@ -121,6 +139,8 @@ Ext.define('casco.view.manage.Documentadd', {
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'textfield',
+				    value:me.fid.get('id'),
+				    hidden:true,
 					allowBlank: false
 				},{
 					anchor: '100%',
@@ -163,7 +183,7 @@ Ext.define('casco.view.manage.Documentadd', {
 					formBind: true,
 					glyph: 0xf0c7,
 					listeners: {
-						click: 'createdocument'
+						click: 'createDocument'
 					}
 				}, {
 					text: 'Cancel',
