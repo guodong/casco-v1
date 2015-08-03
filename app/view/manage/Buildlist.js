@@ -1,25 +1,37 @@
-Ext.define('casco.view.manage.Userlist', {
+Ext.define('casco.view.manage.Buildlist', {
 	extend: 'Ext.grid.Panel',
-	alias: 'widget.userlist',
-	requires: ['casco.view.manage.Useradd'],
-	id: 'userlist',
-	itemId: 'userlist',
+	 
+	alias: 'widget.buildlist',
+	requires: ['casco.view.testing.BuildCreate','casco.store.Builds'],
+   
+	id:'build_list',
+	modal: true,
+	maximizable: true,
+    
 	initComponent: function() {
 		var me = this;
-		var store = Ext.create('casco.store.Users');
+		 
+		var store = Ext.create('casco.store.Builds', {
+    		proxy: {
+    			extraParams: {
+    				project_id: me.project.get('id'),
+    			 
+    			}
+    		}
+    	});
 		store.load();
 		me.store = store;
 		me.tbar = [{
-			hidden: localStorage.role == 'staff' ? true: false,  //用户权限
-			text: 'Add User',
+		//	hidden: localStorage.role == 'staff' ? true: false,  //用户权限
+			text: 'Add Build',
 			glyph: 0xf067,
 			handler: function() {
-				var win = Ext.create('casco.view.manage.Useradd', {store: store});
+				var win = Ext.create('casco.view.testing.BuildCreate', {project: me.project});
 				win.show();
 			}
 		}, {
-			hidden: localStorage.role == 'staff' ? true: false,  //用户权限
-			text: 'Delete User',
+		//	hidden: localStorage.role == 'staff' ? true: false,  //用户权限
+			text: 'Delete Build',
 			glyph: 0xf068,
 			handler: function() {
 				Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
@@ -28,8 +40,7 @@ Ext.define('casco.view.manage.Userlist', {
                 var selection =view.getSelectionModel().getSelection()[0];
 	            if (selection) {
 				selection.erase();
-			    //var user = view.user?view.user:Ext.create('casco.model.User');
-				//Ext.Msg.alert(selection.account);
+			
 	            me.store.remove(selection);
 
 	            me.getView().refresh();
@@ -44,37 +55,28 @@ Ext.define('casco.view.manage.Userlist', {
 		me.callParent();   
 	},
 	columns: [
-	{   text:"id",
+	{  
+		text:"id",
 		dataIndex:"id",
-		width:200,
+		 
 	    hidden:true
 	
 	},{
-		text: "account",
-		id:"account",
-		dataIndex: "account",
-		width: 130
+		text: "Version",
+		width:200,
+		anchor: '50%',
+		dataIndex: "version",
+		 
 	}, {
-		text: "realname",
-		dataIndex: "realname",
-		width: 100
-	}, {
-		text: "jobnumber",
-		dataIndex: "jobnumber",
-		width: 130
-	},/* {
-		text: "role",
-		dataIndex: "role",
-		width: 180
-	}, */{
 		text: "created time",
 		dataIndex: "created_at",
-		width: 180
+	    width:200,
+		anchor: '50%', 
 	}	],
     listeners : {
         itemdblclick: function(dv, record, item, index, e) {
         	if(localStorage.role == 'staff') return;  //用户权限
-        	var win = Ext.create('casco.view.manage.Useradd', {user: record});//这里初始化的什么玩意
+        	var win = Ext.create('casco.view.testing.BuildCreate', {user: record});//这里初始化的什么玩意
             win.down('form').loadRecord(record);
             win.show();
         }
