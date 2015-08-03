@@ -8,15 +8,15 @@ Ext.define('casco.view.testing.Result', {
         clicksToEdit: 1
     },
     listeners : {
-//        celldblclick: function(a,b,c, record, item, index, e) {
-//        	var win = Ext.create('widget.testmore',{result: record});
-//        	win.down('form').loadRecord(record);
-//            win.show();
-//        }
+        cellclick: function(a,b,c, record, item, index, e) {
+        	Ext.getCmp('testing-step-panel').down('form').loadRecord(record);
+        	Ext.getCmp('testing-step').store.loadData(record.get('tc').steps);
+        }
     },
 	title: 'Testing result',
 	store: Ext.create('casco.store.Results'),
 	scrollable: true,
+	job: Ext.create('casco.model.Testjob'),
     initComponent: function(){
     	var me = this;
     	var resultStore = Ext.create('Ext.data.Store', {
@@ -36,6 +36,7 @@ Ext.define('casco.view.testing.Result', {
 		}, {
 			text: 'description',
 			dataIndex: 'tc',
+			flex:1,
 			renderer: function(v) {
 				return v.description
 			}
@@ -44,7 +45,7 @@ Ext.define('casco.view.testing.Result', {
 			dataIndex: "tc",
 			width: 200,
 			autoShow: false,
-			flex:1,
+			hidden: true,
 			renderer: function(value) {
 				var value = JSON.parse(value.source_json);
 				var arr = [];
@@ -65,19 +66,53 @@ Ext.define('casco.view.testing.Result', {
 				return str;
 			}
 		}, {
-			text: "exe time",
-			dataIndex: "exe_at",
-			width: 140,
-			editable: false,
+			text: "begin at",
+			dataIndex: "begin_at",
+			width: 180,
 			editor: {
-				xtype: 'datefield',
-				format: 'Y-m-d',
 				editable: false,
+				disabledCls: '',
+				xtype: 'datetimefield',
+				cls: 'testit',
+				format: 'Y-m-d H:i:s',
+				listeners: {
+//					focus: function(editor){console.log(1)
+//						if(me.job.get('status') == 1){
+//							editor.setDisabled(true);
+//						}
+//					}
+				}
+			},
+			renderer: function(value, md, record){
+				if(typeof(value) == 'object'){
+					var str = Ext.util.Format.date(value, 'Y-m-d H:i:s');
+					return str;
+				}
+				if(value == '0000-00-00 00:00:00' || value == null){
+					return '';
+				}
+				return value;
+			}
+		}, {
+			text: "end at",
+			dataIndex: "end_at",
+			width: 180,
+			editor: {
+				editable: false,
+				xtype: 'datetimefield',
+				format: 'Y-m-d H:i:s'
 			},
 			renderer: function(value){
-				return Ext.util.Format.date(value, 'Y-m-d');
+				if(typeof(value) == 'object'){
+					var str = Ext.util.Format.date(value, 'Y-m-d H:i:s');
+					return str;
+				}
+				if(value == '0000-00-00 00:00:00' || value == null){
+					return '';
+				}
+				return value;
 			}
-		},{
+		}, {
 		    xtype: 'gridcolumn',
 		    dataIndex: 'result',
 			width: 120,
@@ -94,12 +129,11 @@ Ext.define('casco.view.testing.Result', {
 		        store: resultStore,
 		        listeners: {
 		        	select: function(combo, r){
-		        		if(r.get('value') != 2){
+		        		if(r.get('value') != 0){
+		        			var rd = me.getSelectionModel().getSelection()[0];
+		        			rd.set('exec_at', Ext.Date.format(new Date(), 'Y-m-d H:i:s'));
 		        			return;
 		        		}
-		        		var win = Ext.create('widget.testmore',{result: Ext.getCmp('result-main').getSelectionModel().getSelection()[0]});
-		            	win.down('form').loadRecord(Ext.getCmp('result-main').getSelectionModel().getSelection()[0]);
-		                win.show();
 		        	}
 		        }
 		    }
@@ -108,19 +142,38 @@ Ext.define('casco.view.testing.Result', {
 			text: 'Save',
 			glyph: 0xf0c7,
 			handler: function() {
-				if(me.store.getModifiedRecords().length = 0){
-					Ext.Msg.alert('Notice', 'No need to save.')
-					return;
-				}
-				me.store.sync({
-					callback: function(){
+				var out = [];
+				me.getStore().each(function(r){
+					var steps = [];
+					Ext.each(r.get('tc').steps, function(step){
+						steps.push({id: step.id, step_result_id: step.step_result_id, result: step.result==null?0:step.result, comment: step.comment});
+					});
+					out.push({id: r.get('id'), begin_at: r.get('begin_at'), end_at: r.get('end_at'), result: r.get('result'), cr:r.get('cr'), steps: steps});
+				});
+				Ext.Ajax.request({
+					url: API + '/result/updateall',
+					method: 'put',
+					jsonData: {results: out},
+					success: function(){
 						Ext.Msg.alert('Success', 'Saved successfully.')
 					}
-				})
+				});
 			}
 		},{
 			text: 'Submit',
 			glyph: 0xf093,
+			scope: this,
+			handler: function() {
+				me.job.set('status', 1);
+				me.job.save({
+					success: function(){
+						Ext.Msg.alert('Success', 'Submit successfully.')
+					}
+				});
+			}
+		},{
+			text: 'Export',
+			glyph: 0xf019,
 			scope: this,
 			handler: function() {
 			}

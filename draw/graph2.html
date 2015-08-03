@@ -176,7 +176,7 @@ label{
 		}
 		function show(id){
 			//tree.init("http://api.casco.me/dump?tag=" + id);
-			tree.init("http://192.168.44.129:8080/dump?tag=" + id);
+			tree.init("http://localhost:8080/dump?tag=" + id);
 			location.hash=id;
 		}
 		window.addEventListener("hashchange", function(){

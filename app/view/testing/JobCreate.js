@@ -1,11 +1,9 @@
 Ext.define('casco.view.testing.JobCreate', {
 	extend: 'Ext.window.Window',
 	xtype: 'testing.jobcreate',
-	requires: ['casco.view.testing.RsVersionGrid'],
 
 	modal: true,
 	title: 'Create Job',
-	width: 300,
 	controller: 'testing',
 	layout: {
 		type: 'border'
@@ -14,6 +12,7 @@ Ext.define('casco.view.testing.JobCreate', {
 	width: 1000,
 	initComponent: function() {
 		var me = this;
+		me.rs_versions = [];
 		var tcdocs = Ext.create('casco.store.Documents');
 		tcdocs.load({
 			params: {
@@ -59,6 +58,7 @@ Ext.define('casco.view.testing.JobCreate', {
 				editable: false,
 				fieldLabel: 'Tc Document',
 				displayField: 'name',
+				name: 'tc_id',
 				valueField: 'id',
 				store: tcdocs,
 				allowBlank: false,
@@ -71,6 +71,7 @@ Ext.define('casco.view.testing.JobCreate', {
 							}
 						});
 						var grid = Ext.getCmp('testing-job-rs');
+						me.job.rs_versions = grid.getStore();
 						grid.store.load({
 							params: {
 								document_id: r.get('id'),
@@ -93,9 +94,50 @@ Ext.define('casco.view.testing.JobCreate', {
 				valueField: 'id'
 			}]
 		}, {
-			xtype: 'testing.rsversiongrid',
+			xtype: 'grid',
 			id: 'testing-job-rs',
 			region: 'center',
+			store: Ext.create('casco.store.Documents'),
+			plugins: {
+		        ptype: 'cellediting',
+		        clicksToEdit: 1,
+		        listeners: {
+		            beforeedit: function(editor, e) {
+		            	var combo = e.grid.columns[e.colIdx].getEditor(e.record);
+		            	var st = Ext.create('casco.store.Versions', {data: e.record.get('versions')});
+		            	
+		            	combo.setStore(st);
+		            }
+		        }
+		    },
+		    columns: [{
+				text: 'Rs doc',
+				dataIndex: 'name',
+				flex: 1
+			}, {
+				text: 'Version',
+				dataIndex: 'version_id',
+				renderer: function(v, md, record){
+					var versions = record.get('versions');
+					if(versions.length == 0) return;
+					if(!v){
+						record.set('version_id', versions[0].id);
+						return versions[0].name;
+					}
+					for(var i in versions){
+						if(v == versions[i].id){
+							return versions[i].name;
+						}
+					}
+				},
+				editor: {
+			        xtype: 'combobox',
+			        queryMode: 'local',
+					displayField: 'name',
+					valueField: 'id',
+					editable: false
+			    }
+			}]
 		}];
 		me.dockedItems = [{
 			xtype: 'toolbar',

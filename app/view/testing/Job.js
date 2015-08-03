@@ -4,10 +4,15 @@ Ext.define('casco.view.testing.Job', {
 
     listeners: {
         itemdblclick: function(view, record, item, index, e, eOpts){
+        	Ext.getCmp('result-main').job = record;
         	Ext.getCmp('result-main').store.load({
         		params: {
         			job_id: record.get('id')
-        		}
+        		},
+//        		callback: function(){
+//        			var it = Ext.ComponentQuery.query(".testit");console.log(it)
+//        			it.setDisabled();
+//        		}
         	});
     	}
     },
@@ -26,7 +31,6 @@ Ext.define('casco.view.testing.Job', {
 		}, {
 			text : 'build',
 			dataIndex : 'build',
-			flex: 1,
 			renderer : function(v) {
 				return v.name;
 			}
@@ -42,7 +46,26 @@ Ext.define('casco.view.testing.Job', {
 			renderer : function(v) {
 				return v.name;
 			}
-		},{
+		}, {
+			text: 'rs:version',
+			dataIndex: 'rs_versions',
+			flex: 1,
+			renderer: function(v){
+				var arr = [];
+				for(var i in v){
+					var str = v[i].document.name + ":" + v[i].name;
+					arr.push(str);
+				}
+				return arr.join('; ');
+			}
+		}, {
+			text: 'status',
+			dataIndex: 'status',
+			renderer: function(v){
+				return v==0?'<span style="color:red">testing</span>':'<span style="color: green">submited</span>';
+			},
+			width: 200
+		}, {
 			text: 'created at',
 			dataIndex: 'created_at',
 			width: 200
@@ -52,9 +75,12 @@ Ext.define('casco.view.testing.Job', {
 			glyph: 0xf067,
 			scope: this,
 			handler: function() {
+				var job = Ext.create('casco.model.Testjob');
 				var win = Ext.create('widget.testing.jobcreate', {
 					project: me.project,
+					job: job
 				});
+				win.down('form').loadRecord(job);
 				win.show();
 			}
 		}];
