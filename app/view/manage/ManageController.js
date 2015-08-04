@@ -95,13 +95,23 @@ Ext.define('casco.view.manage.ManageController', {
 		});
 	},
 	createDocument:function(){
-
-
-	
-
-
-
-
+		
+	   	var view = this.getView();
+    	var self = this;
+    	var form = this.lookupReference('documentaddform');//获取对应的form表单
+    	var doc = view.doc?view.doc:Ext.create('casco.model.Document');
+    	doc.set(form.getValues());
+    	doc.save({
+    		callback: function(){
+    			Ext.Msg.alert('Message', 'Save Document Successfully.', function(){
+					form.up("window").destroy();
+					//重新刷新左边的树的结构
+                    var t = Ext.ComponentQuery.query("#mtree")[0];
+				    t.store.reload();
+    			 
+		    	});
+    		}
+    	});
 	},
 	seldoc: function(view, record, item, index, e, eOpts){//only leaf can  be listened
 		var json = record.data;

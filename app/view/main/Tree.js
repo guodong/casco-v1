@@ -29,7 +29,7 @@ Ext.define('casco.view.main.Tree', {
 
     	},//itemdbclick
 		itemcontextmenu:function(menutree,record,items,index,e){
-
+            var me=this;
 			e.preventDefault();
 			e.stopEvent();
 
@@ -80,8 +80,8 @@ Ext.define('casco.view.main.Tree', {
 					items:[{
 						text:'Add Document',
 						handler:function(){
-						  
-						  var win = Ext.create('casco.view.manage.Documentadd', {project_id: record.id});
+					 
+						  var win = Ext.create('casco.view.manage.Documentadd', {project:me.project,fid:record});
 				          win.show();
 						 
 						}
