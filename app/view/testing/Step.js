@@ -24,6 +24,7 @@ Ext.define('casco.view.testing.Step', {
     		bodyPadding: 10,
     		items: [{
     			xtype: 'textfield',
+    			id: 'testing-cr',
     			fieldLabel: 'CR',
     			name: 'cr',
     			width: '100%',

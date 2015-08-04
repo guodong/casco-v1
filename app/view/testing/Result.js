@@ -27,6 +27,41 @@ Ext.define('casco.view.testing.Result', {
 	                {label: 'failed',   value: 2},
             ]
         });
+    	me.store.setListeners({
+    		beforeload: function(){
+				var cs = me.getColumns();
+				var stepcs = Ext.getCmp('testing-step-panel').down('grid').getColumns();
+    			if(me.job.get('status') == 1){
+    				Ext.each(cs, function(c){
+    					if(c.getEditor()){
+    						c.getEditor().setDisabled(1);
+    					}
+    				});
+    				Ext.each(stepcs, function(c){
+    					if(c.getEditor()){
+    						c.getEditor().setDisabled(1);
+    					}
+    				});
+    				Ext.getCmp('testing-cr').setEditable(false);
+    				Ext.getCmp('testing-save-btn').hide();
+    				Ext.getCmp('testing-submit-btn').hide();
+    			}else{
+    				Ext.each(cs, function(c){
+    					if(c.getEditor()){
+    						c.getEditor().setDisabled(0);
+    					}
+    				});
+    				Ext.each(stepcs, function(c){
+    					if(c.getEditor()){
+    						c.getEditor().setDisabled(0);
+    					}
+    				});
+    				Ext.getCmp('testing-cr').setEditable(true);
+    				Ext.getCmp('testing-save-btn').show();
+    				Ext.getCmp('testing-submit-btn').show();
+    			}
+    		}
+    	});
 		me.columns = [{
 			text: 'tc',
 			dataIndex: 'tc',
@@ -73,15 +108,7 @@ Ext.define('casco.view.testing.Result', {
 				editable: false,
 				disabledCls: '',
 				xtype: 'datetimefield',
-				cls: 'testit',
-				format: 'Y-m-d H:i:s',
-				listeners: {
-//					focus: function(editor){console.log(1)
-//						if(me.job.get('status') == 1){
-//							editor.setDisabled(true);
-//						}
-//					}
-				}
+				format: 'Y-m-d H:i:s'
 			},
 			renderer: function(value, md, record){
 				if(typeof(value) == 'object'){
@@ -99,6 +126,7 @@ Ext.define('casco.view.testing.Result', {
 			width: 180,
 			editor: {
 				editable: false,
+				disabledCls: '',
 				xtype: 'datetimefield',
 				format: 'Y-m-d H:i:s'
 			},
@@ -122,6 +150,7 @@ Ext.define('casco.view.testing.Result', {
 		    text: 'Result',
 		    editor: {
 		        xtype: 'combobox',
+				disabledCls: '',
 		        queryMode: 'local',
 				displayField: 'label',
 				valueField: 'value',
@@ -140,6 +169,7 @@ Ext.define('casco.view.testing.Result', {
 		}];
 		me.tbar = [{
 			text: 'Save',
+			id: 'testing-save-btn',
 			glyph: 0xf0c7,
 			handler: function() {
 				var out = [];
@@ -161,6 +191,7 @@ Ext.define('casco.view.testing.Result', {
 			}
 		},{
 			text: 'Submit',
+			id: 'testing-submit-btn',
 			glyph: 0xf093,
 			scope: this,
 			handler: function() {
