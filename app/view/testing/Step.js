@@ -66,6 +66,7 @@ Ext.define('casco.view.testing.Step', {
         	    text: 'Result',
         	    editor: {
         	        xtype: 'combobox',
+    				disabledCls: '',
         	        queryMode: 'local',
         			displayField: 'label',
         			valueField: 'value',
@@ -77,6 +78,7 @@ Ext.define('casco.view.testing.Step', {
         		dataIndex: 'comment',
                 flex: true,
         		editor: {
+    				disabledCls: '',
         			xtype: 'textfield'
         		}
         	}]

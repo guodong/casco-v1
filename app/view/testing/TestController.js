@@ -26,6 +26,7 @@ Ext.define('casco.view.testing.TestController', {
 		job.save({
 			success: function(){
 				Ext.getCmp('joblist').store.insert(0, job);
+				Ext.getCmp('testing-job-rs').destroy();
 			}
 		});
 		
