@@ -8,7 +8,7 @@ Ext.define('casco.Application', {
 
 	name : 'casco',
 	
-	requires: ['casco.view.auth.SelectProject', 'casco.model.Project'],
+	requires: ['casco.view.auth.SelectProject','casco.model.Project'],
 
 	stores : [
 	// TODO: add global / shared stores here

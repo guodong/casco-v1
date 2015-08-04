@@ -2,7 +2,7 @@ Ext.define('casco.view.main.Tree', {
     extend: 'Ext.tree.Panel',
     alias: 'widget.tree',
 
-    requires: ['casco.view.tc.Tc'],
+    requires: ['casco.view.tc.Tc', 'casco.view.rs.Rs'],
     listeners: {
         itemdblclick: function(view, record, item, index, e, eOpts){
         	var me = this;
@@ -29,9 +29,10 @@ Ext.define('casco.view.main.Tree', {
 
     	},//itemdbclick
 		itemcontextmenu:function(menutree,record,items,index,e){
-
+            var me=this;
 			e.preventDefault();
 			e.stopEvent();
+
 			if(record.data.leaf==true){
 				var nodemenu=new Ext.menu.Menu({
 					floating:true,
@@ -51,11 +52,11 @@ Ext.define('casco.view.main.Tree', {
                          record.remove(items[index]);
 					     var model = new casco.model.Document({id:record.id});
 					     model.erase();
-
-    	 
+                         Ext.Msg.alert("delete successfully");
+    	                
     	                  }}, this);
-						//console.log(items,index,e,record);
-						 Ext.Msg.alert("delete successfully");
+						 
+						
 						}
 					}/*,{
 						text:'reselect',
@@ -72,12 +73,28 @@ Ext.define('casco.view.main.Tree', {
 				nodemenu.showAt(e.getXY());
 
  
+           }else{
+
+             var nodemenu=new Ext.menu.Menu({
+					floating:true,
+					items:[{
+						text:'Add Document',
+						handler:function(){
+					 
+						  var win = Ext.create('casco.view.manage.Documentadd', {project:me.project,fid:record});
+				          win.show();
+						 
+						}
+					}]
+			   
+			 });
+
+                nodemenu.showAt(e.getXY());
 
 
 
 
-
-            }//if
+			  }//root½Úµã--else
         }//itemmenu
     },//lsiteners
     displayField: 'name',

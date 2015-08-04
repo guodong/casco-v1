@@ -33,6 +33,25 @@ Ext.define('casco.view.manage.ManageController', {
     		}
     	});
     },
+	createFolder:function (){//build
+		var view = this.getView();
+    	var self = this;
+    	var form = this.lookupReference('build_create_form');//获取对应的form表单
+    	var build = view.build?view.build:Ext.create('casco.model.Build');
+    	build.set(form.getValues());
+    	build.save({
+    		callback: function(){
+    			Ext.Msg.alert('Message', 'Build manage successfully.', function(){
+    				var t = Ext.ComponentQuery.query("#build_list")[0];
+    				if(!view.user)t.store.add(build);
+    				form.up("window").destroy();
+		    	});
+    		}
+    	});
+
+
+
+	},
     createmethod: function () {
     	var view = this.getView();
     	var self = this;
@@ -75,11 +94,30 @@ Ext.define('casco.view.manage.ManageController', {
 			}
 		});
 	},
+	createDocument:function(){
+		
+	   	var view = this.getView();
+    	var self = this;
+    	var form = this.lookupReference('documentaddform');//获取对应的form表单
+    	var doc = view.doc?view.doc:Ext.create('casco.model.Document');
+    	doc.set(form.getValues());
+    	doc.save({
+    		callback: function(){
+    			Ext.Msg.alert('Message', 'Save Document Successfully.', function(){
+					form.up("window").destroy();
+					//重新刷新左边的树的结构
+                    var t = Ext.ComponentQuery.query("#mtree")[0];
+				    t.store.reload();
+    			 
+		    	});
+    		}
+    	});
+	},
 	seldoc: function(view, record, item, index, e, eOpts){//only leaf can  be listened
 		var json = record.data;
 		if(!record.data.leaf) return;
 		var tabs = this.lookupReference('main');
-	  
+	
 		var tab = tabs.child('#tab-' + json.id);
 		if(!tab){
 			tab = tabs.add({

@@ -1,15 +1,18 @@
 Ext.define('casco.view.testing.JobCreate', {
 	extend: 'Ext.window.Window',
-
 	xtype: 'testing.jobcreate',
 
 	modal: true,
 	title: 'Create Job',
-	width: 300,
 	controller: 'testing',
-
+	layout: {
+		type: 'border'
+	},
+	height: 300,
+	width: 1000,
 	initComponent: function() {
 		var me = this;
+		me.rs_versions = [];
 		var tcdocs = Ext.create('casco.store.Documents');
 		tcdocs.load({
 			params: {
@@ -26,13 +29,16 @@ Ext.define('casco.view.testing.JobCreate', {
 		});
 		me.items = [{
 			xtype: 'form',
+			region: 'west',
+			split: true,
 			reference: 'job_create_form',
 			bodyPadding: '10',
+			width: 300,
 			items: [{
 				xtype: 'hiddenfield',
 				name: 'project_id',
 				value: me.project.get('id')
-			},{
+			}, {
 				fieldLabel: 'Name',
 				msgTarget: 'under',
 				name: 'name',
@@ -52,33 +58,33 @@ Ext.define('casco.view.testing.JobCreate', {
 				editable: false,
 				fieldLabel: 'Tc Document',
 				displayField: 'name',
+				name: 'tc_id',
 				valueField: 'id',
 				store: tcdocs,
 				allowBlank: false,
 				queryMode: 'local',
 				listeners: {
 					select: function(f, r, i) {
-						var st = Ext.create('casco.store.Versions');
-						st.load({
+						Ext.getCmp('test-tc-version').store.load({
 							params: {
 								document_id: r.get('id')
-							},
-							callback: function() {
-								Ext.getCmp('test-tc-version').store = st;
 							}
 						});
-						Ext.getCmp('test-rs').store.load({
+						var grid = Ext.getCmp('testing-job-rs');
+						me.job.rs_versions = grid.getStore();
+						grid.store.load({
 							params: {
 								document_id: r.get('id'),
 								type: 'rs',
 								mode: 'related'
 							}
-						});
+						})
 					}
 				}
 			}, {
 				fieldLabel: 'Tc Version',
 				name: 'tc_version_id',
+				store: Ext.create('casco.store.Versions'),
 				id: 'test-tc-version',
 				xtype: 'combobox',
 				allowBlank: false,
@@ -86,40 +92,51 @@ Ext.define('casco.view.testing.JobCreate', {
 				queryMode: 'local',
 				displayField: 'name',
 				valueField: 'id'
+			}]
+		}, {
+			xtype: 'grid',
+			id: 'testing-job-rs',
+			region: 'center',
+			store: Ext.create('casco.store.Documents'),
+			plugins: {
+		        ptype: 'cellediting',
+		        clicksToEdit: 1,
+		        listeners: {
+		            beforeedit: function(editor, e) {
+		            	var combo = e.grid.columns[e.colIdx].getEditor(e.record);
+		            	var st = Ext.create('casco.store.Versions', {data: e.record.get('versions')});
+		            	
+		            	combo.setStore(st);
+		            }
+		        }
+		    },
+		    columns: [{
+				text: 'Rs doc',
+				dataIndex: 'name',
+				flex: 1
 			}, {
-				xtype: 'combobox',
-				id: 'test-rs',
-				editable: false,
-				fieldLabel: 'Rs Document',
-				displayField: 'name',
-				valueField: 'id',
-				store: rsdocs,
-				allowBlank: false,
-				queryMode: 'local',
-				listeners: {
-					select: function(f, r, i) {
-						var st = Ext.create('casco.store.Versions');
-						st.load({
-							params: {
-								document_id: r.get('id')
-							},
-							callback: function() {
-								Ext.getCmp('test-rs-version').store = st;
-							}
-						});
+				text: 'Version',
+				dataIndex: 'version_id',
+				renderer: function(v, md, record){
+					var versions = record.get('versions');
+					if(versions.length == 0) return;
+					if(!v){
+						record.set('version_id', versions[0].id);
+						return versions[0].name;
 					}
-				}
-			}, {
-				fieldLabel: 'Rs Version',
-				name: 'rs_version_id',
-				id: 'test-rs-version',
-				xtype: 'combobox',
-				allowBlank: false,
-				allowBlank: false,
-				editable: false,
-				queryMode: 'local',
-				displayField: 'name',
-				valueField: 'id'
+					for(var i in versions){
+						if(v == versions[i].id){
+							return versions[i].name;
+						}
+					}
+				},
+				editor: {
+			        xtype: 'combobox',
+			        queryMode: 'local',
+					displayField: 'name',
+					valueField: 'id',
+					editable: false
+			    }
 			}]
 		}];
 		me.dockedItems = [{
@@ -138,7 +155,10 @@ Ext.define('casco.view.testing.JobCreate', {
 				text: 'Cancel',
 				glyph: 0xf112,
 				scope: me,
-				handler: me.destroy
+				handler: function(){
+					Ext.getCmp('testing-job-rs').destroy();
+					me.destroy();
+				}
 			}]
 		}],
 

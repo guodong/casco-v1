@@ -56,6 +56,7 @@ Ext.define('casco.view.main.Main', {
             split: true,
             collapsible: true,
             editable: false,
+            bodyPadding: 0
         },{
             region: 'center',
             xtype: 'tabpanel',

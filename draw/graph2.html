@@ -151,11 +151,13 @@ label{
 	<script>
 		function getPar(par) {
 			var local_url = document.location.href;
+		 
 			var get = local_url.indexOf(par + "=");
 			if (get == -1) {
 				return false;
 			}
 			var get_par = local_url.slice(par.length + get + 1);
+		 
 			var nextPar = get_par.indexOf("&");
 			if (nextPar != -1) {
 				get_par = get_par.slice(0, nextPar);
@@ -166,6 +168,8 @@ label{
 			var tree = CollapsibleTree("#categoryHierarchy");
 			tree.init("http://api.casco.me/dump?id=" + getPar('id'));
 		}); */
+	 
+	 
 		var tree = CollapsibleTree("#categoryHierarchy");
 		function look(){
 			show($("#tag").val());
@@ -176,7 +180,7 @@ label{
 		}
 		function show(id){
 			//tree.init("http://api.casco.me/dump?tag=" + id);
-			tree.init("http://192.168.44.129:8080/dump?tag=" + id);
+			tree.init("http://localhost:8080/dump?tag=" + id);
 			location.hash=id;
 		}
 		window.addEventListener("hashchange", function(){

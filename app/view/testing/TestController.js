@@ -11,7 +11,18 @@ Ext.define('casco.view.testing.TestController', {
 
 	createJob: function() {
 		var form = this.lookupReference('job_create_form');
-		var job = Ext.create('casco.model.Testjob', form.getValues());
+		var meta = form.getValues();
+		rsvsd = Ext.getCmp('testing-job-rs').getStore();
+		var rsvss = [];
+		rsvsd.each(function(v){
+			var obj = {
+				rs_document_id: v.get('id'),
+				rs_version_id: v.get('version_id')
+			}
+			rsvss.push(obj);
+		});
+		meta.rs_versions = rsvss;
+		var job = Ext.create('casco.model.Testjob', meta);
 		job.save({
 			success: function(){
 				Ext.getCmp('joblist').store.insert(0, job);

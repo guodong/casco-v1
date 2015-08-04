@@ -1,6 +1,6 @@
 Ext.define('casco.view.rs.Rs', {
 	extend: 'Ext.grid.Panel',
-	xtype: 'widget.rs',
+	xtype: 'rs',
 	viewModel: 'main',
 	
 	requires: [
