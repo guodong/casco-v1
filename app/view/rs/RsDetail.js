@@ -11,6 +11,11 @@ Ext.define('casco.view.rs.RsDetail', {
     modal: true,
     title: 'Rs Detail',
     width: 600,
+    height:600,
+    
+    layout:{
+    	type:'border'
+    },
     
     initComponent: function(){
     	var me = this;
@@ -19,8 +24,11 @@ Ext.define('casco.view.rs.RsDetail', {
 			me.vat.setData(me.rs.get('vat'));
 		}
 		me.vatstrstore = Ext.create('casco.store.Vatstrs');
+//		me.vatstrstore = new casco.store.Vatstrs();
 		me.vatstrstore.load({
-    		params: {project_id: localStorage.project_id}
+    		params: {
+    			project_id: me.project.get('id')
+    			}
     	});
     	Ext.apply(me, {
     		dockedItems: [{
@@ -53,7 +61,6 @@ Ext.define('casco.view.rs.RsDetail', {
                   		      	t.store.reload();
                     		}
                     	});
-
                     	this.destroy();
                     }
                 }
