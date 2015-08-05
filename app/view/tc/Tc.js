@@ -108,9 +108,11 @@ Ext.define('casco.view.tc.Tc', {
 				},this);
 				 
                 
-			    num=parseInt(tag.substring(tag.lastIndexOf('-')+1,tag.length-1))+1;
-				 
-			    tag='[TSP-SyRTC-'+num+']';
+               
+				var suffix=tag.toString().match(/[^\d]+/g);
+			    num=parseInt(tag.toString().match(/\d+/g))+1;
+			//	console.log(suffix);
+			    tag=suffix[0]+num+suffix[1];
 		/*		 
 				 for (var i=0;i<record.length;i++)
 				 {
