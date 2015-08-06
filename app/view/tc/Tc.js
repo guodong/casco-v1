@@ -79,7 +79,7 @@ Ext.define('casco.view.tc.Tc', {
             text: 'Export Doc',
             glyph: 0xf019,
             handler : function() {
-            	window.open(API+'tc/export?document_id='+me.document_id);
+            	window.open(API+'tc/export?version_id='+me.down('combobox').getValue());
             	return;
             	Ext.Ajax.request({
         			url : API + 'tc/export',
