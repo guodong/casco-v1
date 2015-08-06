@@ -71,7 +71,23 @@ Ext.define('casco.view.testing.Step', {
         			displayField: 'label',
         			valueField: 'value',
         			editable: false,
-        	        store: resultStore
+        	        store: resultStore,
+
+    		        listeners: {
+    		        	select: function(combo, r){
+    		        		me.down('grid').getSelectionModel().getSelection()[0].set('result', r.get('value')); //必须先手动把值付给store，因为ext先触发select事件后付给store的
+    		        		var result = 1;
+    		        		me.down('grid').getStore().each(function(step){
+    		        			if(step.get('result') == 2){
+    		        				result = 2;
+    		        				return false;
+    		        			}else if(step.get('result') == 0){
+    		        				result = 0;
+    		        			}
+    		        		});console.log(result)
+    		        		me.down('form').getRecord().set('result', result);
+    		        	}
+    		        }
         	    }
         	},{
         		text: 'comment',
