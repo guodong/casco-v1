@@ -32,19 +32,19 @@ Ext.define('casco.view.testing.Job', {
 			text : 'build',
 			dataIndex : 'build',
 			renderer : function(v) {
-				return v.name;
+				return v?v.name:'';
 			}
 		}, {
 			text : 'tc',
 			dataIndex : 'tc_version',
 			renderer : function(v) {
-				return v.document.name;
+				return v?v.document.name:'';
 			}
 		}, {
 			text : 'tc version',
 			dataIndex : 'tc_version',
 			renderer : function(v) {
-				return v.name;
+				return v?v.name:'';
 			}
 		}, {
 			text: 'rs:version',

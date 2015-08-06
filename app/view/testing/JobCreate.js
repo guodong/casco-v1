@@ -4,12 +4,13 @@ Ext.define('casco.view.testing.JobCreate', {
 
 	modal: true,
 	title: 'Create Job',
+	id: 'testing-job-create-window',
 	controller: 'testing',
 	layout: {
 		type: 'border'
 	},
-	height: 300,
-	width: 1000,
+	height: 700,
+	width: 700,
 	initComponent: function() {
 		var me = this;
 		me.rs_versions = [];
@@ -78,7 +79,7 @@ Ext.define('casco.view.testing.JobCreate', {
 								type: 'rs',
 								mode: 'related'
 							}
-						})
+						});
 					}
 				}
 			}, {
@@ -91,7 +92,16 @@ Ext.define('casco.view.testing.JobCreate', {
 				editable: false,
 				queryMode: 'local',
 				displayField: 'name',
-				valueField: 'id'
+				valueField: 'id',
+				listeners: {
+					select: function(f, r, i){
+						Ext.getCmp('testing-job-tc-grid').getStore().load({
+							params: {
+								version_id: r.get('id')
+							}
+						});
+					}
+				}
 			}]
 		}, {
 			xtype: 'grid',
@@ -137,6 +147,27 @@ Ext.define('casco.view.testing.JobCreate', {
 					valueField: 'id',
 					editable: false
 			    }
+			}]
+		},{
+			xtype: 'grid',
+			id: 'testing-job-tc-grid',
+			region: 'south',
+			height: 400,
+			store: Ext.create('casco.store.Tcs'),
+			selModel: {
+				selType: 'checkboxmodel',
+				checkOnly: true
+			},
+			columns: [{
+				text: 'tag',
+				dataIndex: 'tag'
+			},{
+				text: 'description',
+				dataIndex: 'descripiton',
+				flex: 1
+			},{
+				text: 'test method',
+				dataIndex: 'test_method'
 			}]
 		}];
 		me.dockedItems = [{
