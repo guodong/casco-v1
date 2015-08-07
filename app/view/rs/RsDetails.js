@@ -6,7 +6,7 @@ Ext.define('casco.view.rs.RsDetails', {
           // 'casco.view.document.DocumentController',
            'casco.store.Vatstrs',
            'casco.store.Vat',
-           'casco.view.main.ItemTree'
+           'casco.view.rs.vat.VatTree'
     ],
     
     width:900,
@@ -57,7 +57,7 @@ Ext.define('casco.view.rs.RsDetails', {
 				type:'border'
 			},
 			items: [{
-				xtype: 'itemtree',
+				xtype: 'vattree',
 				region: 'west',
 				width: 200,
 		        split: true,
@@ -65,27 +65,27 @@ Ext.define('casco.view.rs.RsDetails', {
 				autoScroll: true,
 				document_id: me.document_id,
 				project: me.project,
+//				console.log(me.rs.get('tag')),
+//				itag: me.rs.get('tag'),
+//				proxy: {
+//	    			extraParams: {
+//	    				itag: me.rs.get('tag')
+//	    			}
+//	    		}
 				listeners: {
 					itemdblclick: function(view, record, item, index, e, eOpts){
 						me.addVat(record);
+//						var me = this;
+//			        	if(!record.get('leaf')) return;
+			        	
 					}
 				}
 			},{
-				xtype:'toolbar',
-				region:'south',
-				split:true,
-				items: ['->',{
-	                text: 'Submit',
-	                glyph: 0xf093,
-	                scope: me,
-//	                handler : this.destroy
-	            }]
-			},{
 				xtype: 'grid',
 				region: 'center',
-				itemId: 'Vat',
+				itemId: 'vat',
 			    columns: [
-			        { text: 'Vat',  dataIndex: 'tag', flex: 1}
+			        { text: 'Tag',  dataIndex: 'tag', flex: 1}
 			    ],
 			    store: me.vat,
 			    listeners : {
@@ -199,6 +199,34 @@ Ext.define('casco.view.rs.RsDetails', {
 			    store: me.vat
 			}]
 		}]
+		
+//	    listeners: {
+//	        itemdblclick: function(view, record, item, index, e, eOpts){
+//	        	var me = this;
+//	        	if(!record.get('leaf')) return;
+//	    		var tabs = Ext.getCmp('workpanel');
+//	    		var tab = tabs.child('#tab-' + record.get('id'));
+//	    		if(tab){
+//	    			tabs.remove(tab);
+//	    		}
+//	    		var document = casco.model.Document;
+//	    		casco.model.Document.load(record.get('id'), {
+//	    			success: function(record){
+//	    				tab = tabs.add({
+//	    					id: 'tab-'+record.get('id'),
+//	    					xtype: record.get('type'),
+//	    					title: record.get('name'),
+//	    					document: record,
+//	    					closable: true,
+//	    					project: me.project
+//	    				});
+//	    				tabs.setActiveTab(tab);
+//	    			}
+//	    		});
+//
+//	    	}//itemdbclick
+//	    }
+//		
 		me.callParent();
 	}
 });

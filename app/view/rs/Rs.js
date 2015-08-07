@@ -7,7 +7,7 @@ Ext.define('casco.view.rs.Rs', {
 	           'casco.store.Versions',
 	           'casco.store.Rss',
 	           'casco.view.rs.RsImport',
-	           'casco.view.rs.RsDetail',
+	           'casco.view.rs.RsDetails',
 	           'casco.ux.StatusBar'
 	           ],
 	           

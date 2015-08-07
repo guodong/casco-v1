@@ -7,11 +7,14 @@ Ext.define('casco.view.tc.TcAdd', {
 			 'casco.view.tc.TcController',
 			 'casco.view.tc.source.Add','casco.store.TcSteps','casco.store.Sources'],
 	controller: 'tc',
+	
 	modal: true,
 	title: 'Tc Item',
 	width: 800,
 	maxHeight: 600,
 	autoScroll: true,
+//	maximizable: true,
+//    resizable: true,
 
 	initComponent: function() {
 		var me = this;
