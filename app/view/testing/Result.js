@@ -158,11 +158,14 @@ Ext.define('casco.view.testing.Result', {
 		        store: resultStore,
 		        listeners: {
 		        	select: function(combo, r){
+	        			var rd = me.getSelectionModel().getSelection()[0];
 		        		if(r.get('value') != 0){
-		        			var rd = me.getSelectionModel().getSelection()[0];
 		        			rd.set('exec_at', Ext.Date.format(new Date(), 'Y-m-d H:i:s'));
-		        			return;
 		        		}
+	        			Ext.each(rd.get('tc').steps, function(step){
+	        				step.result = r.get('value');
+	        			});
+	        			Ext.getCmp('testing-step-panel').down('grid').reconfigure();
 		        	}
 		        }
 		    }
@@ -207,6 +210,8 @@ Ext.define('casco.view.testing.Result', {
 			glyph: 0xf019,
 			scope: this,
 			handler: function() {
+				window.open(API+'testjob/export?job_id='+me.job.get('id'));
+            	return;
 			}
 		}];
     	this.callParent();

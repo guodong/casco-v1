@@ -79,7 +79,7 @@ Ext.define('casco.view.tc.Tc', {
             text: 'Export Doc',
             glyph: 0xf019,
             handler : function() {
-            	window.open(API+'tc/export?document_id='+me.document_id);
+            	window.open(API+'tc/export?version_id='+me.down('combobox').getValue());
             	return;
             	Ext.Ajax.request({
         			url : API + 'tc/export',
@@ -108,9 +108,11 @@ Ext.define('casco.view.tc.Tc', {
 				},this);
 				 
                 
-			    num=parseInt(tag.substring(tag.lastIndexOf('-')+1,tag.length-1))+1;
-				 
-			    tag='[TSP-SyRTC-'+num+']';
+               
+				var suffix=tag.toString().match(/[^\d]+/g);
+			    num=parseInt(tag.toString().match(/\d+/g))+1;
+			//	console.log(suffix);
+			    tag=suffix[0]+num+suffix[1];
 		/*		 
 				 for (var i=0;i<record.length;i++)
 				 {
