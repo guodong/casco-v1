@@ -22,11 +22,17 @@ Ext.define('casco.view.testing.TestController', {
 			rsvss.push(obj);
 		});
 		meta.rs_versions = rsvss;
+		var tcs = [];
+		var sels = Ext.getCmp('testing-job-tc-grid').getSelection();
+		for(var i in sels){
+			tcs.push(sels[i].get('id'));
+		}
+		meta.tcs = tcs;
 		var job = Ext.create('casco.model.Testjob', meta);
 		job.save({
 			success: function(){
 				Ext.getCmp('joblist').store.insert(0, job);
-				Ext.getCmp('testing-job-rs').destroy();
+				Ext.getCmp('testing-job-create-window').destroy();
 			}
 		});
 		

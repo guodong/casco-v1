@@ -210,6 +210,8 @@ Ext.define('casco.view.testing.Result', {
 			glyph: 0xf019,
 			scope: this,
 			handler: function() {
+				window.open(API+'testjob/export?job_id='+me.job.get('id'));
+            	return;
 			}
 		}];
     	this.callParent();

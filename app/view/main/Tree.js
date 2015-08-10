@@ -3,6 +3,7 @@ Ext.define('casco.view.main.Tree', {
     alias: 'widget.tree',
 
     requires: ['casco.view.tc.Tc', 'casco.view.rs.Rs'],
+    
     listeners: {
         itemdblclick: function(view, record, item, index, e, eOpts){
         	var me = this;
@@ -98,7 +99,7 @@ Ext.define('casco.view.main.Tree', {
 
 
 
-			  }//root½Úµã--else
+			  }//rootï¿½Úµï¿½--else
         }//itemmenu
     },//lsiteners
     displayField: 'name',

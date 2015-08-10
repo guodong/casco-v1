@@ -34,7 +34,6 @@ Ext.define('casco.view.main.MainController', {
 				project: this.getView().project
 			});
 		}
-
 		tabs.setActiveTab(tab);
 	}
 
