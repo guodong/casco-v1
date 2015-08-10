@@ -51,20 +51,22 @@ Ext.define('casco.view.main.Tree', {
 					    Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
 							  //刷新右边的图存在难点和bug
                         
-					     var tabs=Ext.getCmp('workingpanel');
-						 //愚蠢的做法
-						 frames['draw'].src=frames['draw'].src;
+					   
+						// frames['draw'].src=frames['draw'].src+'&t='+new Date().getTime();
 						// console.log(tabs.items.items[0].getHtml());
 						 
 					     record.remove(items[index]);
 					     var model = new casco.model.Document({id:record.id});
 					     model.erase();
                          Ext.Msg.alert("delete successfully");
+						 Ext.fly('draw').dom.contentWindow.location.reload();
     	                 
     	                  }}, this);
 						
 
-				 
+				          var tabs=Ext.getCmp('workingpanel');
+						  
+						 
 						 
 						
 						}//handler
