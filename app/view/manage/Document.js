@@ -37,6 +37,7 @@ Ext.define('casco.view.manage.Document', {
 	    },{
 	        region: 'center',
 	        xtype: 'tabpanel',
+			id:'workingpanel',
 	        reference: 'main',
 	        items:[{
 	            title: 'Main',

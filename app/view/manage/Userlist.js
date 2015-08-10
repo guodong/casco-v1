@@ -28,8 +28,6 @@ Ext.define('casco.view.manage.Userlist', {
                 var selection =view.getSelectionModel().getSelection()[0];
 	            if (selection) {
 				selection.erase();
-			    //var user = view.user?view.user:Ext.create('casco.model.User');
-				//Ext.Msg.alert(selection.account);
 	            me.store.remove(selection);
 
 	            me.getView().refresh();

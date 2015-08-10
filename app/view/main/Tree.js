@@ -8,6 +8,7 @@ Ext.define('casco.view.main.Tree', {
         	var me = this;
         	if(!record.get('leaf')) return;
     		var tabs = Ext.getCmp('workpanel');
+			 
     		var tab = tabs.child('#tab-' + record.get('id'));
     		if(tab){
     			tabs.remove(tab);
@@ -48,25 +49,26 @@ Ext.define('casco.view.main.Tree', {
 						text:'delete',
 						handler:function(){
 					    Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
-							
-                         record.remove(items[index]);
+							  //刷新右边的图存在难点和bug
+                        
+					     var tabs=Ext.getCmp('workingpanel');
+						 //愚蠢的做法
+						 frames['draw'].src=frames['draw'].src;
+						// console.log(tabs.items.items[0].getHtml());
+						 
+					     record.remove(items[index]);
 					     var model = new casco.model.Document({id:record.id});
 					     model.erase();
                          Ext.Msg.alert("delete successfully");
-    	                
+    	                 
     	                  }}, this);
+						
+
+				 
 						 
 						
-						}
-					}/*,{
-						text:'reselect',
-						handler:function(){
-							for (var i=0;i<record.data.children;i++ )
-							{record.childNodes[i].set('checked',false);
-							}
-                        }//handler
-
-					}*/]
+						}//handler
+					}]//items
 
 				});//nodemenu
 
