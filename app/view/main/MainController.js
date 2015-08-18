@@ -14,7 +14,48 @@ Ext.define('casco.view.main.MainController', {
 		this.redirectTo('project/' + record.get('id'), true);
 		location.reload();
 	},
-
+    editUser:function(combo,record){
+      
+	
+	 if(record.get('name')=='1'){
+	 var  model= Ext.create('casco.model.User');
+     model.set(JSON.parse(localStorage.user));
+	 model.load();
+	  var win = Ext.create('casco.view.manage.Useradd', {user:model});
+	  win.down('form').loadRecord(model);
+	  win.show();}
+	  else if(record.get('name')=='2'){
+        
+	   Ext.Msg.confirm('Confirm', 'Are you sure to logout?', function(choice){if(choice == 'yes'){
+        var me = this;
+    	var view = this.getView();
+    	Ext.Ajax.request({
+			url: API + 'logout',
+			withCredentials: true,
+			success: function(response){
+				var d = Ext.decode(response.responseText);
+			 
+				if(d.code != 0){
+					Ext.Msg.alert('Error', 'Logout failure.');
+				}else{
+					 //首先清空localsotrage
+	                localStorage.clear();
+					var main=location.hash;
+                    console.log(main);
+					loc=main.match(/^\#([a-z]*).*?$/);//蛋疼，表示project窗口不能销毁
+					console.log(loc[1]);
+                    var parent=(loc[1]=="project")?"app-main":loc[1];
+                    me.getView().up(parent).destroy();
+				    me.redirectTo('selectProject', true);
+					
+    	            location.reload();
+			 
+				}
+            }//success
+       });//request
+	   }}, this);//confirm
+	  }//else
+	},
 	manage : function() {
 		this.redirectTo('manage', true);
 		location.reload();
