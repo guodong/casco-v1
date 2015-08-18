@@ -13,7 +13,8 @@ Ext.define('casco.view.rs.vat.VatTree', {
     		proxy: {
     			extraParams: {
     				project_id: me.project.get('id'),
-    				document_id: me.document_id //用于过滤与之相关的文档
+    				document_id: me.document_id, //用于过滤与之相关的文档
+    				tag: localStorage.tag
     			}
     		}
     	});

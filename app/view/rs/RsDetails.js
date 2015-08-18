@@ -116,12 +116,12 @@ Ext.define('casco.view.rs.RsDetails', {
             			vat.push(s.getData());
             		});
                 	rs.set('vat', vat);
-                	if(me.down("#vatstr_id").getValue().length == 36)
-                		rs.set('vatstr_id', me.down("#vatstr_id").getValue());
+//                	if(me.down("#vatstr_id").getValue().length == 36)
+//                		rs.set('vatstr_id', me.down("#vatstr_id").getValue());
                 	rs.save({
                 		callback: function(){
-                        	var t = Ext.ComponentQuery.query("#tab-"+me.document_id)[0];
-              		      	t.store.reload();
+                        	//var t = Ext.ComponentQuery.query("#tab-"+me.document_id)[0];
+              		      	//Ext.getCmp().getStore.reload();
                 		}
                 	});
                 	this.destroy();

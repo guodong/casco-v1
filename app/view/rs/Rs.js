@@ -209,17 +209,11 @@ Ext.define('casco.view.rs.Rs', {
 			    });
 				return arr.join(', ');
 			}
-		}, {
-			text: "vat string",
-			dataIndex: "vatstr",
-			width: 100,
-			renderer: function(value) {
-				return value?value.name:'';
-			}
 		}];
 		
 		me.listeners = {
 			celldblclick: function(a,b,c,record){
+				localStorage.tag = record.get('tag');
 				if(c==0){
 					window.open('/draw/graph2.html#'+record.get('tag'));
 					return;
