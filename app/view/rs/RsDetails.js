@@ -65,6 +65,7 @@ Ext.define('casco.view.rs.RsDetails', {
 				autoScroll: true,
 				document_id: me.document_id,
 				project: me.project,
+				rs: me.rs,
 //				console.log(me.rs.get('tag')),
 //				itag: me.rs.get('tag'),
 //				proxy: {
