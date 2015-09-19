@@ -61,19 +61,44 @@ Ext.define('casco.view.manage.Userlist', {
 		text: "jobnumber",
 		dataIndex: "jobnumber",
 		width: 130
-	},/* {
+	}, {
 		text: "role",
-		dataIndex: "role",
-		width: 180
-	}, */{
+		dataIndex: "role_id",
+	    width: 180,
+		renderer: function(value) {
+            return Ext.String.format('{1}', value, value=='0'?'Staff':'Manager');
+        }
+	   
+	}, {
 		text: "created time",
 		dataIndex: "created_at",
 		width: 180
-	}	],
+	},{
+		text:"projects",
+		hidden: localStorage.role == 'staff' ? true: false,  //用户权限
+		width: 150,
+        renderer: function(val,meta,rec) {
+            var id = Ext.id();
+            Ext.defer(function() {
+               Ext.widget('button', {
+                  renderTo: id,
+                  text: 'Edit Projects',
+                  glyph: 0xf040,
+                  scale: 'small',
+                  handler: function() {
+					  var win = Ext.create('casco.view.manage.userprojects', {user:rec});
+                      win.show();
+                  }
+               });
+            }, 50);
+            return Ext.String.format('<div id="{0}"></div>', id);
+         }
+
+	}, ],
     listeners : {
         itemdblclick: function(dv, record, item, index, e) {
         	if(localStorage.role == 'staff') return;  //用户权限
-			var win = Ext.create('casco.view.manage.Useradd', {user: record});//这里初始化的什么玩意
+			var win = Ext.create('casco.view.manage.Useredit', {user: record});//这里初始化的什么玩意
             win.down('form').loadRecord(record);
             win.show();
         }

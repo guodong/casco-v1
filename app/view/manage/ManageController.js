@@ -72,7 +72,7 @@ Ext.define('casco.view.manage.ManageController', {
 		var view = this.getView();
 		var project = view.project?view.project:Ext.create('casco.model.Project');
 		var form = view.down('form');
-		var data = form.getValues(); //提交的数据
+		var data = form.getValues(); //提交的数据,没有name的需要手动添加进入表单么？
 		data.document_id = view.document_id;
 		data.vatstrs = [];
 		view.vatstrs.each(function(s){
