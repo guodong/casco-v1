@@ -112,9 +112,7 @@ Ext.define('casco.view.manage.Useredit', {
     	    	            glyph: 0xf067,
     	    	            text: 'Edit UserDocuments',
     	    	            handler: function(){
-    	    					var wd = Ext.create("casco.view.manage.UserDocuments", {
-    	    						participants: this.participants
-    	    					});
+    	    					var wd = Ext.create("casco.view.manage.UserDocuments",{user:me.user});
     	    					wd.show();
     	    				}
     	    	        }]
@@ -126,13 +124,12 @@ Ext.define('casco.view.manage.Useredit', {
 					
 					
     			},{
-
-				   xtype:'checkboxfield',//类型
-                 
+				   xtype:'checkboxfield',//
 				   fieldLabel:'Lock',
-				   checked:true,
+				   checked:me.user.get('islock')=='0'?false:true,
 				   name:'islock',
                    inputValue:'1',
+				   uncheckedValue:'0',
 				}],
 				buttons: ['->', {
 					text: 'Save',

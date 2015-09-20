@@ -16,7 +16,16 @@ Ext.define('casco.view.auth.LoginController', {
 				}else{
 					localStorage.setItem("user", JSON.stringify(d.data));
 					me.getView().destroy();
-					Ext.widget('selectProject');
+					if(JSON.parse(localStorage.user).role_id=='1'){
+					Ext.widget('selectProject');//管理员的界面
+					}else{//普通用户的视图
+
+                    //普通用户直接进入project视图如何
+                    Ext.widget('commonView');
+
+
+
+					}
 				}
 			}
 		});

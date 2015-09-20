@@ -11,10 +11,13 @@ Ext.define('casco.view.tc.TcAdd', {
 	modal: true,
 	title: 'Tc Item',
 	width: 800,
-	maxHeight: 600,
-	autoScroll: true,
-//	maximizable: true,
-//    resizable: true,
+	height: 600,
+//	autoScroll: true,
+	maximizable: true,
+    resizable: true,
+    layout: {
+		type: 'fit'
+	},
 
 	initComponent: function() {
 		var me = this;

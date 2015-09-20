@@ -38,10 +38,10 @@ Ext.define('casco.view.rs.RsDetails', {
     	});
 		
 		me.addVat = function(record){
-			if(record.data.type != 'item'){
+			if(record.data.type == 'folder'){
 				return;
 			}
-			me.vat.loadData([{tag: record.data.name,id: record.data.item_id}], true);
+			me.vat.loadData([{tag: record.get('name'),id: record.get('id'), type: record.get('type')}], true);
 		};
 		
 		me.items = [{
@@ -65,6 +65,7 @@ Ext.define('casco.view.rs.RsDetails', {
 				autoScroll: true,
 				document_id: me.document_id,
 				project: me.project,
+				rs: me.rs,
 //				console.log(me.rs.get('tag')),
 //				itag: me.rs.get('tag'),
 //				proxy: {

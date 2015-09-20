@@ -10,9 +10,6 @@ Ext.define('casco.store.TreeItems', {
         },
         writer: {
             type: 'json'
-        },
-        extraParams: {
-			project_id: localStorage.project_id
-		}
+        }
     }
 });

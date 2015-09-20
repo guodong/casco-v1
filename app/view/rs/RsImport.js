@@ -25,8 +25,12 @@ Ext.define('casco.view.rs.RsImport', {
 				//version_id在这里啊
 				xtype : 'combobox',
 				fieldLabel : 'Version',
+<<<<<<< HEAD
 				name:'version_id',
 				labelWidth : 50,
+=======
+				labelWidth : 60,
+>>>>>>> 4acd4f81c28268d9018ff95cf28d41eb6012cef5
 				store : me.vstore,
 				displayField : 'name',
 				valueField : 'id',
@@ -57,10 +61,29 @@ Ext.define('casco.view.rs.RsImport', {
 			 * 'hiddenfield', value: me.version_id },
 			 */
 			{
+				xtype:'textfield',
+				fieldLabel:'Columns',
+				name:'columns',
+				labelWidth:60,
+//				allowBlank:false,
+				width:'100%',
+				editable:'true',
+//				value:'请用逗号分割不同属性'
+				listeners:{
+					render:function(field,p){
+						Ext.QuickTips.init();
+						Ext.QuickTips.register({
+							target:field.el,
+							text:'请用逗号分割不同属性'
+						})
+					}
+				}
+				
+			},{
 				xtype : 'filefield',
 				name : 'file',
 				fieldLabel : 'File',
-				labelWidth : 50,
+				labelWidth : 60,
 				msgTarget : 'side',
 				allowBlank : false,
 				anchor : 0,
@@ -80,7 +103,7 @@ Ext.define('casco.view.rs.RsImport', {
 				name: 'document_id',
 				value: me.document_id
 			}],
-
+		
 			buttons : [ {
 				text : 'Import',
 				handler : function() {
@@ -107,6 +130,7 @@ Ext.define('casco.view.rs.RsImport', {
 				}
 			} ],
 		} ];
+
 		me.callParent(arguments);
 	},
 
