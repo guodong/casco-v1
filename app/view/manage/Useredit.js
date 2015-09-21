@@ -13,13 +13,13 @@ Ext.define('casco.view.manage.Useredit', {
 		var me = this;
 	 	
 		me.projects = Ext.create('casco.store.Projects');  //作用？？？？？
-		if(me.user!=null){
+		if(me.user!=null){//自身默认的方法啦
 			me.projects.setData(me.user.get('projects'));
 		}
 		console.log(me.user.get('role_id'));
 		var pros_store=Ext.create('casco.store.Projects');
 		pros_store.load();
-        me.pros_store=pros_store;
+      
 		var store = Ext.create('Ext.data.Store', {
          fields: ['name', 'value'],
          data : [
@@ -83,6 +83,7 @@ Ext.define('casco.view.manage.Useredit', {
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'combobox',
+				
                     editable: false,
                     displayField: 'name',
                     valueField: 'value',
@@ -102,27 +103,43 @@ Ext.define('casco.view.manage.Useredit', {
 					allowBlank: false,
                    
 				},*/{
-    				xtype: 'grid',
-    				region: 'center',
-    				fieldLabel: 'Projects',
-   				    dockedItems: [{
-    	    	        xtype: 'toolbar', 
-    	    	        dock: 'bottom',
-    	    	        items: [{
-    	    	            glyph: 0xf067,
-    	    	            text: 'Edit UserDocuments',
-    	    	            handler: function(){
-    	    					var wd = Ext.create("casco.view.manage.UserDocuments",{user:me.user});
-    	    					wd.show();
-    	    				}
-    	    	        }]
-    	    	    }],
-    			    columns: [
-    			        { text: 'Projects',  dataIndex: 'name', flex: 1}
-    			    ],
-    			    store: me.projects,//分两种情况吧,add和edit
-					
-					
+    				anchor: '100%',
+					fieldLabel: 'Project',
+					name: 'project',
+					labelAlign: 'top',
+					msgTarget: 'under',
+					xtype: 'combobox',
+                    editable: false,
+					multiSelect:true,
+                    displayField: 'name',
+                    valueField: 'id',
+                    store: pros_store,
+                    queryMode: 'local',
+                    emptyText: 'Select the Projects',
+					listeners : {
+
+						  afterRender : function(combo) {
+						 
+						  me.projects.each(function(record){
+						  combo.addValue(record.data.id);//同时下拉框会将与name为firstValue值对应的 text显示
+						 
+						  });
+						  } , //还要重写select方法
+						 
+						  select : function(combo, record) {
+                           //难道是程序自动加载的id
+						   console.log('all '+combo.getValue());
+						
+						   console.log(combo.getSelection().data);
+						   //遍历来判断是否有值
+						   var flag=Ext.Array.contains(combo.getValue(),combo.getSelection().data.id);
+                           if(!flag){
+                            combo.addValue(combo.getSelection().data.id);
+						   }
+					       }//select
+                    
+
+					}//listeners
     			},{
 				   xtype:'checkboxfield',//
 				   fieldLabel:'Lock',

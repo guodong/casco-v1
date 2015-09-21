@@ -25,12 +25,11 @@ Ext.define('casco.view.manage.Userlist', {
 			handler: function() {
 				Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
 		 
-	            var view=me.getView();
+	            var view=me.getView();//为什么不能连续删除啊?
                 var selection =view.getSelectionModel().getSelection()[0];
 	            if (selection) {
 				selection.erase();
 	            me.store.remove(selection);
-
 	            me.getView().refresh();
 	            }
 		       
@@ -74,7 +73,7 @@ Ext.define('casco.view.manage.Userlist', {
 		dataIndex: "created_at",
 		width: 180
 	},{
-		text:"Privileges",
+	   text:"Privileges",
 		hidden: localStorage.role == 'staff' ? true: false,  //用户权限
 		width: 220,
         renderer: function(val,meta,rec) {

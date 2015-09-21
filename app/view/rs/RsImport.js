@@ -25,12 +25,11 @@ Ext.define('casco.view.rs.RsImport', {
 				//version_id在这里啊
 				xtype : 'combobox',
 				fieldLabel : 'Version',
-<<<<<<< HEAD
+
 				name:'version_id',
-				labelWidth : 50,
-=======
+
 				labelWidth : 60,
->>>>>>> 4acd4f81c28268d9018ff95cf28d41eb6012cef5
+
 				store : me.vstore,
 				displayField : 'name',
 				valueField : 'id',
