@@ -29,8 +29,10 @@ Ext.define('casco.view.manage.ManageController', {
 
     			Ext.Msg.alert('Message', 'User manage successfully.', function(){
     				var t = Ext.ComponentQuery.query("#tab-userlist")[0];
-    				if(!view.user)t.store.add(user);
-    				form.up("window").destroy();
+    				//if(!view.user)t.store.add(user);//edit 就不对了的
+    				t.store.reload();
+					form.up("window").destroy();
+					
 		    	});
     		}
     	});
