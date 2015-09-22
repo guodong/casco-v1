@@ -1,7 +1,7 @@
-Ext.define('casco.view.manage.Useradd', {
+Ext.define('casco.view.manage.Useredit', {
 	extend: 'Ext.window.Window',
 
-	xtype: 'widget.useradd',
+	xtype: 'widget.useredit',
 	requires: [],
 	controller: 'manage',
 	resizable: true,
@@ -13,13 +13,13 @@ Ext.define('casco.view.manage.Useradd', {
 		var me = this;
 	 	
 		me.projects = Ext.create('casco.store.Projects');  //作用？？？？？
-		if(me.user!=null){
+		if(me.user!=null){//自身默认的方法啦
 			me.projects.setData(me.user.get('projects'));
 		}
-		 
+		console.log(me.user.get('role_id'));
 		var pros_store=Ext.create('casco.store.Projects');
 		pros_store.load();
-
+      
 		var store = Ext.create('Ext.data.Store', {
          fields: ['name', 'value'],
          data : [
@@ -68,55 +68,42 @@ Ext.define('casco.view.manage.Useradd', {
 					xtype: 'textfield'
 				}, */ {
 					anchor: '100%',
-					fieldLabel: 'Password(默认为:casco123)',
+					fieldLabel: 'Password',
 					name: 'password',
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'textfield',
 					inputType: 'password',
-					value:'casco123',
 					allowBlank: false,
 					//hidden: me.user?true:false
-				}, {
+				},{
 					anchor: '100%',
 					fieldLabel: 'Role',
-					name: 'Role',
+					name: 'role_id',
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'combobox',
+				
                     editable: false,
                     displayField: 'name',
                     valueField: 'value',
                     store: store,
                     queryMode: 'local',
-                    emptyText: 'Please select role',
+                    emptyText: me.user.get('role_id')=='0'?'Staff':'Manager',
                    
 				},/*{
-    				xtype: 'grid',
-    				region: 'center',
-    				fieldLabel: 'Select Projects',
-   				    dockedItems: [{
-    	    	        xtype: 'toolbar', 
-    	    	        dock: 'bottom',
-    	    	        items: [{
-    	    	            glyph: 0xf067,
-    	    	            text: 'Select Projects',
-    	    	            handler: function(){
-    	    					var wd = Ext.create("casco.view.manage.userprojects", {
-    	    						participants: this.participants
-    	    					});
-    	    					wd.show();
-    	    				}
-    	    	        }]
-    	    	    }],
-    			    columns: [
-    			        { text: 'Projects',  dataIndex: 'name', flex: 1}
-    			    ],
-    			    store: me.projects,
-				
-					
-    			},*/{
 					anchor: '100%',
+					fieldLabel: 'Role',
+					anchor: '100%',
+					fieldLabel: 'role_id',
+					name: 'role_id',
+					labelAlign: 'top',
+					msgTarget: 'under',
+					xtype: 'textfield',
+					allowBlank: false,
+                   
+				},*/{
+    				anchor: '100%',
 					fieldLabel: 'Project',
 					name: 'project',
 					labelAlign: 'top',
@@ -129,15 +116,37 @@ Ext.define('casco.view.manage.Useradd', {
                     store: pros_store,
                     queryMode: 'local',
                     emptyText: 'Select the Projects',
-                   
-				},{
-				   xtype:'checkboxfield',
+					listeners : {
+
+						  afterRender : function(combo) {
+						 
+						  me.projects.each(function(record){
+						  combo.addValue(record.data.id);//同时下拉框会将与name为firstValue值对应的 text显示
+						 
+						  });
+						  } , //还要重写select方法
+						 
+						  select : function(combo, record) {
+                           //难道是程序自动加载的id
+						   console.log('all '+combo.getValue());
+						
+						   console.log(combo.getSelection().data);
+						   //遍历来判断是否有值
+						   var flag=Ext.Array.contains(combo.getValue(),combo.getSelection().data.id);
+                           if(!flag){
+                            combo.addValue(combo.getSelection().data.id);
+						   }
+					       }//select
+                    
+
+					}//listeners
+    			},{
+				   xtype:'checkboxfield',//
 				   fieldLabel:'Lock',
-				   checked:false,
+				   checked:me.user.get('islock')=='0'?false:true,
 				   name:'islock',
                    inputValue:'1',
 				   uncheckedValue:'0',
-				   boxLabel:'选中时锁住'
 				}],
 				buttons: ['->', {
 					text: 'Save',

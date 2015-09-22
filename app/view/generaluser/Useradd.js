@@ -19,7 +19,7 @@ Ext.define('casco.view.manage.Useradd', {
 		 
 		var pros_store=Ext.create('casco.store.Projects');
 		pros_store.load();
-
+        me.pros_store=pros_store;
 		var store = Ext.create('Ext.data.Store', {
          fields: ['name', 'value'],
          data : [
@@ -68,7 +68,7 @@ Ext.define('casco.view.manage.Useradd', {
 					xtype: 'textfield'
 				}, */ {
 					anchor: '100%',
-					fieldLabel: 'Password(默认为:casco123)',
+					fieldLabel: 'Password',
 					name: 'password',
 					labelAlign: 'top',
 					msgTarget: 'under',
@@ -83,6 +83,8 @@ Ext.define('casco.view.manage.Useradd', {
 					name: 'Role',
 					labelAlign: 'top',
 					msgTarget: 'under',
+					
+					
 					xtype: 'combobox',
                     editable: false,
                     displayField: 'name',
@@ -91,18 +93,18 @@ Ext.define('casco.view.manage.Useradd', {
                     queryMode: 'local',
                     emptyText: 'Please select role',
                    
-				},/*{
+				},{
     				xtype: 'grid',
     				region: 'center',
-    				fieldLabel: 'Select Projects',
+    				fieldLabel: 'Select Documents',
    				    dockedItems: [{
     	    	        xtype: 'toolbar', 
     	    	        dock: 'bottom',
     	    	        items: [{
     	    	            glyph: 0xf067,
-    	    	            text: 'Select Projects',
+    	    	            text: 'Select project-documents',
     	    	            handler: function(){
-    	    					var wd = Ext.create("casco.view.manage.userprojects", {
+    	    					var wd = Ext.create("casco.view.manage.UserDocuments", {
     	    						participants: this.participants
     	    					});
     	    					wd.show();
@@ -115,7 +117,7 @@ Ext.define('casco.view.manage.Useradd', {
     			    store: me.projects,
 				
 					
-    			},*/{
+    			}/*,{
 					anchor: '100%',
 					fieldLabel: 'Project',
 					name: 'project',
@@ -123,22 +125,13 @@ Ext.define('casco.view.manage.Useradd', {
 					msgTarget: 'under',
 					xtype: 'combobox',
                     editable: false,
-					multiSelect:true,
                     displayField: 'name',
-                    valueField: 'id',
-                    store: pros_store,
+                    valueField: 'value',
+                    store: me.pros_store,
                     queryMode: 'local',
-                    emptyText: 'Select the Projects',
+                    emptyText: 'Please select thedocument',
                    
-				},{
-				   xtype:'checkboxfield',
-				   fieldLabel:'Lock',
-				   checked:false,
-				   name:'islock',
-                   inputValue:'1',
-				   uncheckedValue:'0',
-				   boxLabel:'选中时锁住'
-				}],
+				}*/],
 				buttons: ['->', {
 					text: 'Save',
 					formBind: true,

@@ -12,11 +12,20 @@ Ext.define('casco.view.auth.LoginController', {
 			success: function(response){
 				var d = Ext.decode(response.responseText);
 				if(d.code != 0){
-					Ext.Msg.alert('Error', 'Authentication failure.');
+					Ext.Msg.alert('Error', d.data);
 				}else{
 					localStorage.setItem("user", JSON.stringify(d.data));
 					me.getView().destroy();
-					Ext.widget('selectProject');
+					if(JSON.parse(localStorage.user).role_id=='1'){
+					Ext.widget('selectProject');//管理员的界面
+					}else{//普通用户的视图
+
+                    //普通用户直接进入project视图如何
+                    Ext.widget('commonView');
+
+
+
+					}
 				}
 			}
 		});

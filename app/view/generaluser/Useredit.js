@@ -1,7 +1,7 @@
-Ext.define('casco.view.manage.Useradd', {
+Ext.define('casco.view.manage.Useredit', {
 	extend: 'Ext.window.Window',
 
-	xtype: 'widget.useradd',
+	xtype: 'widget.useredit',
 	requires: [],
 	controller: 'manage',
 	resizable: true,
@@ -16,10 +16,10 @@ Ext.define('casco.view.manage.Useradd', {
 		if(me.user!=null){
 			me.projects.setData(me.user.get('projects'));
 		}
-		 
+		console.log(me.user.get('role_id'));
 		var pros_store=Ext.create('casco.store.Projects');
 		pros_store.load();
-
+        me.pros_store=pros_store;
 		var store = Ext.create('Ext.data.Store', {
          fields: ['name', 'value'],
          data : [
@@ -68,19 +68,18 @@ Ext.define('casco.view.manage.Useradd', {
 					xtype: 'textfield'
 				}, */ {
 					anchor: '100%',
-					fieldLabel: 'Password(默认为:casco123)',
+					fieldLabel: 'Password',
 					name: 'password',
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'textfield',
 					inputType: 'password',
-					value:'casco123',
 					allowBlank: false,
 					//hidden: me.user?true:false
-				}, {
+				},{
 					anchor: '100%',
 					fieldLabel: 'Role',
-					name: 'Role',
+					name: 'role_id',
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'combobox',
@@ -89,20 +88,31 @@ Ext.define('casco.view.manage.Useradd', {
                     valueField: 'value',
                     store: store,
                     queryMode: 'local',
-                    emptyText: 'Please select role',
+                    emptyText: me.user.get('role_id')=='0'?'Staff':'Manager',
                    
 				},/*{
+					anchor: '100%',
+					fieldLabel: 'Role',
+					anchor: '100%',
+					fieldLabel: 'role_id',
+					name: 'role_id',
+					labelAlign: 'top',
+					msgTarget: 'under',
+					xtype: 'textfield',
+					allowBlank: false,
+                   
+				},*/{
     				xtype: 'grid',
     				region: 'center',
-    				fieldLabel: 'Select Projects',
+    				fieldLabel: 'Projects',
    				    dockedItems: [{
     	    	        xtype: 'toolbar', 
     	    	        dock: 'bottom',
     	    	        items: [{
     	    	            glyph: 0xf067,
-    	    	            text: 'Select Projects',
+    	    	            text: 'Edit UserDocuments',
     	    	            handler: function(){
-    	    					var wd = Ext.create("casco.view.manage.userprojects", {
+    	    					var wd = Ext.create("casco.view.manage.UserDocuments", {
     	    						participants: this.participants
     	    					});
     	    					wd.show();
@@ -112,32 +122,17 @@ Ext.define('casco.view.manage.Useradd', {
     			    columns: [
     			        { text: 'Projects',  dataIndex: 'name', flex: 1}
     			    ],
-    			    store: me.projects,
-				
+    			    store: me.projects,//分两种情况吧,add和edit
 					
-    			},*/{
-					anchor: '100%',
-					fieldLabel: 'Project',
-					name: 'project',
-					labelAlign: 'top',
-					msgTarget: 'under',
-					xtype: 'combobox',
-                    editable: false,
-					multiSelect:true,
-                    displayField: 'name',
-                    valueField: 'id',
-                    store: pros_store,
-                    queryMode: 'local',
-                    emptyText: 'Select the Projects',
-                   
-				},{
-				   xtype:'checkboxfield',
+					
+    			},{
+
+				   xtype:'checkboxfield',//类型
+                 
 				   fieldLabel:'Lock',
-				   checked:false,
+				   checked:true,
 				   name:'islock',
                    inputValue:'1',
-				   uncheckedValue:'0',
-				   boxLabel:'选中时锁住'
 				}],
 				buttons: ['->', {
 					text: 'Save',

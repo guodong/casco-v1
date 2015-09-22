@@ -22,9 +22,14 @@ Ext.define('casco.view.rs.RsImport', {
 			xtype : 'form',
 			bodyPadding : 10,
 			items : [ {
+				//version_id在这里啊
 				xtype : 'combobox',
 				fieldLabel : 'Version',
+
+				name:'version_id',
+
 				labelWidth : 60,
+
 				store : me.vstore,
 				displayField : 'name',
 				valueField : 'id',
@@ -111,8 +116,12 @@ Ext.define('casco.view.rs.RsImport', {
 							waitMsg : 'Uploading file...',
 							success : function(fp, o) {
 								self.up('window').doHide();
+								//此时弹窗显示一下数据
+
+								Ext.Msg.alert(o.result.msg);
 								var t = Ext.ComponentQuery.query("#tab-"
 										+ me.document_id)[0];
+							
 								t.store.reload();
 							}
 						});

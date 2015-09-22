@@ -25,11 +25,12 @@ Ext.define('casco.view.manage.Userlist', {
 			handler: function() {
 				Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
 		 
-	            var view=me.getView();//为什么不能连续删除啊?
+	            var view=me.getView();
                 var selection =view.getSelectionModel().getSelection()[0];
 	            if (selection) {
 				selection.erase();
 	            me.store.remove(selection);
+
 	            me.getView().refresh();
 	            }
 		       
@@ -73,19 +74,19 @@ Ext.define('casco.view.manage.Userlist', {
 		dataIndex: "created_at",
 		width: 180
 	},{
-	   text:"Privileges",
+		text:"projects",
 		hidden: localStorage.role == 'staff' ? true: false,  //用户权限
-		width: 220,
+		width: 150,
         renderer: function(val,meta,rec) {
             var id = Ext.id();
             Ext.defer(function() {
                Ext.widget('button', {
                   renderTo: id,
-                  text: 'Edit Documents Privileges',
+                  text: 'Edit Projects',
                   glyph: 0xf040,
                   scale: 'small',
                   handler: function() {
-					  var win = Ext.create('casco.view.manage.UserDocuments', {user:rec});
+					  var win = Ext.create('casco.view.manage.userprojects', {user:rec});
                       win.show();
                   }
                });
@@ -93,14 +94,7 @@ Ext.define('casco.view.manage.Userlist', {
             return Ext.String.format('<div id="{0}"></div>', id);
          }
 
-	},{
-		text: "islock",
-		dataIndex: "islock",
-		width: 130,
-		renderer: function(value) {
-            return Ext.String.format('{1}', value, value=='0'?'No':'Yes');
-        }
-	}],
+	}, ],
     listeners : {
         itemdblclick: function(dv, record, item, index, e) {
         	if(localStorage.role == 'staff') return;  //用户权限

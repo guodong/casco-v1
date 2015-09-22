@@ -91,7 +91,7 @@ line {
 		$(function() {
 			var data;
 			$.ajax({
-				url: 'http://192.128.44.129:8080/dump?tag=' + location.hash.substr(1),
+				url: 'http://localhost:8080/dump?tag=' + location.hash.substr(1),
 				async: false,
 				dataType: 'json',
 				success: function(d) {

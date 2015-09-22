@@ -18,15 +18,13 @@ Ext.define('casco.view.manage.ManageController', {
         }, this);
     },
     createuser: function () {
-    	var view = this.getView();//此时要更行两张表
+    	var view = this.getView();
     	var self = this;
     	var form = this.lookupReference('useraddform');//获取对应的form表单
-        
-		var user = view.user?view.user:Ext.create('casco.model.User');
+    	var user = view.user?view.user:Ext.create('casco.model.User');
     	user.set(form.getValues());
     	user.save({
     		callback: function(){
-
     			Ext.Msg.alert('Message', 'User manage successfully.', function(){
     				var t = Ext.ComponentQuery.query("#tab-userlist")[0];
     				if(!view.user)t.store.add(user);
@@ -75,8 +73,6 @@ Ext.define('casco.view.manage.ManageController', {
 		var project = view.project?view.project:Ext.create('casco.model.Project');
 		var form = view.down('form');
 		var data = form.getValues(); //提交的数据,没有name的需要手动添加进入表单么？
-		console.log(view);
-		
 		data.document_id = view.document_id;
 		data.vatstrs = [];
 		view.vatstrs.each(function(s){

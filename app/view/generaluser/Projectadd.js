@@ -42,7 +42,7 @@ Ext.define('casco.view.manage.Projectadd', {
     	            msgTarget: 'under',
     	            xtype: 'textarea'
     	        }, {
-    				xtype: 'grid',//貌似后台发送数据是通过store的名字来命名的哦
+    				xtype: 'grid',
     				region: 'center',
     				fieldLabel: 'Participants',
     				dockedItems: [{

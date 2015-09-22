@@ -109,7 +109,7 @@ Ext.define('casco.view.main.Tree', {
 	    this.store = Ext.create('casco.store.TreeDocuments', {
     		proxy: {
     			extraParams: {
-    				project_id: me.project.get('id')
+    				project_id: me.project?me.project.get('id'):''
     			}
     		}
     	});
