@@ -62,7 +62,7 @@ Ext.define('casco.view.rs.RsImport', {
 //				allowBlank:false,
 				width:'100%',
 				editable:'true',
-//				value:'请用逗号分割不同属性'
+				store : me.vstore,
 				listeners:{
 					render:function(field,p){
 						Ext.QuickTips.init();

@@ -36,7 +36,7 @@
 			console.log(location.hash.substr(1)+'<br/>'+location.href);
 			//var API = 'http://api.casco.me/';
 			//var API = 'http://192.100.212.31:8080/';
-			var API='http://192.168.44.129:8080/';
+			var API='http://localhost:8080/';
 			//图标属性-柱状图
 			var makeChart = function(data) {
 				var chart1 = new Highcharts.Chart(
@@ -257,7 +257,7 @@
 
 			$.ajax({
 				type: 'get',
-				url: API + 'rs?document_id=' + location.hash.substr(1),
+				url: API + 'rs?version_id=' + location.hash.substr(1),
 				dataType: "json",
 				async: false,
 				success: function(d) {

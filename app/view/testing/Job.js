@@ -1,6 +1,8 @@
 Ext.define('casco.view.testing.Job', {
     extend: 'Ext.grid.Panel',
     xtype: 'testing.job',
+    
+    requires:['casco.store.Testjobs'],
 
     listeners: {
         itemdblclick: function(view, record, item, index, e, eOpts){
