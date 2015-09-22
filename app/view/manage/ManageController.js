@@ -31,6 +31,9 @@ Ext.define('casco.view.manage.ManageController', {
     				var t = Ext.ComponentQuery.query("#tab-userlist")[0];
     				//if(!view.user)t.store.add(user);//edit 就不对了的
     				t.store.reload();
+					//swtich处也要更新
+					Ext.getCmp('switch').store.reload();
+
 					form.up("window").destroy();
 					
 		    	});

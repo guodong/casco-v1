@@ -145,6 +145,7 @@ Ext.define('casco.view.manage.Useredit', {
 				   checked:me.user.get('islock')=='0'?false:true,
 				   name:'islock',
                    inputValue:'1',
+				   boxLabel:'选中时锁住',
 				   uncheckedValue:'0',
 				}],
 				buttons: ['->', {
