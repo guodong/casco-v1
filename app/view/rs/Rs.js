@@ -120,7 +120,7 @@ Ext.define('casco.view.rs.Rs', {
 			glyph: 0xf080,
 			scope: this,
 			handler: function() {
-				window.open('/stat/cover.htm#'+me.document_id);
+				window.open('/stat/cover.htm#'+me.curr_version.get('id'));
 			}
 		},'->',{
             xtype: 'textfield',

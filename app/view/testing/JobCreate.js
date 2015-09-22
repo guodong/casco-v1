@@ -115,7 +115,6 @@ Ext.define('casco.view.testing.JobCreate', {
 		            beforeedit: function(editor, e) {
 		            	var combo = e.grid.columns[e.colIdx].getEditor(e.record);
 		            	var st = Ext.create('casco.store.Versions', {data: e.record.get('versions')});
-		            	
 		            	combo.setStore(st);
 		            }
 		        }
