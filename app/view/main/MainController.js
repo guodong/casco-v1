@@ -18,13 +18,25 @@ Ext.define('casco.view.main.MainController', {
       
 	
 	 if(record.get('name')=='1'){
-	 var  model= Ext.create('casco.model.User');
-     model.set(JSON.parse(localStorage.user));
-	 model.load();
-	  var win = Ext.create('casco.view.manage.Useradd', {user:model});
-	  win.down('form').loadRecord(model);
-	  win.show();}
-	  else if(record.get('name')=='2'){
+	   combo.setValue(combo.emptyText);
+	  var  model= Ext.create('casco.model.User');
+	   model.setId(JSON.parse(localStorage.user).id);
+	 
+	  casco.model.User.load(JSON.parse(localStorage.user).id,{
+
+		callback:function(record, operation,ops){
+
+		var win = Ext.create('casco.view.manage.Useredit', {user:record}); 
+		win.down('form').loadRecord(record);//动态填充表单 
+		win.show();
+
+
+
+	  }
+  
+	  });
+	  
+	 }else if(record.get('name')=='2'){
         
 	   Ext.Msg.confirm('Confirm', 'Are you sure to logout?', function(choice){if(choice == 'yes'){
         var me = this;
@@ -41,13 +53,12 @@ Ext.define('casco.view.main.MainController', {
 					 //首先清空localsotrage
 	                localStorage.clear();
 					var main=location.hash;
-                    console.log(main);
+                   // console.log(main);
 					loc=main.match(/^\#([a-z]*).*?$/);//蛋疼，表示project窗口不能销毁
 				//	console.log(loc[1]);
                     var parent=(loc[1]=="project")?"app-main":loc[1];
                     me.getView().up(parent).destroy();
 				    me.redirectTo('selectProject', true);
-					
     	            location.reload();
 			 
 				}

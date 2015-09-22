@@ -95,6 +95,13 @@ Ext.define('casco.view.manage.ManageController', {
 				form.up("window").destroy();
 				var t = Ext.ComponentQuery.query("#tab-projectlist")[0];
 				t.store.reload();
+			   //最好再刷新一下user,不然userlist那边store仍然没改变
+			    var u=Ext.ComponentQuery.query("#tab-userlist")[0];
+				if(u){u.store.reload();}
+
+
+
+
 			}
 		});
 	},
@@ -134,5 +141,17 @@ Ext.define('casco.view.manage.ManageController', {
 		}
         
 		tabs.setActiveTab(tab);
+	},
+	save_userdocs:function(){
+
+     var form=this.lookupReference('prosuserform');
+	 console.log(form.getValues());
+	
+	 console.log(Ext.ComponentQuery.query("#doc_tree")[0].getSelectionModel());
+     console.log(Ext.getCmp('doc_tree'));
+
+
+
 	}
+
 });

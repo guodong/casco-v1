@@ -16,7 +16,6 @@ Ext.define('casco.view.manage.Useredit', {
 		if(me.user!=null){//自身默认的方法啦
 			me.projects.setData(me.user.get('projects'));
 		}
-		console.log(me.user.get('role_id'));
 		var pros_store=Ext.create('casco.store.Projects');
 		pros_store.load();
       
