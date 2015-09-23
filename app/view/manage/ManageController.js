@@ -32,7 +32,7 @@ Ext.define('casco.view.manage.ManageController', {
     				//if(!view.user)t.store.add(user);//edit 就不对了的
     				t.store.reload();
 					//swtich处也要更新
-					Ext.getCmp('switch').store.reload();
+					Ext.getCmp('switcher')[0].store.reload();
 
 					form.up("window").destroy();
 					
@@ -148,15 +148,84 @@ Ext.define('casco.view.manage.ManageController', {
 		tabs.setActiveTab(tab);
 	},
 	save_userdocs:function(){
+ 
+
+   function child_checked(node){//判断是否有选中的子节点
+   
+    var flag=false;
+    node.eachChild(function(rec){
+    if(rec.checked=='checked'){
+      flag=true;}
+       rec.eachChild(function(last){
+		  if(last.checked=='checked'){
+		  flag=true;}
+		  
+	   });
+	
+   });
+  // console.log(node.data.text+':'+flag);
+   return flag; 
+   };
+     
 
      var form=this.lookupReference('prosuserform');
-	 console.log(form.getValues());
 	
-	 console.log(Ext.ComponentQuery.query("#doc_tree")[0].getSelectionModel());
-     console.log(Ext.getCmp('doc_tree'));
+	 var json={};
+     var a = Ext.getCmp('doc_tree').getRootNode();
+     var all_check=Ext.getCmp('doc_tree').getChecked();
+//	 console.log(all_check);
+
+	   //先进行无值的project处理
+	  for(var i=0;i<a.childNodes.length;i++){//第一层必定是工程节点,顶多三层
+       
+           if(!child_checked(a.childNodes[i])){
+               
+            json[a.childNodes[i].data.id]=null;
+             
+           }
+		   continue;
+	  }
+	 //有值的project处理
+	 all_check.forEach(function(node){
+      if((node.data.type=='folder'||node.data.type=='doc')&&node.parentNode.data.type=='project'){
+          json[node.parentNode.data.id]=json[node.parentNode.data.id]?json[node.parentNode.data.id]+=(','+node.data.doc_id):node.data.doc_id;
+		 // console.log(json[node.parentNode.data.id]);
+	  }else if(node.data.type=='doc'&&node.parentNode.data.type=='folder'){
+          json[node.parentNode.parentNode.data.id]=json[node.parentNode.parentNode.data.id]?json[node.parentNode.parentNode.data.id]+=(','+node.data.doc_id):node.data.doc_id;
+		 // console.log(json[node.parentNode.parentNode.data.id]);
+
+	  }
+
+	 });
+	  
+     
+
+           
+	//	 console.log(json);
+    
+		 Ext.Ajax.request({
+					url: API + 'tree/poweredit',
+					method: 'post',
+					jsonData: {data:json,
+					user_id:Ext.getCmp('userdocs').user.get('id')
+					},
+					success: function(){
+						Ext.Msg.alert('Success', 'Saved successfully.');
+                       
+						 form.up("window").destroy();
+
+		            }
+		 });
+
+		
+    
+	
+	  
 
 
+        
+	 
 
-	}
+	}//save
 
 });

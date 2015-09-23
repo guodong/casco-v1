@@ -8,7 +8,8 @@ Ext.define('casco.view.manage.UserDocuments', {
 	modal: true,
 	title: 'Select  Documents',
 	width: 400,
-	height: 500,
+	height:500,
+	id:'userdocs',
 	autoScroll: true,
 	layout: {
 		type: 'border'
@@ -112,7 +113,7 @@ Ext.define('casco.view.manage.UserDocuments', {
 			root:{text:'Projects-Documents',draggable:false,id:'root'},
 			listeners : {
 		       checkchange: function(node,checked){
-				  
+		
 			
 		    if (node.hasChildNodes()) {
 				for (var j = 0; j < node.childNodes.length; j++) {
@@ -120,6 +121,9 @@ Ext.define('casco.view.manage.UserDocuments', {
 					node.childNodes[j].set('checked', checked);
 				}
 				 }
+		     
+              
+			 
 			   }//checkchange
 		                 }//listener
 			
