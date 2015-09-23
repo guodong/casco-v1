@@ -6,13 +6,12 @@ Ext.define('casco.view.manage.UserDocuments', {
 	resizable: true,
 	maximizable: true,
 	modal: true,
-	title: 'Select  Documents',
+	autoScroll:true,
+	title: 'Documents Privileges',
 	width: 400,
-	height:500,
-	id:'userdocs',
-	autoScroll: true,
+    minHeight:400,
 	layout: {
-		type: 'border'
+		type: 'fit'
 	},
 	initComponent: function() {
 		var me = this;
@@ -94,7 +93,10 @@ Ext.define('casco.view.manage.UserDocuments', {
 		    }
 		},*/
 		    xtype: 'form',
-		    region: 'center',
+		 //   region: 'center',
+			layout:"fit",
+			scrollable:true,
+		    autoScroll:true,
 		    reference: 'prosuserform',
 		    bodyPadding: '0',
 			items: [{
@@ -102,8 +104,8 @@ Ext.define('casco.view.manage.UserDocuments', {
 			xtype: 'treepanel',
             id: 'doc_tree',
             store: store,
-           
-          
+			layout:"fit", 
+            containerScroll: true, 
             editable: false,
 		    animate:false,
             bodyPadding: 0,
