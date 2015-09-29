@@ -26,6 +26,10 @@ Ext.define('casco.view.manage.Testmethod', {
 		text: "created time",
 		dataIndex: "created_at",
 		width: 180
+	}, {
+		text: "updated time",
+		dataIndex: "updated_at",
+		width: 180
 	}],
     listeners : {
         itemdblclick: function(dv, record, item, index, e) {

@@ -28,7 +28,8 @@ Ext.define('casco.view.main.Top', {
         },'->',{
             text: 'Manage',
             xtype: 'button',
-            handler: 'manage'
+            handler: 'manage',
+            hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false
         }
         ,{
             text: 'Testing',

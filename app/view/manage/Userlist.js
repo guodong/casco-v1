@@ -10,7 +10,7 @@ Ext.define('casco.view.manage.Userlist', {
 		store.load();
 		me.store = store;
 		me.tbar = [{
-			hidden: localStorage.role == 'staff' ? true: false,  //用户权限
+			hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false,  //用户权限
 			text: 'Add User',
 			glyph: 0xf067,
 			handler: function() {
@@ -19,7 +19,7 @@ Ext.define('casco.view.manage.Userlist', {
 				win.show();
 			}
 		}, {
-			hidden: localStorage.role == 'staff' ? true: false,  //用户权限
+			hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false,  //用户权限
 			text: 'Delete User',
 			glyph: 0xf068,
 			handler: function() {
@@ -69,10 +69,6 @@ Ext.define('casco.view.manage.Userlist', {
         }
 	   
 	}, {
-		text: "created time",
-		dataIndex: "created_at",
-		width: 180
-	},{
 	   text:"Privileges",
 		hidden: localStorage.role == 'staff' ? true: false,  //用户权限
 		width: 220,
@@ -100,6 +96,14 @@ Ext.define('casco.view.manage.Userlist', {
 		renderer: function(value) {
             return Ext.String.format('{1}', value, value=='0'?'No':'Yes');
         }
+	},{
+		text: "created time",
+		dataIndex: "created_at",
+		width: 180
+	},{
+		text: "updated time",
+		dataIndex: "updated_at",
+		width: 180
 	}],
     listeners : {
         itemdblclick: function(dv, record, item, index, e) {

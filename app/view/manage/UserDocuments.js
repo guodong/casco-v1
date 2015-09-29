@@ -9,7 +9,7 @@ Ext.define('casco.view.manage.UserDocuments', {
 	title: 'Select  Documents',
 	width: 400,
 	height: 500,
-	autoScroll: true,
+	scrollable:true,
 	layout: {
 		type: 'border'
 	},

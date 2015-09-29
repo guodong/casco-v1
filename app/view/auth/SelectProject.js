@@ -33,6 +33,7 @@ Ext.define("casco.view.auth.SelectProject",{
 	        }],
 	        buttons: [ {
 	            text: 'Manage',
+	            hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false,
 	            listeners: {
 	                click: 'onManage'
 	            }

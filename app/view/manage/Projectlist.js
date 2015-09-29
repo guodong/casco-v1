@@ -38,10 +38,7 @@ Ext.define('casco.view.manage.Projectlist', {
 			return users.join(',');
 		}
 	}, {
-		text: "created time",
-		dataIndex: "created_at",
-		width: 180
-	},{
+		text:"Documents",
 		hidden: localStorage.role == 'staff' ? true: false,  //用户权限
 		width: 150,
         renderer: function(val,meta,rec) {
@@ -62,6 +59,7 @@ Ext.define('casco.view.manage.Projectlist', {
             return Ext.String.format('<div id="{0}"></div>', id);
          }
       },{
+    	  text:"Build",
 		  width:130,
 		  
           renderer:function(val,meta,rec){
@@ -94,6 +92,7 @@ Ext.define('casco.view.manage.Projectlist', {
 		  
 		  
 	  },{
+		text:"statistics",
 		width: 110,
         renderer: function(val,meta,rec) {
             var id = Ext.id();
@@ -113,7 +112,15 @@ Ext.define('casco.view.manage.Projectlist', {
             }, 50);
             return Ext.String.format('<div id="{0}"></div>', id);
          }
-      }],
+      },{
+		text: "created time",
+		dataIndex: "created_at",
+		width: 180
+	},{
+		text: "updated time",
+		dataIndex: "updated_at",
+		width: 180
+	}],
     listeners : {
         itemdblclick: function(dv, record, item, index, e) {
         	if(localStorage.role == 'staff') return;  //用户权限

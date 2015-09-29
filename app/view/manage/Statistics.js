@@ -36,8 +36,8 @@ Ext.define('casco.view.manage.Statistics', {
 				text: 'Num failed',
 				dataIndex: 'num_failed'
 			}, {
-				text: 'Num untested',
-				dataIndex: 'num_untested'
+				text: 'Num norun',
+				dataIndex: 'num_norun'
 			}],
 			listeners: {
 				celldblclick: function(a, b, c, record) {
