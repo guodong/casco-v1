@@ -3,5 +3,9 @@ Ext.define('casco.model.User', {
     proxy: {
         type: 'rest',
         url: API+'user'
-    }
+    },
+	fields: [
+        {name: 'id', type: 'string'}
+       
+    ]
 });

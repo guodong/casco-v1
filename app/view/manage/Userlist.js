@@ -25,12 +25,12 @@ Ext.define('casco.view.manage.Userlist', {
 			handler: function() {
 				Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
 		 
-	            var view=me.getView();//为什么不能连续删除啊?
+	            var view=me.getView();
                 var selection =view.getSelectionModel().getSelection()[0];
 	            if (selection) {
-				selection.erase();
 	            me.store.remove(selection);
-	            me.getView().refresh();
+				selection.erase();
+	     
 	            }
 		       
     	}}, this);

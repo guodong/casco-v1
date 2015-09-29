@@ -17,7 +17,7 @@ Ext.define('casco.view.manage.Projectadd', {
     	var me = this;
     	me.participants = Ext.create('casco.store.Users');
     	me.vatstrs = Ext.create('casco.store.Vatstrs');
-    	if(me.project){console.log(me.project.get('participants'))
+    	if(me.project){console.log(me.project.get('participants'));
     		me.participants.setData(me.project.get('participants'));
     		me.vatstrs.setData(me.project.get('vatstrs'));
     	}

@@ -1,17 +1,19 @@
 Ext.define('casco.view.manage.UserDocuments', {
 	extend: 'Ext.window.Window',
-
+    controller: 'manage',
 	alias: 'widget.UserDocuments',
 	requires: ['Ext.grid.plugin.CellEditing'],
 	resizable: true,
 	maximizable: true,
 	modal: true,
-	title: 'Select  Documents',
+	autoScroll:true,
+	title: 'Documents Privileges',
 	width: 400,
 	height: 500,
 	scrollable:true,
+    minHeight:400,
 	layout: {
-		type: 'border'
+		type: 'fit'
 	},
 	initComponent: function() {
 		var me = this;
@@ -44,13 +46,13 @@ Ext.define('casco.view.manage.UserDocuments', {
         store.load();
 		
 
-		me.addSources = function(record){
+	/*	me.addSources = function(record){
 			
 			var docs_id=[];
 			var new_docs;
 			if(me.user_docs){
 		     //如果是Json数组怎么办呢?
-		/*	 me.user_docs.each(function(rec){
+			 me.user_docs.each(function(rec){
 			 docs_id=rec.get('doc_noedit').split(',');
 			 if(!Ext.Array.contains(docs_id,record.data.document_id)){
                 new_docs=me.user_docs.get('doc_nonedit')+','+record.data.document_id;
@@ -61,7 +63,7 @@ Ext.define('casco.view.manage.UserDocuments', {
 		     }else{
                //否则就不做处理
 
-			 }*/
+			 }
 			
 
 			}else{//if user_docs为空的情形吧
@@ -70,8 +72,8 @@ Ext.define('casco.view.manage.UserDocuments', {
 			 me.user_docs.loadData([{project_id: record.data.project_id,user_id:me.user.get('id'),document_id:new_docs}], true);
 			}
 			
-		};
-		me.items = [/*{
+		};*/
+		me.items = [{/*{
 			xtype: 'grid',
 			region: 'west',
 			store: documents,
@@ -91,12 +93,21 @@ Ext.define('casco.view.manage.UserDocuments', {
 					me.addSources(record);
 				}
 		    }
-		},*/{
+		},*/
+		    xtype: 'form',
+		 //   region: 'center',
+			layout:"fit",
+			scrollable:true,
+		    autoScroll:true,
+		    reference: 'prosuserform',
+		    bodyPadding: '0',
+			items: [{
+			anchor: '100%',
 			xtype: 'treepanel',
-            id: 'mtree',
+            id: 'doc_tree',
             store: store,
-            region: 'center',
-            width: 200,
+			layout:"fit", 
+            containerScroll: true, 
             editable: false,
 		    animate:false,
             bodyPadding: 0,
@@ -106,26 +117,21 @@ Ext.define('casco.view.manage.UserDocuments', {
 			root:{text:'Projects-Documents',draggable:false,id:'root'},
 			listeners : {
 		       checkchange: function(node,checked){
-				  
-				node.expand(true);  
-			/*	node.eachChild(function(child) {  
-			//	child.ui.toggleCheck(checked);  
-				child.set('checked', checked);  
-				child.fireEvent('checkchange', child, checked);
-			//	child.checkchange(child,checked);
-                });
- */
-				 if (node.hasChildNodes()) {
-        for (var j = 0; j < node.childNodes.length; j++) {
-           
-			node.childNodes[j].fireEvent('checkchange',node.childNodes[j], checked);//为什么不会递归地触发,不搞了搞死了
-			node.childNodes[j].set('checked', checked);
-        }
-				 }
-			   }//checkchange
-		}//listener
+		
 			
-		}/*,{
+		    if (node.hasChildNodes()) {
+				for (var j = 0; j < node.childNodes.length; j++) {
+					node.childNodes[j].fireEvent('checkchange',node.childNodes[j], checked);//为什么不会递归地触发,不搞了搞死了
+					node.childNodes[j].set('checked', checked);
+				}
+				 }
+		     
+              
+			 
+			   }//checkchange
+		                 }//listener
+			
+		}]/*,{
 			xtype: 'grid',
 			region: 'east
 				
@@ -177,7 +183,7 @@ Ext.define('casco.view.manage.UserDocuments', {
 		        	me.user_docs.remove(record);
 		        }
 		    }
-		}*/];
+		}*/}];
 		me.dockedItems = [{
 			xtype: 'toolbar',
 			dock: 'bottom',
@@ -185,12 +191,17 @@ Ext.define('casco.view.manage.UserDocuments', {
 				background: '#eee'
 			},
 			items: ['->', {
-
-
-				text: 'Ok',
+				text: 'Save',
+				formBind: true,
+				glyph: 0xf0c7,
+				listeners: {
+					click: 'save_userdocs'
+				}
+			}, {
+				text: 'Cancel',
 				glyph: 0xf112,
 				scope: me,
-				handler: this.destroy//数据的处理究竟是通过前端还是后端呢?后端吧，应为多条记录无法同时发送过去的
+				handler: this.destroy
 			}]
 		}];
 		
