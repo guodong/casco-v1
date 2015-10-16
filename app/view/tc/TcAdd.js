@@ -15,9 +15,10 @@ Ext.define('casco.view.tc.TcAdd', {
 //	autoScroll: true,
 	maximizable: true,
     resizable: true,
-    layout: {
+	autoScroll: true, //注意此时不能用fit布局方式
+   /* layout: {
 		type: 'fit'
-	},
+	},*/
 
 	initComponent: function() {
 		var me = this;

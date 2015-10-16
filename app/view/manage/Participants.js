@@ -35,8 +35,11 @@ Ext.define('casco.view.manage.Participants', {
 				        //{ text: 'jobnumber',  dataIndex: 'jobnumber'}
 		    ],
 		    listeners : {
-		        itemdblclick: function(view, record, item, index, e, eOpts){
+				itemclick: function(view, record, item, index, e, eOpts){
 					me.addSources(record);
+				},
+		        itemdblclick: function(view, record, item, index, e, eOpts){
+					Ext.getCmp('selectedusers').store.remove(record);
 				}
 		    }
 		}, {
@@ -79,7 +82,10 @@ Ext.define('casco.view.manage.Participants', {
 		    store: me.participants,
 		    listeners : {
 		        itemdblclick: function(dv, record, item, index, e) {
-		        	me.participants.remove(record);
+					//这里面要显示出那个用户所属于的项目吧
+		        	//me.participants.remove(record);
+					 var win = Ext.create('casco.view.manage.UserDocuments', {user:record,project:me.project});
+                     win.show();
 		        }
 		    }
 		}];

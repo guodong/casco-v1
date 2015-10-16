@@ -132,8 +132,10 @@ Ext.define('casco.view.manage.ManageController', {
 	seldoc: function(view, record, item, index, e, eOpts){//only leaf can  be listened
 		var json = record.data;
 		if(!record.data.leaf) return;
+		//console.log(json);
+		if(JSON.parse(localStorage.user).role_id!='1'&&json.id=="userlist"){Ext.Msg.alert('您无权查看!');return;}
 		var tabs = this.lookupReference('main');
-	
+	    
 		var tab = tabs.child('#tab-' + json.id);
 		if(!tab){
 			tab = tabs.add({

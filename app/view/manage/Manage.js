@@ -16,6 +16,8 @@ Ext.define('casco.view.manage.Manage', {
 	initComponent: function() {
 		Ext.setGlyphFontFamily('FontAwesome'); // 设置图标字体文件，只有设置了以后才能用glyph属性
 		var me = this;
+		var user=me.user;
+
 		this.items = [{		
 
 			region: 'north',
@@ -36,6 +38,7 @@ Ext.define('casco.view.manage.Manage', {
 					expanded: true,
 					children: [{
 						text: "User Management",
+						hidden:JSON.parse(localStorage.user).role_id=='1'?false:true,
 						children: [{
 							text: "User List",
 							leaf: true,

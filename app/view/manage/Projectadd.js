@@ -53,7 +53,8 @@ Ext.define('casco.view.manage.Projectadd', {
     	    	            text: 'Edit Participants',
     	    	            handler: function(){
     	    					var wd = Ext.create("casco.view.manage.Participants", {
-    	    						participants: me.participants
+    	    						participants: me.participants,
+									project:me.project
     	    					});
     	    					wd.show();
     	    				}

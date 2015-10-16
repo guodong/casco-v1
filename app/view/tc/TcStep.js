@@ -63,7 +63,7 @@ Ext.define('casco.view.tc.TcStep', {
     	        }]
     	    }],
     	});
-    	me.callParent(arguments); //必须在getSelectionModel上边，否则报错
+    	me.callParent(arguments); //必须在getSelectionModel上边，否则报错(叼炸天)
     	this.getSelectionModel().on('selectionchange', this.onSelectChange, this);
 
     },
