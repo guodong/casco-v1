@@ -75,7 +75,7 @@ Ext.define('casco.view.manage.Useredit', {
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'combobox',
-				    id:'switcher',	//ManagerController
+//				    id:'switcher',	//ManagerController
                     editable: false,
                     displayField: 'name',
                     valueField: 'value',
