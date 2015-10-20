@@ -17,10 +17,11 @@ Ext.define('casco.view.manage.Projectadd', {
     	var me = this;
     	me.participants = Ext.create('casco.store.Users');
     	me.vatstrs = Ext.create('casco.store.Vatstrs');
-    	if(me.project){console.log(me.project.get('participants'));
+    	if(me.project){console.log(me.project.get('vatstrs'));
     		me.participants.setData(me.project.get('participants'));
-    		me.vatstrs.setData(me.project.get('vatstrs'));
+//    		me.vatstrs.setData(me.project.get('vatstrs'));
     	}
+//    	console.log(me.vatstrs);
     	Ext.apply(me, {
     		items: [{
     	    	xtype: 'form',
@@ -65,6 +66,8 @@ Ext.define('casco.view.manage.Projectadd', {
     			    store: me.participants
     			}, {
     				xtype : 'vatstr',
+    				reference: 'mvatstr',
+    				id:'mvatstr',
     				store: me.vatstrs
     			}],
     			buttons: ['->', {

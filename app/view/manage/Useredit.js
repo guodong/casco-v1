@@ -1,9 +1,9 @@
 Ext.define('casco.view.manage.Useredit', {
 	extend: 'Ext.window.Window',
-
-	xtype: 'widget.useredit',
+//	xtype: 'useredit',
+	alias:'widget.useredit',
 	requires: [],
-	controller: 'manage',
+	controller: 'manage',	//ManageController.js
 	resizable: true,
 	maximizable: true,
 	modal: true,
@@ -12,27 +12,28 @@ Ext.define('casco.view.manage.Useredit', {
 	initComponent: function() {
 		var me = this;
 	 	
-		me.projects = Ext.create('casco.store.Projects');  //作用？？？？？
-		if(me.user!=null){//自身默认的方法啦
+		me.projects = Ext.create('casco.store.Projects');  //？？？me.projects 与 pros_store 区别
+		if(me.user!=null){
 			me.projects.setData(me.user.get('projects'));
 		}
 		var pros_store=Ext.create('casco.store.Projects');
 		pros_store.load();
       
+		//？？？考虑直接从数据库Role表中读取数据
 		var store = Ext.create('Ext.data.Store', {
          fields: ['name', 'value'],
          data : [
-          
          {"name":"Staff", "value":"0"},
-		 {"name":"Manager", "value":"1"}
-		
-        
+		 {"name":"Manager", "value":"1"},
+         {"name":"Admin","value":"2"}
            ]});
+		//var role = Ext.create('casco.store.Roles');  //报错 [Ext.create] Unrecognized class name / alias
+		
+		
 		Ext.apply(me, {
-			
 			items: [{
 				xtype: 'form',
-				reference: 'useraddform',
+				reference: 'useraddform',	//lookupReference
 				bodyPadding: '10',
 				items: [{
 					anchor: '100%',
@@ -41,7 +42,6 @@ Ext.define('casco.view.manage.Useredit', {
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'textfield',
-					
 					allowBlank: false
 				}, {
 					anchor: '100%',
@@ -58,14 +58,7 @@ Ext.define('casco.view.manage.Useredit', {
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'textfield'
-				},/*{                                        //用户角色
-					anchor: '100%',
-					fieldLabel: 'role',
-					name: 'role',
-					labelAlign: 'top',
-					msgTarget: 'under',
-					xtype: 'textfield'
-				}, */ {
+				}, {
 					anchor: '100%',
 					fieldLabel: 'Password',
 					name: 'password',
@@ -82,14 +75,13 @@ Ext.define('casco.view.manage.Useredit', {
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'combobox',
-				    id:'switcher',
+				    id:'switcher',	//ManagerController
                     editable: false,
                     displayField: 'name',
                     valueField: 'value',
                     store: store,
                     queryMode: 'local',
                     emptyText: me.user.get('role_id')=='0'?'Staff':'Manager',
-                   
 				},/*{
 					anchor: '100%',
 					fieldLabel: 'Role',
@@ -112,6 +104,7 @@ Ext.define('casco.view.manage.Useredit', {
 					multiSelect:true,
                     displayField: 'name',
                     valueField: 'id',
+//                    store: me.projects,	//???如何
                     store: pros_store,
                     queryMode: 'local',
                     emptyText: 'Select the Projects',
@@ -145,7 +138,7 @@ Ext.define('casco.view.manage.Useredit', {
 				   checked:me.user.get('islock')=='0'?false:true,
 				   name:'islock',
                    inputValue:'1',
-				   boxLabel:'选中时锁住',
+				   boxLabel:'选中停用账户',
 				   uncheckedValue:'0',
 				}],
 				buttons: ['->', {

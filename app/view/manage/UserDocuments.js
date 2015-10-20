@@ -3,6 +3,7 @@ Ext.define('casco.view.manage.UserDocuments', {
     controller: 'manage',
 	alias: 'widget.UserDocuments',
 	requires: ['Ext.grid.plugin.CellEditing'],
+	id:'userdocs',
 	resizable: true,
 	maximizable: true,
 	modal: true,

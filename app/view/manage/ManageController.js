@@ -17,29 +17,30 @@ Ext.define('casco.view.manage.ManageController', {
             }
         }, this);
     },
+
+    //用户管理
     createuser: function () {
-    	var view = this.getView();//此时要更行两张表
+    	var view = this.getView();	//EditUser's View class,包括UI和User Data等
     	var self = this;
-    	var form = this.lookupReference('useraddform');//获取对应的form表单
+    	var form = this.lookupReference('useraddform');	 //获取对应的form表单
         
 		var user = view.user?view.user:Ext.create('casco.model.User');
     	user.set(form.getValues());
     	user.save({
     		callback: function(){
-
     			Ext.Msg.alert('Message', 'User manage successfully.', function(){
-    				var t = Ext.ComponentQuery.query("#tab-userlist")[0];
-    				//if(!view.user)t.store.add(user);//edit 就不对了的
-    				t.store.reload();
-					//swtich处也要更新
-					Ext.getCmp('switcher')[0].store.reload();
-
+//    				//？？？不需要手动更新
+//    				var t = Ext.ComponentQuery.query("#tab-userlist")[0];	//Array[0]
+//    				//if(!view.user)t.store.add(user);//edit 就不对了的
+//    				t.store.reload();
+//					//swtich处也要更新
+//					Ext.getCmp('switcher')[0].store.reload();
 					form.up("window").destroy();
-					
 		    	});
     		}
     	});
     },
+    
 	createFolder:function (){//build
 		var view = this.getView();
     	var self = this;

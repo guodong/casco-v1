@@ -2,6 +2,7 @@ Ext.define('casco.view.manage.Vatstr', {
     extend: 'Ext.grid.Panel',
 
     alias: 'widget.vatstr',
+    id:"mvatstr",
     requires: [
         'Ext.grid.plugin.CellEditing',
         'Ext.form.field.TextArea',
@@ -54,6 +55,7 @@ Ext.define('casco.view.manage.Vatstr', {
     },
     onAddClick: function(){
         var rec = new casco.model.Vatstr({
+        	num: this.store.getCount() + 1,
             name: ''
         }), edit = this.editing;
         

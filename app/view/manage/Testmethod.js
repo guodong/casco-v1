@@ -8,12 +8,28 @@ Ext.define('casco.view.manage.Testmethod', {
 		store.load();
 		me.store = store;
 		me.tbar = [{
-			hidden: localStorage.role == 'staff' ? true: false,  //用户权限
+//			hidden: localStorage.role == 'staff' ? true: false,  //用户权限
 			text: 'Add Method',
 			glyph: 0xf067,
 			handler: function() {
 				var win = Ext.create('casco.view.manage.Methodadd', {store: store});
 				win.show();
+			}
+		},{
+//			hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false,  //用户权限
+			text: 'Delete Method',
+			glyph: 0xf068,
+			handler: function() {
+				Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
+				 
+					var view=me.getView();
+		            var selection =view.getSelectionModel().getSelection()[0];
+			        if (selection) {
+			            me.store.remove(selection);
+						selection.erase();
+			            }
+					}
+				}, this);
 			}
 		}];
 		me.callParent();

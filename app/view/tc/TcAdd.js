@@ -1,6 +1,5 @@
 Ext.define('casco.view.tc.TcAdd', {
 	extend: 'Ext.window.Window',
-
 	alias: 'widget.tcadd',
 	requires: ['casco.view.document.DocTree', 'casco.view.tc.TcStep',
 			'casco.view.document.DocumentController',
@@ -12,16 +11,15 @@ Ext.define('casco.view.tc.TcAdd', {
 	title: 'Tc Item',
 	width: 800,
 	height: 600,
-//	autoScroll: true,
+	autoScroll: true,
 	maximizable: true,
     resizable: true,
     layout: {
-		type: 'fit'
+		type: 'anchor'
 	},
 
 	initComponent: function() {
 		var me = this;
-	 
 		me.sources = Ext.create('casco.store.Sources');
 		me.steps = Ext.create('casco.store.TcSteps');
 		if(me.tc){
@@ -34,6 +32,7 @@ Ext.define('casco.view.tc.TcAdd', {
 				project_id: me.project.get('id')
 			}
 		});
+		
 		me.items = [{
 			xtype: 'form',
 			reference: 'TcAddform',
@@ -49,7 +48,6 @@ Ext.define('casco.view.tc.TcAdd', {
 				anchor : '100%',
 				fieldLabel : 'Tag',
 				name : 'tag',
-				//labelAlign : 'top',
 				xtype : 'textfield',
 	            allowBlank: false,
 				value: me.tag_id
@@ -57,59 +55,29 @@ Ext.define('casco.view.tc.TcAdd', {
 				anchor : '100%',
 				fieldLabel : 'Description',
 				name : 'description',
-				//labelAlign : 'top',
 				xtype : 'textarea',
 	            allowBlank: false
 			}, {
-				xtype : 'tagfield',
+				anchor : '100%',
+				xtype : 'tagfield',	 //!!
 				//defaultType:'checkbox',
 				name : 'testmethod_id',
-			    queryMode: 'local',
-                  
-				anchor : '100%',
-				editable : true,
 				fieldLabel : 'Test Methods',
-			 
-				labelAlign : 'top',
-				displayField : 'name',
+				displayField : 'name',	//获取id，显示name
 				valueField : 'id',
+			    queryMode: 'local',
+//				editable : true,
 				store:tm,
 	            allowBlank: false
 			},{
 				anchor : '100%',
 				fieldLabel : 'Pre condition',
 				name : 'pre_condition',
-				//labelAlign : 'top',
 				xtype : 'textarea',
 				maxHeight: 50,
 	            allowBlank: false
-			}/*, {
-				xtype : 'combobox',
-				name : 'result',
-				anchor : '100%',
-				hidden: me.tc?false:true,
-				editable : false,
-				fieldLabel : 'result',
-				//labelAlign : 'top',
-				displayField : 'text',
-				valueField : 'value',
-				store : Ext.create('Ext.data.Store', {
-					fields : [ 'text', 'value' ],
-					data : [ {
-						"text" : "untested",
-						"value" : 0
-					}, {
-						"text" : "passed",
-						"value" : 1
-					}, {
-						"text" : "failed",
-						"value" : 2
-					} ]
-				}),
-	            allowBlank: false
-			}*/, {
+			}, {
 				xtype: 'grid',
-				region: 'center',
 				fieldLabel: 'Sources',
 				dockedItems: [{
 	    	        xtype: 'toolbar', 
