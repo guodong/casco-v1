@@ -34,7 +34,7 @@ Ext.define('casco.view.manage.ManageController', {
     				//if(!view.user)t.store.add(user);//edit 就不对了的
     				t.store.reload();
 					//swtich处也要更新
-					console.log(Ext.getCmp('switcher'));
+				//	console.log(Ext.getCmp('switcher'));
 					Ext.getCmp('switcher').store.reload();
 					form.up("window").destroy();
 		    	});

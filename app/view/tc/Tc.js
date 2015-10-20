@@ -43,12 +43,11 @@ Ext.define('casco.view.tc.Tc', {
 					    
                      //   console.log(me.store_tc.getAt(0));
 					    me.columns=me.store_tc.getAt(0).get('columModle'); 
-						 console.log(me.store_tc.getAt(0).get('data'));
 					    me.ds = new Ext.data.JsonStore({
 										  data: (me.store_tc.getAt(0).get('data')),
-										  fields:(me.store_tc.getAt(0).get('fieldsNames'))
+										  fields:Ext.encode(me.store_tc.getAt(0).get('fieldsNames'))
 						});
-                        console.log(me.ds.getData());
+       
                         me.store_tc.setData(me.ds.getData());
 						me.reconfigure(me.store_tc,me.columns);
                           
@@ -71,7 +70,7 @@ Ext.define('casco.view.tc.Tc', {
             editable: false,
             listeners: {
             	select: function(combo, record){
-					console.log(record);
+				
             		me.curr_version = record;
 					 Ext.Ajax.request({url: API+'tc', params:{
                 			version_id:record.get('id')

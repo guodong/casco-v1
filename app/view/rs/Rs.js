@@ -53,12 +53,12 @@ Ext.define('casco.view.rs.Rs', {
 					   
                             
 					    me.columns=me.store_rs.getAt(0).get('columModle'); 
-					//	console.log(me.columns);
+					 
 					    me.ds = new Ext.data.JsonStore({
 										  data: (me.store_rs.getAt(0).get('data')),
 										  fields:(me.store_rs.getAt(0).get('fieldsNames'))
 						});
-                     //  console.log(me.ds.getData());
+                     
                         me.store_rs.setData(me.ds.getData());
 						me.reconfigure(me.store_rs,me.columns);
 
