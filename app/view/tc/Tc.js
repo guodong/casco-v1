@@ -22,20 +22,39 @@ Ext.define('casco.view.tc.Tc', {
     	var me = this;
     	me.versions = new casco.store.Versions();
 		me.store = new casco.store.Tcs();
+		me.store_tc = new casco.store.Tcs();
 		me.versions.load({
 			params:{
 				document_id: me.document.id
 			},
 			callback: function(){
 				me.down('combobox').select(me.versions.getAt(0));
+				
 				var latest_v = me.versions.getCount() > 0?me.versions.getAt(0):0;
 				me.curr_version = latest_v;
 				if(latest_v){
-					me.store.load({
+					me.store_tc.load({
+						scope:this,
+						synchronous: true,
 						params: {
 							version_id: latest_v.get('id')
+						},
+					    callback:function(){
+					    
+                     //   console.log(me.store_tc.getAt(0));
+					    me.columns=me.store_tc.getAt(0).get('columModle'); 
+						 console.log(me.store_tc.getAt(0).get('data'));
+					    me.ds = new Ext.data.JsonStore({
+										  data: (me.store_tc.getAt(0).get('data')),
+										  fields:(me.store_tc.getAt(0).get('fieldsNames'))
+						});
+                        console.log(me.ds.getData());
+                        me.store_tc.setData(me.ds.getData());
+						me.reconfigure(me.store_tc,me.columns);
+                          
 						}
 					});
+
 				}
 			}
 		});
@@ -52,12 +71,26 @@ Ext.define('casco.view.tc.Tc', {
             editable: false,
             listeners: {
             	select: function(combo, record){
+					console.log(record);
             		me.curr_version = record;
-            		me.store.load({
-            			params:{
-                			version_id: record.get('id')
-            			}
-            		})
+					 Ext.Ajax.request({url: API+'tc', params:{
+                			version_id:record.get('id')
+            			},method:'get',async: false,callback: function(options, success, response) {
+					 me.json = new Ext.util.JSON.decode(response.responseText);
+					 }});
+					 me.cm=Ext.create('Ext.grid.column.Column',{columns:[
+					 { header:'编号', dataIndex:'id',width:200},
+					 { header:'名称', dataIndex:'name',width:300}
+					 ]});
+					  me.ds = new Ext.data.JsonStore({
+					  data: me.json.data,
+					  fields:me.json.fieldsNames
+					 });
+					 
+					 me.columns=me.json.columModle;
+					// console.log(me.columns);
+					 me.store.setData(me.ds.getData());
+                     me.reconfigure(me.store,me.columns);
             	}
             }
 		},'-',{
@@ -192,6 +225,7 @@ Ext.define('casco.view.tc.Tc', {
 			name:'searchStatusBar'
 		});
         
+		/*
         me.columns = [
 		{text: "tag", dataIndex: "tag", width: 200, hideable: false,
 		  summaryType: 'count',
@@ -210,6 +244,8 @@ Ext.define('casco.view.tc.Tc', {
 		{text: "test method", dataIndex: "testmethods", width: 100, renderer: function(tm){console.log(tm);var str="";for(var i in tm){str+=tm[i].name}return str;}},
 		{text: "pre condition", dataIndex: "pre_condition", flex: 1},
 		];
+
+		*/
     	me.callParent(arguments);
     },
     

@@ -141,7 +141,7 @@ Ext.define('casco.view.rs.Rs', {
 					vstore:me.versions,
 					type: 'rs'
 				});
-				console.log(me.versions);
+				//console.log(me.versions);
 				win.show();
 				}   
 		},'-',{

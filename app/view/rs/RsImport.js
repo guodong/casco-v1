@@ -118,7 +118,7 @@ Ext.define('casco.view.rs.RsImport', {
 							success : function(form,action) {
 							 Ext.Msg.alert('Success',action.response.responseText);
 							
-							 console.log(action);
+							 // console.log(action);
 							},
 	                        failure: function(form,action) { 
 							
@@ -129,7 +129,7 @@ Ext.define('casco.view.rs.RsImport', {
                              scope:this,
 					         callback:function(){
 					   		 
-							  console.log((versions.getAt(0)));
+							 // console.log((versions.getAt(0)));
 			                  Ext.Msg.alert('导入成功!',(versions.getAt(0).get('result')));
 							  // Ext.Msg.alert(record.get('result'));
 							 }
@@ -137,9 +137,12 @@ Ext.define('casco.view.rs.RsImport', {
 
 
 							 self.up('window').destroy();
-
-    	                      var t = Ext.ComponentQuery.query("#tab-"+me.document_id)[0];
+                              var t=Ext.getCmp("docv-"+me.document_id);
+							  t.store.reload();
+    	                     /* var t = Ext.ComponentQuery.query("#tab-"+me.document_id)[0];
     	          		      t.store_rs.reload();
+							  t.getView().refresh();
+							  */
 							  }//failure
 											  
 							 

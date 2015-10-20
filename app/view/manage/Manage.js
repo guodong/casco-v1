@@ -37,6 +37,7 @@ Ext.define('casco.view.manage.Manage', {
 				root: {
 					expanded: true,
 					children: [{
+             
 						text: "User Management",
 						hidden:JSON.parse(localStorage.user).role_id=='1'?false:true,
 						children: [{
