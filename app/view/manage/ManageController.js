@@ -30,11 +30,12 @@ Ext.define('casco.view.manage.ManageController', {
     		callback: function(){
     			Ext.Msg.alert('Message', 'User manage successfully.', function(){
 //    				//？？？不需要手动更新
-//    				var t = Ext.ComponentQuery.query("#tab-userlist")[0];	//Array[0]
-//    				//if(!view.user)t.store.add(user);//edit 就不对了的
-//    				t.store.reload();
-//					//swtich处也要更新
-//					Ext.getCmp('switcher')[0].store.reload();
+    				var t = Ext.ComponentQuery.query("#tab-userlist")[0];	//Array[0]
+    				//if(!view.user)t.store.add(user);//edit 就不对了的
+    				t.store.reload();
+					//swtich处也要更新
+					console.log(Ext.getCmp('switcher'));
+					Ext.getCmp('switcher').store.reload();
 					form.up("window").destroy();
 		    	});
     		}

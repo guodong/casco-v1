@@ -55,6 +55,7 @@ Ext.define('casco.view.main.Top', {
             valueField: 'id',
             store: store,
             queryMode: 'local',
+			id:'switcher',	//ManagerController
             emptyText: 'Switch Project',
             listeners: {
             	select: 'switchProject'
