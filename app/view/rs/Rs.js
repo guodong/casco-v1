@@ -31,31 +31,62 @@ Ext.define('casco.view.rs.Rs', {
 		var me = this;
 		me.versions = new casco.store.Versions();
 		me.store = new casco.store.Rss();
+		me.store_rs = new casco.store.Rss();
 		me.versions.load({
 			params:{
 				document_id: me.document.id
 			},
 			synchronous: true,
 			callback: function(){
-				me.down('combobox').select(me.versions.getAt(0));     //取最近的版本
+				me.down('combobox').select(me.versions.getAt(0));  //取最近的版本
 				var latest_v = me.versions.getCount() > 0?me.versions.getAt(0):0;
 				me.curr_version = latest_v;
 				if(latest_v){
-					me.store.load({
+		
+					me.store_rs.load({
+						scope:this,
+						synchronous: true,
 						params: {
 							version_id: latest_v.get('id')
+						},
+					    callback:function(){
+					   
+                            
+					    me.columns=me.store_rs.getAt(0).get('columModle'); 
+					//	console.log(me.columns);
+					    me.ds = new Ext.data.JsonStore({
+										  data: (me.store_rs.getAt(0).get('data')),
+										  fields:(me.store_rs.getAt(0).get('fieldsNames'))
+						});
+                     //  console.log(me.ds.getData());
+                        me.store_rs.setData(me.ds.getData());
+						me.reconfigure(me.store_rs,me.columns);
+
 						}
 					});
+                        
+							/*
+					     me.store_rs.getAt(0).get('columModle')
+				          
+						  me.columns=me.store_rs.get('columModle');
+						
+					 
+						 
+						
+
+						 
 //					me.store.each(function(rs){     
 //						if(rs.tcs.length){
 //							cvd++;
 //						}
-//					});
+//					});  */
 				}				
 			}
 		});
+		 
+
 		
-		me.tbar = [{
+		 me.tbar = [{
 			xtype: 'combobox',
 			id: 'docv-'+ me.document.id,
 			fieldLabel: 'Version',
@@ -69,12 +100,27 @@ Ext.define('casco.view.rs.Rs', {
             lastQuery: '',
             listeners: {
             	select: function(combo, record){
+
             		me.curr_version = record;
-            		me.store.load({
-            			params:{
-                			version_id: record.get('id')
-            			}
-            		})
+					  Ext.Ajax.request({url: API+'rs', params:{
+                			version_id:record.get('id')
+            			},method:'get',async: false,callback: function(options, success, response) {
+					 me.json = new Ext.util.JSON.decode(response.responseText);
+					 }});
+					 me.cm=Ext.create('Ext.grid.column.Column',{columns:[
+					 { header:'编号', dataIndex:'id',width:200},
+					 { header:'名称', dataIndex:'name',width:300}
+					 ]});
+					  me.ds = new Ext.data.JsonStore({
+					  data: me.json.data,
+					  fields:me.json.fieldsNames
+					 });
+					 
+					 me.columns=me.json.columModle;
+				//	 console.log(me.columns);
+					 me.store.setData(me.ds.getData());
+                     me.reconfigure(me.store,me.columns);
+					
             	},
             	beforequery : function(e){
             		e.query = new RegExp(e.query.trim(), 'i');
@@ -148,8 +194,24 @@ Ext.define('casco.view.rs.Rs', {
            tooltip: 'Find Next Row',
            handler: me.onNextClick,
            scope: me
-       }];
+       }/*,{
+       xtype:'gridpanel',
+	   height: 200,
+	   width: 400,
+	   id:'fuck',
+	   region: 'center',
+		split: true,
+		border: false,
+		store: me.ds,
+		columns: me.cm
+
+
+	   }*/];
 		
+      
+
+
+
 		me.bbar = ['-',{
 			summaryType: 'count',
 	        summaryRenderer: function(value, summaryData, dataIndex) {
@@ -161,6 +223,29 @@ Ext.define('casco.view.rs.Rs', {
 			defaultText:me.defaultStatusText,
 			name:'searchStatusBar'
 		});
+         
+     
+		 
+		 
+	/*	
+       me.items=[{
+	   xtype:'textfield',
+	   value:'text',
+	   
+	   
+	   },{
+       xtype:'gridpanel',
+	   height: 200,
+	   width: 400,
+	   region: 'center',
+		split: true,
+		border: false,
+		store: me.ds,
+		cm: me.cm
+
+
+	   }];
+         
 
 		me.columns = [{
 			text: "tag",
@@ -174,14 +259,6 @@ Ext.define('casco.view.rs.Rs', {
 			text: "allocation",
 			dataIndex: "allocation",
 			flex: 1
-		}, {
-			text: "implement",
-			dataIndex: "implement",
-			flex:1,
-//			width: 100,
-//	        summaryRenderer: function(value, summaryData, dataIndex) {
-//	            //return 'covered:' +cvd;
-//	        }
 		}, {
 			text: "category",
 			dataIndex: "category",
@@ -211,6 +288,7 @@ Ext.define('casco.view.rs.Rs', {
 				return arr.join(', ');
 			}
 		}];
+		*/
 		
 		me.listeners = {
 			celldblclick: function(a,b,c,record){
@@ -315,7 +393,7 @@ Ext.define('casco.view.rs.Rs', {
 
         if (me.searchValue !== null) {
             me.searchRegExp = new RegExp(me.getSearchValue(), 'g' + (me.caseSensitive ? '' : 'i'));
-            me.store.each(function(record, idx) {
+            me.store_rs.each(function(record, idx) {
                 var node = view.getNode(record);
                 
                 if (node) {
