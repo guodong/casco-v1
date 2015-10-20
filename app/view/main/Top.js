@@ -74,4 +74,5 @@ Ext.define('casco.view.main.Top', {
         }];
     	this.callParent();
     }
+
 })

@@ -137,7 +137,7 @@ Ext.define('casco.view.manage.Useradd', {
 				   name:'islock',
                    inputValue:'1',
 				   uncheckedValue:'0',
-				   boxLabel:'选中时锁住'
+				   boxLabel:'停用账户'
 				}],
 				buttons: ['->', {
 					text: 'Save',

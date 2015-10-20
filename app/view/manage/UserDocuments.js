@@ -3,15 +3,13 @@ Ext.define('casco.view.manage.UserDocuments', {
     controller: 'manage',
 	alias: 'widget.UserDocuments',
 	requires: ['Ext.grid.plugin.CellEditing'],
-	id:'userdocs',
 	resizable: true,
 	maximizable: true,
 	modal: true,
 	autoScroll:true,
 	title: 'Documents Privileges',
 	width: 400,
-	height: 500,
-	scrollable:true,
+	id:'userdocs',
     minHeight:400,
 	layout: {
 		type: 'fit'
@@ -22,6 +20,23 @@ Ext.define('casco.view.manage.UserDocuments', {
 		//projects.load();
 		var documents=Ext.create('casco.store.Documents');
 		documents.load();
+		var  test=function(node,checked){
+
+         	for (var j = 0; j < node.childNodes.length; j++) {
+				//	node.childNodes[j].fireEvent('checkchange',node.childNodes[j], checked);//为什么不会递归地触发,不搞了搞死了
+					node.childNodes[j].set('checked', checked);
+					if(node.hasChildNodes()){
+					
+					 test(node.childNodes[j],checked);
+					}
+
+
+                    
+				}
+
+		}
+		this.test=test;
+		
 		//获取用户相关的文档store
 	/*	var user_docs=Ext.create('casco.store.ProjectUser');
 		user_docs.load({
@@ -39,10 +54,12 @@ Ext.define('casco.view.manage.UserDocuments', {
     		proxy: {
     			extraParams: {
     				
-					user_id:me.user.get('id')
+					user_id:me.user.get('id'),
+					project_id:me.project.get('id')
     			}
     		}
     	});
+	
 		store.proxy.url=API+'treeitem';
         store.load();
 		
@@ -97,9 +114,7 @@ Ext.define('casco.view.manage.UserDocuments', {
 		},*/
 		    xtype: 'form',
 		 //   region: 'center',
-			layout:"fit",
-			scrollable:true,
-		    autoScroll:true,
+			//layout:"fit",
 		    reference: 'prosuserform',
 		    bodyPadding: '0',
 			items: [{
@@ -107,28 +122,25 @@ Ext.define('casco.view.manage.UserDocuments', {
 			xtype: 'treepanel',
             id: 'doc_tree',
             store: store,
-			layout:"fit", 
             containerScroll: true, 
             editable: false,
 		    animate:false,
             bodyPadding: 0,
 			split: true,
 	        collapsible: true,
-			autoScroll: true,
 			root:{text:'Projects-Documents',draggable:false,id:'root'},
 			listeners : {
+
+			   scope:this,
 		       checkchange: function(node,checked){
-		
-			
-		    if (node.hasChildNodes()) {
-				for (var j = 0; j < node.childNodes.length; j++) {
-					node.childNodes[j].fireEvent('checkchange',node.childNodes[j], checked);//为什么不会递归地触发,不搞了搞死了
-					node.childNodes[j].set('checked', checked);
-				}
-				 }
-		     
-              
-			 
+
+
+
+
+                this.test(node,checked);
+
+
+
 			   }//checkchange
 		                 }//listener
 			
@@ -209,4 +221,4 @@ Ext.define('casco.view.manage.UserDocuments', {
 		me.callParent(arguments);
 		//this.getSelectionModel().on('selectionchange', function(){}, this);
 	}
-});
+	});

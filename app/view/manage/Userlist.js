@@ -1,3 +1,4 @@
+
 Ext.define('casco.view.manage.Userlist', {
 	extend: 'Ext.grid.Panel',
 	alias: 'widget.userlist',
@@ -65,7 +66,7 @@ Ext.define('casco.view.manage.Userlist', {
 		dataIndex: "role_id",
 	    width: 180,
 		renderer: function(value) {
-            return Ext.String.format('{1}', value, value=='0'?'Staff':'Manager');
+            return Ext.String.format('{1}', value, value=='0'?'Staff':(value=='1'?'SysManager':'ComManager'));
         }
 	   
 	}, {
@@ -96,14 +97,6 @@ Ext.define('casco.view.manage.Userlist', {
 		renderer: function(value) {
             return Ext.String.format('{1}', value, value=='0'?'No':'Yes');
         }
-	},{
-		text: "created time",
-		dataIndex: "created_at",
-		width: 180
-	},{
-		text: "updated time",
-		dataIndex: "updated_at",
-		width: 180
 	}],
     listeners : {
         itemdblclick: function(dv, record, item, index, e) {
@@ -113,4 +106,5 @@ Ext.define('casco.view.manage.Userlist', {
             win.show();
         }
     }
+
 })

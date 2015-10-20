@@ -22,6 +22,9 @@ Ext.define('casco.view.auth.LoginController', {
 
                     //普通用户直接进入project视图如何
                     Ext.widget('selectProject');
+
+
+
 					}
 				}
 			}

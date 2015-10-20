@@ -1,3 +1,4 @@
+
 Ext.define('casco.view.manage.Statistics', {
 	extend: 'Ext.window.Window',
 
@@ -51,4 +52,5 @@ Ext.define('casco.view.manage.Statistics', {
 	doHide: function() {
 		this.hide();
 	}
+
 });

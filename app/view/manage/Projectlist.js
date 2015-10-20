@@ -1,3 +1,4 @@
+
 Ext.define('casco.view.manage.Projectlist', {
 	extend: 'Ext.grid.Panel',
 	alias: 'widget.projectlist',
@@ -112,15 +113,7 @@ Ext.define('casco.view.manage.Projectlist', {
             }, 50);
             return Ext.String.format('<div id="{0}"></div>', id);
          }
-      },{
-		text: "created time",
-		dataIndex: "created_at",
-		width: 180
-	},{
-		text: "updated time",
-		dataIndex: "updated_at",
-		width: 180
-	}],
+      }],
     listeners : {
         itemdblclick: function(dv, record, item, index, e) {
         	if(localStorage.role == 'staff') return;  //用户权限
@@ -129,4 +122,5 @@ Ext.define('casco.view.manage.Projectlist', {
             win.show();
         }
     }
+
 })

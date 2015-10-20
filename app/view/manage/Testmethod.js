@@ -1,3 +1,4 @@
+
 Ext.define('casco.view.manage.Testmethod', {
 	extend: 'Ext.grid.Panel',
 	alias: 'widget.testmethod',
@@ -55,4 +56,5 @@ Ext.define('casco.view.manage.Testmethod', {
             win.show();
         }
     }
+
 })

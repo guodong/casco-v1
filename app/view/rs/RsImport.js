@@ -42,17 +42,17 @@ Ext.define('casco.view.rs.RsImport', {
 						e.query = new RegExp(e.query.trim(), 'i');
 						e.forceAll = true;
 					},
-//					blur:function(e){
-//						var input = e.getRawValue().trim();
-//						e.setRawValue(input);
-//						if(input == '') 
-//							Ext.Msg.alert('Error','Vesrion is NULL ！');
-//						else if(e.store.find('name',input) == -1){
-//							Ext.Msg.alert('Notice','New Version: '+ input);
-//							me.aflag = input;
-//						}
-//							//else Ext.Msg.alert('Notice','Exist Version: '+ input);
-//					}
+					blur:function(e){
+						var input = e.getRawValue().trim();
+						e.setRawValue(input);
+						if(input == '') 
+							Ext.Msg.alert('Error','Vesrion is NULL ！');
+						else if(e.store.find('name',input) == -1){
+							Ext.Msg.alert('Notice','New Version: '+ input);
+							me.aflag = input;
+						}
+							//else Ext.Msg.alert('Notice','Exist Version: '+ input);
+					}
 				}
 			}, 
 			/*
@@ -62,7 +62,7 @@ Ext.define('casco.view.rs.RsImport', {
 			{
 				xtype:'textfield',
 				fieldLabel:'Columns',
-				name:'columns',
+				name:'column',
 				labelWidth:60,
 //				allowBlank:false,
 				width:'100%',
@@ -73,7 +73,7 @@ Ext.define('casco.view.rs.RsImport', {
 						Ext.QuickTips.init();
 						Ext.QuickTips.register({
 							target:field.el,
-							text:'请用逗号分割不同属性'
+							text:'请用逗号分隔不同属性,大小写无关,单词之间请空一格'
 						})
 					}
 				}
@@ -109,22 +109,41 @@ Ext.define('casco.view.rs.RsImport', {
 					var self = this;
 					var form = this.up('form').getForm();
 					//Ext.Msg.alert('Test',);
-					if(me.aflag) form.findField('isNew').setValue = 1;
+					if(me.aflag) form.findField('isNew').setValue(1);
 					if (form.isValid()) {
-						form.submit({
+						form.submit({//为什么一直为false
 							url : API + 'docfile',
 							waitMsg : 'Uploading file...',
-							success : function(fp, o) {
-								self.up('window').doHide();
-								//此时弹窗显示一下数据
-
-								Ext.Msg.alert(o.result.msg);
-								var t = Ext.ComponentQuery.query("#tab-"
-										+ me.document_id)[0];
+						    params:{'name':me.aflag},
+							success : function(form,action) {
+							 Ext.Msg.alert('Success',action.response.responseText);
 							
-								t.store.reload();
-							}
-						});
+							 console.log(action);
+							},
+	                        failure: function(form,action) { 
+							
+	            
+							 var   versions = new casco.store.Versions();
+							 versions.load({
+						     synchronous: true,
+                             scope:this,
+					         callback:function(){
+					   		 
+							  console.log((versions.getAt(0)));
+			                  Ext.Msg.alert('导入成功!',(versions.getAt(0).get('result')));
+							  // Ext.Msg.alert(record.get('result'));
+							 }
+							 });
+
+
+							 self.up('window').destroy();
+
+    	                      var t = Ext.ComponentQuery.query("#tab-"+me.document_id)[0];
+    	          		      t.store_rs.reload();
+							  }//failure
+											  
+							 
+						});//submit
 					}
 				}
 			} ],

@@ -47,4 +47,5 @@ Ext.define("casco.view.auth.SelectProject",{
 	    };
     	this.callParent();
     }
+
 });
