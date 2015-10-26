@@ -16,7 +16,7 @@ Ext.define('casco.view.tc.Tc', {
 	//matched string css class
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
-
+   // forceFit:true,
     viewModel : 'main',
     initComponent: function(){
     	var me = this;
@@ -400,13 +400,13 @@ Ext.define('casco.view.tc.Tc', {
     	dock: 'top'
     }],
     
-    listeners : {
+    listeners : {//与init并列,不能直接me.*来了进行调用
         celldblclick: function(a,b,c, record, item, index, e) {
         	if(c==0){
 				window.open('/draw/graph2.html#'+record.get('tag'));
 				return;
 			}
-        	var win = Ext.create('widget.tcadd',{tc: record, document_id: this.document_id, project: this.project});
+        	var win = Ext.create('widget.tcadd',{tc: record, document_id: this.document.id, project: this.project,columns:this.columns});
             win.down('form').loadRecord(record);
             win.show();
         }

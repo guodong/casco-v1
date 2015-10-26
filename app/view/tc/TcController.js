@@ -25,7 +25,8 @@ Ext.define('casco.view.tc.TcController', {
 		//var tc = Ext.create('casco.model.Tc');console.log(tc.get('tag'))
 		tc.set(data);
 		tc.save({
-			callback: function() {
+			callback: function(record, operation, success) {
+				console.log(record);
 				form.up("window").destroy();
 				var t = Ext.ComponentQuery.query("#tab-" + data.document_id)[0];
 				t.store.reload();

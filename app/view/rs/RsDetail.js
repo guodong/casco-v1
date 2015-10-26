@@ -130,6 +130,13 @@ Ext.define('casco.view.rs.RsDetail', {
     	            store: me.vatstrstore,
     	            editable: false,
     	            queryMode: 'local'
+    	        },{
+    	            fieldLabel: 'test',
+    	            xtype: 'textfield',
+    	            editable: false,
+        	    	width: '100%',
+    				hidden: me.editvat?true:false,
+    	           
     	        }, {
     				xtype: 'grid',
     				fieldLabel: 'Vat',
@@ -154,8 +161,23 @@ Ext.define('casco.view.rs.RsDetail', {
     			    ],
     			    store: me.vat
     			}]
-    	    }]
+    	    },{
+    	            fieldLabel: 'test1',
+    	            xtype: 'textfield',
+    	            editable: false,
+        	    	width: '100%',
+    	            name: 'test'
+    	        }]
     	});
+		me.items.add({
+    	            fieldLabel: 'test',
+    	            xtype: 'textfield',
+    	            editable: false,
+        	    	width: '100%',
+    				hidden: me.editvat?true:false,
+    	           
+    	        });
+		me.doLayout();
     	me.callParent(arguments);
     },
     doHide: function(){
