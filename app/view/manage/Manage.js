@@ -1,3 +1,4 @@
+// 20151021  R
 Ext.define('casco.view.manage.Manage', {
 	extend: 'Ext.container.Viewport',
 	requires: ['casco.view.main.Top', 'casco.view.manage.ManageController',
@@ -6,7 +7,6 @@ Ext.define('casco.view.manage.Manage', {
 			'casco.view.manage.Projectadd', 'casco.view.manage.Useradd','casco.view.manage.Document'],
 
 	xtype: 'manage',
-
 	layout: {
 		type: 'border'
 	},
@@ -19,7 +19,6 @@ Ext.define('casco.view.manage.Manage', {
 		var user=me.user;
 
 		this.items = [{		
-
 			region: 'north',
 			xtype: 'top'
 		}, {
@@ -33,13 +32,19 @@ Ext.define('casco.view.manage.Manage', {
 			listeners: {
 				itemclick: 'seldoc'
 			},
-			store: Ext.create('Ext.data.TreeStore', {
+//			render:function(){
+//				if(JSON.parse(localStorage.user).role_id != '2')
+//					this.hide();
+//			},
+//			hide:function(){
+//				this.node.hide = true;
+//				if(this.wrap) this.wrap.style.display = "none";
+//			},
+			store: Ext.create('Ext.data.TreeStore', {  
 				root: {
 					expanded: true,
 					children: [{
-             
 						text: "User Management",
-						hidden:JSON.parse(localStorage.user).role_id=='1'?false:true,
 						children: [{
 							text: "User List",
 							leaf: true,
@@ -62,6 +67,11 @@ Ext.define('casco.view.manage.Manage', {
 					}]
 				}
 			})
+//			initEvents:function(){
+//				if(this.node){
+//					this.hide();
+//				}
+//			}
 		}, {
 			region: 'center',
 			reference: 'main',

@@ -29,7 +29,7 @@ Ext.define('casco.view.manage.ManageController', {
     	user.save({
     		callback: function(){
     			Ext.Msg.alert('Message', 'User manage successfully.', function(){
-//    				//？？？不需要手动更新
+    				//更新
     				var t = Ext.ComponentQuery.query("#tab-userlist")[0];	//Array[0]
     				//if(!view.user)t.store.add(user);//edit 就不对了的
     				t.store.reload();
