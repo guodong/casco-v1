@@ -16,7 +16,7 @@ Ext.define('casco.view.tc.Tc', {
 	//matched string css class
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
-
+   // forceFit:true,
     viewModel : 'main',
     initComponent: function(){
     	var me = this;
@@ -43,12 +43,11 @@ Ext.define('casco.view.tc.Tc', {
 					    
                      //   console.log(me.store_tc.getAt(0));
 					    me.columns=me.store_tc.getAt(0).get('columModle'); 
-						 console.log(me.store_tc.getAt(0).get('data'));
 					    me.ds = new Ext.data.JsonStore({
 										  data: (me.store_tc.getAt(0).get('data')),
-										  fields:(me.store_tc.getAt(0).get('fieldsNames'))
+										  fields:Ext.encode(me.store_tc.getAt(0).get('fieldsNames'))
 						});
-                        console.log(me.ds.getData());
+       
                         me.store_tc.setData(me.ds.getData());
 						me.reconfigure(me.store_tc,me.columns);
                           
@@ -71,7 +70,7 @@ Ext.define('casco.view.tc.Tc', {
             editable: false,
             listeners: {
             	select: function(combo, record){
-					console.log(record);
+				
             		me.curr_version = record;
 					 Ext.Ajax.request({url: API+'tc', params:{
                 			version_id:record.get('id')
@@ -401,13 +400,13 @@ Ext.define('casco.view.tc.Tc', {
     	dock: 'top'
     }],
     
-    listeners : {
+    listeners : {//与init并列,不能直接me.*来了进行调用
         celldblclick: function(a,b,c, record, item, index, e) {
         	if(c==0){
 				window.open('/draw/graph2.html#'+record.get('tag'));
 				return;
 			}
-        	var win = Ext.create('widget.tcadd',{tc: record, document_id: this.document_id, project: this.project});
+        	var win = Ext.create('widget.tcadd',{tc: record, document_id: this.document.id, project: this.project,columns:this.columns});
             win.down('form').loadRecord(record);
             win.show();
         }

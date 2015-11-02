@@ -10,7 +10,7 @@ Ext.define('casco.view.rs.RsDetails', {
     ],
     
     width:900,
-    height:650,
+    height:400,
 //    autoScroll:true,
     resizable: true,
     maximizable: true,
@@ -24,13 +24,28 @@ Ext.define('casco.view.rs.RsDetails', {
 	
 	initComponent:function(){
 		var me = this;
-		
+		me.store=Ext.create('casco.store.Rss');
 		me.vat = Ext.create('casco.store.Vat');
+		
+		me.store.add([me.rs]);
+
+
 		if(me.rs){
-			me.vat.setData(me.rs.get('vat'));
+			
+			me.vat.setData(me.rs.getData());
 		}
+	//	console.log(me.store);
 		me.vatstrstore = Ext.create('casco.store.Vatstrs');
 //		me.vatstrstore = new casco.store.Vatstrs();
+        //终于用这种方式遍历出来了啊
+        Ext.Array.each(me.columns, function(name, index, countriesItSelf) {
+       // console.log(name.width);
+		me.columns[index].width='100%';
+		me.columns[index].editor={xtype:'textfield'};
+        });
+        
+        console.log(me.columns);
+		 
 		me.vatstrstore.load({
     		params: {
     			project_id: me.project.get('id')
@@ -43,6 +58,8 @@ Ext.define('casco.view.rs.RsDetails', {
 			}
 			me.vat.loadData([{tag: record.get('name'),id: record.get('id'), type: record.get('type')}], true);
 		};
+
+		
 		
 		me.items = [{
 			xtype: 'panel',
@@ -133,50 +150,18 @@ Ext.define('casco.view.rs.RsDetails', {
 			title:false,
 			bodyPadding:'10',
 			region:'center',
-			autoScroll:true,
+			//autoScroll:true,
 			items: [{
-	            fieldLabel: 'tag',
-	            xtype: 'textfield',
-	            editable: false,
-    	    	width: '100%',
-	            name: 'tag'
-	        },{
-	            fieldLabel: 'description',
-	            xtype: 'textareafield',
-	            editable: false,
-    	    	width: '100%',
-	            name: 'description'
-	        },{
-	            fieldLabel: 'implement',
-	            xtype: 'textfield',
-	            editable: false,
-    	    	width: '100%',
-	            name: 'implement'
-	        },{
-	            fieldLabel: 'priority',
-	            xtype: 'textfield',
-	            editable: false,
-    	    	width: '100%',
-	            name: 'priority'
-	        },{
-	            fieldLabel: 'contribution',
-	            xtype: 'textfield',
-	            editable: false,
-    	    	width: '100%',
-	            name: 'contribution'
-	        },{
-	            fieldLabel: 'category',
-	            xtype: 'textfield',
-	            editable: false,
-    	    	width: '100%',
-	            name: 'category'
-	        },{
-	            fieldLabel: 'allocation',
-	            xtype: 'textfield',
-	            editable: false,
-    	    	width: '100%',
-	            name: 'allocation'
-	        }, {
+				xtype: 'gridpanel',
+				fieldLabel: 'gridpanel',
+				id:'inpanel',
+			    columns:me.columns,
+				store:me.store,
+				editable: true,
+				forceFit:true,
+				plugins: {ptype: 'cellediting', clicksToEdit: 1}
+
+			},{
 				xtype: 'grid',
 				fieldLabel: 'Vat',
 				//hidden:true,
@@ -199,8 +184,23 @@ Ext.define('casco.view.rs.RsDetails', {
 			    ],
 			    store: me.vat
 			}]
-		}]
-		
+		}],
+					 
+     
+     //    Ext.getCmp('inpanel').reconfigure(me.store,me.columns);
+
+	  /*console.log(me.items[2].items);		
+	   me.items[2].items.push({
+    	            fieldLabel: 'test',
+    	            xtype: 'textfield',
+					region:'north',
+    	            editable: false,
+        	    	width: '100%',
+    				
+    	           
+    	        });
+		//me.redoLayout();		
+		*/
 //	    listeners: {
 //	        itemdblclick: function(view, record, item, index, e, eOpts){
 //	        	var me = this;

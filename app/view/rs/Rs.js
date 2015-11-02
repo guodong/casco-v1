@@ -24,7 +24,7 @@ Ext.define('casco.view.rs.Rs', {
 	//matched string css class
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
-	
+	//forceFit:true,
 //	columnLines:true,
 		
 	initComponent: function() {
@@ -53,12 +53,12 @@ Ext.define('casco.view.rs.Rs', {
 					   
                             
 					    me.columns=me.store_rs.getAt(0).get('columModle'); 
-					//	console.log(me.columns);
+					 
 					    me.ds = new Ext.data.JsonStore({
 										  data: (me.store_rs.getAt(0).get('data')),
 										  fields:(me.store_rs.getAt(0).get('fieldsNames'))
 						});
-                     //  console.log(me.ds.getData());
+                     
                         me.store_rs.setData(me.ds.getData());
 						me.reconfigure(me.store_rs,me.columns);
 
@@ -141,7 +141,7 @@ Ext.define('casco.view.rs.Rs', {
 					vstore:me.versions,
 					type: 'rs'
 				});
-				//console.log(me.versions);
+				
 				win.show();
 				}   
 		},'-',{
@@ -309,12 +309,16 @@ Ext.define('casco.view.rs.Rs', {
 //					wd.show();
 //					return;
 //				}
+    //            console.log(me.getColumnModel().getColumnHeader());
 				var win = Ext.create('widget.rs.rsdetails', {
 					rs: record,
 //					editvat: c==6||c==5,
 					document_id: me.document_id,
 					project:me.project,
+					columns:me.columns,
+					
 				});
+			    
 				win.down('form').loadRecord(record);
 				win.show();
 			}
