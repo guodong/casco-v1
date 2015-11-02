@@ -58,7 +58,7 @@ Ext.define('casco.view.testing.Job', {
 					var str = v[i].document.name + ":" + v[i].name;
 					arr.push(str);
 				}
-				return arr.join('; ');
+				return arr.join('; ');//处理过后渲染出来
 			}
 		}, {
 			text: 'status',

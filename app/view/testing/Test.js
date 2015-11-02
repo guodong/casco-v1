@@ -205,6 +205,7 @@ Ext.define('casco.view.testing.Test', {
 					autoShow: false,
 					flex:1,
 					renderer: function(value) {
+						//plunk函数?
 						var value = JSON.parse(value);
 						var arr = [];
 						Ext.Array.each(value, function(v) {

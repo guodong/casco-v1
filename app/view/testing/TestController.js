@@ -19,7 +19,7 @@ Ext.define('casco.view.testing.TestController', {
 				rs_document_id: v.get('id'),
 				rs_version_id: v.get('version_id')
 			}
-			rsvss.push(obj);
+			rsvss.push(obj);//放入的是一个对象啊
 		});
 		meta.rs_versions = rsvss;
 		var tcs = [];
@@ -31,7 +31,7 @@ Ext.define('casco.view.testing.TestController', {
 		var job = Ext.create('casco.model.Testjob', meta);
 		job.save({
 			success: function(){
-				Ext.getCmp('joblist').store.insert(0, job);
+				Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
 				Ext.getCmp('testing-job-create-window').destroy();
 			}
 		});
