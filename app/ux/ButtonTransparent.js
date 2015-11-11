@@ -6,7 +6,6 @@ Ext.define('casco.ux.ButtonTransparent', {
     alias : 'widget.buttontransparent', // 此类的xtype类型为buttontransparent
     // 类初始化时执行
     initComponent : function() {
-    	
         // 设置事件监听
         this.listenerss = {
             // 鼠标移开，背景设置透明
@@ -27,7 +26,6 @@ Ext.define('casco.ux.ButtonTransparent', {
                 this.setTransparent(document.getElementById(this.id));
             }
         };
-
         this.callParent(arguments); // 调用你模块的initComponent函数
     },
     
