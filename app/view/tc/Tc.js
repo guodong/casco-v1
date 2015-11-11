@@ -16,7 +16,7 @@ Ext.define('casco.view.tc.Tc', {
 	//matched string css class
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
-   // forceFit:true,
+    forceFit:true,
     viewModel : 'main',
     initComponent: function(){
     	var me = this;

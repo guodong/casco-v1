@@ -17,6 +17,31 @@ Ext.define('casco.view.rs.RsImport', {
 	viewModel : 'main',
 	initComponent : function() {
 		var me = this;
+		var headers=null;
+		//获取最近一次的列名吧
+		me.versions = new casco.store.Versions();
+		me.versions.load({
+			params:{
+				document_id: me.document_id,
+				newest:'newest'
+			},
+			callback:function(records, operation, success){
+            
+			//必须要同步才能取值
+			//console.log(records[0].getData().responseText);
+			if(records[0].getData().responseText!=""){
+			headers=me.versions.getAt(0).get('headers');
+		//	console.log(me.down('form').items.getAt(0));
+            me.down('form').items.getAt(1).setValue(headers);
+			}else{
+           
+		    if(me.type=="rs") me.down('form').items.getAt(1).setValue("description,implement,priority,contribute,category,allocation");
+            else if(me.type="tc") me.down('form').items.getAt(1).setValue("description,test method,pre_condition,test steps");
+			}
+		}//callback
+		});
+		
+
 		me.aflag = '';
 		me.items = [ {
 			xtype : 'form',
@@ -67,7 +92,7 @@ Ext.define('casco.view.rs.RsImport', {
 //				allowBlank:false,
 				width:'100%',
 				editable:'true',
-				store : me.vstore,
+				value:headers,
 				listeners:{
 					render:function(field,p){
 						Ext.QuickTips.init();

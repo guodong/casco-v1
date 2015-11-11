@@ -134,7 +134,7 @@ Ext.define('casco.view.tc.TcAdd', {
 
         if(!Ext.Array.contains(array,name.dataIndex)){
         
-		Ext.Array.insert(me.items[0].items,2,
+		Ext.Array.insert(me.items[0].items,3,
 			    [{anchor : '100%',
 				fieldLabel : name.dataIndex,
 				name : name.dataIndex,

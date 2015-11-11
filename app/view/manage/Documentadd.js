@@ -116,7 +116,7 @@ Ext.define('casco.view.manage.Documentadd', {
 					allowBlank: false,
 					editable:false,
 					hidden: true//me.user?true:false
-				}, {
+				}/*, {
 					anchor: '100%',
 					fieldLabel: 'build_version',
 					name: 'build_version',
@@ -132,7 +132,7 @@ Ext.define('casco.view.manage.Documentadd', {
 					msgTarget: 'under',
 					xtype: 'textfield',
 					allowBlank: false
-				},{
+				}*/,{
 					anchor: '100%',
 					fieldLabel: 'fid',
 					name: 'fid',
@@ -142,7 +142,7 @@ Ext.define('casco.view.manage.Documentadd', {
 				    value:me.fid.get('id'),
 				    hidden:true,
 					allowBlank: false
-				},{
+				},/*{
 					anchor: '100%',
 					fieldLabel: 'regex',
 					name: 'regex',
@@ -158,7 +158,7 @@ Ext.define('casco.view.manage.Documentadd', {
 					msgTarget: 'under',
 					xtype: 'textfield',
 					allowBlank: false
-				}/*,{
+				},{
 					anchor: '100%',
 					fieldLabel: 'created_at',
 					name: 'test_version',
