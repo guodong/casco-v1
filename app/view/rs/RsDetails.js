@@ -131,13 +131,14 @@ Ext.define('casco.view.rs.RsDetails', {
             		  var column='';
             		  //console.log(me.down('form').getValues());
             		  //可以不用很low的拼接,可以push2array2join
+            		  var my_rs=Ext.create('casco.model.Rs',{id:rs.get('id')});
             		  Ext.Object.each(me.down('form').getValues(), function(key, value, myself){
             		  	
             		  	if(key!='id'&&key!='tag'){column+='"'+key+'":"'+value+'",';}
-            	
+            	      else if(key=='tag'){my_rs.set('tag',value);}
             		  	
             		  });
-            		  var my_rs=Ext.create('casco.model.Rs',{id:rs.get('id')});
+            		  
             		  my_rs.set('column',column.substr(0,column.length-1));
             		
                 	my_rs.set('vat', vat);
