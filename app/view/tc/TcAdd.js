@@ -22,9 +22,19 @@ Ext.define('casco.view.tc.TcAdd', {
 		var me = this;
 		me.sources = Ext.create('casco.store.Sources');
 		me.steps = Ext.create('casco.store.TcSteps');
+		me.steps.load({
+			params:{
+               tc_id:me.tc.get('id')
+			}
+		});
 		if(me.tc){
-			me.sources.setData(me.tc.get('sources'));
-			me.steps.setData(me.tc.get('steps'));
+		  
+		  var a=new Array();
+		  var list=me.tc.get('source')?me.tc.get('source').split(','):null;
+		  Ext.Array.each(list,function(name, index, countriesItSelf){
+           a.push({tag:name});
+		  });
+			me.sources.setData(a);
 		}
 		var tm = Ext.create('casco.store.Testmethods');
 		tm.load({
@@ -78,7 +88,7 @@ Ext.define('casco.view.tc.TcAdd', {
 	            allowBlank: true
 			}*/,{
 				xtype: 'grid',
-				fieldLabel: 'Sources',
+				fieldLabel: 'source',
 				dockedItems: [{
 	    	        xtype: 'toolbar', 
 	    	        dock: 'bottom',
@@ -96,7 +106,7 @@ Ext.define('casco.view.tc.TcAdd', {
 	    	        }]
 	    	    }],
 			    columns: [
-			        { text: 'Sources',  dataIndex: 'tag', flex: 1}
+			        { text: 'source',  dataIndex: 'tag', flex: 1}
 			    ],
 			    store: me.sources
 			}, {
@@ -131,7 +141,8 @@ Ext.define('casco.view.tc.TcAdd', {
 		
 
 		Ext.Array.each(me.columns,function(name, index, countriesItSelf){
-
+        
+		if(name.dataIndex=='source') return;
         if(!Ext.Array.contains(array,name.dataIndex)){
         
 		Ext.Array.insert(me.items[0].items,2,
@@ -156,7 +167,7 @@ Ext.define('casco.view.tc.TcAdd', {
 				value: me.tag_id}]);//注意一定是[],否则不认数据类型
 */
 			
-		 console.log(me.document_id);
+		// console.log(me.document_id);
 		me.callParent(arguments);
 	}
 });

@@ -31,8 +31,7 @@ Ext.define('casco.view.rs.RsDetails', {
 
 
 		if(me.rs){
-			
-			me.vat.setData(me.rs.getData());
+					me.vat.setData(me.rs.getData().vat);
 		}
 	//	console.log(me.store);
 		me.vatstrstore = Ext.create('casco.store.Vatstrs');
@@ -150,7 +149,9 @@ Ext.define('casco.view.rs.RsDetails', {
                          me.pointer.reconfigure(me.pointer.store, me.pointer.columns);
                         	Ext.Msg.alert('更新成功');
                         	//暂时修改前端对象吧
-                          me.destroy();
+                          me.destroy();                  
+													var t = Ext.ComponentQuery.query("#tab-" + me.document_id)[0];
+													t.store.reload();
                         	
               		     
                 		}

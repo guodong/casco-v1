@@ -59,8 +59,8 @@ Ext.define('casco.view.rs.Rs', {
 										  fields:(me.store_rs.getAt(0).get('fieldsNames'))
 						});
                      
-              me.store_rs.setData(me.ds.getData());
-						  me.reconfigure(me.store_rs,me.columns);
+                        me.store_rs.setData(me.ds.getData());
+						me.reconfigure(me.store_rs,me.columns);
 
 						}
 					});
@@ -294,7 +294,7 @@ Ext.define('casco.view.rs.Rs', {
 			celldblclick: function(a,b,c,record){
 				localStorage.tag = record.get('tag');
 				if(c==0){
-					window.open('/draw/graph2.html#'+record.get('tag'));
+					window.open('/draw/graph2.html#'+record.get('id')+"&"+record.get('tag'));
 					return;
 				}
 //				if(c==5||c==6){

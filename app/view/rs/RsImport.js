@@ -35,8 +35,8 @@ Ext.define('casco.view.rs.RsImport', {
             me.down('form').items.getAt(1).setValue(headers);
 			}else{
            
-		    if(me.type=="rs") me.down('form').items.getAt(1).setValue("description,implement,priority,contribute,category,allocation");
-            else if(me.type="tc") me.down('form').items.getAt(1).setValue("description,test method,pre_condition,test steps");
+		    if(me.type=="rs") me.down('form').items.getAt(1).setValue("description,implement,source,priority,contribute,category,allocation");
+            else if(me.type="tc") me.down('form').items.getAt(1).setValue("description,safety,source,test method,pre_condition,test steps");
 			}
 		}//callback
 		});
@@ -155,7 +155,7 @@ Ext.define('casco.view.rs.RsImport', {
 					         callback:function(){
 					   		 
 							 // console.log((versions.getAt(0)));
-			                  Ext.Msg.alert('导入成功!',(versions.getAt(0).get('result')));
+			                  Ext.Msg.alert('导入结果!',(versions.getAt(0).get('result')));
 							  // Ext.Msg.alert(record.get('result'));
 							 }
 							 });

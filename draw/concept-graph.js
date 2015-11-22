@@ -37,7 +37,7 @@ var CollapsibleTree = function(elt) {
       var that = this;
       d3.json(url, function(json) {
         root = json;
-
+        if(root){
         // root.x0 = h / 2;
         // root.y0 = 0;
         root.x0 = w / 2;
@@ -53,6 +53,7 @@ var CollapsibleTree = function(elt) {
         // that.updateParents(root);
         // that.updateChildren(root);
         that.updateBoth(root);
+		}
       });
     },
     updateBoth: function(source) {

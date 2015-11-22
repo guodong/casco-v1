@@ -166,17 +166,18 @@ Ext.define('casco.view.tc.Tc', {
                 Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
 		 
 	            var view=me.getView();
-                var selection =view.getSelectionModel().getSelection()[0];
-	            if (selection) {
-				 
-				selection.erase();
-			    //var user = view.user?view.user:Ext.create('casco.model.User');
-				//Ext.Msg.alert(selection.account);
-	            me.store.remove(selection);
-
+                 me.reconfigure(me.store,me.columns);
+						var selection =view.getSelectionModel().getSelection()[0];
+						var tc = Ext.create('casco.model.Tc',{id:selection.get('id')});
+				        tc.erase();
+						if (selection) {
+							me.store.remove(selection);
+							selection.erase();
+						}
+			    
 	            me.getView().refresh();
-	            }
-		       
+	             
+			
     	}}, this);
 
 
@@ -403,7 +404,8 @@ Ext.define('casco.view.tc.Tc', {
     listeners : {//与init并列,不能直接me.*来了进行调用
         celldblclick: function(a,b,c, record, item, index, e) {
         	if(c==0){
-				window.open('/draw/graph2.html#'+record.get('tag'));
+				console.log();
+				window.open('/draw/graph2.html#'+record.get('id')+'&'+record.get('tag'));
 				return;
 			}
         	var win = Ext.create('widget.tcadd',{tc: record, document_id: this.document.id, project: this.project,columns:this.columns});
