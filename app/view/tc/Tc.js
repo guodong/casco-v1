@@ -143,19 +143,11 @@ Ext.define('casco.view.tc.Tc', {
 				 
                 
                
-				var suffix=tag.toString().match(/[^\d]+/g);
+				  var suffix=tag.toString().match(/[^\d]+/g);
 			    num=parseInt(tag.toString().match(/\d+/g))+1;
 			//	console.log(suffix);
 			    tag=suffix[0]+num+suffix[1];
-		/*		 
-				 for (var i=0;i<record.length;i++)
-				 {
-                    if(tag<record[i].get('tag')){tag=record[i].get('tag')};
-					else continue;
-                  }
-
-		*/	 
-               var win = Ext.create('widget.tcadd',{listeners:{scope: this}, version_id: me.curr_version.get('id'),tag_id:tag,project:me.project, document_id:me.document.id});
+               var win = Ext.create('widget.tcadd',{listeners:{scope: this}, columns:me.columns,version_id: me.curr_version.get('id'),tag_id:tag,project:me.project, document_id:me.document.id});
                 win.show();
             }
         },'-',{

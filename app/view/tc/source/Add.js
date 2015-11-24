@@ -16,7 +16,7 @@ Ext.define('casco.view.tc.source.Add', {
 	},
 	initComponent: function() {
 		var me = this;
-	//	console.log(me.sources.getData());
+    console.log(me.columns);
 		me.addSources = function(record){
 			if(record.data.type != 'item'){
 				return;

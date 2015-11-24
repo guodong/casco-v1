@@ -73,21 +73,25 @@ Ext.define('casco.view.testing.Result', {
 			dataIndex: 'tc',
 			flex:1,
 			renderer: function(v) {
-				return v.description
+				//console.log(eval('{'+v.column+'}'));
+				var column=JSON.parse('{'+v.column+'}');
+				//console.log(column);
+				return column.description||column['test case description']||''
 			}
 		}, {
-			text: "sources",
+			text: "source",
 			dataIndex: "tc",
 			width: 200,
 			autoShow: false,
 			hidden: true,
 			renderer: function(value) {
-				var value = JSON.parse(value.source_json);
-				var arr = [];
-				Ext.Array.each(value, function(v) {
-					arr.push(v);
-				});
-				return arr.join(', ');
+				var value = JSON.parse('{'+value.column+'}');
+				
+//				var arr = [];
+//				Ext.Array.each(value, function(v) {
+//					arr.push(v);
+//				});
+				return value.source||'';
 			}
 		}, {
 			text: "test method",
@@ -143,7 +147,7 @@ Ext.define('casco.view.testing.Result', {
 		}, {
 		    xtype: 'gridcolumn',
 		    dataIndex: 'result',
-			width: 120,
+			  width: 120,
 		    renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
 		        return resultStore.findRecord('value', value).get('label');
 		    },
@@ -185,7 +189,7 @@ Ext.define('casco.view.testing.Result', {
 				});
 				Ext.Ajax.request({
 					url: API + '/result/updateall',
-					method: 'put',
+					method: 'post',
 					jsonData: {results: out},
 					success: function(){
 						Ext.Msg.alert('Success', 'Saved successfully.')

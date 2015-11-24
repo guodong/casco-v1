@@ -4,13 +4,11 @@ Ext.define('casco.view.tc.TcController', {
 
 	createTc : function() {
 		var view = this.getView();
-		var tc = Ext.create('casco.model.Tc',{id:view.tc.get('id')});//view.tc?view.tc:Ext.create('casco.model.Tc');
-		
-	
+		var tc = Ext.create('casco.model.Tc',{id:view.tc?view.tc.get('id'):null});//view.tc?view.tc:Ext.create('casco.model.Tc');
 		var form = view.down('form');
 		var data = form.getValues(); //提交的数据
 		data.source = [];
-		console.log(view.sources.getData());
+	//	console.log(view.sources.getData());
 		view.sources.each(function(s){
 			data.source.push(s.get('tag'));
 		});
@@ -22,12 +20,14 @@ Ext.define('casco.view.tc.TcController', {
             	
             		  	
    });
-        data.column=column.substring(0,column.length-1);
+    
+    data.column=column.substring(0,column.length-1);
 		data.document_id = view.document_id;//还可以这样动态添加啊
+		data.version_id=view.version_id;
 		data.steps = [];
 		var i = 1;
 		view.steps.each(function(s){
-			console.log(s.data);
+		//	console.log(s.data);
 			data.steps.push({ 
 				"num": s.data.num,
 				"actions": s.data.actions,

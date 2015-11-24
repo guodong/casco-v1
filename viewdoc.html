@@ -20,18 +20,33 @@
 			}
 			return get_par;
 		}
-		var id = getPar('file');
+		
+		
+		   var  filename = getPar('file');
+		//var API='http://192.100.212.31:8080/document/';
+		    var API='http://localhost/casco-api/public/files/';
+		    var box = document.getElementById('box');
+			//	id.filename = id.filename.substring(0, d.filename);
+				//var src = 'http://192.100.212.33/files/'+d.filename+'.pdf';
+				var src=API+filename;
+				//var str = '<embed name="plugin" type="application/pdf" width="100%" height="100%" src="'+src+'"></embed>';
+				var str='<a href="'+src+'">'+'µã»÷ÏÂÔØ=>  '+filename+'</a>';
+				box.innerHTML = str;
+				/*
 		$.ajax({
-			url: 'http://192.100.212.31:8080/document/'+id,
+			url: API+'document/'+id,
 			dataType: 'json',
 			success: function(d){
 				var box = document.getElementById('box');
-				d.filename = d.filename.substring(0, d.filename.length-4);
-				var src = 'http://192.100.212.33/files/'+d.filename+'.pdf';
-				var str = '<embed name="plugin" type="application/pdf" width="100%" height="100%" src="'+src+'"></embed>';
+				d.filename = d.filename.substring(0, d.filename);
+				//var src = 'http://192.100.212.33/files/'+d.filename+'.pdf';
+				var src=API+'files/'+d.filename;
+				//var str = '<embed name="plugin" type="application/pdf" width="100%" height="100%" src="'+src+'"></embed>';
+				var str='<a href="'+src+'">'+d.filename+'</a>';
 				box.innerHTML = str;
 			}
 		});
+		*/
 	</script>
 </body>
 </html>

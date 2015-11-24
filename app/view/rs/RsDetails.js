@@ -146,12 +146,13 @@ Ext.define('casco.view.rs.RsDetails', {
                         //	var t = Ext.ComponentQuery.query("#tab-"+me.document_id)[0];
                         //console.log(me.down('form').getValues());
                           rs.set(me.down('form').getValues());
-                         me.pointer.reconfigure(me.pointer.store, me.pointer.columns);
+                          rs.set('vat',vat);
+                          me.pointer.reconfigure(me.pointer.store, me.pointer.columns);
                         	Ext.Msg.alert('更新成功');
                         	//暂时修改前端对象吧
                           me.destroy();                  
-													var t = Ext.ComponentQuery.query("#tab-" + me.document_id)[0];
-													t.store.reload();
+													//var t = Ext.ComponentQuery.query("#tab-" + me.document_id)[0];
+													//t.store.reload();
                         	
               		     
                 		}

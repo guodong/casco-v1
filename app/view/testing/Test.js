@@ -238,7 +238,7 @@ Ext.define('casco.view.testing.Test', {
 				},{
 				    xtype: 'gridcolumn',
 				    dataIndex: 'result',
-					width: 120,
+					  width: 120,
 				    renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
 				        return resultStore.findRecord('value', value).get('label');
 				    },
