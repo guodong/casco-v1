@@ -1,18 +1,16 @@
+//151105 
 Ext.define('casco.view.manage.ManageController', {
     extend: 'Ext.app.ViewController',
 
-    requires: [
-               'casco.view.manage.Userlist'
-    ],
-
+    requires: ['casco.view.manage.Userlist'],
     alias: 'controller.manage',
+    
+    //注销登录
     onLogout: function () {
         Ext.Msg.confirm('Confirm', 'Are you sure to logout?', function (choice) {
             if (choice === 'yes') {
                 localStorage.removeItem('uid');
-
                 this.getView().destroy();
-
                 Ext.widget('login');
             }
         }, this);

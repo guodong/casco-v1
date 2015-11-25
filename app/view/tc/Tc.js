@@ -128,6 +128,8 @@ Ext.define('casco.view.tc.Tc', {
         			}
         		});
             }
+		
+		
         },'-',{
             text: 'Add Item',
             glyph: 0xf067, 

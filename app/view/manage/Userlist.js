@@ -1,4 +1,4 @@
-//20151021 Q R
+//151021 Q R
 Ext.define('casco.view.manage.Userlist', {
 	extend: 'Ext.grid.Panel',
 	//alias: 'widget.userlist',

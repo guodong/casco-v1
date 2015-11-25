@@ -47,6 +47,7 @@ Ext.define('casco.view.rs.vat.Add', {
 			autoScroll: true,
 			listeners: {
 				itemdblclick: function(view, record, item, index, e, eOpts) {
+					console.log(record);
 					me.addSources(record);
 				}
 			}
