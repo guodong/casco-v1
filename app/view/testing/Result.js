@@ -8,7 +8,7 @@ Ext.define('casco.view.testing.Result', {
         clicksToEdit: 1
     },
     listeners : {
-        cellclick: function(a,b,c, record, item, index, e) {
+          cellclick: function(a,b,c, record, item, index, e) {
         	Ext.getCmp('testing-step-panel').down('form').loadRecord(record);
         	Ext.getCmp('testing-step').store.loadData(record.get('tc').steps);
         }

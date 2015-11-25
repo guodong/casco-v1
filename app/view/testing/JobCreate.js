@@ -66,6 +66,7 @@ Ext.define('casco.view.testing.JobCreate', {
 				queryMode: 'local',
 				listeners: {
 					select: function(f, r, i) {
+						//级联选择
 						Ext.getCmp('test-tc-version').store.load({
 							params: {
 								document_id: r.get('id')
@@ -95,9 +96,11 @@ Ext.define('casco.view.testing.JobCreate', {
 				valueField: 'id',
 				listeners: {
 					select: function(f, r, i){
+						//级联处
 						Ext.getCmp('testing-job-tc-grid').getStore().load({
 							params: {
-								version_id: r.get('id')
+								version_id: r.get('id'),
+								act:'stat'
 							}
 						});
 					}
@@ -159,15 +162,30 @@ Ext.define('casco.view.testing.JobCreate', {
 			},
 			columns: [{
 				text: 'tag',
-				dataIndex: 'tag'
+				dataIndex: 'tc',
+				renderer: function(v) {
+				return v.tag
+			}
 			},{
 				text: 'description',
-				dataIndex: 'descripiton',
-				flex: 1
-			},{
-				text: 'test method',
-				dataIndex: 'test_method'
-			}]
+				dataIndex: 'tc',
+				flex: 1,
+			  renderer: function(v) {
+			  var column=JSON.parse('{'+v.column+'}');
+				//console.log(column);
+				return column.description||column['test case description']||''
+			  }
+			}, {
+			text: "test method",
+			dataIndex: "tc",
+			renderer: function(v) {
+				var str = "";
+				for ( var i in v.testmethods) {
+					str += v.testmethods[i].name;
+				}
+				return str;
+			}
+		}]
 		}];
 		me.dockedItems = [{
 			xtype: 'toolbar',

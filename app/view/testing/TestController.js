@@ -15,6 +15,7 @@ Ext.define('casco.view.testing.TestController', {
 		rsvsd = Ext.getCmp('testing-job-rs').getStore();
 		var rsvss = [];
 		rsvsd.each(function(v){
+		//	console.log(v);
 			var obj = {
 				rs_document_id: v.get('id'),
 				rs_version_id: v.get('version_id')
@@ -25,7 +26,8 @@ Ext.define('casco.view.testing.TestController', {
 		var tcs = [];
 		var sels = Ext.getCmp('testing-job-tc-grid').getSelection();
 		for(var i in sels){
-			tcs.push(sels[i].get('id'));
+		//	console.log(sels[i].get('tc').id);
+			tcs.push(sels[i].get('tc').id);
 		}
 		meta.tcs = tcs;
 		var job = Ext.create('casco.model.Testjob', meta);
