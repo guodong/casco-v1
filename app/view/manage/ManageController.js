@@ -1,3 +1,4 @@
+//151105 
 Ext.define('casco.view.manage.ManageController', {
 	extend: 'Ext.app.ViewController',
 

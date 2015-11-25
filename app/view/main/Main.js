@@ -1,3 +1,4 @@
+//151105
 /**
  * This class is the main view for the application. It is specified in app.js as the
  * "mainView" property. That setting automatically applies the "viewport"
@@ -11,16 +12,14 @@ Ext.define('casco.view.main.Main', {
 
     requires: [
         'Ext.plugin.Viewport',
-
         'casco.view.main.MainController',
         'casco.view.main.MainModel'
     ],
 
     controller: 'main',
     viewModel: 'main',
-
+    
     ui: 'navigation',
-
     tabBarHeaderPosition: 1,
 
     tabBar: {
