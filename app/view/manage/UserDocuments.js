@@ -25,18 +25,50 @@ Ext.define('casco.view.manage.UserDocuments', {
          	for (var j = 0; j < node.childNodes.length; j++) {
 				//	node.childNodes[j].fireEvent('checkchange',node.childNodes[j], checked);//为什么不会递归地触发,不搞了搞死了
 					node.childNodes[j].set('checked', checked);
-					if(node.hasChildNodes()){
+					if(node.childNodes[j].hasChildNodes()){
 					
 					 test(node.childNodes[j],checked);
 					}
+        
+				}//for
 
-
-                    
-				}
-
-		}
-		this.test=test;
+		}//test
 		
+		var  test_parent=function(node){
+			
+			
+			 
+			   var flag=0;                                                     
+			  // console.log(node.parentNode);                              
+			    if(node.parentNode==null){return;}                          
+			   for(var k=0;k<node.parentNode.childNodes.length;k++){        
+			    	                                                          
+			                                                                
+			//    console.log(node.parentNode.childNodes[k].);              
+			   if(node.parentNode.childNodes[k].get('checked')){            
+			    	                                                          
+			    //	 console.log(node.parentNode.childNodes[k].checked);    
+			    	continue;                                                                        
+			    	                                                                                 
+			   }                                                                                   
+			                                                                                       
+			    else flag=1;break;                                                                 
+			   }//for                                                                              
+			   if(node.parentNode.parentNode==null){return;}                                                                                
+			   node.parentNode.set('checked',(flag==0)?true:false);                                
+			   //不用写递归是因为set方法的时候会触发父类的事件从而执行,然而并不是这样                                                    
+			   if(node.parentNode!=null)test_parent(node.parentNode);                            
+			                                                                                       
+			                        
+		   
+		   
+		   
+
+		
+	}//test_parent
+		this.test=test;
+	
+		this.test_parent=test_parent;
 		//获取用户相关的文档store
 	/*	var user_docs=Ext.create('casco.store.ProjectUser');
 		user_docs.load({
@@ -135,10 +167,41 @@ Ext.define('casco.view.manage.UserDocuments', {
 		       checkchange: function(node,checked){
 
 
-
+              
+             //   console.log(node.get('text')); 
 
                 this.test(node,checked);
-
+             
+                this.test_parent(node);
+                
+                
+              
+              
+                                            
+              
+              
+              
+                                                            
+                  
+              
+                                                                  
+              
+              
+              
+              
+              
+              
+              
+              
+                                         
+              
+              
+                
+                
+                
+                
+                
+                
 
 
 			   }//checkchange

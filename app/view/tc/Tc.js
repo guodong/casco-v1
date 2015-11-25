@@ -16,7 +16,7 @@ Ext.define('casco.view.tc.Tc', {
 	//matched string css class
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
-   // forceFit:true,
+    forceFit:true,
     viewModel : 'main',
     initComponent: function(){
     	var me = this;
@@ -145,19 +145,11 @@ Ext.define('casco.view.tc.Tc', {
 				 
                 
                
-				var suffix=tag.toString().match(/[^\d]+/g);
+				  var suffix=tag.toString().match(/[^\d]+/g);
 			    num=parseInt(tag.toString().match(/\d+/g))+1;
 			//	console.log(suffix);
 			    tag=suffix[0]+num+suffix[1];
-		/*		 
-				 for (var i=0;i<record.length;i++)
-				 {
-                    if(tag<record[i].get('tag')){tag=record[i].get('tag')};
-					else continue;
-                  }
-
-		*/	 
-               var win = Ext.create('widget.tcadd',{listeners:{scope: this}, version_id: me.curr_version.get('id'),tag_id:tag,project:me.project, document_id:me.document.id});
+               var win = Ext.create('widget.tcadd',{listeners:{scope: this}, columns:me.columns,version_id: me.curr_version.get('id'),tag_id:tag,project:me.project, document_id:me.document.id});
                 win.show();
             }
         },'-',{
@@ -168,17 +160,18 @@ Ext.define('casco.view.tc.Tc', {
                 Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
 		 
 	            var view=me.getView();
-                var selection =view.getSelectionModel().getSelection()[0];
-	            if (selection) {
-				 
-				selection.erase();
-			    //var user = view.user?view.user:Ext.create('casco.model.User');
-				//Ext.Msg.alert(selection.account);
-	            me.store.remove(selection);
-
+                 me.reconfigure(me.store,me.columns);
+						var selection =view.getSelectionModel().getSelection()[0];
+						var tc = Ext.create('casco.model.Tc',{id:selection.get('id')});
+				        tc.erase();
+						if (selection) {
+							me.store.remove(selection);
+							selection.erase();
+						}
+			    
 	            me.getView().refresh();
-	            }
-		       
+	             
+			
     	}}, this);
 
 
@@ -405,7 +398,8 @@ Ext.define('casco.view.tc.Tc', {
     listeners : {//与init并列,不能直接me.*来了进行调用
         celldblclick: function(a,b,c, record, item, index, e) {
         	if(c==0){
-				window.open('/draw/graph2.html#'+record.get('tag'));
+				console.log();
+				window.open('/draw/graph2.html#'+record.get('id')+'&'+record.get('tag'));
 				return;
 			}
         	var win = Ext.create('widget.tcadd',{tc: record, document_id: this.document.id, project: this.project,columns:this.columns});

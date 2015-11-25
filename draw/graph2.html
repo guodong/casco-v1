@@ -169,7 +169,7 @@ label{
 			tree.init("http://api.casco.me/dump?id=" + getPar('id'));
 		}); */
 	 
-	 
+	    var API="http://localhost/casco-api/public/";
 		var tree = CollapsibleTree("#categoryHierarchy");
 		function look(){
 			show($("#tag").val());
@@ -180,7 +180,7 @@ label{
 		}
 		function show(id){
 			//tree.init("http://api.casco.me/dump?tag=" + id);
-			tree.init("http://localhost:8080/dump?tag=" + id);
+			tree.init(API+"dump?id=" + id);
 			location.hash=id;
 		}
 		window.addEventListener("hashchange", function(){

@@ -1,10 +1,10 @@
 /**
- * This class is the controller for the main view for the application. It is
- * specified as the "controller" of the Main view class.
- * 
- * TODO - Replace this content of this view to suite the needs of your
- * application.
- */
+* This class is the controller for the main view for the application. It is
+* specified as the "controller" of the Main view class.
+*
+* TODO - Replace this content of this view to suite the needs of your
+* application.
+*/
 Ext.define('casco.view.main.MainController', {
 	extend : 'Ext.app.ViewController',
 
@@ -14,58 +14,58 @@ Ext.define('casco.view.main.MainController', {
 		this.redirectTo('project/' + record.get('id'), true);
 		location.reload();
 	},
-    editUser:function(combo,record){
-      
-	
-	 if(record.get('name')=='1'){
-	   combo.setValue(combo.emptyText);
-	  var  model= Ext.create('casco.model.User');
-	   model.setId(JSON.parse(localStorage.user).id);
-	 
-	  casco.model.User.load(JSON.parse(localStorage.user).id,{
-
-		callback:function(record, operation,ops){
-
-		var win = Ext.create('casco.view.manage.Useredit', {user:record}); 
-		win.down('form').loadRecord(record);//动态填充表单 
-		win.show();
+	editUser:function(combo,record){
 
 
+		if(record.get('name')=='1'){
+			combo.setValue(combo.emptyText);
+			var  model= Ext.create('casco.model.User');
+			model.setId(JSON.parse(localStorage.user).id);
 
-	  }
-  
-	  });
-	  
-	 }else if(record.get('name')=='2'){
-        
-	   Ext.Msg.confirm('Confirm', 'Are you sure to logout?', function(choice){if(choice == 'yes'){
-        var me = this;
-    	var view = this.getView();
-    	Ext.Ajax.request({
-			url: API + 'logout',
-			withCredentials: true,
-			success: function(response){
-				var d = Ext.decode(response.responseText);
-			 
-				if(d.code != 0){
-					Ext.Msg.alert('Error', 'Logout failure.');
-				}else{
-					 //首先清空localsotrage
-	                localStorage.clear();
-					var main=location.hash;
-                   // console.log(main);
-					loc=main.match(/^\#([a-z]*).*?$/);//蛋疼，表示project窗口不能销毁
-				//	console.log(loc[1]);
-                    var parent=(loc[1]=="project")?"app-main":loc[1];
-                    me.getView().up(parent).destroy();
-				    me.redirectTo('selectProject', true);
-    	            location.reload();
-			 
+			casco.model.User.load(JSON.parse(localStorage.user).id,{
+
+				callback:function(record, operation,ops){
+
+					var win = Ext.create('casco.view.manage.Useredit', {user:record});
+					win.down('form').loadRecord(record);//动态填充表单
+					win.show();
+
+
+
 				}
-            }//success
-       });//request
-	   }}, this);//confirm
-	  }//else
+
+			});
+
+		}else if(record.get('name')=='2'){
+
+			Ext.Msg.confirm('Confirm', 'Are you sure to logout?', function(choice){if(choice == 'yes'){
+				var me = this;
+				var view = this.getView();
+				Ext.Ajax.request({
+					url: API + 'logout',
+					withCredentials: true,
+					success: function(response){
+						var d = Ext.decode(response.responseText);
+
+						if(d.code != 0){
+							Ext.Msg.alert('Error', 'Logout failure.');
+						}else{
+							//首先清空localsotrage
+							localStorage.clear();
+							var main=location.hash;
+							// console.log(main);
+							loc=main.match(/^\#([a-z]*).*?$/);//蛋疼，表示project窗口不能销毁
+							//	console.log(loc[1]);
+							var parent=(loc[1]=="project")?"app-main":loc[1];
+							me.getView().up(parent).destroy();
+							me.redirectTo('selectProject', true);
+							location.reload();
+
+						}
+					}//success
+				});//request
+			}}, this);//confirm
+		}//else
 	},
 	manage : function() {
 		this.redirectTo('manage', true);

@@ -16,7 +16,7 @@ Ext.define('casco.view.main.Top', {
          data : [
           
          {"abbr":"EditInfo", "name":"1"},
-		 {"abbr":"Logout", "name":"2"}
+		     {"abbr":"Logout", "name":"2"}
 		
         
            ]});
@@ -55,7 +55,7 @@ Ext.define('casco.view.main.Top', {
             valueField: 'id',
             store: store,
             queryMode: 'local',
-			id:'switcher',	//ManagerController
+			      itemId:'switcher',	//ManagerController
             emptyText: 'Switch Project',
             listeners: {
             	select: 'switchProject'
@@ -66,7 +66,7 @@ Ext.define('casco.view.main.Top', {
             displayField: 'abbr',
             valueField: 'name',
             store: states,
-			width: '10%',
+			      width: '10%',
             queryMode: 'local',
             emptyText: JSON.parse(localStorage.user).realname,
             listeners: {

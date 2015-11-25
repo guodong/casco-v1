@@ -24,7 +24,7 @@ Ext.define('casco.view.rs.Rs', {
 	//matched string css class
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
-	//forceFit:true,
+	forceFit:true,
 //	columnLines:true,
 		
 	initComponent: function() {
@@ -119,7 +119,7 @@ Ext.define('casco.view.rs.Rs', {
 					 me.columns=me.json.columModle;
 				//	 console.log(me.columns);
 					 me.store.setData(me.ds.getData());
-                     me.reconfigure(me.store,me.columns);
+           me.reconfigure(me.store,me.columns);
 					
             	},
             	beforequery : function(e){
@@ -294,7 +294,7 @@ Ext.define('casco.view.rs.Rs', {
 			celldblclick: function(a,b,c,record){
 				localStorage.tag = record.get('tag');
 				if(c==0){
-					window.open('/draw/graph2.html#'+record.get('tag'));
+					window.open('/draw/graph2.html#'+record.get('id')+"&"+record.get('tag'));
 					return;
 				}
 //				if(c==5||c==6){
@@ -310,8 +310,12 @@ Ext.define('casco.view.rs.Rs', {
 //					return;
 //				}
     //            console.log(me.getColumnModel().getColumnHeader());
+      //  record.set('allocation','test herer');
+      //  me.reconfigure(me.store,me.columns);
+      //  console.log(record.getData());
 				var win = Ext.create('widget.rs.rsdetails', {
 					rs: record,
+					pointer:me,
 //					editvat: c==6||c==5,
 					document_id: me.document_id,
 					project:me.project,

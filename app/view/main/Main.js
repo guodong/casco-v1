@@ -43,6 +43,7 @@ Ext.define('casco.view.main.Main', {
     	me.items = [{
             region: 'north',
             xtype: 'top',
+            reference:'top',
             project: me.project
         },{
             xtype: 'tree',
@@ -60,8 +61,8 @@ Ext.define('casco.view.main.Main', {
             region: 'center',
             xtype: 'tabpanel',
             title: '',
-			reference: 'rightpanel',
-            id: 'workpanel',//为什么这个id此时没有用了
+			      reference: 'rightpanel',
+            id: 'workpanel',
             items:[{
                 title: 'Overview',
                 html: '<iframe id="draw" src="/draw/noedit.html?'+me.project.get('id')+'" style="width:100%;height:100%;border:0"></iframe>'

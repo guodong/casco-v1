@@ -12,7 +12,8 @@ Ext.define('casco.view.tc.TcStep', {
     id: 'mgrid',
 	columns: [{
 		xtype: 'rownumberer',
-		text: 'step',
+		text: 'num',
+		dataIndex:'num',
 		width: 50
     },{
         text: 'Actions',
@@ -35,7 +36,7 @@ Ext.define('casco.view.tc.TcStep', {
         draggable: false,
         hideable: false,
         menuDisabled: true,
-        dataIndex: 'expected_result',
+        dataIndex: 'expected result',
         field: {
             type: 'textareafield'
         }

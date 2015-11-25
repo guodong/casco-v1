@@ -10,7 +10,7 @@ Ext.define('casco.view.rs.RsDetails', {
     ],
     
     width:900,
-    height:400,
+    height:650,
 //    autoScroll:true,
     resizable: true,
     maximizable: true,
@@ -31,21 +31,14 @@ Ext.define('casco.view.rs.RsDetails', {
 
 
 		if(me.rs){
-			
-			me.vat.setData(me.rs.getData());
+					me.vat.setData(me.rs.getData().vat);
 		}
 	//	console.log(me.store);
 		me.vatstrstore = Ext.create('casco.store.Vatstrs');
 //		me.vatstrstore = new casco.store.Vatstrs();
-        //终于用这种方式遍历出来了啊
-        Ext.Array.each(me.columns, function(name, index, countriesItSelf) {
-       // console.log(name.width);
-		me.columns[index].width='100%';
-		me.columns[index].editor={xtype:'textfield'};
-        });
-        
-        console.log(me.columns);
-		 
+       
+      
+    
 		me.vatstrstore.load({
     		params: {
     			project_id: me.project.get('id')
@@ -77,8 +70,8 @@ Ext.define('casco.view.rs.RsDetails', {
 				xtype: 'vattree',
 				region: 'west',
 				width: 200,
-		        split: true,
-		        collapsible: true,
+		    split: true,
+		    collapsible: true,
 				autoScroll: true,
 				document_id: me.document_id,
 				project: me.project,
@@ -133,16 +126,38 @@ Ext.define('casco.view.rs.RsDetails', {
                 	me.vat.each(function(s){
             			vat.push(s.getData());
             		});
-                	rs.set('vat', vat);
-//                	if(me.down("#vatstr_id").getValue().length == 36)
-//                		rs.set('vatstr_id', me.down("#vatstr_id").getValue());
-                	rs.save({
-                		callback: function(){
-                        	//var t = Ext.ComponentQuery.query("#tab-"+me.document_id)[0];
-              		      	//Ext.getCmp().getStore.reload();
+            		  
+            		  var column='';
+            		  //console.log(me.down('form').getValues());
+            		  //可以不用很low的拼接,可以push2array2join
+            		  var my_rs=Ext.create('casco.model.Rs',{id:rs.get('id')});
+            		  Ext.Object.each(me.down('form').getValues(), function(key, value, myself){
+            		  	
+            		  	if(key!='id'&&key!='tag'){column+='"'+key+'":"'+value+'",';}
+            	      else if(key=='tag'){my_rs.set('tag',value);}
+            		  	
+            		  });
+            		  
+            		  my_rs.set('column',column.substr(0,column.length-1));
+            		
+                	my_rs.set('vat', vat);
+                	my_rs.save({
+                		callback: function(record, operation, success){
+                        //	var t = Ext.ComponentQuery.query("#tab-"+me.document_id)[0];
+                        //console.log(me.down('form').getValues());
+                          rs.set(me.down('form').getValues());
+                          rs.set('vat',vat);
+                          me.pointer.reconfigure(me.pointer.store, me.pointer.columns);
+                        	Ext.Msg.alert('更新成功');
+                        	//暂时修改前端对象吧
+                          me.destroy();                  
+													//var t = Ext.ComponentQuery.query("#tab-" + me.document_id)[0];
+													//t.store.reload();
+                        	
+              		     
                 		}
                 	});
-                	this.destroy();
+                	
                 }
             }]
 		},{
@@ -155,7 +170,7 @@ Ext.define('casco.view.rs.RsDetails', {
 				xtype: 'gridpanel',
 				fieldLabel: 'gridpanel',
 				id:'inpanel',
-			    columns:me.columns,
+			 //   columns:me.columns,
 				store:me.store,
 				editable: true,
 				forceFit:true,
@@ -187,20 +202,22 @@ Ext.define('casco.view.rs.RsDetails', {
 		}],
 					 
      
-     //    Ext.getCmp('inpanel').reconfigure(me.store,me.columns);
+    
+	  
+	  Ext.Array.each(me.columns, function(name, index, countriesItSelf) {
+		Ext.Array.insert(me.items[2].items,0,
+			    [{anchor : '100%',
+				fieldLabel : name.dataIndex,
+				name : name.dataIndex,
+				xtype : 'textarea',
+				maxHeight: 10,
+	            allowBlank: true}]);//插入值即可
 
-	  /*console.log(me.items[2].items);		
-	   me.items[2].items.push({
-    	            fieldLabel: 'test',
-    	            xtype: 'textfield',
-					region:'north',
-    	            editable: false,
-        	    	width: '100%',
-    				
-    	           
-    	        });
+		
+        });
+        
 		//me.redoLayout();		
-		*/
+	 
 //	    listeners: {
 //	        itemdblclick: function(view, record, item, index, e, eOpts){
 //	        	var me = this;
