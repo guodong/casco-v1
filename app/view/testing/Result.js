@@ -210,11 +210,19 @@ Ext.define('casco.view.testing.Result', {
 				});
 			}
 		},{
-			text: 'Export',
+			text: 'Export Word',
 			glyph: 0xf019,
 			scope: this,
 			handler: function() {
 				window.open(API+'testjob/export?job_id='+me.job.get('id'));
+            	return;
+			}
+		},{
+			text: 'Export Project',
+			glyph: 0xf019,
+			scope: this,
+			handler: function() {
+				window.open(API+'testjob/export_pro?job_id='+me.job.get('id'));
             	return;
 			}
 		}];
