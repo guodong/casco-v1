@@ -58,6 +58,7 @@ Ext.define('casco.Application', {
 					action.stop(true);
 					Ext.widget('login');
 				}else{
+					
 					action.resume();
 				}
 			}
@@ -73,6 +74,7 @@ Ext.define('casco.Application', {
 					action.stop(true);
 					Ext.widget('login');
 				}else{
+					if(!localStorage.user)localStorage.setItem("user", JSON.stringify(d.data));
 					action.resume();
 				}
 			}

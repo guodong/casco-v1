@@ -41,7 +41,6 @@ Ext.define('casco.view.tc.Tc', {
 						},
 					    callback:function(){
 					    
-                     //   console.log(me.store_tc.getAt(0));
 					    me.columns=me.store_tc.getAt(0).get('columModle'); 
 					    me.ds = new Ext.data.JsonStore({
 										  data: (me.store_tc.getAt(0).get('data')),
@@ -96,6 +95,7 @@ Ext.define('casco.view.tc.Tc', {
 			text: 'Import Doc',
 			glyph: 0xf093,
 			scope: this,
+			width: 100,
 			handler: function() {
 				var win = Ext.create('widget.rs.rsimport', {
 					listeners: {
@@ -112,6 +112,7 @@ Ext.define('casco.view.tc.Tc', {
 		},'-',{
             text: 'Export Doc',
             glyph: 0xf019,
+            width: 100,
             handler : function() {
             	window.open(API+'tc/export?version_id='+me.down('combobox').getValue());
             	return;
@@ -132,7 +133,8 @@ Ext.define('casco.view.tc.Tc', {
 		
         },'-',{
             text: 'Add Item',
-            glyph: 0xf067, 
+            glyph: 0xf067,
+            width: 100,
             handler : function() {
                 
 			    var tag='';
@@ -155,6 +157,7 @@ Ext.define('casco.view.tc.Tc', {
         },'-',{
             text: 'Delete Item',
             glyph: 0xf068,
+            width: 100,
             handler : function() {
 
                 Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
@@ -170,10 +173,24 @@ Ext.define('casco.view.tc.Tc', {
 						}
 			    
 	            me.getView().refresh();
-	             
+                }},this);
+        	}
 			
-    	}}, this);
+    	},'-',{
+            text: 'Edit checklog.py',
+            glyph: 0xf0e8,
+            width: 100,
+            scope:this,
+            handler : function() {
 
+	            var view=me.getView();
+                me.reconfigure(me.store,me.columns);
+				var selection =view.getSelectionModel().getSelection()[0];
+				if(!selection){Ext.Msg.alert("请选择TC");return;}
+				window.open('/ace-builds/editor.html?type=python&tc_id='+selection.get('id')); 
+	          //  me.getView().refresh();
+	             
+	 
 
             }
         },
@@ -186,7 +203,24 @@ Ext.define('casco.view.tc.Tc', {
 //			},
 //			hidden: true
 //		},
-		'->',{
+        '-',{
+            text: 'Edit tc_robot',
+            glyph: 0xf0e8,
+            width: 100,
+            scope:this,
+            handler : function() {
+
+	            var view=me.getView();
+                me.reconfigure(me.store,me.columns);
+				var selection =view.getSelectionModel().getSelection()[0];
+				if(!selection){Ext.Msg.alert("请选择TC");return;}
+				window.open('/ace-builds/editor.html?type=robot&tc_id='+selection.get('id')); 
+	          //  me.getView().refresh();
+	             
+	 
+
+            }
+        },'->',{
             xtype: 'textfield',
             fieldLabel: 'Search',  
             labelWidth: 50,
