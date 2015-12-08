@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Editor</title>
+<style>
+body {
+	overflow: hidden;
+	margin: 0;
+	font-size: 14px;
+	font-family: "Helvetica Neue", Helvetica;
+}
+#chart, #header, #footer {
+	position: absolute;
+	top: 0;
+}
+#header, #footer {
+	z-index: 1;
+	display: block;
+	font-size: 36px;
+	font-weight: 300;
+	text-shadow: 0 1px 0 #fff;
+}
+#header.inverted, #footer.inverted {
+	color: #fff;
+	text-shadow: 0 1px 4px #000;
+}
+#header {
+	top: 80px;
+	left: 140px;
+	width: 1000px;
+}
+#footer {
+	top: 680px;
+	right: 140px;
+	text-align: right;
+}
+rect {
+	fill: none;
+	pointer-events: all;
+}
+pre {
+	font-size: 18px;
+}
+line {
+	stroke: #000;
+	stroke-width: 1.5px;
+}
+.string, .regexp {
+	color: #f39;
+}
+.keyword {
+	color: #00c;
+}
+.comment {
+	color: #777;
+	font-style: oblique;
+}
+.number {
+	color: #369;
+}
+.class, .special {
+	color: #1181B8;
+}
+a:link, a:visited {
+	color: #000;
+	text-decoration: none;
+}
+a:hover {
+	color: #666;
+}
+.hint {
+	position: absolute;
+	right: 0;
+	width: 1280px;
+	font-size: 12px;
+	color: #999;
+}
+.node circle {
+	cursor: pointer;
+	fill: #fff;
+	stroke: steelblue;
+	stroke-width: 1.5px;
+}
+.node text {
+	font-size: 11px;
+}
+path.link {
+	fill: none;
+	stroke: #ccc;
+	stroke-width: 1.5px;
+}
+.sidebar{
+	width: 150px;
+	border-right: 1px solid #ccc;
+	height: 100%;
+	float: left;
+	padding: 50px 20px;
+}
+.main{
+	padding-left: 200px;
+}
+input[type=text]{
+	width: 140px;
+	height: 28px;
+	border: 1px solid #ccc;
+}
+label{
+	font-size:  12px;
+	margin-bottom: 5px;
+	display: block;
+}
+</style>
+  
+  
+  <style type="text/css" media="screen">
+    body {
+        overflow: hidden;
+    }
+   .sidebar{
+	width: 150px;
+	border-right: 1px solid #ccc;
+	float:left;
+	height: ;
+	padding: 50px 20px;
+	}
+    label{
+    
+margin-top: 10px;
+margin-left: 20px;
+position: relative;
+display: inline-block;
+padding: 7px 12px;
+font-size: 13px;
+font-weight: bold;
+color: #333;
+text-shadow: 0 1px 0 rgba(128,128,128,0);
+white-space: nowrap;
+vertical-align: middle;
+cursor: pointer;
+border-radius: 3px;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+-webkit-appearance: none;
+text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+border-color: #5ca941;	
+    
+    
+    
+    }
+    #editor {
+        magin:0;
+        position:absolute;
+        float:left;
+        top: 0;
+        bottom: 0;
+        left: 200px;
+        right:0px;
+    }
+
+button{
+margin-top: 10px;
+margin-left: 10px;
+position: relative;
+display: inline-block;
+padding: 7px 12px;
+font-size: 13px;
+font-weight: bold;
+color: #333;
+text-shadow: 0 1px 0 rgba(255,255,255,0.9);
+white-space: nowrap;
+vertical-align: middle;
+cursor: pointer;
+background-color: #eee;
+background-image: -webkit-linear-gradient(#fcfcfc, #eee);
+background-image: linear-gradient(#fcfcfc, #eee);
+background-repeat: repeat-x;
+border: 1px solid #d5d5d5;
+border-radius: 3px;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+-webkit-appearance: none;
+text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+background-color: #60b044;
+background-image: -webkit-linear-gradient(#8add6d, #60b044);
+background-image: linear-gradient(#8add6d, #60b044);
+background-repeat: repeat-x;
+border-color: #5ca941;	
+color: #fff;	
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+<label>options</label>		
+<p>
+<button class="button" style="width:80%" onclick="save()">保存</button>
+<p>
+<button class="button" style="width:80%" onclick="javascript:location.reload()">刷新</button>
+<p>
+<button class="button" style="width:80%" onclick='reset()'>重置</button>
+</div>
+
+<div id="robot" style="display:none">
+*** Settings ***
+Documentation     Example test cases using the keyword-driven testing approach.
+...               Example fsfb2 test rtc_04
+Library           simlibrary.SimNode     S1   1     0.5
+
+*** Test Cases ***
+RTC_05_01
+    caseConfiguration       ${CURDIR}
+    deviceInit              ./setting/simulator/simulator_feature.xml
+    deviceRun
+    runCase                 0   0
+    sleepSeconds            5
+    stopCase
+    checkResult             ${CURDIR}
+    deviceEnd
+</div>
+<div  id="checklog" style="display:none">
+#!/usr/bin/python
+# -*- coding:utf-8 -*-
+#----------------------------------------------------------------------------
+# FileName:     checklog.py
+# Description:  analyse log for rtc_04 
+# Author:       OO
+# Version:      0.0.1
+# Created:      2015-11-20
+# Company:      CASCO
+# LastChange:   
+# History:      
+#----------------------------------------------------------------------------
+"""Usage: checklog.py FILE1 FILE2
+
+for example test library.
+
+Arguments:
+  FILE1     input file1
+  FILE2     input file2
+"""
+
+from docopt import docopt
+from simulator.base.check import CheckLog
+
+if __name__ == '__main__':
+    arguments = docopt(__doc__)
+
+    _case = CheckLog()
+    _case.setSeparator()
+    _case.setKeyName()
+    _case.setDiffRule('all', 'SHB_CKW_1', 'SHB_CKW_2', 'MainCKW_1', 'MainCKW_2')
+    _case.setRepeatRule('all', 1, '****************** Send BSD message!!')
+    _case.analysisLog(arguments['FILE1'])
+    _case.setRepeatRule(3, 2, '****************** Receive SSE message!!')
+    _case.setRepeatRule(9, 2, '****************** Receive SSE message!!')
+    _case.analysisLog(arguments['FILE2'])
+    _case.outputLog()
+   
+}
+</div>
+<pre id="editor">
+</pre>
+<script src="/jquery.min.js"></script>
+<script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+<script>
+
+function getPar(par) {
+	//获取当前URL
+	var local_url = document.location.href;
+	//获取要取得的get参数位置
+	var get = local_url.indexOf(par + "=");
+	if (get == -1) {
+		return false;
+	}
+	//截取字符串
+	var get_par = local_url.slice(par.length + get + 1);
+	//判断截取后的字符串是否还有其他get参数
+	var nextPar = get_par.indexOf("&");
+	if (nextPar != -1) {
+		get_par = get_par.slice(0, nextPar);
+	}
+	return get_par;
+}
+
+ function  save(){
+
+	    var id=getPar('tc_id');
+		var type=getPar('type');
+		var content=null;
+		switch(type){
+		case 'python':
+           content={'checklog':ace.edit("editor").getValue()}; 
+			break;
+		case 'robot':
+           content={'robot':ace.edit('editor').getValue()};
+			break;
+		default:
+		}
+	  
+		 $.ajax({
+			url: API+'tc/'+id,
+			method:'put',
+			data:content,
+			success: function(d){
+
+			  alert('保存成功!');
+			}
+		});
+	  
+ }
+
+function   clear(){
+
+	alert(/xss/);
+}
+
+function  reset(){
+
+	
+	var id=getPar('tc_id');
+	var type=getPar('type');
+	var params=(type=='python')?{'checklog':''}:{'robot':''};
+    $.ajax({
+		url: API+'tc/'+id,
+		dataType: 'json',
+		method:'put',
+		data:params,
+		success: function(d){		 
+		location.reload();
+			 	 
+		}
+	});
+   
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+	var API='http://localhost/casco-api/public/';	
+	var id=getPar('tc_id');
+	var type=getPar('type');
+    $.ajax({
+		url: API+'tc/'+id,
+		dataType: 'json',
+		success: function(d){
+
+		 switch(type){
+
+		 case 'python':
+
+			 var checklog=document.getElementById("checklog").innerText;
+			 var editor = ace.edit("editor"); 
+			 var content=d.checklog?d.checklog:checklog;
+			 console.log(content);
+			 editor.setValue(content);
+			 editor.setTheme("ace/theme/ambiance");
+			 editor.session.setMode("ace/mode/python");
+			 break;
+		 case 'robot':
+			 var robot=document.getElementById("robot").innerText;
+			 var editor = ace.edit("editor");
+			 var content=d.robot?d.robot:robot;
+			 editor.setValue(content);
+			 editor.setTheme("ace/theme/ambiance");
+			 editor.session.setMode("ace/mode/python");
+             break;
+ 		 default:
+		 }//switch
+		}
+	});
+   
+
+
+   
+
+
+   
+</script>
+
+</body>
+</html>
