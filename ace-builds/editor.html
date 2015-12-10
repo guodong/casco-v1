@@ -7,10 +7,8 @@
 <link href="editor.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-
 	<div class="sidebar">
 		<label id="label_tag" ></label>
-		<label id="label_file" ></label>
 		<p>
 			<button class="button" style="width: 80%" onclick="save()">保存</button>
 		<p>
@@ -36,6 +34,7 @@ RTC_04_01
     checkResult             ${CURDIR}
     deviceEnd
     	</div>
+    	
 	<div id="checklog" style="display: none">
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
@@ -78,9 +77,10 @@ if __name__ == '__main__':
     _case.analysisLog(arguments['FILE2'])
     _case.outputLog()
 	    </div>
+	    
 	<pre id="editor"></pre>
 	<script src="jquery.min.js"></script>
-	<script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="ace.js" type="text/javascript" charset="utf-8"></script>
 
 	<script>
 	function getPar(par) {
@@ -100,6 +100,7 @@ if __name__ == '__main__':
 		}
 		return get_par;
 	}
+	
 	 function  save(){
 		    var id=getPar('tc_id');
 			var type=getPar('type');
@@ -113,7 +114,7 @@ if __name__ == '__main__':
 				break;
 			default:
 			}
-		  
+			
 			 $.ajax({
 				url: API+'tc/'+id,
 				method:'put',
@@ -124,11 +125,8 @@ if __name__ == '__main__':
 			});
 		  
 	 }
-	function   clear(){
-		alert(/xss/);
-	}
+	 
 	function  reset(){
-		
 		var id=getPar('tc_id');
 		var type=getPar('type');
 		var params=(type=='python')?{'checklog':''}:{'robot':''};
@@ -139,7 +137,6 @@ if __name__ == '__main__':
 			data:params,
 			success: function(d){		 
 			location.reload();
-				 	 
 			}
 		});
 	   
@@ -157,9 +154,9 @@ if __name__ == '__main__':
 			 case 'python':
 				 var checklog=document.getElementById("checklog").innerText;
 				 var editor = ace.edit("editor"); 
-				 document.getElementById("label_tag").innerText = tag +  "\n checklog.py";
+				 document.getElementById("label_tag").innerHTML = tag +  "<br /> checklog.py";
 				 var content=d.checklog?d.checklog:checklog;
-				 console.log(content);
+				 console.log(d);
 				 editor.setValue(content);
 				 editor.setTheme("ace/theme/monokai");
 				 editor.session.setMode("ace/mode/python");
@@ -177,9 +174,6 @@ if __name__ == '__main__':
 			 }//switch
 			}
 		});
-   
-   
-   
 </script>
 
 </body>
