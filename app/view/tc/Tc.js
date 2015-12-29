@@ -147,7 +147,7 @@ Ext.define('casco.view.tc.Tc', {
 				 
                 
                
-				  var suffix=tag.toString().match(/[^\d]+/g);
+				var suffix=tag.toString().match(/[^\d]+/g);
 			    num=parseInt(tag.toString().match(/\d+/g))+1;
 			//	console.log(suffix);
 			    tag=suffix[0]+num+suffix[1];

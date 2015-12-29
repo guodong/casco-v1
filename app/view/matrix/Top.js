@@ -1,8 +1,8 @@
-Ext.define('casco.view.main.Top', {
+Ext.define('casco.view.matrix.Top', {
     extend: 'Ext.toolbar.Toolbar',
-    alias: 'widget.top',
-    xtype: 'top',
-    controller: 'main',
+    alias: 'widget.matrix_top',
+    xtype: 'matrix_top',
+    controller: 'matrix',
     style: {background: '#167abc',padding: '10px',color: '#fff'},
     initComponent: function(){
     	var store = Ext.create('casco.store.Projects');
@@ -16,7 +16,7 @@ Ext.define('casco.view.main.Top', {
          data : [
           
          {"abbr":"EditInfo", "name":"1"},
-		     {"abbr":"Logout", "name":"2"}
+		 {"abbr":"Logout", "name":"2"}
 		
         
            ]});
@@ -36,9 +36,9 @@ Ext.define('casco.view.main.Top', {
             xtype: 'button',
             handler: 'testing'
         },{
-            text: 'Matrix',
+            text: 'Project',
             xtype: 'button',
-            handler: 'matrix'
+            handler: 'project'
         },{
             text: 'Project Stat',
             xtype: 'button',
@@ -70,7 +70,7 @@ Ext.define('casco.view.main.Top', {
             displayField: 'abbr',
             valueField: 'name',
             store: states,
-			      width: '10%',
+			width: '10%',
             queryMode: 'local',
             emptyText: JSON.parse(localStorage.user).realname,
             listeners: {

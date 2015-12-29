@@ -61,7 +61,7 @@ Ext.define('casco.view.main.Main', {
             region: 'center',
             xtype: 'tabpanel',
             title: '',
-			      reference: 'rightpanel',
+			reference: 'rightpanel',
             id: 'workpanel',
             items:[{
                 title: 'Overview',

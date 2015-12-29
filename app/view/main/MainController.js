@@ -87,6 +87,10 @@ Ext.define('casco.view.main.MainController', {
 			});
 		}
 		tabs.setActiveTab(tab);
+	},
+	matrix:function(){
+        this.redirectTo('matrix', true);
+		location.reload();
 	}
 
 });
