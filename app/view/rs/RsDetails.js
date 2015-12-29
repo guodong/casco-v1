@@ -165,7 +165,7 @@ Ext.define('casco.view.rs.RsDetails', {
 			title:false,
 			bodyPadding:'10',
 			region:'center',
-			//autoScroll:true,
+			autoScroll:true,
 			items: [{
 				xtype: 'gridpanel',
 				fieldLabel: 'gridpanel',

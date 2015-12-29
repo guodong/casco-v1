@@ -176,24 +176,7 @@ Ext.define('casco.view.tc.Tc', {
                 }},this);
         	}
 			
-    	},'-',{
-            text: 'Edit checklog.py',
-            glyph: 0xf0e8,
-            width: 100,
-            scope:this,
-            handler : function() {
-
-	            var view=me.getView();
-                me.reconfigure(me.store,me.columns);
-				var selection =view.getSelectionModel().getSelection()[0];
-				if(!selection){Ext.Msg.alert("请选择TC");return;}
-				window.open('/ace-builds/editor.html?type=python&tc_id='+selection.get('id')); 
-	          //  me.getView().refresh();
-	             
-	 
-
-            }
-        },
+    	},
 //        '-',{
 //			text: 'View Graph',
 //			glyph: 0xf0e8,
@@ -203,24 +186,7 @@ Ext.define('casco.view.tc.Tc', {
 //			},
 //			hidden: true
 //		},
-        '-',{
-            text: 'Edit tc_robot',
-            glyph: 0xf0e8,
-            width: 100,
-            scope:this,
-            handler : function() {
-
-	            var view=me.getView();
-                me.reconfigure(me.store,me.columns);
-				var selection =view.getSelectionModel().getSelection()[0];
-				if(!selection){Ext.Msg.alert("请选择TC");return;}
-				window.open('/ace-builds/editor.html?type=robot&tc_id='+selection.get('id')); 
-	          //  me.getView().refresh();
-	             
-	 
-
-            }
-        },'->',{
+    	'->',{
             xtype: 'textfield',
             fieldLabel: 'Search',  
             labelWidth: 50,

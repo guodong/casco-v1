@@ -175,6 +175,33 @@ Ext.define('casco.view.testing.Result', {
 		    }
 		}];
 		me.tbar = [{
+            text: 'Edit checklog',
+            glyph: 0xf0e8,
+            width: 120,
+            scope:this,
+            handler : function() {
+	            var view=me.getView();
+//                me.reconfigure(me.store,me.columns);
+				var selection =view.getSelectionModel().getSelection()[0];
+//				var selectc = selection.get('tc');
+				console.log(selection.get('tc').tag);
+				if(!selection){Ext.Msg.alert("请选择TC");return;}
+				window.open('/ace-builds/editor.html?type=python&tc_id='+selection.get('tc_id')+'&tc_tag='+selection.get('tc').tag); 
+	          //  me.getView().refresh();
+            }
+        },{
+            text: 'Edit robot',
+            glyph: 0xf0e8,
+            width: 110,
+            scope:this,
+            handler : function() {
+	            var view=me.getView();
+				var selection =view.getSelectionModel().getSelection()[0];
+				if(!selection){Ext.Msg.alert("请选择TC");return;}
+				window.open('/ace-builds/editor.html?type=robot&tc_id='+selection.get('tc_id')+'&tc_tag='+selection.get('tc').tag); 
+	          //  me.getView().refresh();
+            }
+        },{
 			text: 'Save',
 			id: 'testing-save-btn',
 			glyph: 0xf0c7,
