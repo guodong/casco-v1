@@ -12,6 +12,8 @@ Ext.define('casco.view.manage.Userlist', {
 		var store = Ext.create('casco.store.Users');
 		store.load();
 		me.store = store;
+		var selModel=new Ext.selection.Model({mode:"MULTI"});
+         me.selModel=selModel;
 		me.tbar = [{
 			//hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false,  //用户权限
 			text: 'Add User',

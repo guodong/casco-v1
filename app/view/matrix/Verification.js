@@ -3,7 +3,7 @@ Ext.define('casco.view.matrix.Verification', {
     xtype: 'matrix.verification',
     
     requires:['casco.store.Verification','casco.model.Verification','casco.view.matrix.VerificationCreate',
-		'casco.view.matrix.ParentMatrix','casco.view.matrix.ChildMatrix'],
+		'casco.view.matrix.ParentMatrix','casco.view.matrix.ChildMatrix','casco.view.matrix.Summary'],
 
     listeners: {
         itemdblclick: function(view, record, item, index, e, eOpts){
@@ -34,13 +34,17 @@ Ext.define('casco.view.matrix.Verification', {
 		data : [
 			{"abbr":"AL", "name":"ParentMatrix"},
 			{"abbr":"AK", "name":"ChildMatrix"},
-			{"abbr":"AZ", "name":"Revison"}
+			{"abbr":"AZ", "name":"Revison"},
+			{"abbr":"AZ", "name":"Summary"}
 		]
 		});
 		me.columns = [{
-			text : 'name',
-			dataIndex : 'name'
+			text : 'version',
+			dataIndex : 'version'
 		}, {
+			text : 'author',
+			dataIndex : 'author'
+		},{
 			text : 'child:version',
 			dataIndex : 'child_version',
 			renderer : function(v) {
@@ -64,6 +68,9 @@ Ext.define('casco.view.matrix.Verification', {
 			},
 		 
 		}, {
+			text: 'description',
+			dataIndex: 'description'
+		},{
 			text: 'created at',
 			dataIndex: 'created_at',
 			 
@@ -105,6 +112,21 @@ Ext.define('casco.view.matrix.Verification', {
 				});
 				win.down('form').loadRecord(job);
 				win.show();
+			}
+		},'-',{
+			text: 'Delete Verification',
+			glyph: 0xf067,
+			scope: this,
+			handler:function(){
+               Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){   //confirm
+					if(choice == 'yes'){
+						var view=me.getView();
+						var selection =view.getSelectionModel().getSelection()[0];
+						if (selection) {
+							me.store.remove(selection);
+							selection.erase();
+						}
+					}}, this);
 			}
 		}];
     	this.callParent();

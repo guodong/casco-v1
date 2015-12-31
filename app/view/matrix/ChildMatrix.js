@@ -33,15 +33,26 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			},
 			synchronous: true,
 			callback: function(record){
-			me.columns=record[0].get('columModle'); 			 
-			me.ds = new Ext.data.JsonStore({
+				
+            me.columns=me.columns_store;
+		    me.ds = new Ext.data.JsonStore({
 							  data: record[0].get('data'),
 							  fields:record[0].get('fieldsNames')
 			});
-		 
 			me.matrix.setData(me.ds.getData());
+			Ext.Array.forEach(record[0].get('columModle'),function(item){
+		    var column = Ext.create('Ext.grid.column.Column', {  
+				text: item['header'],  
+				width:60,  
+				style: "text-align:center;",  
+				align:'center',  
+				dataIndex: item['dataIndex']  
+			});  
+            me.columns.push(column);
+			//me.headerCt.insert(me.columns.length, column);
+			});
 			me.reconfigure(me.matrix,me.columns);
-
+			
 		    }//callback
 		});
     
@@ -82,7 +93,20 @@ Ext.define('casco.view.matrix.ChildMatrix', {
            scope: me
        }];
 		
-      
+       	me.columns_store=[
+			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:200,sortable:true},
+			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:250,sortable:true},
+			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:200,sortable:true},
+			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:250,sortable:true},
+			  {text:'Traceability',dataIndex:'Traceability',header:'Traceability',width:200,sortable:true},
+			  {text:'No compliance description',dataIndex:'No compliance description',header:'No compliance description',width:200,sortable:true},
+			  {text:'Already described in completeness',dataIndex:'Already described in completeness',header:'Already described in completeness',width:200,sortable:true},
+			  {text:'Verif. Assessment',dataIndex:'Verif. Assessment',header:'Verif. Assessment',width:200,sortable:true},
+			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:200,sortable:true},
+			  {text:'Verif. opinion justification',dataIndex:'Verif. opinion justification',header:'Verif. opinion justification',width:200,sortable:true},
+			  {text:'CR',dataIndex:'CR',header:'CR',width:50,sortable:true},
+			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:50,sortable:true}
+				];
 
 
 

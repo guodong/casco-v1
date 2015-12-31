@@ -30,20 +30,25 @@ Ext.define('casco.view.matrix.MatrixController', {
            xtype='childmatrix';
 		  title='child_matrix';
 		  break;
-	  case  'revision':
+	  case  'Revision':
+		  break;
+	  case  'Summary':
+		  xtype='summary';
+	      title='summary';
 		  break;
 	  case  'all':
 		  break;
 	   default:
 	  }
 	    var tabs = Ext.getCmp('matrixpanel');
-		var selModel=new Ext.grid.RowSelectionModel({singleSelect:false});
+		var selModel=new Ext.selection.Model({mode:"MULTI"});
 		var tab = tabs.child('#tab-'+record.get('name')+'-'+v_id);
 		if(!tab){
 		tab = tabs.add({
 			id: 'tab-'+record.get('name')+'-'+v_id,
 			xtype: xtype,
 			title: title,
+			version:record.get('version')?record.get('version'):null,
 			closable: true,
 			selModel:selModel,
 			verification_id:v_id
@@ -66,6 +71,7 @@ Ext.define('casco.view.matrix.MatrixController', {
 			}
 			rsvss.push(obj);//放入的是一个对象啊
 		});
+		meta.account=JSON.parse(localStorage.user).account;
 		meta.parent_versions = rsvss;
 		var job = Ext.create('casco.model.Verification', meta);
 		job.save({

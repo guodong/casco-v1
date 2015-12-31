@@ -9,7 +9,7 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 	layout: {
 		type: 'border'
 	},
-	height: 350,
+	height: 400,
 	width: 700,
 	initComponent: function() {
 		var me = this;
@@ -32,9 +32,9 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 				name: 'project_id',
 				value: me.project.get('id')
 			}, {
-				fieldLabel: 'Name',
+				fieldLabel: 'version',
 				msgTarget: 'under',
-				name: 'name',
+				name: 'version',
 				xtype: 'textfield'
 			}, {
 				xtype: 'combobox',
@@ -87,8 +87,16 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 						*/
 					}
 				}
-			}]//me.items[0]
-		}, {
+			},{
+
+			fieldLabel: 'description',
+			labelAlign:'top',
+			name: 'description',
+			xtype: 'textarea',
+			flex:1,
+			anchor :'100%'
+		}]//me.items[0]
+		},{
 			xtype: 'grid',
 			id: 'parent_doc',
 			region: 'center',

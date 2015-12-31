@@ -26,6 +26,14 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 	initComponent: function() {
 		var me = this;
 		//console.log(me.verification_id);
+		me.column_store=Ext.create('Ext.data.Store', {
+         fields: ['name', 'value'],
+         data : [
+         {"name":"NA", "value":"NA"},
+		 {"name":"OK", "value":"OK"},
+		 {"name":"空白", "value":"空白"}
+           ]});
+
 		me.matrix = new casco.store.ParentMatrix();
 		me.matrix.load({
 			params:{
@@ -33,26 +41,109 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			},
 			synchronous: true,
 			callback: function(record){
-			me.columns=record[0].get('columModle'); 			 
-			me.ds = new Ext.data.JsonStore({
+            me.columns=me.columns_store;
+		    me.ds = new Ext.data.JsonStore({
 							  data: record[0].get('data'),
 							  fields:record[0].get('fieldsNames')
 			});
-		 
 			me.matrix.setData(me.ds.getData());
+			Ext.Array.forEach(record[0].get('columModle'),function(item){
+		    var column = Ext.create('Ext.grid.column.Column', {  
+				text: item['header'],  
+				width:60,  
+				style: "text-align:center;",  
+				align:'center',  
+				dataIndex: item['dataIndex']  
+			});  
+            me.columns.push(column);
+			//me.headerCt.insert(me.columns.length, column);
+			});
 			me.reconfigure(me.matrix,me.columns);
-
+			
+			
+            
 		    }//callback
 		});
-    
+            
+
+
+          me.text_editor = new Ext.Editor({
+			// update the innerHTML of the bound element 
+			// when editing completes
+			updateEl: true,
+			alignment: 'l-l',
+			autoSize: {
+				width: 'boundEl'
+			},
+			field: {
+		    xtype:'textfield'
+			}
+		  });
+		   me.combo_editor = new Ext.Editor({
+			// update the innerHTML of the bound element 
+			// when editing completes
+			updateEl: true,
+			alignment: 'l-l',
+			autoSize: {
+				width: 'boundEl'
+			},
+			field: {
+				xtype: 'combo',
+			    typeAhead:true,
+                //readOnly:true,
+                queryMode:'local',
+                triggerAction:'all',
+                valueField:'name',
+                displayField:'value',
+                store:me.column_store,
+                lazyRender:true,
+				listeners:{  
+                       select : function(combo, record, index) {  
+						console.log(record);
+					   }
+			    }
+			}
+		   });
+		   
 
 		
+		 me.listeners = {
+			celldblclick: function(th, td, cellIndex, record,tr, rowIndex, e, eOpts ){
+			   
+				switch(cellIndex){
+                case '9':
+				 me.combo_editor.startEdit(td);break;
+				case '10':
+                 me.combo_editor.startEdit(td);break;
+                default:
+				 me.text_editor.startEdit(td);
+				}
+			}
+		
+		};  
+
+		me.columns_store=[
+			 {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:200,sortable:true},
+			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:200,sortable:true},
+			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:200,sortable:true},
+			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:200,sortable:true},
+			  {text:'justification',dataIndex:'justification',header:'justification',width:200,sortable:true},
+			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:200,sortable:true},
+			  {text:'No Compliance Description',dataIndex:'No Compliance Description',header:'No Compliance Description',width:200,sortable:true},
+			  {text:'Defect Type',dataIndex:'Defect Type',header:'Defect Type',width:200,sortable:true},
+			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:200,sortable:true},
+			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:200,sortable:true},
+			  {text:'Verif Assest justifiaction',dataIndex:'Verif Assest justifiaction',header:'Verif Assest justifiaction',width:200,sortable:true},
+			  {text:'CR',dataIndex:'CR',header:'CR',width:200,sortable:true},
+			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:200,sortable:true}
+				];
+
 		 me.tbar = [{
-			text: 'View Statistics',
+			text: 'Save',
 			glyph: 0xf080,
 			scope: this,
 			handler: function() {
-				window.open('/stat/cover.htm#'+me.curr_version.get('id'));
+				
 			}
 		},'->',{
             xtype: 'textfield',
@@ -98,113 +189,10 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			name:'searchStatusBar'
 		});
          
-     
-		 
-		 
-	/*	
-       me.items=[{
-	   xtype:'textfield',
-	   value:'text',
-	   
-	   
-	   },{
-       xtype:'gridpanel',
-	   height: 200,
-	   width: 400,
-	   region: 'center',
-		split: true,
-		border: false,
-		store: me.ds,
-		cm: me.cm
-
-
-	   }];
-         
-
-		me.columns = [{
-			text: "tag",
-			dataIndex: "tag",
-			width: 130,
-	        summaryType: 'count',
-	        summaryRenderer: function(value, summaryData, dataIndex) {
-	            return Ext.String.format('{0} item{1}', value, value !== 1 ? 's' : '');
-	        }
-		}, {
-			text: "allocation",
-			dataIndex: "allocation",
-			flex: 1
-		}, {
-			text: "category",
-			dataIndex: "category",
-			flex:1,
-//			width: 130,
-		}, {
-			text: "tcs",
-			dataIndex: "tcs",
-			width: 250,
-			renderer: function(value) {
-				var str = ""; 
-				Ext.Array.each(value, function(v) {
-					str += v.tag + " ";
-				});
-				return str;
-			}
-		}, {
-			text: "vat",
-			dataIndex: "vat",
-			width: 250,
-			renderer : function(value) {
-				if(!value) return '';
-				var arr = [];
-				Ext.Array.each(value, function(v) {
-			        arr.push(v.tag);
-			    });
-				return arr.join(', ');
-			}
-		}];
-		*/
-		
-		me.listeners = {
-			celldblclick: function(a,b,c,record){
-				localStorage.tag = record.get('tag');
-				if(c==0){
-					window.open('/draw/graph2.html#'+record.get('id')+"&"+record.get('tag'));
-					return;
-				}
-				//双击进入编辑状态
-//				if(c==5||c==6){
-//					var st = Ext.create('casco.store.Vat');
-//					st.setData(record.get('vat'));
-//					if(record.get('vatstr'))
-//						st.add({id: record.get('vatstr').id, tag: record.get('vatstr').name});
-//					var wd = Ext.create("casco.view.rs.vat.Add", {
-//						vat: st,
-//						document_id: me.document_id
-//					});
-//					wd.show();
-//					return;
-//				}
-    //            console.log(me.getColumnModel().getColumnHeader());
-      //  record.set('allocation','test herer');
-      //  me.reconfigure(me.store,me.columns);
-      //  console.log(record.getData());
-				var win = Ext.create('widget.rs.rsdetails', {
-					rs: record,
-					pointer:me,
-//					editvat: c==6||c==5,
-					document_id: me.document_id,
-					project:me.project,
-					columns:me.columns,
-					
-				});
-			    
-				win.down('form').loadRecord(record);
-				win.show();
-			}
-		};
+	
 		
 		me.callParent(arguments);
-	},
+		},
 	
 	afterRender:function(){
 		var me = this;
