@@ -59,7 +59,11 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			//me.headerCt.insert(me.columns.length, column);
 			});
 			me.reconfigure(me.matrix,me.columns);
-			
+			me.customMenuItemsCache = [];
+			me.headerCt.on('menucreate', function (cmp, menu) {
+            menu.on('beforeshow', me.showHeaderMenu, me);
+			}, me);
+
 			
             
 		    }//callback
@@ -128,11 +132,31 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:200,sortable:true},
 			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:200,sortable:true},
 			  {text:'justification',dataIndex:'justification',header:'justification',width:200,sortable:true},
-			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:200,sortable:true},
+			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:200,sortable:true,
+				customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
+                    { boxLabel: 'OK', name: 'rb', inputValue: 'OK'},   
+                    { boxLabel: 'NOK', name: 'rb', inputValue:'NOK'},
+				    { boxLabel: 'NA', name: 'rb', inputValue: 'NA'}]//items
+					}]//menu
+			  }]//customMenu
+			  },
 			  {text:'No Compliance Description',dataIndex:'No Compliance Description',header:'No Compliance Description',width:200,sortable:true},
-			  {text:'Defect Type',dataIndex:'Defect Type',header:'Defect Type',width:200,sortable:true},
-			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:200,sortable:true},
-			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:200,sortable:true},
+			  {text:'Defect Type',dataIndex:'Defect Type',header:'Defect Type',width:200,sortable:true,
+				 customMenu:[{text:'Not complete/Wrong coverage...',menu:[{xtype:'panel',defaultType:'radio',vertical:true,items: [  
+                    { boxLabel: 'Not complete', name: 'rb', inputValue: 'OK'},   
+                    { boxLabel: 'logic or description mistake in Child requirement', name: 'rb', inputValue:'NOK'},
+				    { boxLabel: 'Other', name: 'rb', inputValue: 'NA'}]//items
+					}]//menu
+			  }]//customMenu
+			  },
+			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:200,sortable:true,
+			   customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
+                    { boxLabel: 'OK', name: 'rb', inputValue: 'OK'},   
+                    { boxLabel: 'NOK', name: 'rb', inputValue:'NOK'},
+				    { boxLabel: 'NA', name: 'rb', inputValue: 'NA'}]//items
+					}]//menu
+			  }]//customMenu
+			  },
 			  {text:'Verif Assest justifiaction',dataIndex:'Verif Assest justifiaction',header:'Verif Assest justifiaction',width:200,sortable:true},
 			  {text:'CR',dataIndex:'CR',header:'CR',width:200,sortable:true},
 			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:200,sortable:true}
@@ -193,7 +217,42 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		
 		me.callParent(arguments);
 		},
-	
+
+	showHeaderMenu: function (menu) {
+        var me = this;
+
+        me.removeCustomMenuItems(menu);
+        me.addCustomMenuitems(menu);
+    },
+
+    removeCustomMenuItems: function (menu) {
+        var me = this,
+            menuItem;
+
+        while (menuItem = me.customMenuItemsCache.pop()) {
+            menu.remove(menuItem.getItemId(), false);
+        }
+    },
+
+    addCustomMenuitems: function (menu) {
+        var me = this,
+            renderedItems;
+
+        var menuItems = menu.activeHeader.customMenu || [];
+
+        if (menuItems.length > 0) {
+            if (menu.activeHeader.renderedCustomMenuItems === undefined) {
+                renderedItems = menu.add(menuItems);
+                menu.activeHeader.renderedCustomMenuItems = renderedItems;
+            } else {
+                renderedItems = menu.activeHeader.renderedCustomMenuItems;
+                menu.add(renderedItems);
+            }
+            Ext.each(renderedItems, function (renderedMenuItem) {
+                me.customMenuItemsCache.push(renderedMenuItem);
+            });
+        }//if
+    },
 	afterRender:function(){
 		var me = this;
 		me.callParent(arguments);

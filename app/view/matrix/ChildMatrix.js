@@ -1,5 +1,6 @@
 Ext.define('casco.view.matrix.ChildMatrix', {
 	extend: 'Ext.grid.Panel',
+	mixins:['Ext.plugin.Abstract'],
 	xtype: 'childmatrix',
 	viewModel: 'main',
 	
@@ -24,7 +25,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 	forceFit:true,
 //	columnLines:true,
 		
-	initComponent: function() {
+	initComponent: function(component) {
 		var me = this;
 		//console.log(me.verification_id);
 		me.matrix = new casco.store.ChildMatrix();
@@ -53,7 +54,11 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			//me.headerCt.insert(me.columns.length, column);
 			});
 			me.reconfigure(me.matrix,me.columns);
-			
+			me.customMenuItemsCache = [];
+			me.headerCt.on('menucreate', function (cmp, menu) {
+            menu.on('beforeshow', me.showHeaderMenu, me);
+			}, me);
+
 		    }//callback
 		});
     
@@ -95,14 +100,47 @@ Ext.define('casco.view.matrix.ChildMatrix', {
        }];
 		
        	me.columns_store=[
-			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:200,sortable:true},
+			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:200,sortable:true, customMenu: [
+                {
+                    text: 'My menu item',
+                    menu: [
+                        {
+                            text: 'My submenu item',
+							handler: function() {
+							Ext.Msg.alert('xss');
+							}
+                        }
+                    ]
+                }
+            ]},
 			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:250,sortable:true},
 			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:200,sortable:true},
 			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:250,sortable:true},
-			  {text:'Traceability',dataIndex:'Traceability',header:'Traceability',width:200,sortable:true},
+			  {text:'Traceability',dataIndex:'Traceability',header:'Traceability',width:200,sortable:true,
+				customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',vertical:true,items: [  
+                    { boxLabel: 'OK', name: 'rb', inputValue: 'OK'},   
+                    { boxLabel: 'NOK', name: 'rb', inputValue:'NOK'},
+				    { boxLabel: 'NA', name: 'rb', inputValue: 'NA'}]//items
+					}]//menu
+			  }]//customMenu
+			  },
 			  {text:'No compliance description',dataIndex:'No compliance description',header:'No compliance description',width:200,sortable:true},
-			  {text:'Already described in completeness',dataIndex:'Already described in completeness',header:'Already described in completeness',width:200,sortable:true},
-			  {text:'Verif. Assessment',dataIndex:'Verif. Assessment',header:'Verif. Assessment',width:200,sortable:true},
+			  {text:'Already described in completeness',dataIndex:'Already described in completeness',header:'Already described in completeness',width:200,sortable:true,
+				 customMenu:[{text:'YES/NO',menu:[{xtype:'radiogroup',items: [  
+                    { boxLabel: 'YES', name: 'rb', inputValue: 'OK'},   
+                    { boxLabel: 'NO', name: 'rb', inputValue:'NO'}]//items
+					}]//menu
+			  }]//customMenu
+			  },
+			  {text:'Verif. Assessment',dataIndex:'Verif. Assessment',header:'Verif. Assessment',width:200,sortable:true,
+				  customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
+                    { boxLabel: 'OK', name: 'rb', inputValue: 'OK'},   
+                    { boxLabel: 'NOK', name: 'rb', inputValue:'NOK'},
+				    { boxLabel: 'NA', name: 'rb', inputValue: 'NA'}]//items
+					}]//menu
+			  }]//customMenu
+			  },
+
 			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:200,sortable:true},
 			  {text:'Verif. opinion justification',dataIndex:'Verif. opinion justification',header:'Verif. opinion justification',width:200,sortable:true},
 			  {text:'CR',dataIndex:'CR',header:'CR',width:50,sortable:true},
@@ -230,12 +268,51 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 		me.callParent(arguments);
 	},
 	
+	
+    showHeaderMenu: function (menu) {
+        var me = this;
+
+        me.removeCustomMenuItems(menu);
+        me.addCustomMenuitems(menu);
+    },
+
+    removeCustomMenuItems: function (menu) {
+        var me = this,
+            menuItem;
+
+        while (menuItem = me.customMenuItemsCache.pop()) {
+            menu.remove(menuItem.getItemId(), false);
+        }
+    },
+
+    addCustomMenuitems: function (menu) {
+        var me = this,
+            renderedItems;
+
+        var menuItems = menu.activeHeader.customMenu || [];
+
+        if (menuItems.length > 0) {
+            if (menu.activeHeader.renderedCustomMenuItems === undefined) {
+                renderedItems = menu.add(menuItems);
+                menu.activeHeader.renderedCustomMenuItems = renderedItems;
+            } else {
+                renderedItems = menu.activeHeader.renderedCustomMenuItems;
+                menu.add(renderedItems);
+            }
+            Ext.each(renderedItems, function (renderedMenuItem) {
+                me.customMenuItemsCache.push(renderedMenuItem);
+            });
+        }//if
+    },
+//}),
+
 	afterRender:function(){
 		var me = this;
 		me.callParent(arguments);
 		me.textField= me.down('textfield[name = searchField]');
 		me.statusBar = me.down('statusbar[name = searchStatusBar]');
 		me.view.on('cellkeydown',me.focusTextField,me);
+		/*
 		var menu = me.headerCt.getMenu();
 		menu.removeAll();
 		menu.add([{
@@ -244,7 +321,8 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 				var columnDataIndex = menu.activeHeader.dataIndex;
 				alert('custom item for column "'+columnDataIndex+'" was pressed');
 			}
-		}]);           
+		}]); 
+		*/
 	},
 	
 	focusTextField: function(view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
