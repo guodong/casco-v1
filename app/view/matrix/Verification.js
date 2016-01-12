@@ -35,7 +35,8 @@ Ext.define('casco.view.matrix.Verification', {
 			{"abbr":"AL", "name":"ParentMatrix"},
 			{"abbr":"AK", "name":"ChildMatrix"},
 			{"abbr":"AZ", "name":"Revison"},
-			{"abbr":"AZ", "name":"Summary"}
+			{"abbr":"AZ", "name":"Summary"},
+			{"abbr":"ALL","name":"All"}
 		]
 		});
 		me.columns = [{

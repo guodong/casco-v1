@@ -16,46 +16,56 @@ Ext.define('casco.view.matrix.MatrixController', {
         this.redirectTo('matrix/' + record.get('id'), true);
 		location.reload();
 	},
-	switchView:function(combo,record){
+	switchView:function(combo,irecord){
     
-
+      combo.setValue(combo.emptyText);
 	  var v_id=combo.val_id;
-	  var title='';var xtype='';
-      switch(record.get('name')){
+	  var json=[];
+      switch(irecord.get('name')){
       case 'ParentMatrix':
-          xtype='parentmatrix';
-		  title='parent_matrix';
+
+          json={'xtype':'parentmatrix'};
+		
 		  break;
 	  case 'ChildMatrix':
-           xtype='childmatrix';
-		  title='child_matrix';
+          json={'xtype':'childmatrix'};
+		  
 		  break;
 	  case  'Revision':
+		  json={'xtype':'Revision'};
 		  break;
 	  case  'Summary':
-		  xtype='summary';
-	      title='summary';
+		  json={'xtype':'summary'};
 		  break;
-	  case  'all':
+	  case  'All':
+		  json=[{'xtype':'parentmatrix'},{'xtype':'childmatrix'}
+				,{'xtype':'summary'},{'xtype':'Revision'}];
 		  break;
 	   default:
 	  }
-	    var tabs = Ext.getCmp('matrixpanel');
-		var selModel=new Ext.selection.Model({mode:"MULTI"});
-		var tab = tabs.child('#tab-'+record.get('name')+'-'+v_id);
-		if(!tab){
-		tab = tabs.add({
-			id: 'tab-'+record.get('name')+'-'+v_id,
-			xtype: xtype,
-			title: title,
-			version:record.get('version')?record.get('version'):null,
+
+       //写个递归方便多了啊
+       var create_tab=function(record){
+       if(Array.isArray(record)){
+       Ext.Array.each(record,function(name,index){create_tab(name)});
+	   }
+       else{
+		var tab = Ext.getCmp('matrixpanel');.child('#'+record.xtype+v_id);
+		  if(!tab)tab=tabs.add({
+			id:record.xtype+v_id,
+			xtype: record.xtype,
+			title: record.xtype,
+			version:irecord.get('version')?irecord.get('version'):null,
 			closable: true,
-			selModel:selModel,
 			verification_id:v_id
 		});
-		}
-		tabs.setActiveTab(tab);
+	    tabs.setActiveTab(tab);
+	   }
+	   }
+       create_tab(json);
 
+
+	  
 	},
 	createVerification: function() {
 		Ext.MessageBox.wait('正在处理,请稍候...', 'Create Verification');
