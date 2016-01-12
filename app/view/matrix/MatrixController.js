@@ -50,7 +50,8 @@ Ext.define('casco.view.matrix.MatrixController', {
        Ext.Array.each(record,function(name,index){create_tab(name)});
 	   }
        else{
-		var tab = Ext.getCmp('matrixpanel');.child('#'+record.xtype+v_id);
+		var tabs= Ext.getCmp('matrixpanel');
+		var tab=tabs.child('#'+record.xtype+v_id);
 		  if(!tab)tab=tabs.add({
 			id:record.xtype+v_id,
 			xtype: record.xtype,
@@ -65,7 +66,24 @@ Ext.define('casco.view.matrix.MatrixController', {
        create_tab(json);
 
 
-	  
+	   /*
+	    var tabs = Ext.getCmp('matrixpanel');
+		var selModel=new Ext.selection.Model({mode:"MULTI"});
+		var tab = tabs.child('#tab-'+record.get('name')+'-'+v_id);
+		if(!tab){
+		tab = tabs.add({
+			id: 'tab-'+record.get('name')+'-'+v_id,
+			xtype: xtype,
+			title: title,
+			version:record.get('version')?record.get('version'):null,
+			closable: true,
+			selModel:selModel,
+			verification_id:v_id
+		});
+		}
+		tabs.setActiveTab(tab);
+		*/
+
 	},
 	createVerification: function() {
 		Ext.MessageBox.wait('正在处理,请稍候...', 'Create Verification');

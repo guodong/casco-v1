@@ -20,6 +20,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 	//matched string css class
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
+    columnsText:'显示的列',
 	forceFit:true,
 //	columnLines:true,
 		
@@ -235,6 +236,15 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 		me.textField= me.down('textfield[name = searchField]');
 		me.statusBar = me.down('statusbar[name = searchStatusBar]');
 		me.view.on('cellkeydown',me.focusTextField,me);
+		var menu = me.headerCt.getMenu();
+		menu.removeAll();
+		menu.add([{
+			text: 'Custom Item',
+			handler: function() {
+				var columnDataIndex = menu.activeHeader.dataIndex;
+				alert('custom item for column "'+columnDataIndex+'" was pressed');
+			}
+		}]);           
 	},
 	
 	focusTextField: function(view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
