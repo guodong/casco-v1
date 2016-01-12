@@ -50,7 +50,7 @@ Ext.define('casco.view.matrix.MatrixController', {
        Ext.Array.each(record,function(name,index){create_tab(name)});
 	   }
        else{
-		var tab = Ext.getCmp('matrixpanel');.child('#'+record.xtype+v_id);
+		var tab = Ext.getCmp('matrixpanel').child('#'+record.xtype+v_id);
 		  if(!tab)tab=tabs.add({
 			id:record.xtype+v_id,
 			xtype: record.xtype,
