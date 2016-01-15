@@ -14,11 +14,8 @@ Ext.define('casco.view.main.Top', {
 		var states = Ext.create('Ext.data.Store', {
          fields: ['abbr', 'name'],
          data : [
-          
          {"abbr":"EditInfo", "name":"1"},
-		     {"abbr":"Logout", "name":"2"}
-		
-        
+		 {"abbr":"Logout", "name":"2"}
            ]});
 
     	this.items = [{

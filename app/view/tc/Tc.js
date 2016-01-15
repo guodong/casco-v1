@@ -159,9 +159,7 @@ Ext.define('casco.view.tc.Tc', {
             glyph: 0xf068,
             width: 100,
             handler : function() {
-
                 Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
-		 
 	            var view=me.getView();
                  me.reconfigure(me.store,me.columns);
 						var selection =view.getSelectionModel().getSelection()[0];
@@ -176,17 +174,7 @@ Ext.define('casco.view.tc.Tc', {
                 }},this);
         	}
 			
-    	},
-//        '-',{
-//			text: 'View Graph',
-//			glyph: 0xf0e8,
-//			scope: this,
-//			handler: function() {
-//				window.open('/draw/graph.html?document_id='+me.document_id);
-//			},
-//			hidden: true
-//		},
-    	'->',{
+    	},'->',{
             xtype: 'textfield',
             fieldLabel: 'Search',  
             labelWidth: 50,

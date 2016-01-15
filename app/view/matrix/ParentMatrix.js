@@ -21,6 +21,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
 	forceFit:true,
+	selType: 'checkboxmodel',
 //	columnLines:true,
 		
 	initComponent: function() {
@@ -69,8 +70,6 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		    }//callback
 		});
             
-
-
           me.text_editor = new Ext.Editor({
 			// update the innerHTML of the bound element 
 			// when editing completes
@@ -109,7 +108,16 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			}
 		   });
 		   
-
+         me.self_op=function(the,newValue,oldValue){       
+		 var rows=me.getSelectionModel().getSelection();
+		 if(rows!=undefined){
+		 Ext.Array.each(rows,function(item){
+		 item.set(newValue);
+		// 这行很重要,由于自定义列的后遗症
+		 me.getView().refresh(); 
+		 });
+		 }
+		}
 		
 		 me.listeners = {
 			celldblclick: function(th, td, cellIndex, record,tr, rowIndex, e, eOpts ){
@@ -125,7 +133,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			}
 		
 		};  
-
+        
 		me.columns_store=[
 			 {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:200,sortable:true},
 			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:200,sortable:true},
@@ -133,28 +141,39 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:200,sortable:true},
 			  {text:'justification',dataIndex:'justification',header:'justification',width:200,sortable:true},
 			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:200,sortable:true,
-				customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
-                    { boxLabel: 'OK', name: 'rb', inputValue: 'OK'},   
-                    { boxLabel: 'NOK', name: 'rb', inputValue:'NOK'},
-				    { boxLabel: 'NA', name: 'rb', inputValue: 'NA'}]//items
-					}]//menu
+				 customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
+                    { boxLabel: 'OK', name: 'Completeness', inputValue: 'OK'},   
+                    { boxLabel: 'NOK', name: 'Completeness', inputValue:'NOK'},
+				    { boxLabel: 'NA', name: 'Completeness', inputValue: 'NA'}],
+					listeners:{
+						change:function(the,newValue,oldValue){
+						 me.self_op(the,newValue,oldValue);}
+					}
+					}],//menu	
 			  }]//customMenu
 			  },
 			  {text:'No Compliance Description',dataIndex:'No Compliance Description',header:'No Compliance Description',width:200,sortable:true},
 			  {text:'Defect Type',dataIndex:'Defect Type',header:'Defect Type',width:200,sortable:true,
-				 customMenu:[{text:'Not complete/Wrong coverage...',menu:[{xtype:'panel',defaultType:'radio',vertical:true,items: [  
-                    { boxLabel: 'Not complete', name: 'rb', inputValue: 'OK'},   
-                    { boxLabel: 'logic or description mistake in Child requirement', name: 'rb', inputValue:'NOK'},
-				    { boxLabel: 'Other', name: 'rb', inputValue: 'NA'}]//items
+				  customMenu:[{text:'Not complete/Wrong coverage...',menu:[{xtype:'panel',defaultType:'radio',
+                    vertical:true,items: [ 
+                    { boxLabel: 'Not complete', name: 'Defect Type', inputValue: 'Not complete'},
+				    { boxLabel: 'Wrong coverage', name: 'Defect Type', inputValue: 'Wrong coverage'},   
+                    { boxLabel: 'logic or description mistake in Child requirement', name: 'Defect Type', inputValue:'logic or description mistake in Child requirement'},
+				    { boxLabel: 'Other', name: 'Defect Type', inputValue: 'Other'}],
+				    listeners:{change:function(the,newValue,oldValue){me.self_op(the,newValue,oldValue);}}
 					}]//menu
 			  }]//customMenu
 			  },
 			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:200,sortable:true,
 			   customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
-                    { boxLabel: 'OK', name: 'rb', inputValue: 'OK'},   
-                    { boxLabel: 'NOK', name: 'rb', inputValue:'NOK'},
-				    { boxLabel: 'NA', name: 'rb', inputValue: 'NA'}]//items
-					}]//menu
+                    { boxLabel: 'OK', name: 'Verif. Assesst', inputValue: 'OK'},   
+                    { boxLabel: 'NOK', name:'Verif. Assesst', inputValue:'NOK'},
+				    { boxLabel: 'NA', name: 'Verif. Assesst', inputValue: 'NA'}],
+					listeners:{
+						change:function(the,newValue,oldValue){
+						 me.self_op(the,newValue,oldValue);}
+					}
+					}],//menu	
 			  }]//customMenu
 			  },
 			  {text:'Verif Assest justifiaction',dataIndex:'Verif Assest justifiaction',header:'Verif Assest justifiaction',width:200,sortable:true},
@@ -166,41 +185,17 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			text: 'Save',
 			glyph: 0xf080,
 			scope: this,
-			handler: function() {
-				
+			handler: function() {	
 			}
-		},'->',{
-            xtype: 'textfield',
-            fieldLabel: 'Search',  
-            labelWidth: 50,
-            name: 'searchField', 
-            //hideLabel: true,
-            width: 200,
-            listeners: {
-                change: {
-                    fn: me.onTextFieldChange,
-                    scope: this,
-                    buffer: 500
-                }
-            }
-       },{
-           xtype: 'button',
-           text: '&lt;',
-           tooltip: 'Find Previous Row',
-           handler: me.onPreviousClick,
-           scope: me
-       },{
-           xtype: 'button',
-           text: '&gt;',
-           tooltip: 'Find Next Row',
-           handler: me.onNextClick,
-           scope: me
-       }];
-		
-      
-
-
-
+		 },
+			{
+			text: 'Export',
+			glyph: 0xf080,
+			scope: this,
+			handler: function() {
+			}
+		}];
+	
 		me.bbar = ['-',{
 			summaryType: 'count',
 	        summaryRenderer: function(value, summaryData, dataIndex) {
@@ -241,6 +236,8 @@ Ext.define('casco.view.matrix.ParentMatrix', {
         var menuItems = menu.activeHeader.customMenu || [];
 
         if (menuItems.length > 0) {
+
+			 menu.removeAll();
             if (menu.activeHeader.renderedCustomMenuItems === undefined) {
                 renderedItems = menu.add(menuItems);
                 menu.activeHeader.renderedCustomMenuItems = renderedItems;

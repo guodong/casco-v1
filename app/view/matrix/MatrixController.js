@@ -39,7 +39,7 @@ Ext.define('casco.view.matrix.MatrixController', {
 		  break;
 	  case  'All':
 		  json=[{'xtype':'parentmatrix'},{'xtype':'childmatrix'}
-				,{'xtype':'summary'},{'xtype':'Revision'}];
+				,{'xtype':'summary'}];
 		  break;
 	   default:
 	  }
@@ -64,26 +64,6 @@ Ext.define('casco.view.matrix.MatrixController', {
 	   }
 	   }
        create_tab(json);
-
-
-	   /*
-	    var tabs = Ext.getCmp('matrixpanel');
-		var selModel=new Ext.selection.Model({mode:"MULTI"});
-		var tab = tabs.child('#tab-'+record.get('name')+'-'+v_id);
-		if(!tab){
-		tab = tabs.add({
-			id: 'tab-'+record.get('name')+'-'+v_id,
-			xtype: xtype,
-			title: title,
-			version:record.get('version')?record.get('version'):null,
-			closable: true,
-			selModel:selModel,
-			verification_id:v_id
-		});
-		}
-		tabs.setActiveTab(tab);
-		*/
-
 	},
 	createVerification: function() {
 		Ext.MessageBox.wait('正在处理,请稍候...', 'Create Verification');
@@ -92,7 +72,6 @@ Ext.define('casco.view.matrix.MatrixController', {
 		rsvsd = Ext.getCmp('parent_doc').getStore();
 		var rsvss = [];
 		rsvsd.each(function(v){
-		//	console.log(v);
 			var obj = {
 				parent_document_id: v.get('id'),
 				parent_version_id: v.get('version_id')
@@ -122,6 +101,9 @@ Ext.define('casco.view.matrix.MatrixController', {
 	manage : function() {
 		this.redirectTo('manage', true);
 		location.reload();
+	},
+	save : function(){
+
 	},
 	testing : function() {
 		this.redirectTo('testing/' + this.getView().project.get('id'));

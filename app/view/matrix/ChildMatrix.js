@@ -4,7 +4,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 	xtype: 'childmatrix',
 	viewModel: 'main',
 	
-	requires: [
+	requires: ['casco.view.matrix.MatrixController'
 	          
 	           ],
 	           
@@ -14,6 +14,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
     //search参数
 	searchValue:null,
 	matches:[],
+	controller:'matrix',
 	//currentIndex:null,
 	searchRegExp:null,
 	//caseSensitive:false,
@@ -22,20 +23,19 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
     columnsText:'显示的列',
+	selModel: new Ext.selection.CheckboxModel({checkOnly:true}), 
 	forceFit:true,
 //	columnLines:true,
 		
 	initComponent: function(component) {
 		var me = this;
-		//console.log(me.verification_id);
 		me.matrix = new casco.store.ChildMatrix();
 		me.matrix.load({
 			params:{
 				id: me.verification_id
 			},
 			synchronous: true,
-			callback: function(record){
-				
+			callback: function(record){		
             me.columns=me.columns_store;
 		    me.ds = new Ext.data.JsonStore({
 							  data: record[0].get('data'),
@@ -65,82 +65,109 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 
 		
 		 me.tbar = [{
-			text: 'View Statistics',
+			text: 'Save',
 			glyph: 0xf080,
 			scope: this,
-			handler: function() {
-				window.open('/stat/cover.htm#'+me.curr_version.get('id'));
+			handler:function(){
+		     
+			 var data=[];
+			//血的教训，早知道就用这了... me.matrix.sync();
+			 var rows=me.getSelectionModel().getSelection();
+			 Ext.Array.each(rows,function(item){
+			 item.dirty=false;
+			 item.commit(); 
+			 data.push(item.getData());
+			 });//each
+			 var model=Ext.create('casco.model.Verification',{id:me.verification_id});
+			 model.set('data',data);
+			 model.save({
+			 callback: function(record, operation, success){
+             },
+			 failure: function(record, operation) {
+			  me.getView().refresh(); //这一行重要哇我晕
+              Ext.Msg.alert('Failed','Save failed!');
+			 },
+			 success: function(record, operation) {
+             // do something if the save succeeded
+			 //console.log(rows);
+			 me.getView().refresh(); //这一行重要哇我晕
+			 Ext.Msg.alert('Success', 'Saved successfully.');
+			 
+			 },
+			 });
+			
 			}
-		},'->',{
-            xtype: 'textfield',
-            fieldLabel: 'Search',  
-            labelWidth: 50,
-            name: 'searchField', 
-            //hideLabel: true,
-            width: 200,
-            listeners: {
-                change: {
-                    fn: me.onTextFieldChange,
-                    scope: this,
-                    buffer: 500
-                }
-            }
-       },{
-           xtype: 'button',
-           text: '&lt;',
-           tooltip: 'Find Previous Row',
-           handler: me.onPreviousClick,
-           scope: me
-       },{
-           xtype: 'button',
-           text: '&gt;',
-           tooltip: 'Find Next Row',
-           handler: me.onNextClick,
-           scope: me
-       }];
+		},'-',{text: 'Export',
+			glyph: 0xf080,
+			scope: this,
+			handler:function(){
+		    	window.open(API+'childmatrix/export?v_id='+me.verification_id);
+            	return;
+		}
+		}];
+
+		me.self_op=function(the,newValue,oldValue){       
+		 var rows=me.getSelectionModel().getSelection();
+		 if(rows!=undefined){
+		 Ext.Array.each(rows,function(item){
+		 item.set(newValue);
+		 });
+		 // 这行很重要,由于自定义列的后遗症
+		 me.getView().refresh(); 
+		 }
+		}
 		
        	me.columns_store=[
-			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:200,sortable:true, customMenu: [
-                {
-                    text: 'My menu item',
-                    menu: [
-                        {
-                            text: 'My submenu item',
-							handler: function() {
-							Ext.Msg.alert('xss');
-							}
-                        }
-                    ]
-                }
-            ]},
+			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:200,sortable:true},
 			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:250,sortable:true},
 			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:200,sortable:true},
 			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:250,sortable:true},
 			  {text:'Traceability',dataIndex:'Traceability',header:'Traceability',width:200,sortable:true,
-				customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',vertical:true,items: [  
-                    { boxLabel: 'OK', name: 'rb', inputValue: 'OK'},   
-                    { boxLabel: 'NOK', name: 'rb', inputValue:'NOK'},
-				    { boxLabel: 'NA', name: 'rb', inputValue: 'NA'}]//items
-					}]//menu
+				  customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
+                    { boxLabel: 'OK', name: 'Traceability', inputValue: 'OK'},   
+                    { boxLabel: 'NOK', name: 'Traceability', inputValue:'NOK'},
+				    { boxLabel: 'NA', name: 'Traceability', inputValue: 'NA'}],
+					listeners:{
+						change:function(the,newValue,oldValue){
+						 me.self_op(the,newValue,oldValue);}
+					}
+					}],//menu	
 			  }]//customMenu
+			  ,editor: {
+			        xtype: 'combobox',
+			        queryMode: 'local',
+					displayField: 'name',
+					valueField: 'value',
+					store:Ext.create('Ext.data.Store', {
+					fields: ['name', 'value'],
+					data : [{"name":"NA", "value":"NA"},{"name":"OK", "value":"OK"},{"name":"NOK", "value":"NOK"}]}),
+					editable: false
+			    }
 			  },
 			  {text:'No compliance description',dataIndex:'No compliance description',header:'No compliance description',width:200,sortable:true},
 			  {text:'Already described in completeness',dataIndex:'Already described in completeness',header:'Already described in completeness',width:200,sortable:true,
 				 customMenu:[{text:'YES/NO',menu:[{xtype:'radiogroup',items: [  
-                    { boxLabel: 'YES', name: 'rb', inputValue: 'OK'},   
-                    { boxLabel: 'NO', name: 'rb', inputValue:'NO'}]//items
+                    { boxLabel: 'YES', name: 'Already described in completeness', inputValue: 'YES'},   
+                    { boxLabel: 'NO', name: 'Already described in completeness', inputValue:'NO'}],
+					 listeners:{
+						change:function(the,newValue,oldValue){
+						 me.self_op(the,newValue,oldValue);}
+					}
 					}]//menu
 			  }]//customMenu
 			  },
 			  {text:'Verif. Assessment',dataIndex:'Verif. Assessment',header:'Verif. Assessment',width:200,sortable:true,
 				  customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
-                    { boxLabel: 'OK', name: 'rb', inputValue: 'OK'},   
-                    { boxLabel: 'NOK', name: 'rb', inputValue:'NOK'},
-				    { boxLabel: 'NA', name: 'rb', inputValue: 'NA'}]//items
-					}]//menu
+                    { boxLabel: 'OK', name: 'Verif. Assessment', inputValue: 'OK'},   
+                    { boxLabel: 'NOK', name: 'Verif. Assessment', inputValue:'NOK'},
+				    { boxLabel: 'NA', name: 'Verif. Assessment', inputValue: 'NA'}],
+					listeners:{
+						change:function(the,newValue,oldValue){
+						 me.self_op(the,newValue,oldValue);}
+					}
+					}],//menu
 			  }]//customMenu
 			  },
-
 			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:200,sortable:true},
 			  {text:'Verif. opinion justification',dataIndex:'Verif. opinion justification',header:'Verif. opinion justification',width:200,sortable:true},
 			  {text:'CR',dataIndex:'CR',header:'CR',width:50,sortable:true},
@@ -290,8 +317,9 @@ Ext.define('casco.view.matrix.ChildMatrix', {
             renderedItems;
 
         var menuItems = menu.activeHeader.customMenu || [];
-
+           
         if (menuItems.length > 0) {
+			 menu.removeAll();
             if (menu.activeHeader.renderedCustomMenuItems === undefined) {
                 renderedItems = menu.add(menuItems);
                 menu.activeHeader.renderedCustomMenuItems = renderedItems;

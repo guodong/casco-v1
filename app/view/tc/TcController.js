@@ -21,7 +21,7 @@ Ext.define('casco.view.tc.TcController', {
             		  	
    });
     
-    data.column=column.substring(0,column.length-1);
+		data.column=column.substring(0,column.length-1);
 		data.document_id = view.document_id;//还可以这样动态添加啊
 		data.version_id=view.version_id;
 		data.steps = [];

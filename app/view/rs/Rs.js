@@ -119,7 +119,7 @@ Ext.define('casco.view.rs.Rs', {
 					 me.columns=me.json.columModle;
 				//	 console.log(me.columns);
 					 me.store.setData(me.ds.getData());
-           me.reconfigure(me.store,me.columns);
+                     me.reconfigure(me.store,me.columns);
 					
             	},
             	beforequery : function(e){
