@@ -31,9 +31,6 @@ Ext.define('casco.view.matrix.MatrixController', {
           json={'xtype':'childmatrix'};
 		  
 		  break;
-	  case  'Revision':
-		  json={'xtype':'Revision'};
-		  break;
 	  case  'Summary':
 		  json={'xtype':'summary'};
 		  break;

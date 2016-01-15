@@ -86,7 +86,6 @@ Ext.define('casco.view.tc.Tc', {
 					 });
 					 
 					 me.columns=me.json.columModle;
-					// console.log(me.columns);
 					 me.store.setData(me.ds.getData());
                      me.reconfigure(me.store,me.columns);
             	}

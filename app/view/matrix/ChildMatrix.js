@@ -73,6 +73,19 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			 var data=[];
 			//血的教训，早知道就用这了... me.matrix.sync();
 			 var rows=me.getSelectionModel().getSelection();
+			 console.log(rows);
+			 if(rows==null||rows==undefined||rows==[]||rows=='')
+			 {me.matrix.sync({
+			 callback: function(record, operation, success){
+             },
+			 failure: function(record, operation) {
+			  me.getView().refresh(); //这一行重要哇我晕
+              Ext.Msg.alert('Failed','Save failed!');
+			 },
+			 success: function(record, operation) {
+			 me.getView().refresh();Ext.Msg.alert('Success', 'Saved successfully.');
+			 }
+			 });return;}
 			 Ext.Array.each(rows,function(item){
 			 item.dirty=false;
 			 item.commit(); 
@@ -88,8 +101,6 @@ Ext.define('casco.view.matrix.ChildMatrix', {
               Ext.Msg.alert('Failed','Save failed!');
 			 },
 			 success: function(record, operation) {
-             // do something if the save succeeded
-			 //console.log(rows);
 			 me.getView().refresh(); //这一行重要哇我晕
 			 Ext.Msg.alert('Success', 'Saved successfully.');
 			 
@@ -97,7 +108,13 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			 });
 			
 			}
-		},'-',{text: 'Export',
+		},/*'-',{text: 'Cancel',
+			glyph: 0xf080,
+			scope: this,
+			handler:function(){
+		    me.matrix.rejectChanges();
+			me.getView().refresh();}
+		},*/'-',{text: 'Export',
 			glyph: 0xf080,
 			scope: this,
 			handler:function(){
@@ -117,11 +134,25 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 		 }
 		}
 		
+		me.plugins={
+		        ptype: 'cellediting',
+		        clicksToEdit: 1,
+				autoCancel:false,
+				listeners: {
+		            edit: function(editor, e) {
+					//commit 不好
+		            //e.record.commit();
+					e.record.set(e.field,e.value);
+					me.getView().refresh(); 
+		            }
+		        }
+		},
+
        	me.columns_store=[
-			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:200,sortable:true},
-			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:250,sortable:true},
-			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:200,sortable:true},
-			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:250,sortable:true},
+			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:250,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:250,sortable:true,editor:{xtype:'textfield'}},
 			  {text:'Traceability',dataIndex:'Traceability',header:'Traceability',width:200,sortable:true,
 				  customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
                     { boxLabel: 'OK', name: 'Traceability', inputValue: 'OK'},   
@@ -134,17 +165,16 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 					}],//menu	
 			  }]//customMenu
 			  ,editor: {
-			        xtype: 'combobox',
-			        queryMode: 'local',
+			        xtype: 'combo',
+			        triggerAction:'all',
 					displayField: 'name',
 					valueField: 'value',
 					store:Ext.create('Ext.data.Store', {
 					fields: ['name', 'value'],
 					data : [{"name":"NA", "value":"NA"},{"name":"OK", "value":"OK"},{"name":"NOK", "value":"NOK"}]}),
-					editable: false
 			    }
 			  },
-			  {text:'No compliance description',dataIndex:'No compliance description',header:'No compliance description',width:200,sortable:true},
+			  {text:'No compliance description',dataIndex:'No compliance description',header:'No compliance description',width:200,sortable:true,editor:{xtype:'textfield'}},
 			  {text:'Already described in completeness',dataIndex:'Already described in completeness',header:'Already described in completeness',width:200,sortable:true,
 				 customMenu:[{text:'YES/NO',menu:[{xtype:'radiogroup',items: [  
                     { boxLabel: 'YES', name: 'Already described in completeness', inputValue: 'YES'},   
@@ -155,6 +185,15 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 					}
 					}]//menu
 			  }]//customMenu
+			  ,editor: {
+			        xtype: 'combo',
+			        triggerAction:'all',
+					displayField: 'name',
+					valueField: 'value',
+					store:Ext.create('Ext.data.Store', {
+					fields: ['name', 'value'],
+					data : [{"name":"YES", "value":"YES"},{"name":"NO", "value":"NO"}]}),
+			    }
 			  },
 			  {text:'Verif. Assessment',dataIndex:'Verif. Assessment',header:'Verif. Assessment',width:200,sortable:true,
 				  customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
@@ -167,11 +206,20 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 					}
 					}],//menu
 			  }]//customMenu
+			  ,editor: {
+			        xtype: 'combo',
+			        triggerAction:'all',
+					displayField: 'name',
+					valueField: 'value',
+					store:Ext.create('Ext.data.Store', {
+					fields: ['name', 'value'],
+					data : [{"name":"NA", "value":"NA"},{"name":"OK", "value":"OK"},{"name":"NOK", "value":"NOK"}]}),
+			    }
 			  },
-			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:200,sortable:true},
-			  {text:'Verif. opinion justification',dataIndex:'Verif. opinion justification',header:'Verif. opinion justification',width:200,sortable:true},
-			  {text:'CR',dataIndex:'CR',header:'CR',width:50,sortable:true},
-			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:50,sortable:true}
+			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Verif. opinion justification',dataIndex:'Verif. opinion justification',header:'Verif. opinion justification',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'CR',dataIndex:'CR',header:'CR',width:50,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:50,sortable:true,editor:{xtype:'textfield'}}
 				];
 
 
