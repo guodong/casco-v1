@@ -1,22 +1,13 @@
 Ext.define('casco.view.matrix.Verification', {
     extend: 'Ext.grid.Panel',
     xtype: 'matrix.verification',
-    
+    controller:'matrix',
     requires:['casco.store.Verification','casco.model.Verification','casco.view.matrix.VerificationCreate',
-		'casco.view.matrix.ParentMatrix','casco.view.matrix.ChildMatrix','casco.view.matrix.Summary'],
+		'casco.view.matrix.ParentMatrix','casco.view.matrix.ChildMatrix','casco.view.matrix.Summary',
+		'casco.view.matrix.MatrixController'],
 
     listeners: {
         itemdblclick: function(view, record, item, index, e, eOpts){
-        	Ext.getCmp('result-main').job = record;
-        	Ext.getCmp('result-main').store.load({
-        		params: {
-        			job_id: record.get('id')
-        		},
-//        		callback: function(){
-//        			var it = Ext.ComponentQuery.query(".testit");console.log(it)
-//        			it.setDisabled();
-//        		}
-        	});
     	}
     },
     bodyPadding: 0,
@@ -32,11 +23,10 @@ Ext.define('casco.view.matrix.Verification', {
 		var states = Ext.create('Ext.data.Store', {
 		fields: ['abbr', 'name'],
 		data : [
+			{"abbr":"ALL","name":"All"},
 			{"abbr":"AL", "name":"ParentMatrix"},
 			{"abbr":"AK", "name":"ChildMatrix"},
-			{"abbr":"AZ", "name":"Revison"},
-			{"abbr":"AZ", "name":"Summary"},
-			{"abbr":"ALL","name":"All"}
+			{"abbr":"AZ", "name":"Summary"}			
 		]
 		});
 		me.columns = [{
@@ -62,24 +52,18 @@ Ext.define('casco.view.matrix.Verification', {
 						return arr.join(',	');
 			}
 		}, {
-			text: 'status',
-			dataIndex: 'status',
-			renderer: function(v){
-				return v==0?'<span style="color:red">testing</span>':'<span style="color: green">submited</span>';
-			},
-		 
-		}, {
 			text: 'description',
 			dataIndex: 'description'
 		},{
 			text: 'created at',
 			dataIndex: 'created_at',
 			 
-		}, {
+		},{
 			
 			text:'view',
 			dataIndex:'id',
-			renderer:function(val_id){
+			width:120,
+			renderer:function(val_id,metaData,rec){
 			 var id = Ext.id();	 
              Ext.defer(function() {
                	Ext.create('Ext.form.ComboBox', {
@@ -91,16 +75,126 @@ Ext.define('casco.view.matrix.Verification', {
 				val_id:val_id,//依赖注入,组件扩展性很好哇
 			    emptyText: 'Switch View',
 				listeners: {
-            	select: 'switchView'
+            	select: function(combo,irecord){
+				   me.switchView(combo,irecord,rec);
+				}
 				},
 				renderTo:id
 				});   
             }, 50);
             return Ext.String.format('<div style="color:0xf0ce" id="{0}" ></div>', id);
-			
-
 			}//renderer
+		}, {
+			text: 'status',
+			dataIndex: 'status',
+			renderer:function(val,meta,rec){
+			var id=Ext.id();
+			if(val==1){
+		    Ext.defer(function(){
+			  Ext.widget('button', {
+			      renderTo:id,
+			      text:'提交',
+				  glyph: 0xf040,
+                  scale: 'small',
+                  listeners: {
+                  click:function(self, e, eOpts){
+				  rec.data.status=0;
+				  //console.log(rec.data);
+				  rec.save({
+					params:{status:rec.data.status},
+					success: function(){
+						me.getView().refresh();
+						Ext.Msg.alert('','提交成功!');
+					},
+					failure: function(){
+						Ext.Msg.alert('','提交失败，请检查配置');
+					}});
+				 // me.store.setData(rec.data);
+				  }
+				  }
+		      });
+		   },50);	   
+          return Ext.String.format('<div id="{0}"></div>',id);
+          }else if(val==0){
+             Ext.defer(function(){
+			  Ext.widget('button', {
+			      renderTo:id,
+			      text:'撤销',
+				  glyph: 0xf040,
+                  scale: 'small',
+                  listeners: {
+                  click:function(self, e, eOpts){
+				  rec.data.status=1;
+				  rec.save({
+					params:{status:rec.data.status},
+					success: function(){
+						me.getView().refresh();
+						Ext.Msg.alert('','撤销成功!');
+						
+					},
+					failure: function(){
+						Ext.Msg.alert('','撤销失败，请检查配置');
+					}});
+				  }
+				  }
+		      });
+		   },50);
+		   
+          return Ext.String.format('<div id="{0}"></div>',id);
+          }
+          }
+		 
 		}];
+
+
+	me.switchView=function(combo,irecord,rec){
+    
+      combo.setValue(combo.emptyText);
+	  var v_id=combo.val_id;
+	  var json=[];
+      switch(irecord.get('name')){
+      case 'ParentMatrix':
+
+          json={'xtype':'parentmatrix'};
+		
+		  break;
+	  case 'ChildMatrix':
+          json={'xtype':'childmatrix'};
+		  
+		  break;
+	  case  'Summary':
+		  json={'xtype':'summary'};
+		  break;
+	  case  'All':
+		  json=[{'xtype':'parentmatrix'},{'xtype':'childmatrix'}
+				,{'xtype':'summary'}];
+		  break;
+	   default:
+	  }
+
+       //写个递归方便多了啊
+       var create_tab=function(record){
+       if(Array.isArray(record)){
+       Ext.Array.each(record,function(name,index){create_tab(name)});
+	   }
+       else{
+		var tabs= Ext.getCmp('matrixpanel');
+		var tab=tabs.child('#'+record.xtype+v_id);
+		  if(!tab)tab=tabs.add({
+			id:record.xtype+v_id,
+			xtype: record.xtype,
+			title: record.xtype,
+			version:irecord.get('version')?irecord.get('version'):null,
+			closable: true,
+			verification:rec
+		});
+	    tabs.setActiveTab(tab);
+	   }
+	   }
+       create_tab(json);
+	},
+
+
 		me.tbar = [{
 			text: 'Create Verification',
 			glyph: 0xf067,
@@ -116,7 +210,7 @@ Ext.define('casco.view.matrix.Verification', {
 			}
 		},'-',{
 			text: 'Delete Verification',
-			glyph: 0xf067,
+			glyph: 0xf068,
 			scope: this,
 			handler:function(){
                Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){   //confirm
@@ -129,6 +223,13 @@ Ext.define('casco.view.matrix.Verification', {
 						}
 					}}, this);
 			}
+		},'-',{
+		 text: 'Export',
+		 scope: this,
+		 handler:function(){
+         window.open(API+'verification/export?project_id='+me.project.get('id'));
+          return;
+		 }
 		}];
     	this.callParent();
     }

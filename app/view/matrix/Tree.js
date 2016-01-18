@@ -1,6 +1,6 @@
 Ext.define('casco.view.matrix.Tree', {
     extend: 'Ext.tree.Panel',
-    requires: ['casco.view.matrix.Verification'],
+    requires: ['casco.view.matrix.Verification','casco.view.matirx.TreeCellEditing'],
     alias: 'widget.matrix_tree',
     listeners: {
         itemdblclick: function(view, record, item, index, e, eOpts){
@@ -8,6 +8,7 @@ Ext.define('casco.view.matrix.Tree', {
 			//console.log(me.getView().up().project);
         	if(!record.get('leaf')) return;
     		var tabs = Ext.getCmp('matrixpanel');
+			//console.log(record.data.id);
 			var tab = tabs.child('#tab-verification-'+record.data.id);
 			if(!tab){
 			tab = tabs.add({
@@ -19,30 +20,12 @@ Ext.define('casco.view.matrix.Tree', {
 			});
 			}
 			tabs.setActiveTab(tab);
-			/*
-    		casco.model.Document.load(record.get('id'), {
-    			success: function(record){
-    			
-    			
-				
-    		var plugin=Ext.widget(record.get('type'),{
-    				id: 'tab-'+record.get('id'),
-					xtype: record.get('type'),
-					title: record.get('name'),
-					document: record,
-					closable: true,
-					project: me.project});
-    		//改变store的rest路由
-    		plugin.store.proxy.url='tc/matrix';
-    		plugin.store_tc.proxy.url='tc/matrix';
-    				tab = tabs.add(plugin);
-    				tabs.setActiveTab(tab);
-    			}
-    		});
-			*/
-
     	},//itemdbclick
-		itemcontextmenu:function(menutree,record,items,index,e){
+		itemcontextmenu:'onCtxMenu'
+			
+		
+		/*
+		function(menutree,record,items,index,e){
             var me=this;
 			e.preventDefault();
 			e.stopEvent();
@@ -50,7 +33,7 @@ Ext.define('casco.view.matrix.Tree', {
 			if(record.data.leaf==true){
 				var nodemenu=new Ext.menu.Menu({
 					floating:true,
-					items:[/*{
+					items:[{
 						text:'select all',
 						handler:function(){
 						    console.log(items,index,record.id);
@@ -58,7 +41,7 @@ Ext.define('casco.view.matrix.Tree', {
 								record.childNodes[i].set('checked',true);
 							}
 						}
-					}, */{
+					}, {
 						text:'delete',
 						handler:function(){
 					    Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
@@ -113,12 +96,15 @@ Ext.define('casco.view.matrix.Tree', {
 
 			  }//root�ڵ�--else
         }//itemmenu
+		*/
     },//lsiteners
     displayField: 'name',
     rootVisible : false,
     initComponent: function(){
     	var me = this;
-		//console.log(me.project);
+		var treeEditor=Ext.create('casco.view.matirx.TreeCellEditing',{clicksToEdit:1});
+	    me.plugins=[treeEditor];
+		var onAdd=onEdit=onDelete=Ext.emptyFn;
 	    this.store = Ext.create('casco.store.TreeDocuments', {
     		proxy: {
     			extraParams: {

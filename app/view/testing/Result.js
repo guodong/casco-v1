@@ -73,9 +73,7 @@ Ext.define('casco.view.testing.Result', {
 			dataIndex: 'tc',
 			flex:1,
 			renderer: function(v) {
-				//console.log(eval('{'+v.column+'}'));
 				var column=JSON.parse('{'+v.column+'}');
-				//console.log(column);
 				return column.description||column['test case description']||''
 			}
 		}, {

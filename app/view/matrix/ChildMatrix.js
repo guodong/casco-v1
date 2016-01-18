@@ -23,16 +23,17 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
     columnsText:'显示的列',
-	selModel: new Ext.selection.CheckboxModel({checkOnly:true}), 
+	//selModel: new Ext.selection.CheckboxModel({checkOnly:true}), 
 	forceFit:true,
 //	columnLines:true,
 		
 	initComponent: function(component) {
 		var me = this;
+		me.selType=me.verification.get('status')==1?'checkboxmodel':'',
 		me.matrix = new casco.store.ChildMatrix();
 		me.matrix.load({
 			params:{
-				id: me.verification_id
+				id: me.verification.get('id')
 			},
 			synchronous: true,
 			callback: function(record){		
@@ -70,10 +71,10 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			scope: this,
 			handler:function(){
 		     
+			 if(me.verification.get('status')==0){Ext.Msg.alert('','已提交，不可编辑');return;}
 			 var data=[];
 			//血的教训，早知道就用这了... me.matrix.sync();
 			 var rows=me.getSelectionModel().getSelection();
-			 console.log(rows);
 			 if(rows==null||rows==undefined||rows==[]||rows=='')
 			 {me.matrix.sync({
 			 callback: function(record, operation, success){
@@ -91,7 +92,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			 item.commit(); 
 			 data.push(item.getData());
 			 });//each
-			 var model=Ext.create('casco.model.Verification',{id:me.verification_id});
+			 var model=Ext.create('casco.model.Verification',{id:me.verification.get('id')});
 			 model.set('data',data);
 			 model.save({
 			 callback: function(record, operation, success){
@@ -118,7 +119,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			glyph: 0xf080,
 			scope: this,
 			handler:function(){
-		    	window.open(API+'childmatrix/export?v_id='+me.verification_id);
+		    	window.open(API+'childmatrix/export?v_id='+me.verification.get('id'));
             	return;
 		}
 		}];
@@ -303,41 +304,9 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 		*/
 		
 		me.listeners = {
-			celldblclick: function(a,b,c,record){
-				localStorage.tag = record.get('tag');
-				if(c==0){
-					window.open('/draw/graph2.html#'+record.get('id')+"&"+record.get('tag'));
-					return;
-				}
-//				if(c==5||c==6){
-//					var st = Ext.create('casco.store.Vat');
-//					st.setData(record.get('vat'));
-//					if(record.get('vatstr'))
-//						st.add({id: record.get('vatstr').id, tag: record.get('vatstr').name});
-//					var wd = Ext.create("casco.view.rs.vat.Add", {
-//						vat: st,
-//						document_id: me.document_id
-//					});
-//					wd.show();
-//					return;
-//				}
-    //            console.log(me.getColumnModel().getColumnHeader());
-      //  record.set('allocation','test herer');
-      //  me.reconfigure(me.store,me.columns);
-      //  console.log(record.getData());
-				var win = Ext.create('widget.rs.rsdetails', {
-					rs: record,
-					pointer:me,
-//					editvat: c==6||c==5,
-					document_id: me.document_id,
-					project:me.project,
-					columns:me.columns,
-					
-				});
-			    
-				win.down('form').loadRecord(record);
-				win.show();
-			}
+		beforeedit:function(editor, e, eOpts){
+		return me.verification.status==1?true:false;
+        }
 		};
 		
 		me.callParent(arguments);
@@ -346,7 +315,6 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 	
     showHeaderMenu: function (menu) {
         var me = this;
-
         me.removeCustomMenuItems(menu);
         me.addCustomMenuitems(menu);
     },

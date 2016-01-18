@@ -7,16 +7,14 @@
 */
 Ext.define('casco.view.matrix.MatrixController', {
 	extend : 'Ext.app.ViewController',
-
 	alias : 'controller.matrix',
-
 	switchProject : function(combo, record) {
 		
 	   //top的view啊
         this.redirectTo('matrix/' + record.get('id'), true);
 		location.reload();
 	},
-	switchView:function(combo,irecord){
+	switchView:function(combo,irecord,rec){
     
       combo.setValue(combo.emptyText);
 	  var v_id=combo.val_id;
@@ -55,13 +53,126 @@ Ext.define('casco.view.matrix.MatrixController', {
 			title: record.xtype,
 			version:irecord.get('version')?irecord.get('version'):null,
 			closable: true,
-			verification_id:v_id
+			verification:rec
 		});
 	    tabs.setActiveTab(tab);
 	   }
 	   }
        create_tab(json);
 	},
+
+	buildCtxMenu:function(){
+
+         return Ext.create('Ext.menu.Menu',{
+         items:[{
+			 itemId:'add',
+			 handler:'onAdd'
+				},
+			 {
+             itemId:'edit',
+			 handler:'onEdit'
+			 },
+			{
+			 itemId:'delete',
+			 handler:'onDelete'
+			 }
+		 ]
+		 });
+	},
+	onConfirmDelete:function(answer,value,cfg,button){
+       if(answer!='yes')return;
+	   var menu=button.up(),node=menu.treeNode;
+	   node.remove(true);
+
+	 },
+	
+	 onDelete:function(button){
+       
+	   var callback=Ext.bind(this.onConfirmDelete,undefined,[button],true);
+        Ext.Msg.confirm(
+			'Approve deletion',
+			'Are you sure want to delete this node?',callback);
+
+        
+	},
+	onAdd:function(button){
+         var menu=button.up(),node=menu.treeNode,view=menu.treeView,delay=view.expandDuration+50,newNode,doCreate;
+		 doCreate=function(){
+         newNode=node.appendChild({text:'New employee',leaf:true});
+		 onEdit(button,newNode);
+		 } 
+		  if(!node.isExpanded()){
+            node.expand(false,Ext.callback(this.doCreate,this,[],delay));
+		  }else{
+           doCreate();
+		  }
+	},
+
+	 onCtxMenu:function(view,record,element,index,evtObj){
+
+          view.select(record);
+		  evtObj.stopEvent();
+		  if(!this.ctxMenu){
+           this.ctxMenu=this.buildCtxMenu();
+		  }
+           this.ctxMenu.treeNode=record;
+		   this.ctxMenu.treeView=view;
+		   
+		   var ctxMenu=this.ctxMenu;
+		   var addItem=ctxMenu.getComponent('add');
+		   var editItem=ctxMenu.getComponent('edit');
+		   var deleteItem=ctxMenu.getComponent('delete');
+          
+		   if(!record.isLeaf()){
+           addItem.setText('Add document');
+           deleteItem.setText('Delete document');
+		   editItem.setText('Edit document');
+           
+		   addItem.enable();
+		   deleteItem.enable();
+		   editItem.enable();
+		   }else{
+
+           addItem.setText('Can\'t Add document');
+           deleteItem.setText('Delete document');
+		   editItem.setText('Edit document');
+		   addItem.disable();
+		   deleteItem.enable();
+		   editItem.enable();
+		   }
+           ctxMenu.showAt(evtObj.getXY());
+	 },
+     onEdit:function(button,node){
+       
+	   var menu=button.up(),
+		   node=node||menu.treeNode,
+		   view=menu.treeView,
+		   tree=view.ownerCt,
+		   selMdl=view.getSelectionModel(),
+		   colHdr=tree.headerCt.getHeaderAtIndex(0);
+
+	   if(selMdl.getCurrentPositon){
+        pos=selMdl.getCurrentPosition();
+		colHdr=tree.headerCt.getHeaderAtIndex(pos.column);
+	   }
+
+	  var editor = new Ext.Editor({
+    // update the innerHTML of the bound element 
+    // when editing completes
+    updateEl: true,
+    alignment: 'l-l',
+    autoSize: {
+        width: 'boundEl'
+    },
+    field: {
+        xtype: 'textfield'
+    }
+});
+ editor.startEdit(colHdr);
+      // tree.treeEditor.startEdit(colHdr); 
+	  // tree.treeEditor.startEdit(node,colHdr);
+	  },
+
 	createVerification: function() {
 		Ext.MessageBox.wait('正在处理,请稍候...', 'Create Verification');
 		var form = this.lookupReference('ver_create_form');
@@ -91,7 +202,11 @@ Ext.define('casco.view.matrix.MatrixController', {
 				});
 				//Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
 				Ext.getCmp('ver-create-window').destroy();
+			},
+			failure: function(){
+				Ext.Msg.alert('','创建失败，请检查配置');
 			}
+
 		});
 		
 	},
