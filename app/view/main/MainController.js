@@ -23,17 +23,11 @@ Ext.define('casco.view.main.MainController', {
 			model.setId(JSON.parse(localStorage.user).id);
 
 			casco.model.User.load(JSON.parse(localStorage.user).id,{
-
 				callback:function(record, operation,ops){
-
 					var win = Ext.create('casco.view.manage.Useredit', {user:record});
 					win.down('form').loadRecord(record);//动态填充表单
 					win.show();
-
-
-
 				}
-
 			});
 
 		}else if(record.get('name')=='2'){

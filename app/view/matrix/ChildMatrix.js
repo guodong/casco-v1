@@ -1,9 +1,10 @@
 Ext.define('casco.view.matrix.ChildMatrix', {
 	extend: 'Ext.grid.Panel',
+	mixins:['Ext.plugin.Abstract'],
 	xtype: 'childmatrix',
 	viewModel: 'main',
 	
-	requires: [
+	requires: ['casco.view.matrix.MatrixController'
 	          
 	           ],
 	           
@@ -13,6 +14,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
     //search参数
 	searchValue:null,
 	matches:[],
+	controller:'matrix',
 	//currentIndex:null,
 	searchRegExp:null,
 	//caseSensitive:false,
@@ -21,20 +23,20 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
     columnsText:'显示的列',
-//	forceFit:true,
+	//selModel: new Ext.selection.CheckboxModel({checkOnly:true}), 
+	forceFit:true,
 //	columnLines:true,
 		
-	initComponent: function() {
+	initComponent: function(component) {
 		var me = this;
-		//console.log(me.verification_id);
+		me.selType=me.verification.get('status')==1?'checkboxmodel':'',
 		me.matrix = new casco.store.ChildMatrix();
 		me.matrix.load({
 			params:{
-				id: me.verification_id
+				id: me.verification.get('id')
 			},
 			synchronous: true,
-			callback: function(record){
-				
+			callback: function(record){		
             me.columns=me.columns_store;
 		    me.ds = new Ext.data.JsonStore({
 							  data: record[0].get('data'),
@@ -53,60 +55,172 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			//me.headerCt.insert(me.columns.length, column);
 			});
 			me.reconfigure(me.matrix,me.columns);
-			
+			me.customMenuItemsCache = [];
+			me.headerCt.on('menucreate', function (cmp, menu) {
+            menu.on('beforeshow', me.showHeaderMenu, me);
+			}, me);
+
 		    }//callback
 		});
     
 
 		
 		 me.tbar = [{
-			text: 'View Statistics',
+			text: 'Save',
 			glyph: 0xf080,
 			scope: this,
-			handler: function() {
-				window.open('/stat/cover.htm#'+me.curr_version.get('id'));
+			handler:function(){
+		     
+			 if(me.verification.get('status')==0){Ext.Msg.alert('','已提交，不可编辑');return;}
+			 var data=[];
+			//血的教训，早知道就用这了... me.matrix.sync();
+			 var rows=me.getSelectionModel().getSelection();
+			 if(rows==null||rows==undefined||rows==[]||rows=='')
+			 {me.matrix.sync({
+			 callback: function(record, operation, success){
+             },
+			 failure: function(record, operation) {
+			  me.getView().refresh(); //这一行重要哇我晕
+              Ext.Msg.alert('Failed','Save failed!');
+			 },
+			 success: function(record, operation) {
+			 me.getView().refresh();Ext.Msg.alert('Success', 'Saved successfully.');
+			 }
+			 });return;}
+			 Ext.Array.each(rows,function(item){
+			 item.dirty=false;
+			 item.commit(); 
+			 data.push(item.getData());
+			 });//each
+			 var model=Ext.create('casco.model.Verification',{id:me.verification.get('id')});
+			 model.set('data',data);
+			 model.save({
+			 callback: function(record, operation, success){
+             },
+			 failure: function(record, operation) {
+			  me.getView().refresh(); //这一行重要哇我晕
+              Ext.Msg.alert('Failed','Save failed!');
+			 },
+			 success: function(record, operation) {
+			 me.getView().refresh(); //这一行重要哇我晕
+			 Ext.Msg.alert('Success', 'Saved successfully.');
+			 
+			 },
+			 });
+			
 			}
-		},'->',{
-            xtype: 'textfield',
-            fieldLabel: 'Search',  
-            labelWidth: 50,
-            name: 'searchField', 
-            //hideLabel: true,
-            width: 200,
-            listeners: {
-                change: {
-                    fn: me.onTextFieldChange,
-                    scope: this,
-                    buffer: 500
-                }
-            }
-       },{
-           xtype: 'button',
-           text: '&lt;',
-           tooltip: 'Find Previous Row',
-           handler: me.onPreviousClick,
-           scope: me
-       },{
-           xtype: 'button',
-           text: '&gt;',
-           tooltip: 'Find Next Row',
-           handler: me.onNextClick,
-           scope: me
-       }];
+		},/*'-',{text: 'Cancel',
+			glyph: 0xf080,
+			scope: this,
+			handler:function(){
+		    me.matrix.rejectChanges();
+			me.getView().refresh();}
+		},*/'-',{text: 'Export',
+			glyph: 0xf080,
+			scope: this,
+			handler:function(){
+		    	window.open(API+'childmatrix/export?v_id='+me.verification.get('id'));
+            	return;
+		}
+		}];
+
+		me.self_op=function(the,newValue,oldValue){       
+		 var rows=me.getSelectionModel().getSelection();
+		 if(rows!=undefined){
+		 Ext.Array.each(rows,function(item){
+		 item.set(newValue);
+		 });
+		 // 这行很重要,由于自定义列的后遗症
+		 me.getView().refresh(); 
+		 }
+		}
 		
+		me.plugins={
+		        ptype: 'cellediting',
+		        clicksToEdit: 1,
+				autoCancel:false,
+				listeners: {
+		            edit: function(editor, e) {
+					//commit 不好
+		            //e.record.commit();
+					e.record.set(e.field,e.value);
+					me.getView().refresh(); 
+		            }
+		        }
+		},
+
        	me.columns_store=[
-			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:100,sortable:true},
-			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:100,sortable:true},
-			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:100,sortable:true},
-			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:100,sortable:true},
-			  {text:'Traceability',dataIndex:'Traceability',header:'Traceability',width:100,sortable:true},
-			  {text:'No compliance description',dataIndex:'No compliance description',header:'No compliance description',width:100,sortable:true},
-			  {text:'Already described in completeness',dataIndex:'Already described in completeness',header:'Already described in completeness',width:100,sortable:true},
-			  {text:'Verif. Assessment',dataIndex:'Verif. Assessment',header:'Verif. Assessment',width:100,sortable:true},
-			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:100,sortable:true},
-			  {text:'Verif. opinion justification',dataIndex:'Verif. opinion justification',header:'Verif. opinion justification',width:100,sortable:true},
-			  {text:'CR',dataIndex:'CR',header:'CR',width:50,sortable:true},
-			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:50,sortable:true}
+			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:250,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:250,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Traceability',dataIndex:'Traceability',header:'Traceability',width:200,sortable:true,
+				  customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
+                    { boxLabel: 'OK', name: 'Traceability', inputValue: 'OK'},   
+                    { boxLabel: 'NOK', name: 'Traceability', inputValue:'NOK'},
+				    { boxLabel: 'NA', name: 'Traceability', inputValue: 'NA'}],
+					listeners:{
+						change:function(the,newValue,oldValue){
+						 me.self_op(the,newValue,oldValue);}
+					}
+					}],//menu	
+			  }]//customMenu
+			  ,editor: {
+			        xtype: 'combo',
+			        triggerAction:'all',
+					displayField: 'name',
+					valueField: 'value',
+					store:Ext.create('Ext.data.Store', {
+					fields: ['name', 'value'],
+					data : [{"name":"NA", "value":"NA"},{"name":"OK", "value":"OK"},{"name":"NOK", "value":"NOK"}]}),
+			    }
+			  },
+			  {text:'No compliance description',dataIndex:'No compliance description',header:'No compliance description',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Already described in completeness',dataIndex:'Already described in completeness',header:'Already described in completeness',width:200,sortable:true,
+				 customMenu:[{text:'YES/NO',menu:[{xtype:'radiogroup',items: [  
+                    { boxLabel: 'YES', name: 'Already described in completeness', inputValue: 'YES'},   
+                    { boxLabel: 'NO', name: 'Already described in completeness', inputValue:'NO'}],
+					 listeners:{
+						change:function(the,newValue,oldValue){
+						 me.self_op(the,newValue,oldValue);}
+					}
+					}]//menu
+			  }]//customMenu
+			  ,editor: {
+			        xtype: 'combo',
+			        triggerAction:'all',
+					displayField: 'name',
+					valueField: 'value',
+					store:Ext.create('Ext.data.Store', {
+					fields: ['name', 'value'],
+					data : [{"name":"YES", "value":"YES"},{"name":"NO", "value":"NO"}]}),
+			    }
+			  },
+			  {text:'Verif. Assessment',dataIndex:'Verif. Assessment',header:'Verif. Assessment',width:200,sortable:true,
+				  customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
+                    { boxLabel: 'OK', name: 'Verif. Assessment', inputValue: 'OK'},   
+                    { boxLabel: 'NOK', name: 'Verif. Assessment', inputValue:'NOK'},
+				    { boxLabel: 'NA', name: 'Verif. Assessment', inputValue: 'NA'}],
+					listeners:{
+						change:function(the,newValue,oldValue){
+						 me.self_op(the,newValue,oldValue);}
+					}
+					}],//menu
+			  }]//customMenu
+			  ,editor: {
+			        xtype: 'combo',
+			        triggerAction:'all',
+					displayField: 'name',
+					valueField: 'value',
+					store:Ext.create('Ext.data.Store', {
+					fields: ['name', 'value'],
+					data : [{"name":"NA", "value":"NA"},{"name":"OK", "value":"OK"},{"name":"NOK", "value":"NOK"}]}),
+			    }
+			  },
+			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Verif. opinion justification',dataIndex:'Verif. opinion justification',header:'Verif. opinion justification',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'CR',dataIndex:'CR',header:'CR',width:50,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:50,sortable:true,editor:{xtype:'textfield'}}
 				];
 
 
@@ -190,52 +304,59 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 		*/
 		
 		me.listeners = {
-			celldblclick: function(a,b,c,record){
-				localStorage.tag = record.get('tag');
-				if(c==0){
-					window.open('/draw/graph2.html#'+record.get('id')+"&"+record.get('tag'));
-					return;
-				}
-//				if(c==5||c==6){
-//					var st = Ext.create('casco.store.Vat');
-//					st.setData(record.get('vat'));
-//					if(record.get('vatstr'))
-//						st.add({id: record.get('vatstr').id, tag: record.get('vatstr').name});
-//					var wd = Ext.create("casco.view.rs.vat.Add", {
-//						vat: st,
-//						document_id: me.document_id
-//					});
-//					wd.show();
-//					return;
-//				}
-    //            console.log(me.getColumnModel().getColumnHeader());
-      //  record.set('allocation','test herer');
-      //  me.reconfigure(me.store,me.columns);
-      //  console.log(record.getData());
-				var win = Ext.create('widget.rs.rsdetails', {
-					rs: record,
-					pointer:me,
-//					editvat: c==6||c==5,
-					document_id: me.document_id,
-					project:me.project,
-					columns:me.columns,
-					
-				});
-			    
-				win.down('form').loadRecord(record);
-				win.show();
-			}
+		beforeedit:function(editor, e, eOpts){
+		return me.verification.status==1?true:false;
+        }
 		};
 		
 		me.callParent(arguments);
 	},
 	
+	
+    showHeaderMenu: function (menu) {
+        var me = this;
+        me.removeCustomMenuItems(menu);
+        me.addCustomMenuitems(menu);
+    },
+
+    removeCustomMenuItems: function (menu) {
+        var me = this,
+            menuItem;
+
+        while (menuItem = me.customMenuItemsCache.pop()) {
+            menu.remove(menuItem.getItemId(), false);
+        }
+    },
+
+    addCustomMenuitems: function (menu) {
+        var me = this,
+            renderedItems;
+
+        var menuItems = menu.activeHeader.customMenu || [];
+           
+        if (menuItems.length > 0) {
+			 menu.removeAll();
+            if (menu.activeHeader.renderedCustomMenuItems === undefined) {
+                renderedItems = menu.add(menuItems);
+                menu.activeHeader.renderedCustomMenuItems = renderedItems;
+            } else {
+                renderedItems = menu.activeHeader.renderedCustomMenuItems;
+                menu.add(renderedItems);
+            }
+            Ext.each(renderedItems, function (renderedMenuItem) {
+                me.customMenuItemsCache.push(renderedMenuItem);
+            });
+        }//if
+    },
+//}),
+
 	afterRender:function(){
 		var me = this;
 		me.callParent(arguments);
 		me.textField= me.down('textfield[name = searchField]');
 		me.statusBar = me.down('statusbar[name = searchStatusBar]');
 		me.view.on('cellkeydown',me.focusTextField,me);
+		/*
 		var menu = me.headerCt.getMenu();
 		menu.removeAll();
 		menu.add([{
@@ -244,7 +365,8 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 				var columnDataIndex = menu.activeHeader.dataIndex;
 				alert('custom item for column "'+columnDataIndex+'" was pressed');
 			}
-		}]);           
+		}]); 
+		*/
 	},
 	
 	focusTextField: function(view, td, cellIndex, record, tr, rowIndex, e, eOpts) {

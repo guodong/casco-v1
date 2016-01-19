@@ -22,10 +22,11 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 	defaultStatusText:'Nothing Found',
 //	forceFit:true,
 //	columnLines:true,
-		
+	
 	initComponent: function() {
 		var me = this;
-		//console.log(me.verification_id);
+		//console.log(me.verification.get('status'));
+		me.selType=me.verification.get('status')==1?'checkboxmodel':'',
 		me.column_store=Ext.create('Ext.data.Store', {
          fields: ['name', 'value'],
          data : [
@@ -37,7 +38,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		me.matrix = new casco.store.ParentMatrix();
 		me.matrix.load({
 			params:{
-				id: me.verification_id
+				id: me.verification.get('id')
 			},
 			synchronous: true,
 			callback: function(record){
@@ -59,124 +60,175 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			//me.headerCt.insert(me.columns.length, column);
 			});
 			me.reconfigure(me.matrix,me.columns);
-			
+			me.customMenuItemsCache = [];
+			me.headerCt.on('menucreate', function (cmp, menu) {
+            menu.on('beforeshow', me.showHeaderMenu, me);
+			}, me);
+
 			
             
 		    }//callback
-		});
-            
-
-
-          me.text_editor = new Ext.Editor({
-			// update the innerHTML of the bound element 
-			// when editing completes
-			updateEl: true,
-			alignment: 'l-l',
-			autoSize: {
-				width: 'boundEl'
-			},
-			field: {
-		    xtype:'textfield'
-			}
-		  });
-		   me.combo_editor = new Ext.Editor({
-			// update the innerHTML of the bound element 
-			// when editing completes
-			updateEl: true,
-			alignment: 'l-l',
-			autoSize: {
-				width: 'boundEl'
-			},
-			field: {
-				xtype: 'combo',
-			    typeAhead:true,
-                //readOnly:true,
-                queryMode:'local',
-                triggerAction:'all',
-                valueField:'name',
-                displayField:'value',
-                store:me.column_store,
-                lazyRender:true,
-				listeners:{  
-                       select : function(combo, record, index) {  
-						console.log(record);
-					   }
-			    }
-			}
-		   });
-		   
-
-		
-		 me.listeners = {
-			celldblclick: function(th, td, cellIndex, record,tr, rowIndex, e, eOpts ){
-			   
-				switch(cellIndex){
-                case '9':
-				 me.combo_editor.startEdit(td);break;
-				case '10':
-                 me.combo_editor.startEdit(td);break;
-                default:
-				 me.text_editor.startEdit(td);
-				}
-			}
-		
-		};  
-
-		me.columns_store=[
-			 {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:100,sortable:true},
-			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:100,sortable:true},
-			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:100,sortable:true},
-			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:100,sortable:true},
-			  {text:'justification',dataIndex:'justification',header:'justification',width:100,sortable:true},
-			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:100,sortable:true},
-			  {text:'No Compliance Description',dataIndex:'No Compliance Description',header:'No Compliance Description',width:100,sortable:true},
-			  {text:'Defect Type',dataIndex:'Defect Type',header:'Defect Type',width:100,sortable:true},
-			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:100,sortable:true},
-			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:100,sortable:true},
-			  {text:'Verif Assest justifiaction',dataIndex:'Verif Assest justifiaction',header:'Verif Assest justifiaction',width:100,sortable:true},
-			  {text:'CR',dataIndex:'CR',header:'CR',width:100,sortable:true},
-			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:100,sortable:true}
-				];
-
-		 me.tbar = [{
+		});  
+		 
+		  me.tbar = [{
 			text: 'Save',
 			glyph: 0xf080,
 			scope: this,
-			handler: function() {
-				
+			handler:function(){
+		     
+             if(me.verification.get('status')==0){Ext.Msg.alert('','已提交，不可编辑');return;}
+			 var data=[];
+			//血的教训，早知道就用这了... me.matrix.sync();
+			 var rows=me.getSelectionModel().getSelection();
+			 if(rows==null||rows==undefined||rows==[]||rows=='')
+			 {me.matrix.sync({
+			 callback: function(record, operation, success){
+             },
+			 failure: function(record, operation) {
+			  me.getView().refresh(); //这一行重要哇我晕
+              Ext.Msg.alert('Failed','Save failed!');
+			 },
+			 success: function(record, operation) {
+			 me.getView().refresh();Ext.Msg.alert('Success', 'Saved successfully.');
+			 }
+			 });return;}
+			 Ext.Array.each(rows,function(item){
+			 item.dirty=false;
+			 item.commit(); 
+			 data.push(item.getData());
+			 });//each
+			 var model=Ext.create('casco.model.Verification',{id:me.verification.get('id')});
+			 model.set('data',data);
+			 model.save({
+			 callback: function(record, operation, success){
+             },
+			 failure: function(record, operation) {
+			  me.getView().refresh(); //这一行重要哇我晕
+              Ext.Msg.alert('Failed','Save failed!');
+			 },
+			 success: function(record, operation) {
+			 me.getView().refresh(); //这一行重要哇我晕
+			 Ext.Msg.alert('Success', 'Saved successfully.');
+			 
+			 },
+			 });
+			
 			}
-		},'->',{
-            xtype: 'textfield',
-            fieldLabel: 'Search',  
-            labelWidth: 50,
-            name: 'searchField', 
-            //hideLabel: true,
-            width: 200,
-            listeners: {
-                change: {
-                    fn: me.onTextFieldChange,
-                    scope: this,
-                    buffer: 500
-                }
-            }
-       },{
-           xtype: 'button',
-           text: '&lt;',
-           tooltip: 'Find Previous Row',
-           handler: me.onPreviousClick,
-           scope: me
-       },{
-           xtype: 'button',
-           text: '&gt;',
-           tooltip: 'Find Next Row',
-           handler: me.onNextClick,
-           scope: me
-       }];
+		},/*'-',{text: 'Cancel',
+			glyph: 0xf080,
+			scope: this,
+			handler:function(){
+		    me.matrix.rejectChanges();
+			me.getView().refresh();}
+		},*/'-',{text: 'Export',
+			glyph: 0xf080,
+			scope: this,
+			handler:function(){
+		    	window.open(API+'parentmatrix/export?v_id='+me.verification.get('id'));
+            	return;
+		}
+		}];
+
+         me.plugins={
+		        ptype: 'cellediting',
+		        clicksToEdit: 1,
+				autoCancel:false,
+				listeners: {
+		            edit: function(editor, e) {
+					//commit 不好
+		            //e.record.commit();
+					e.record.set(e.field,e.value);
+					me.getView().refresh(); 
+		            }
+		        }
+		},
+         me.self_op=function(the,newValue,oldValue){       
+		 var rows=me.getSelectionModel().getSelection();
+		 if(rows!=undefined){
+		 Ext.Array.each(rows,function(item){
+		 item.set(newValue);
+		// 这行很重要,由于自定义列的后遗症
+		 me.getView().refresh(); 
+		 });
+		 }
+		}
 		
-      
-
-
-
+		me.columns_store=[
+			 {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'justification',dataIndex:'justification',header:'justification',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:200,sortable:true,
+				 customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
+                    { boxLabel: 'OK', name: 'Completeness', inputValue: 'OK'},   
+                    { boxLabel: 'NOK', name: 'Completeness', inputValue:'NOK'},
+				    { boxLabel: 'NA', name: 'Completeness', inputValue: 'NA'}],
+					listeners:{
+						change:function(the,newValue,oldValue){
+						 me.self_op(the,newValue,oldValue);}
+					}
+					}],//menu	
+			  }]//customMenu
+			  ,editor: {
+			        xtype: 'combo',
+			        triggerAction:'all',
+					displayField: 'name',
+					valueField: 'value',
+					store:Ext.create('Ext.data.Store', {
+					fields: ['name', 'value'],
+					data : [{"name":"NA", "value":"NA"},{"name":"OK", "value":"OK"},{"name":"NOK", "value":"NOK"}]}),
+			    }
+			  },
+			  {text:'No Compliance Description',dataIndex:'No Compliance Description',header:'No Compliance Description',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Defect Type',dataIndex:'Defect Type',header:'Defect Type',width:200,sortable:true,
+				  customMenu:[{text:'Not complete/Wrong coverage...',menu:[{xtype:'panel',defaultType:'radio',
+                    vertical:true,items: [ 
+                    { boxLabel: 'Not complete', name: 'Defect Type', inputValue: 'Not complete'},
+				    { boxLabel: 'Wrong coverage', name: 'Defect Type', inputValue: 'Wrong coverage'},   
+                    { boxLabel: 'logic or description mistake in Child requirement', name: 'Defect Type', inputValue:'logic or description mistake in Child requirement'},
+				    { boxLabel: 'Other', name: 'Defect Type', inputValue: 'Other'}],
+				    listeners:{change:function(the,newValue,oldValue){me.self_op(the,newValue,oldValue);}}
+					}]//menu
+			  }]//customMenu
+			  ,editor: {
+			        xtype: 'combo',
+			        triggerAction:'all',
+					displayField: 'name',
+					valueField: 'value',
+					store:Ext.create('Ext.data.Store', {
+					fields: ['name', 'value'],
+					data : [{"name":"Not complete", "value":"Not complete"},{"name":"Wrong coverage", "value":"Wrong coverage"},
+					{"name":"logic or description mistake in Child requirement", "value":"logic or description mistake in Child requirement"},
+					{"name":"Other", "value":"Other"}]}),
+			    }
+			  },
+			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:200,sortable:true,
+			   customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
+                    { boxLabel: 'OK', name: 'Verif. Assesst', inputValue: 'OK'},   
+                    { boxLabel: 'NOK', name:'Verif. Assesst', inputValue:'NOK'},
+				    { boxLabel: 'NA', name: 'Verif. Assesst', inputValue: 'NA'}],
+					listeners:{
+						change:function(the,newValue,oldValue){
+						 me.self_op(the,newValue,oldValue);}
+					}
+					}],//menu	
+			  }]//customMenu
+			  ,editor: {
+			        xtype: 'combo',
+			        triggerAction:'all',
+					displayField: 'name',
+					valueField: 'value',
+					store:Ext.create('Ext.data.Store', {
+					fields: ['name', 'value'],
+					data : [{"name":"NA", "value":"NA"},{"name":"OK", "value":"OK"},{"name":"NOK", "value":"NOK"}]}),
+			    }
+			  },
+			  {text:'Verif Assest justifiaction',dataIndex:'Verif Assest justifiaction',header:'Verif Assest justifiaction',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'CR',dataIndex:'CR',header:'CR',width:200,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:200,sortable:true,editor:{xtype:'textfield'}}
+				];
+	
 		me.bbar = ['-',{
 			summaryType: 'count',
 	        summaryRenderer: function(value, summaryData, dataIndex) {
@@ -188,12 +240,55 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			defaultText:me.defaultStatusText,
 			name:'searchStatusBar'
 		});
-         
-	
-		
+        
+
+        me.listeners={
+        beforeedit:function(editor, e, eOpts){
+		return me.verification.status==1?true:false;
+       // return false;//可编辑
+        }
+
+		}
 		me.callParent(arguments);
 		},
-	
+
+	showHeaderMenu: function (menu) {
+        var me = this;
+        me.removeCustomMenuItems(menu);
+        me.addCustomMenuitems(menu);
+    },
+
+  
+    removeCustomMenuItems: function (menu) {
+        var me = this,
+            menuItem;
+
+        while (menuItem = me.customMenuItemsCache.pop()) {
+            menu.remove(menuItem.getItemId(), false);
+        }
+    },
+
+    addCustomMenuitems: function (menu) {
+        var me = this,
+            renderedItems;
+
+        var menuItems = menu.activeHeader.customMenu || [];
+
+        if (menuItems.length > 0) {
+
+			 menu.removeAll();
+            if (menu.activeHeader.renderedCustomMenuItems === undefined) {
+                renderedItems = menu.add(menuItems);
+                menu.activeHeader.renderedCustomMenuItems = renderedItems;
+            } else {
+                renderedItems = menu.activeHeader.renderedCustomMenuItems;
+                menu.add(renderedItems);
+            }
+            Ext.each(renderedItems, function (renderedMenuItem) {
+                me.customMenuItemsCache.push(renderedMenuItem);
+            });
+        }//if
+    },
 	afterRender:function(){
 		var me = this;
 		me.callParent(arguments);

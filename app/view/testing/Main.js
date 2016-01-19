@@ -1,9 +1,7 @@
 Ext.define('casco.view.testing.Main', {
 	extend: 'Ext.container.Viewport',
 	xtype: 'testing',
-
 	requires: ['Ext.plugin.Viewport', 'casco.model.Result'],
-
 	layout: {
 		type: 'border'
 	},

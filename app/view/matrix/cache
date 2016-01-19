@@ -1,5 +1,6 @@
+//151021 Q R
 Ext.define('casco.view.matrix.Summary', {
-	extend: 'Ext.grid.Panel',
+	extend: 'Ext.container.Viewport',
 	layout:'anchor',
 	xtype:'summary',
 	requires: ['Ext.plugin.Viewport'],
@@ -29,7 +30,7 @@ Ext.define('casco.view.matrix.Summary', {
         me.selModel=selModel;
 		me.tbar = [{
 			glyph: 0xf067,	//resources
-			text: 'button',
+			text: me.version,
 		    xtype:'label'
 		}, {
 			text: 'Export',
@@ -99,19 +100,17 @@ Ext.define('casco.view.matrix.Summary', {
 	}];
 
      me.items = [{
-			//xtype: 'gridpanel',
-			title:'south',
+			region: 'north',
+			xtype: 'gridpanel',
 			columns:north_columns,
-			frame:true,
-			anchor:'100%, 60%',
+			anchor:'100%,60%',
 			store:store
 		}, {
+			region: 'center',
 			height: 'auto',
-			//xtype: 'gridpanel',
-			title:'center',
-			frame:true,
+			xtype: 'gridpanel',
 			columns:center_columns,
-			anchor:'100%, 40%',
+			anchor:'100%,40%',
 			//store:store,
 			collapsible: true
 		}];
