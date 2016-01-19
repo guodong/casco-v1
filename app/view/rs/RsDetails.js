@@ -3,7 +3,6 @@ Ext.define('casco.view.rs.RsDetails', {
     alias: 'widget.rs.rsdetails',
     
     requires: [
-          // 'casco.view.document.DocumentController',
            'casco.store.Vatstrs',
            'casco.store.Vat',
            'casco.view.rs.vat.VatTree'
@@ -70,8 +69,8 @@ Ext.define('casco.view.rs.RsDetails', {
 				xtype: 'vattree',
 				region: 'west',
 				width: 200,
-		    split: true,
-		    collapsible: true,
+				split: true,
+				collapsible: true,
 				autoScroll: true,
 				document_id: me.document_id,
 				project: me.project,

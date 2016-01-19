@@ -154,12 +154,12 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		}
 		
 		me.columns_store=[
-			 {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:200,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:200,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:200,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:200,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'justification',dataIndex:'justification',header:'justification',width:200,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:200,sortable:true,
+			 {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:170,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:175,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:160,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:165,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'justification',dataIndex:'justification',header:'justification',width:95,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:110,sortable:true,
 				 customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
                     { boxLabel: 'OK', name: 'Completeness', inputValue: 'OK'},   
                     { boxLabel: 'NOK', name: 'Completeness', inputValue:'NOK'},
@@ -180,8 +180,8 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 					data : [{"name":"NA", "value":"NA"},{"name":"OK", "value":"OK"},{"name":"NOK", "value":"NOK"}]}),
 			    }
 			  },
-			  {text:'No Compliance Description',dataIndex:'No Compliance Description',header:'No Compliance Description',width:200,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Defect Type',dataIndex:'Defect Type',header:'Defect Type',width:200,sortable:true,
+			  {text:'No Compliance Description',dataIndex:'No Compliance Description',header:'No Compliance Description',width:190,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Defect Type',dataIndex:'Defect Type',header:'Defect Type',width:100,sortable:true,
 				  customMenu:[{text:'Not complete/Wrong coverage...',menu:[{xtype:'panel',defaultType:'radio',
                     vertical:true,items: [ 
                     { boxLabel: 'Not complete', name: 'Defect Type', inputValue: 'Not complete'},
@@ -203,7 +203,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 					{"name":"Other", "value":"Other"}]}),
 			    }
 			  },
-			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:200,sortable:true,
+			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:110,sortable:true,
 			   customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
                     { boxLabel: 'OK', name: 'Verif. Assesst', inputValue: 'OK'},   
                     { boxLabel: 'NOK', name:'Verif. Assesst', inputValue:'NOK'},
@@ -224,9 +224,9 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 					data : [{"name":"NA", "value":"NA"},{"name":"OK", "value":"OK"},{"name":"NOK", "value":"NOK"}]}),
 			    }
 			  },
-			  {text:'Verif Assest justifiaction',dataIndex:'Verif Assest justifiaction',header:'Verif Assest justifiaction',width:200,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'CR',dataIndex:'CR',header:'CR',width:200,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:200,sortable:true,editor:{xtype:'textfield'}}
+			  {text:'Verif Assest justifiaction',dataIndex:'Verif Assest justifiaction',header:'Verif Assest justifiaction',width:175,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'CR',dataIndex:'CR',header:'CR',width:30,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:50,sortable:true,editor:{xtype:'textfield'}}
 				];
 	
 		me.bbar = ['-',{
