@@ -51,7 +51,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			Ext.Array.forEach(record[0].get('columModle'),function(item){
 		    var column = Ext.create('Ext.grid.column.Column', {  
 				text: item['header'],  
-				width:60,  
+				width:150,  
 				style: "text-align:center;",  
 				align:'center',  
 				dataIndex: item['dataIndex']  
@@ -225,8 +225,8 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			    }
 			  },
 			  {text:'Verif Assest justifiaction',dataIndex:'Verif Assest justifiaction',header:'Verif Assest justifiaction',width:175,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'CR',dataIndex:'CR',header:'CR',width:30,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:50,sortable:true,editor:{xtype:'textfield'}}
+			  {text:'CR',dataIndex:'CR',header:'CR',width:50,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:90,sortable:true,editor:{xtype:'textfield'}}
 				];
 	
 		me.bbar = ['-',{

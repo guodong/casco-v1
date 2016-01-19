@@ -3,12 +3,6 @@ Ext.define('casco.view.matrix.Summary', {
 	layout:'anchor',
 	xtype:'summary',
 	requires: [],
-<<<<<<< HEAD
-//	height:500,
-	flex: 1,
-=======
-    forceFit:true,
->>>>>>> 3ccf178610a64869ac9b232a6a03e11527b660b3
 	initComponent: function() {
 		var me = this;
 		var store = 
@@ -51,19 +45,19 @@ Ext.define('casco.view.matrix.Summary', {
 		width: 120
 	}, 
 	{
-		text: "nb of req",
+		text: "Num of Req",
 		dataIndex: "nb of req",
 		width: 120
 	}, {
-		text: "nb of OK",
+		text: "Num of OK Req",
 		dataIndex: "nb req OK",
 		width: 120
 	}, {
-		text: "nb req NOK",
+		text: "Num of NOK Req",
 		dataIndex: "nb req NOK",
 		width: 120
 	}, {
-		text: "nb req NA",
+		text: "Num of NA Req",
 		dataIndex: "nb req NA",
 		width: 120
 	},{
@@ -79,31 +73,31 @@ Ext.define('casco.view.matrix.Summary', {
 		width: 120
 	}, 
 	{
-		text: "nb of NOK items",
+		text: "Num of NOK items",
 		dataIndex: "Total number of NOK items",
 		width: 220
 	}, {
-		text:"nb of Not Complete",
+		text:"Num of Not Complete items",
 		dataIndex: "nb req OK",
 		width: 220
 	}, {
-		text: "nb of Wrong Coverage",
+		text: "Num of Wrong Coverage items",
 		dataIndex: "nb req NOK",
 		width: 220
 	}, {
-		text: "nb of Logic or Description Mistake",
+		text: "nb of Logic or Description Mistake items",
 		dataIndex: "nb req NA",
-		width: 220
+		width: 300
 	},{
 		text: "Other",
 		dataIndex: "other",
-	    width: 220,
+	    width: 120,
 	}];
 
      me.items = [{
 			xtype: 'gridpanel',
 			forceFit:true,
-			title:'summary',
+			title:'Verification Result 统计',
 			columns:north_columns,
 			anchor:'100%, 50%',
 			forceFit:true,
@@ -112,7 +106,7 @@ Ext.define('casco.view.matrix.Summary', {
 			store:store,
 			collapsable: true
 		}, {
-			title:'summary',
+			title:'Defect Type 统计',
 			region:'center',
 			xtype: 'gridpanel',
 			forceFit:true,
