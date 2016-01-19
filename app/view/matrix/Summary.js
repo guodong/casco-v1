@@ -1,16 +1,17 @@
 //151021 Q R
 Ext.define('casco.view.matrix.Summary', {
 	extend: 'Ext.grid.Panel',
-	//alias: 'widget.userlist',
 	xtype:'summary',
 	requires: [],
 	uses:['casco.ux.ButtonTransparent'],
-    forceFit:true,
+	
+	layout:{
+		type:'fit'
+	}
+	
 	initComponent: function() {
 		var me = this;
-		
-		var store = 
-			Ext.create('Ext.data.Store', {
+		var store = Ext.create('Ext.data.Store', {
 			 model: 'Ext.data.Model',
 			 proxy: {
 				 type: 'rest',
@@ -33,7 +34,7 @@ Ext.define('casco.view.matrix.Summary', {
         me.selModel=selModel;
 		me.tbar = [{
 			glyph: 0xf067,	//resources
-			text: me.version,
+			text: 'button',
 		    xtype:'label'
 		}, {
 			//hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false,  //用户权限

@@ -20,7 +20,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 	//matched string css class
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
-	forceFit:true,
+//	forceFit:true,
 //	columnLines:true,
 		
 	initComponent: function() {
@@ -123,19 +123,19 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		};  
 
 		me.columns_store=[
-			 {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:200,sortable:true},
-			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:200,sortable:true},
-			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:200,sortable:true},
-			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:200,sortable:true},
-			  {text:'justification',dataIndex:'justification',header:'justification',width:200,sortable:true},
-			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:200,sortable:true},
-			  {text:'No Compliance Description',dataIndex:'No Compliance Description',header:'No Compliance Description',width:200,sortable:true},
-			  {text:'Defect Type',dataIndex:'Defect Type',header:'Defect Type',width:200,sortable:true},
-			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:200,sortable:true},
-			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:200,sortable:true},
-			  {text:'Verif Assest justifiaction',dataIndex:'Verif Assest justifiaction',header:'Verif Assest justifiaction',width:200,sortable:true},
-			  {text:'CR',dataIndex:'CR',header:'CR',width:200,sortable:true},
-			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:200,sortable:true}
+			 {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:100,sortable:true},
+			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:100,sortable:true},
+			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:100,sortable:true},
+			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:100,sortable:true},
+			  {text:'justification',dataIndex:'justification',header:'justification',width:100,sortable:true},
+			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:100,sortable:true},
+			  {text:'No Compliance Description',dataIndex:'No Compliance Description',header:'No Compliance Description',width:100,sortable:true},
+			  {text:'Defect Type',dataIndex:'Defect Type',header:'Defect Type',width:100,sortable:true},
+			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:100,sortable:true},
+			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:100,sortable:true},
+			  {text:'Verif Assest justifiaction',dataIndex:'Verif Assest justifiaction',header:'Verif Assest justifiaction',width:100,sortable:true},
+			  {text:'CR',dataIndex:'CR',header:'CR',width:100,sortable:true},
+			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:100,sortable:true}
 				];
 
 		 me.tbar = [{

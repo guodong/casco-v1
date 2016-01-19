@@ -21,7 +21,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
     columnsText:'显示的列',
-	forceFit:true,
+//	forceFit:true,
 //	columnLines:true,
 		
 	initComponent: function() {
@@ -95,16 +95,16 @@ Ext.define('casco.view.matrix.ChildMatrix', {
        }];
 		
        	me.columns_store=[
-			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:200,sortable:true},
-			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:250,sortable:true},
-			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:200,sortable:true},
-			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:250,sortable:true},
-			  {text:'Traceability',dataIndex:'Traceability',header:'Traceability',width:200,sortable:true},
-			  {text:'No compliance description',dataIndex:'No compliance description',header:'No compliance description',width:200,sortable:true},
-			  {text:'Already described in completeness',dataIndex:'Already described in completeness',header:'Already described in completeness',width:200,sortable:true},
-			  {text:'Verif. Assessment',dataIndex:'Verif. Assessment',header:'Verif. Assessment',width:200,sortable:true},
-			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:200,sortable:true},
-			  {text:'Verif. opinion justification',dataIndex:'Verif. opinion justification',header:'Verif. opinion justification',width:200,sortable:true},
+			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:100,sortable:true},
+			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:100,sortable:true},
+			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:100,sortable:true},
+			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:100,sortable:true},
+			  {text:'Traceability',dataIndex:'Traceability',header:'Traceability',width:100,sortable:true},
+			  {text:'No compliance description',dataIndex:'No compliance description',header:'No compliance description',width:100,sortable:true},
+			  {text:'Already described in completeness',dataIndex:'Already described in completeness',header:'Already described in completeness',width:100,sortable:true},
+			  {text:'Verif. Assessment',dataIndex:'Verif. Assessment',header:'Verif. Assessment',width:100,sortable:true},
+			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:100,sortable:true},
+			  {text:'Verif. opinion justification',dataIndex:'Verif. opinion justification',header:'Verif. opinion justification',width:100,sortable:true},
 			  {text:'CR',dataIndex:'CR',header:'CR',width:50,sortable:true},
 			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:50,sortable:true}
 				];
