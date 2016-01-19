@@ -323,7 +323,6 @@ Ext.define('casco.view.matrix.ChildMatrix', {
     removeCustomMenuItems: function (menu) {
         var me = this,
             menuItem;
-
         while (menuItem = me.customMenuItemsCache.pop()) {
             menu.remove(menuItem.getItemId(), false);
         }

@@ -28,7 +28,7 @@ Ext.define('casco.view.matrix.Summary', {
         me.selModel=selModel;
 		me.tbar = [{
 			glyph: 0xf067,	//resources
-			text: 'button',
+			text: '',
 		    xtype:'label'
 		}, {
 			text: 'Export',
