@@ -24,7 +24,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 	defaultStatusText:'Nothing Found',
     columnsText:'显示的列',
 	//selModel: new Ext.selection.CheckboxModel({checkOnly:true}), 
-	forceFit:true,
+	//forceFit:true,
 //	columnLines:true,
 		
 	initComponent: function(component) {
@@ -80,7 +80,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			 callback: function(record, operation, success){
              },
 			 failure: function(record, operation) {
-			  me.getView().refresh(); //这一行重要哇我晕
+			  me.getView().refresh(); 
               Ext.Msg.alert('Failed','Save failed!');
 			 },
 			 success: function(record, operation) {
@@ -98,11 +98,11 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			 callback: function(record, operation, success){
              },
 			 failure: function(record, operation) {
-			  me.getView().refresh(); //这一行重要哇我晕
+			  me.getView().refresh(); 
               Ext.Msg.alert('Failed','Save failed!');
 			 },
 			 success: function(record, operation) {
-			 me.getView().refresh(); //这一行重要哇我晕
+			 me.getView().refresh(); 
 			 Ext.Msg.alert('Success', 'Saved successfully.');
 			 
 			 },

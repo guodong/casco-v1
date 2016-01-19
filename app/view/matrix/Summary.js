@@ -1,8 +1,11 @@
 Ext.define('casco.view.matrix.Summary', {
-	extend: 'Ext.grid.Panel',
-	layout:'anchor',
+	extend: 'Ext.panel.Panel',
+	layout: {
+		type: 'border'
+	},
 	xtype:'summary',
-	requires: ['Ext.plugin.Viewport'],
+	requires: [],
+	height:500,
     forceFit:true,
 	flex: 1,
 	initComponent: function() {
@@ -35,6 +38,8 @@ Ext.define('casco.view.matrix.Summary', {
 			text: 'Export',
 			glyph: 0xf068,
 			handler: function() {
+			 	window.open(API+'/verification/summary_export?version='+me.version);
+            	return;
 			}
 		},'->',{
 		    text: me.version,
@@ -99,21 +104,25 @@ Ext.define('casco.view.matrix.Summary', {
 	}];
 
      me.items = [{
-			//xtype: 'gridpanel',
-			title:'south',
+			xtype: 'gridpanel',
+			title:'north',
 			columns:north_columns,
-			frame:true,
-			anchor:'100%, 60%',
-			store:store
+			//frame:true,
+			//anchor:'100%, 60%',
+			region:'north',
+			height:'%60',
+			store:store,
+			collapsable: true
 		}, {
-			height: 'auto',
-			//xtype: 'gridpanel',
+			//height:100,
+			region:'center',
+			xtype: 'gridpanel',
 			title:'center',
-			frame:true,
+			height:'%40',
+			flex: 1,
 			columns:center_columns,
-			anchor:'100%, 40%',
-			//store:store,
-			collapsible: true
+			//anchor:'100%, 40%',
+			store:store
 		}];
 	
 	  me.callParent();
