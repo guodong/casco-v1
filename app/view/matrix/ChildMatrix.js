@@ -24,7 +24,6 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 	defaultStatusText:'Nothing Found',
     columnsText:'显示的列',
 	//selModel: new Ext.selection.CheckboxModel({checkOnly:true}), 
-	forceFit:true,
 //	columnLines:true,
 		
 	initComponent: function(component) {
@@ -150,11 +149,11 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 		},
 
        	me.columns_store=[
-			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:200,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:250,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:200,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:250,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Traceability',dataIndex:'Traceability',header:'Traceability',width:200,sortable:true,
+			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:160,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:165,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:170,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:175,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Traceability',dataIndex:'Traceability',header:'Traceability',width:100,sortable:true,
 				  customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
                     { boxLabel: 'OK', name: 'Traceability', inputValue: 'OK'},   
                     { boxLabel: 'NOK', name: 'Traceability', inputValue:'NOK'},
@@ -175,8 +174,8 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 					data : [{"name":"NA", "value":"NA"},{"name":"OK", "value":"OK"},{"name":"NOK", "value":"NOK"}]}),
 			    }
 			  },
-			  {text:'No compliance description',dataIndex:'No compliance description',header:'No compliance description',width:200,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Already described in completeness',dataIndex:'Already described in completeness',header:'Already described in completeness',width:200,sortable:true,
+			  {text:'No compliance description',dataIndex:'No compliance description',header:'No compliance description',width:190,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Already described in completeness',dataIndex:'Already described in completeness',header:'Already described in completeness',width:240,sortable:true,
 				 customMenu:[{text:'YES/NO',menu:[{xtype:'radiogroup',items: [  
                     { boxLabel: 'YES', name: 'Already described in completeness', inputValue: 'YES'},   
                     { boxLabel: 'NO', name: 'Already described in completeness', inputValue:'NO'}],
@@ -196,7 +195,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 					data : [{"name":"YES", "value":"YES"},{"name":"NO", "value":"NO"}]}),
 			    }
 			  },
-			  {text:'Verif. Assessment',dataIndex:'Verif. Assessment',header:'Verif. Assessment',width:200,sortable:true,
+			  {text:'Verif. Assessment',dataIndex:'Verif. Assessment',header:'Verif. Assessment',width:135,sortable:true,
 				  customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
                     { boxLabel: 'OK', name: 'Verif. Assessment', inputValue: 'OK'},   
                     { boxLabel: 'NOK', name: 'Verif. Assessment', inputValue:'NOK'},
@@ -217,9 +216,9 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 					data : [{"name":"NA", "value":"NA"},{"name":"OK", "value":"OK"},{"name":"NOK", "value":"NOK"}]}),
 			    }
 			  },
-			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:200,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Verif. opinion justification',dataIndex:'Verif. opinion justification',header:'Verif. opinion justification',width:200,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'CR',dataIndex:'CR',header:'CR',width:50,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:110,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Verif. opinion justification',dataIndex:'Verif. opinion justification',header:'Verif. opinion justification',width:185,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'CR',dataIndex:'CR',header:'CR',width:30,sortable:true,editor:{xtype:'textfield'}},
 			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:50,sortable:true,editor:{xtype:'textfield'}}
 				];
 
