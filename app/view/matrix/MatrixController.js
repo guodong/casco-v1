@@ -155,7 +155,8 @@ Ext.define('casco.view.matrix.MatrixController', {
         pos=selMdl.getCurrentPosition();
 		colHdr=tree.headerCt.getHeaderAtIndex(pos.column);
 	   }
-
+      
+	  console.log(Ext.getDom(node),colHdr);
 	  var editor = new Ext.Editor({
     // update the innerHTML of the bound element 
     // when editing completes
@@ -168,7 +169,7 @@ Ext.define('casco.view.matrix.MatrixController', {
         xtype: 'textfield'
     }
 });
- editor.startEdit(colHdr);
+  editor.startEdit(Ext.getDom(node));
       // tree.treeEditor.startEdit(colHdr); 
 	  // tree.treeEditor.startEdit(node,colHdr);
 	  },

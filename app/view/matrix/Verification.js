@@ -98,12 +98,11 @@ Ext.define('casco.view.matrix.Verification', {
                   scale: 'small',
                   listeners: {
                   click:function(self, e, eOpts){
-				  rec.data.status=0;
+				  rec.set('status',0);
 				  //console.log(rec.data);
 				  rec.save({
-					params:{status:rec.data.status},
+					//params:{status:rec.data.status},
 					success: function(){
-						me.getView().refresh();
 						Ext.Msg.alert('','提交成功!');
 					},
 					failure: function(){
@@ -124,11 +123,10 @@ Ext.define('casco.view.matrix.Verification', {
                   scale: 'small',
                   listeners: {
                   click:function(self, e, eOpts){
-				  rec.data.status=1;
+				  rec.set('status',1);
 				  rec.save({
-					params:{status:rec.data.status},
 					success: function(){
-						me.getView().refresh();
+						//me.getView().refresh();
 						Ext.Msg.alert('','撤销成功!');
 						
 					},
