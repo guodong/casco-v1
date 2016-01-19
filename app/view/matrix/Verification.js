@@ -104,6 +104,7 @@ Ext.define('casco.view.matrix.Verification', {
 					//params:{status:rec.data.status},
 					success: function(){
 						Ext.Msg.alert('','提交成功!');
+						//还应该做一件事情就是刷新tabs
 					},
 					failure: function(){
 						Ext.Msg.alert('','提交失败，请检查配置');
