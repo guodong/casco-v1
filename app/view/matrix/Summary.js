@@ -1,13 +1,9 @@
 Ext.define('casco.view.matrix.Summary', {
 	extend: 'Ext.panel.Panel',
-	layout: {
-		type: 'border'
-	},
+	layout:'anchor',
 	xtype:'summary',
 	requires: [],
-	height:500,
     forceFit:true,
-	flex: 1,
 	initComponent: function() {
 		var me = this;
 		var store = 
@@ -36,9 +32,9 @@ Ext.define('casco.view.matrix.Summary', {
 		    xtype:'label'
 		}, {
 			text: 'Export',
-			glyph: 0xf068,
+			glyph: 0xf067,
 			handler: function() {
-			 	window.open(API+'/verification/summary_export?version='+me.version);
+			 	window.open(API+'/verification/summary_export?version='+me.version?me.version:'');
             	return;
 			}
 		},'->',{
@@ -83,19 +79,19 @@ Ext.define('casco.view.matrix.Summary', {
 	}, 
 	{
 		text: "Total number of NOK items",
-		dataIndex: "Total number of NOK items",
+		dataIndex: "defect_num",
 		width: 120
 	}, {
 		text:"The number of NOK items(Not Complete)",
-		dataIndex: "nb req OK",
+		dataIndex: "not_complete",
 		width: 120
 	}, {
 		text: "The number of NOK items(Wrong Coverage)",
-		dataIndex: "nb req NOK",
+		dataIndex: "wrong_coverage",
 		width: 120
 	}, {
 		text: "The number of NOK items(Logic or Description Mistake)",
-		dataIndex: "nb req NA",
+		dataIndex: "logic_error",
 		width: 120
 	},{
 		text: "Other",
@@ -105,23 +101,21 @@ Ext.define('casco.view.matrix.Summary', {
 
      me.items = [{
 			xtype: 'gridpanel',
-			title:'north',
+			title:'summary',
 			columns:north_columns,
-			//frame:true,
-			//anchor:'100%, 60%',
-			region:'north',
-			height:'%60',
+			anchor:'100%, 50%',
+			forceFit:true,
+			//region:'north',
+			//height:'%60',
 			store:store,
 			collapsable: true
 		}, {
-			//height:100,
+			title:'summary',
 			region:'center',
 			xtype: 'gridpanel',
-			title:'center',
-			height:'%40',
-			flex: 1,
+			forceFit:true,
 			columns:center_columns,
-			//anchor:'100%, 40%',
+			anchor:'100%, 50%',
 			store:store
 		}];
 	

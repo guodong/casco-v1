@@ -305,7 +305,8 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 		
 		me.listeners = {
 		beforeedit:function(editor, e, eOpts){
-		return me.verification.status==1?true:false;
+		//console.log(me.verification.get('status'));
+		return me.verification.get('status')==1?true:false;
         }
 		};
 		

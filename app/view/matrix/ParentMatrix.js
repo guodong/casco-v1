@@ -244,7 +244,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 
         me.listeners={
         beforeedit:function(editor, e, eOpts){
-		return me.verification.status==1?true:false;
+		return me.verification.get('status')==1?true:false;
        // return false;//可编辑
         }
 
