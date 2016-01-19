@@ -112,7 +112,7 @@ Ext.define('casco.view.matrix.Verification', {
 				  }
 				  }
 		      });
-		   },50);	   
+		   },70);	   
           return Ext.String.format('<div id="{0}"></div>',id);
           }else if(val==0){
              Ext.defer(function(){
@@ -136,7 +136,7 @@ Ext.define('casco.view.matrix.Verification', {
 				  }
 				  }
 		      });
-		   },50);
+		   },70);
 		   
           return Ext.String.format('<div id="{0}"></div>',id);
           }

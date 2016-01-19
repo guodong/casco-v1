@@ -1,12 +1,14 @@
 Ext.define('casco.view.matrix.Summary', {
 	extend: 'Ext.panel.Panel',
-	layout: {
-		type: 'border'
-	},
+	layout:'anchor',
 	xtype:'summary',
 	requires: [],
+<<<<<<< HEAD
 //	height:500,
 	flex: 1,
+=======
+    forceFit:true,
+>>>>>>> 3ccf178610a64869ac9b232a6a03e11527b660b3
 	initComponent: function() {
 		var me = this;
 		var store = 
@@ -31,9 +33,9 @@ Ext.define('casco.view.matrix.Summary', {
         me.selModel=selModel;
 		me.tbar = [{
 			text: 'Export',
-			glyph: 0xf068,
+			glyph: 0xf067,
 			handler: function() {
-			 	window.open(API+'/verification/summary_export?version='+me.version);
+			 	window.open(API+'/verification/summary_export?version='+me.version?me.version:'');
             	return;
 			}
 		},'->',{
@@ -95,30 +97,27 @@ Ext.define('casco.view.matrix.Summary', {
 	},{
 		text: "Other",
 		dataIndex: "other",
-	    width: 150,
+	    width: 220,
 	}];
 
      me.items = [{
 			xtype: 'gridpanel',
-			title:'north',
 			forceFit:true,
+			title:'summary',
 			columns:north_columns,
-			//frame:true,
-			//anchor:'100%, 60%',
-			region:'north',
-			height:'%60',
+			anchor:'100%, 50%',
+			forceFit:true,
+			//region:'north',
+			//height:'%60',
 			store:store,
 			collapsable: true
 		}, {
-			//height:100,
+			title:'summary',
 			region:'center',
 			xtype: 'gridpanel',
-			title:'center',
-			forcFit:true,
-			height:'%40',
-			flex: 1,
+			forceFit:true,
 			columns:center_columns,
-			//anchor:'100%, 40%',
+			anchor:'100%, 50%',
 			store:store
 		}];
 	
