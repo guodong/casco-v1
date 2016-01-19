@@ -46,7 +46,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			Ext.Array.forEach(record[0].get('columModle'),function(item){
 		    var column = Ext.create('Ext.grid.column.Column', {  
 				text: item['header'],  
-				width:60,  
+				width:100,  
 				style: "text-align:center;",  
 				align:'center',  
 				dataIndex: item['dataIndex']  
@@ -219,8 +219,8 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			  },
 			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:110,sortable:true,editor:{xtype:'textfield'}},
 			  {text:'Verif. opinion justification',dataIndex:'Verif. opinion justification',header:'Verif. opinion justification',width:185,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'CR',dataIndex:'CR',header:'CR',width:30,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:50,sortable:true,editor:{xtype:'textfield'}}
+			  {text:'CR',dataIndex:'CR',header:'CR',width:50,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:90,sortable:true,editor:{xtype:'textfield'}}
 				];
 
 

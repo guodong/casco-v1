@@ -3,7 +3,6 @@ Ext.define('casco.view.matrix.Summary', {
 	layout:'anchor',
 	xtype:'summary',
 	requires: [],
-    forceFit:true,
 	initComponent: function() {
 		var me = this;
 		var store = 
@@ -27,10 +26,6 @@ Ext.define('casco.view.matrix.Summary', {
 		var selModel=new Ext.selection.Model({mode:"MULTI"});
         me.selModel=selModel;
 		me.tbar = [{
-			glyph: 0xf067,	//resources
-			text: '',
-		    xtype:'label'
-		}, {
 			text: 'Export',
 			glyph: 0xf067,
 			handler: function() {
@@ -68,7 +63,7 @@ Ext.define('casco.view.matrix.Summary', {
 	},{
 		text: "Percent of completeness",
 		dataIndex: "Percent of completeness",
-	    width: 120,
+	    width: 220,
 	}];
 	
 	var center_columns= [
@@ -78,29 +73,30 @@ Ext.define('casco.view.matrix.Summary', {
 		width: 120
 	}, 
 	{
-		text: "Total number of NOK items",
-		dataIndex: "defect_num",
-		width: 120
+		text: "nb of NOK items",
+		dataIndex: "Total number of NOK items",
+		width: 220
 	}, {
-		text:"The number of NOK items(Not Complete)",
-		dataIndex: "not_complete",
-		width: 120
+		text:"nb of Not Complete",
+		dataIndex: "nb req OK",
+		width: 220
 	}, {
-		text: "The number of NOK items(Wrong Coverage)",
-		dataIndex: "wrong_coverage",
-		width: 120
+		text: "nb of Wrong Coverage",
+		dataIndex: "nb req NOK",
+		width: 220
 	}, {
-		text: "The number of NOK items(Logic or Description Mistake)",
-		dataIndex: "logic_error",
-		width: 120
+		text: "nb of Logic or Description Mistake",
+		dataIndex: "nb req NA",
+		width: 220
 	},{
 		text: "Other",
 		dataIndex: "other",
-	    width: 120,
+	    width: 220,
 	}];
 
      me.items = [{
 			xtype: 'gridpanel',
+			forceFit:true,
 			title:'summary',
 			columns:north_columns,
 			anchor:'100%, 50%',
