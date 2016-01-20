@@ -2,11 +2,10 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 	extend: 'Ext.grid.Panel',
 	xtype: 'parentmatrix',
 	viewModel: 'main',
-	
+	multiSelect : true,
 	requires: [
 	          
-	           ],
-	           
+	           ],      
 //	autoHeight: true,
 //	allowDeselect: false,
 	           
@@ -20,13 +19,15 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 	//matched string css class
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
-	//forceFit:true,
+	selModel:{
+    selType: "checkboxmodel" , 
+    checkOnly: true
+	},
 //	columnLines:true,
 	
 	initComponent: function() {
 		var me = this;
-		//console.log(me.verification.get('status'));
-		me.selType=me.verification.get('status')==1?'checkboxmodel':'',
+		//me.selType=me.verification.get('status')==1?'checkboxmodel':'';
 		me.column_store=Ext.create('Ext.data.Store', {
          fields: ['name', 'value'],
          data : [
@@ -34,7 +35,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		 {"name":"OK", "value":"OK"},
 		 {"name":"空白", "value":"空白"}
            ]});
-
+        me.selModel=me.selModel?me.selModel:'';
 		me.matrix = new casco.store.ParentMatrix();
 		me.matrix.load({
 			params:{
@@ -243,12 +244,16 @@ Ext.define('casco.view.matrix.ParentMatrix', {
         
 
         me.listeners={
+
         beforeedit:function(editor, e, eOpts){
-		return me.verification.get('status')==1?true:false;
-       // return false;//可编辑
+        //编辑按钮事件监听,并不会fireEvent
+		if(me.verification.get('status')==1){
+        return true;
+		}else{
+		return false;
         }
 
-		}
+		}}
 		me.callParent(arguments);
 		},
 

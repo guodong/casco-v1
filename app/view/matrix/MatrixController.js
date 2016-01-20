@@ -237,7 +237,7 @@ Ext.define('casco.view.matrix.MatrixController', {
 	},
 	project:function(){
 
-        this.redirectTo('project', true);
+        this.redirectTo('project/' +this.getView().project.get('id'), true);
 		location.reload();
 
 

@@ -17,9 +17,10 @@ Ext.define('casco.view.matrix.Summary', {
 			 },
 			 autoLoad: true
 			});
+		
 		 store.load({
 				params: {
-			    version:me.version
+			    v_id:me.verification.get('id')
 				}
 			});
 		me.store = store;
@@ -29,10 +30,10 @@ Ext.define('casco.view.matrix.Summary', {
 			text: 'Export',
 			glyph: 0xf067,
 			handler: function() {
-			 	window.open(API+'/verification/summary_export?version='+me.version?me.version:'');
+			 	window.open(API+'/verification/summary_export?v_id='+(me.verification.get('id')?me.verification.get('id'):''));
             	return;
 			}
-		},'->',{
+		},'-',{
 		    text: me.version,
 			glyph: 0xf068,
 		    xtype:'label'
@@ -74,19 +75,19 @@ Ext.define('casco.view.matrix.Summary', {
 	}, 
 	{
 		text: "nb of NOK items",
-		dataIndex: "Total number of NOK items",
+		dataIndex: "defect_num",
 		width: 220
 	}, {
 		text:"nb of Not Complete",
-		dataIndex: "nb req OK",
+		dataIndex: "not_complete",
 		width: 220
 	}, {
 		text: "nb of Wrong Coverage",
-		dataIndex: "nb req NOK",
+		dataIndex: "wrong_coverage",
 		width: 220
 	}, {
 		text: "nb of Logic or Description Mistake",
-		dataIndex: "nb req NA",
+		dataIndex: "logic_error",
 		width: 220
 	},{
 		text: "Other",
