@@ -11,7 +11,7 @@ Ext.define('casco.view.matrix.MatrixController', {
 	switchProject : function(combo, record) {
 		
 	   //top的view啊
-        this.redirectTo('matrix/' + record.get('id'), true);
+        this.redirectTo('project/' + record.get('id'), true);
 		location.reload();
 	},
 	switchView:function(combo,irecord,rec){

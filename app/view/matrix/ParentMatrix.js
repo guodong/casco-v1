@@ -51,7 +51,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			me.matrix.setData(me.ds.getData());
 			Ext.Array.forEach(record[0].get('columModle'),function(item){
 		    var column = Ext.create('Ext.grid.column.Column', {  
-				text: item['header'],  
+				text: item['header']+' (P)//(C)',
 				width:60,  
 				style: "text-align:center;",  
 				align:'center',  
