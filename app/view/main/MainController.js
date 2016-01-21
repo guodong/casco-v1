@@ -83,7 +83,7 @@ Ext.define('casco.view.main.MainController', {
 		tabs.setActiveTab(tab);
 	},
 	matrix:function(){
-        this.redirectTo('matrix', true);
+        this.redirectTo('matrix/'+this.getView().project.get('id'), true);
 		location.reload();
 	}
 

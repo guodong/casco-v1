@@ -17,9 +17,10 @@ Ext.define('casco.view.matrix.Summary', {
 			 },
 			 autoLoad: true
 			});
+		
 		 store.load({
 				params: {
-			    version:me.version
+			    v_id:me.verification.get('id')
 				}
 			});
 		me.store = store;
@@ -29,12 +30,10 @@ Ext.define('casco.view.matrix.Summary', {
 			text: 'Export',
 			glyph: 0xf067,
 			handler: function() {
-//				alert(1);
-			 	window.open(API+'/verification/summary_export?version='+(me.version?me.version:''));
-			 	
+			 	window.open(API+'/verification/summary_export?v_id='+(me.verification.get('id')?me.verification.get('id'):''));
             	return;
 			}
-		},'->',{
+		},'-',{
 		    text: me.version,
 			glyph: 0xf068,
 		    xtype:'label'
@@ -87,7 +86,7 @@ Ext.define('casco.view.matrix.Summary', {
 		dataIndex: "wrong_coverage",
 		width: 220
 	}, {
-		text: "nb of Logic or Description Mistake items",
+		text: "Num of Logic or Description Mistake items",
 		dataIndex: "logic_error",
 		width: 300
 	},{

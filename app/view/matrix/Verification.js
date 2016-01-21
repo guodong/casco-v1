@@ -17,7 +17,8 @@ Ext.define('casco.view.matrix.Verification', {
     	me.store = new casco.store.Verification();
     	me.store.load({
     		params: {
-    			project_id: me.project.get('id')
+    			project_id: me.project.get('id'),
+				child_id:me.child_id?me.child_id:''
     		}
     	});
 		var states = Ext.create('Ext.data.Store', {
@@ -103,6 +104,8 @@ Ext.define('casco.view.matrix.Verification', {
 				  rec.save({
 					//params:{status:rec.data.status},
 					success: function(){
+						var tabs = Ext.getCmp('matrixpanel');
+						tabs.updateLayout();
 						Ext.Msg.alert('','提交成功!');
 						//还应该做一件事情就是刷新tabs
 					},
@@ -115,7 +118,7 @@ Ext.define('casco.view.matrix.Verification', {
 		      });
 		   },70);	   
           return Ext.String.format('<div id="{0}"></div>',id);
-          }else if(val==0){
+          }else{
              Ext.defer(function(){
 			  Ext.widget('button', {
 			      renderTo:id,
@@ -127,7 +130,8 @@ Ext.define('casco.view.matrix.Verification', {
 				  rec.set('status',1);
 				  rec.save({
 					success: function(){
-						//me.getView().refresh();
+						var tabs = Ext.getCmp('matrixpanel');
+						tabs.updateLayout();
 						Ext.Msg.alert('','撤销成功!');
 						
 					},
@@ -226,7 +230,7 @@ Ext.define('casco.view.matrix.Verification', {
 		 text: 'Export',
 		 scope: this,
 		 handler:function(){
-         window.open(API+'verification/export?project_id='+me.project.get('id'));
+         window.open(API+'verification/export?project_id='+me.project.get('id')+'&child_id='+me.child_id);
           return;
 		 }
 		}];

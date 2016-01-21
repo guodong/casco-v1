@@ -3,7 +3,6 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 	mixins:['Ext.plugin.Abstract'],
 	xtype: 'childmatrix',
 	viewModel: 'main',
-	
 	requires: ['casco.view.matrix.MatrixController'
 	           ],
 	           
@@ -22,13 +21,15 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
     columnsText:'显示的列',
-	//selModel: new Ext.selection.CheckboxModel({checkOnly:true}), 
+	selModel:{
+    selType: "checkboxmodel" , 
+    checkOnly: true
+	}, 
 	//forceFit:true,
 //	columnLines:true,
 		
 	initComponent: function(component) {
 		var me = this;
-		me.selType=me.verification.get('status')==1?'checkboxmodel':'',
 		me.matrix = new casco.store.ChildMatrix();
 		me.matrix.load({
 			params:{
@@ -304,7 +305,6 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 		
 		me.listeners = {
 		beforeedit:function(editor, e, eOpts){
-		//console.log(me.verification.get('status'));
 		return me.verification.get('status')==1?true:false;
         }
 		};
