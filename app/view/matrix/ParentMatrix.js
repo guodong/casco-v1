@@ -1,13 +1,9 @@
+// 160121 Q T
 Ext.define('casco.view.matrix.ParentMatrix', {
 	extend: 'Ext.grid.Panel',
 	xtype: 'parentmatrix',
 	viewModel: 'main',
-	multiSelect : true,
-	requires: [
-	          
-	           ],      
-//	autoHeight: true,
-//	allowDeselect: false,
+	requires: [],      
 	           
     //search参数
 	searchValue:null,
@@ -19,47 +15,56 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 	//matched string css class
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
+	
+	multiSelect : true,
 	selModel:{
-    selType: "checkboxmodel" , 
-    checkOnly: true
+//		mode:'MULTI',
+		selType: "checkboxmodel" ,    //5.1.0之后就不赞成使用这种方式了。。。
+		checkOnly: false
 	},
 //	columnLines:true,
 	
 	initComponent: function() {
 		var me = this;
-		//me.selType=me.verification.get('status')==1?'checkboxmodel':'';
+		console.log(me.verification.get('status'));
+//		me.selType=me.verification.get('status')==1?'checkboxmodel':'';
 		me.column_store=Ext.create('Ext.data.Store', {
          fields: ['name', 'value'],
          data : [
-         {"name":"NA", "value":"NA"},
-		 {"name":"OK", "value":"OK"},
-		 {"name":"空白", "value":"空白"}
-           ]});
-        me.selModel=me.selModel?me.selModel:'';
+                 {"name":"NA", "value":"NA"},
+                 {"name":"OK", "value":"OK"},
+                 {"name":"空白", "value":"空白"}
+           ]
+		});
+		console.log(me.column_store);
+        me.selModel=me.selModel?me.selModel:'';		//赋值作用？？？
 		me.matrix = new casco.store.ParentMatrix();
 		me.matrix.load({
 			params:{
 				id: me.verification.get('id')
 			},
-			synchronous: true,
+			synchronous: true,		//同步作用 ？？？
 			callback: function(record){
-            me.columns=me.columns_store;
-		    me.ds = new Ext.data.JsonStore({
+				me.columns=me.columns_store;
+				console.log(me.columns);	//和push处内容一样？  赋值了什么？？？
+				me.ds = new Ext.data.JsonStore({
 							  data: record[0].get('data'),
 							  fields:record[0].get('fieldsNames')
-			});
-			me.matrix.setData(me.ds.getData());
-			Ext.Array.forEach(record[0].get('columModle'),function(item){
-		    var column = Ext.create('Ext.grid.column.Column', {  
-				text: item['header']+' (P)//(C)',
-				width:120,  
-				style: "text-align:center;",  
-				align:'center',  
-				dataIndex: item['dataIndex']  
-			});  
-            me.columns.push(column);
-			//me.headerCt.insert(me.columns.length, column);
-			});
+				});
+				console.log(record[0].get('fieldsNames'));	//undefined???
+				me.matrix.setData(me.ds.getData());
+				Ext.Array.forEach(record[0].get('columModle'),function(item){	//具体参见动态列的实现
+					var column = Ext.create('Ext.grid.column.Column', {  
+						text: item['header']+' (P)//(C)',
+						width:140,  
+//						align:'center',  
+						dataIndex: item['dataIndex']  
+					});  
+					console.log(column);	//求解释constructor结构  数据在哪？？？
+					me.columns.push(column);
+					console.log(me.columns);	//一样。。。。
+					//me.headerCt.insert(me.columns.length, column);
+				});
 			me.reconfigure(me.matrix,me.columns);
 			me.customMenuItemsCache = [];
 			me.headerCt.on('menucreate', function (cmp, menu) {
@@ -155,10 +160,10 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		}
 		
 		me.columns_store=[
-			 {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:170,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:175,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:160,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:165,sortable:true,editor:{xtype:'textfield'}},
+			 {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:170,sortable:true},
+			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:175,sortable:true},
+			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:160,sortable:true},
+			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:165,sortable:true},
 			  {text:'justification',dataIndex:'justification',header:'justification',width:95,sortable:true,editor:{xtype:'textfield'}},
 			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:110,sortable:true,
 				 customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  

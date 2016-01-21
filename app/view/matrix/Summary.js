@@ -74,19 +74,19 @@ Ext.define('casco.view.matrix.Summary', {
 		width: 120
 	}, 
 	{
-		text: "Num of NOK items",
+		text: "Num of NOK",
 		dataIndex: "defect_num",
 		width: 220
 	}, {
-		text:"Num of Not Complete items",
+		text:"Num of Not Complete",
 		dataIndex: "not_complete",
 		width: 220
 	}, {
-		text: "Num of Wrong Coverage items",
+		text: "Num of Wrong Coverage",
 		dataIndex: "wrong_coverage",
 		width: 220
 	}, {
-		text: "Num of Logic or Description Mistake items",
+		text: "Num of Logic or Description Mistake",
 		dataIndex: "logic_error",
 		width: 300
 	},{
@@ -98,7 +98,7 @@ Ext.define('casco.view.matrix.Summary', {
      me.items = [{
 			xtype: 'gridpanel',
 			forceFit:true,
-			title:'Verification Result 统计',
+			title:'Statistic of Completeness and traceability',
 			columns:north_columns,
 			anchor:'100%, 50%',
 			forceFit:true,
@@ -107,7 +107,7 @@ Ext.define('casco.view.matrix.Summary', {
 			store:store,
 			collapsable: true
 		}, {
-			title:'Defect Type 统计',
+			title:'Defect statistic',
 			region:'center',
 			xtype: 'gridpanel',
 			forceFit:true,

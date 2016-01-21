@@ -6,6 +6,6 @@ Ext.define('casco.store.ParentMatrix', {
     proxy: {
         type: 'rest',
         url: API+'parentmatrix',
-        withCredentials: true
+        withCredentials: true	//允许跨域
     }
 });

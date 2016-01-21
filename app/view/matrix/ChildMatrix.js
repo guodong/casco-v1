@@ -45,10 +45,9 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			me.matrix.setData(me.ds.getData());
 			Ext.Array.forEach(record[0].get('columModle'),function(item){
 		    var column = Ext.create('Ext.grid.column.Column', {  
-				text: item['header'],  
+				text: item['header']+' (P)//(C)',  
 				width:150,  
-				style: "text-align:center;",  
-				align:'center',  
+//				align:'center',  
 				dataIndex: item['dataIndex']  
 			});  
             me.columns.push(column);
@@ -150,10 +149,10 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 		},
 
        	me.columns_store=[
-			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:160,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:165,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:170,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:175,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:160,sortable:true},
+			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:165,sortable:true},
+			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:170,sortable:true},
+			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:175,sortable:true},
 			  {text:'Traceability',dataIndex:'Traceability',header:'Traceability',width:100,sortable:true,
 				  customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
                     { boxLabel: 'OK', name: 'Traceability', inputValue: 'OK'},   
