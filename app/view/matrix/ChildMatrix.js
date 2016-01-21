@@ -5,7 +5,6 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 	viewModel: 'main',
 	
 	requires: ['casco.view.matrix.MatrixController'
-	          
 	           ],
 	           
 //	autoHeight: true,
