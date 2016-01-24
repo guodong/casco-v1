@@ -6,19 +6,14 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 	requires: ['casco.view.matrix.MatrixController'
 	          
 	           ],
-	           
-//	autoHeight: true,
-//	allowDeselect: false,
-	           
-    //search参数
 	searchValue:null,
 	matches:[],
 	controller:'matrix',
-	//currentIndex:null,
+	// currentIndex:null,
 	searchRegExp:null,
-	//caseSensitive:false,
+	// caseSensitive:false,
 	regExpMode:false,
-	//matched string css class
+	// matched string css class
 	matchCls:'x-livesearch-match',
 	defaultStatusText:'Nothing Found',
     columnsText:'显示的列',
@@ -26,42 +21,52 @@ Ext.define('casco.view.matrix.ChildMatrix', {
     selType: "checkboxmodel" , 
     checkOnly: true
 	}, 
-	//forceFit:true,
-//	columnLines:true,
+	// forceFit:true,
+// columnLines:true,
 		
 	initComponent: function(component) {
 		var me = this;
+		me.array=[];
+		me.stack=[];
 		me.matrix = new casco.store.ChildMatrix();
+		me.matrix.on('load',function(g, records){
+		// var cs = me.getColumns();
+		// var st=me.getStore().getFields('Traceability');
+
+			
+		});
 		me.matrix.load({
 			params:{
 				id: me.verification.get('id')
 			},
 			synchronous: true,
 			callback: function(record){		
-            me.columns=me.columns_store;
 		    me.ds = new Ext.data.JsonStore({
 							  data: record[0].get('data'),
 							  fields:record[0].get('fieldsNames')
 			});
-			me.matrix.setData(me.ds.getData());
+		    me.store.setData(me.ds.getData());me.matrix.setData(me.ds.getData());
+			// console.log(me.ds.getData());
+			me.columns=me.columns_store;
+			// innerGrid的store都要来一发
+			// Ext.getCmp('inner_trac').store=me.matrix.getAt(0).get('Traceability');
 			Ext.Array.forEach(record[0].get('columModle'),function(item){
 		    var column = Ext.create('Ext.grid.column.Column', {  
-				text: item['header'],  
+				text: item['header']+' (P)//(C)',  
 				width:100,  
 				style: "text-align:center;",  
 				align:'center',  
 				dataIndex: item['dataIndex']  
 			});  
             me.columns.push(column);
-			//me.headerCt.insert(me.columns.length, column);
+			// me.headerCt.insert(me.columns.length, column);
 			});
-			me.reconfigure(me.matrix,me.columns);
+			me.reconfigure(me.store,me.columns);
 			me.customMenuItemsCache = [];
 			me.headerCt.on('menucreate', function (cmp, menu) {
             menu.on('beforeshow', me.showHeaderMenu, me);
 			}, me);
-
-		    }//callback
+		    }// callback
 		});
     
 
@@ -74,7 +79,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 		     
 			 if(me.verification.get('status')==0){Ext.Msg.alert('','已提交，不可编辑');return;}
 			 var data=[];
-			//血的教训，早知道就用这了... me.matrix.sync();
+			// 血的教训，早知道就用这了... me.matrix.sync();
 			 var rows=me.getSelectionModel().getSelection();
 			 if(rows==null||rows==undefined||rows==[]||rows=='')
 			 {me.matrix.sync({
@@ -92,7 +97,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			 item.dirty=false;
 			 item.commit(); 
 			 data.push(item.getData());
-			 });//each
+			 });// each
 			 var model=Ext.create('casco.model.Verification',{id:me.verification.get('id')});
 			 model.set('data',data);
 			 model.save({
@@ -110,13 +115,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			 });
 			
 			}
-		},/*'-',{text: 'Cancel',
-			glyph: 0xf080,
-			scope: this,
-			handler:function(){
-		    me.matrix.rejectChanges();
-			me.getView().refresh();}
-		},*/'-',{text: 'Export',
+		},'-',{text: 'Export',
 			glyph: 0xf080,
 			scope: this,
 			handler:function(){
@@ -142,8 +141,6 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 				autoCancel:false,
 				listeners: {
 		            edit: function(editor, e) {
-					//commit 不好
-		            //e.record.commit();
 					e.record.set(e.field,e.value);
 					me.getView().refresh(); 
 		            }
@@ -151,7 +148,13 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 		},
 
        	me.columns_store=[
-			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:160,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:160,sortable:true,
+			  customMenu:[
+					{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Child Requirement Tag',dataIndex:'Child Requirement Tag'}]}],
+					 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Child Requirement Tag');}
+					}//
+			   }]//customMenu
+			   },
 			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:165,sortable:true,editor:{xtype:'textfield'}},
 			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:170,sortable:true,editor:{xtype:'textfield'}},
 			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:175,sortable:true,editor:{xtype:'textfield'}},
@@ -164,8 +167,11 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 						change:function(the,newValue,oldValue){
 						 me.self_op(the,newValue,oldValue);}
 					}
-					}],//menu	
-			  }]//customMenu
+					}],// menu
+			  },{text:'筛选',menu:[{xtype:'innergrid',columns:[{dataIndex:'Traceability',text:'Traceability'}]}],
+					listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Traceability');}}
+					//],// menu
+			  }]// customMenu
 			  ,editor: {
 			        xtype: 'combo',
 			        triggerAction:'all',
@@ -185,8 +191,11 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 						change:function(the,newValue,oldValue){
 						 me.self_op(the,newValue,oldValue);}
 					}
-					}]//menu
-			  }]//customMenu
+					}]// menu
+			  },{text:'筛选',menu:{items:[{xtype:'innergrid',columns:[{text:'Already described in completeness',dataIndex:'Already described in completeness',width:20}]}],
+					 listeners:{afterrender:function(g, eOpts){g.down('innergrid').getStore().setData(me.store.getData());g.down('innergrid').fireEvent('datachange',me.store.getData(),g.down('innergrid').getColumns()[0].dataIndex);}
+				}}//menu
+			  }]// customMenu
 			  ,editor: {
 			        xtype: 'combo',
 			        triggerAction:'all',
@@ -206,8 +215,8 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 						change:function(the,newValue,oldValue){
 						 me.self_op(the,newValue,oldValue);}
 					}
-					}],//menu
-			  }]//customMenu
+					}],// menu
+			  }]// customMenu
 			  ,editor: {
 			        xtype: 'combo',
 			        triggerAction:'all',
@@ -237,79 +246,20 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			defaultText:me.defaultStatusText,
 			name:'searchStatusBar'
 		});
-         
-     
-		 
-		 
-	/*	
-       me.items=[{
-	   xtype:'textfield',
-	   value:'text',
-	   
-	   
-	   },{
-       xtype:'gridpanel',
-	   height: 200,
-	   width: 400,
-	   region: 'center',
-		split: true,
-		border: false,
-		store: me.ds,
-		cm: me.cm
-
-
-	   }];
-         
-
-		me.columns = [{
-			text: "tag",
-			dataIndex: "tag",
-			width: 130,
-	        summaryType: 'count',
-	        summaryRenderer: function(value, summaryData, dataIndex) {
-	            return Ext.String.format('{0} item{1}', value, value !== 1 ? 's' : '');
-	        }
-		}, {
-			text: "allocation",
-			dataIndex: "allocation",
-			flex: 1
-		}, {
-			text: "category",
-			dataIndex: "category",
-			flex:1,
-//			width: 130,
-		}, {
-			text: "tcs",
-			dataIndex: "tcs",
-			width: 250,
-			renderer: function(value) {
-				var str = ""; 
-				Ext.Array.each(value, function(v) {
-					str += v.tag + " ";
-				});
-				return str;
-			}
-		}, {
-			text: "vat",
-			dataIndex: "vat",
-			width: 250,
-			renderer : function(value) {
-				if(!value) return '';
-				var arr = [];
-				Ext.Array.each(value, function(v) {
-			        arr.push(v.tag);
-			    });
-				return arr.join(', ');
-			}
-		}];
-		*/
-		
+    
 		me.listeners = {
 		beforeedit:function(editor, e, eOpts){
 		return me.verification.get('status')==1?true:false;
-        }
-		};
-		
+        },
+		statesave:function(g){
+		// Ext.Msg.alert('hehe');
+		g.matrix.each(function(record){   
+		console.log(record);
+		},this);
+		},
+		afterrender:function(g){	  
+		}
+		}
 		me.callParent(arguments);
 	},
 	
@@ -317,7 +267,9 @@ Ext.define('casco.view.matrix.ChildMatrix', {
     showHeaderMenu: function (menu) {
         var me = this;
         me.removeCustomMenuItems(menu);
-        me.addCustomMenuitems(menu);
+        me.addCustomMenuitems(menu);      
+		
+
     },
 
     removeCustomMenuItems: function (menu) {
@@ -346,182 +298,21 @@ Ext.define('casco.view.matrix.ChildMatrix', {
             Ext.each(renderedItems, function (renderedMenuItem) {
                 me.customMenuItemsCache.push(renderedMenuItem);
             });
-        }//if
+        }// if
+		//console.log(menu.items);
+		//console.log(menu.items.items);
     },
-//}),
-
-	afterRender:function(){
-		var me = this;
-		me.callParent(arguments);
-		me.textField= me.down('textfield[name = searchField]');
-		me.statusBar = me.down('statusbar[name = searchStatusBar]');
-		me.view.on('cellkeydown',me.focusTextField,me);
-		/*
-		var menu = me.headerCt.getMenu();
-		menu.removeAll();
-		menu.add([{
-			text: 'Custom Item',
-			handler: function() {
-				var columnDataIndex = menu.activeHeader.dataIndex;
-				alert('custom item for column "'+columnDataIndex+'" was pressed');
-			}
-		}]); 
-		*/
-	},
+	/*
+	 * afterRender:function(){
+	 * 
+	 * var me = this; var menu = me.headerCt.getMenu(); console.log(menu);
+	 * 
+	 * menu.add([{ text: 'Custom Item', handler: function() { var
+	 * columnDataIndex = menu.activeHeader.dataIndex; alert('custom item for
+	 * column "'+columnDataIndex+'" was pressed'); } }]);
+	 *  },
+	 */
 	
-	focusTextField: function(view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
-        if (e.getKey() === e.S) {
-            e.preventDefault();
-            this.textField.focus();
-        }
-    },
-	
-	tagsRe:/<[^>]*>/gm,  //detects html tag gm 参数
-	tagsProtect:'\x0f',  //DEL ASCII code
-	
-	getSearchValue:function(){
-		var me = this,
-		value = me.textField.getValue();  
-		if(value === ''){
-			return null;
-		}
-		if(!me.regExpMode){
-			value = Ext.String.escapeRegex(value);
-		}else{
-			try{
-				new RegExp(value);
-			}catch(error){
-				me.statusBar.setStatus({
-					text:error.message,
-					iconCls:'x-status-error'
-				});
-				return null;
-			}
-			if(value === '^' || value === '$'){
-				return null;
-			}
-		}
-		return value;
-	},
-	
-	gotoCurrent: function() {
-        var pos = this.matches[this.currentIndex];
-        this.getNavigationModel().setPosition(pos.record, pos.column);
-        this.getSelectionModel().select(pos.record);
-    },
-	
-	onTextFieldChange: function() {
-        var me = this,
-        count = 0,
-        view = me.view,
-        cellSelector = view.cellSelector,
-        innerSelector = view.innerSelector;
-        columns = me.visibleColumnManager.getColumns();
-
-        view.refresh();
-        // reset the statusbar
-        me.statusBar.setStatus({
-            text: me.defaultStatusText,
-            iconCls: '',
-        });
-
-        me.searchValue = me.getSearchValue();
-        me.matches = [];
-        me.currentIndex = null;
-
-        if (me.searchValue !== null) {
-            me.searchRegExp = new RegExp(me.getSearchValue(), 'g' + (me.caseSensitive ? '' : 'i'));
-            me.store_rs.each(function(record, idx) {
-                var node = view.getNode(record);
-                
-                if (node) {
-                    Ext.Array.forEach(columns, function(column) {
-                        var cell = Ext.fly(node).down(column.getCellInnerSelector(), true),
-                            matches, cellHTML,
-                            seen;
-
-                        if (cell) {
-                            matches = cell.innerHTML.match(me.tagsRe);
-                            cellHTML = cell.innerHTML.replace(me.tagsRe, me.tagsProtect);
-
-                            // populate indexes array, set currentIndex, and replace wrap matched string in a span
-                            cellHTML = cellHTML.replace(me.searchRegExp, function(m) {
-                                ++count;
-                                if (!seen) {
-                                    me.matches.push({
-                                        record: record,
-                                        column: column
-                                    });
-                                    seen = true;
-                                }
-                                return '<span class="' + me.matchCls + '">' + m + '</span>';
-                            }, me);
-                            // restore protected tags
-                            Ext.each(matches, function(match) {
-                                cellHTML = cellHTML.replace(me.tagsProtect, match);
-                            });
-                            // update cell html
-                            cell.innerHTML = cellHTML;
-                        }
-                    });
-                }
-             }, me);
-
-             // results found
-             if (count) {
-                me.currentIndex = 0;
-                me.gotoCurrent();
-                me.statusBar.setStatus({
-                    text: Ext.String.format('{0} match{1} found.', count, count === 1 ? 'es' : ''),
-                    iconCls: 'x-status-valid'
-                });
-             }
-         }
-
-         // no results found
-         if (me.currentIndex === null) {
-             me.getSelectionModel().deselectAll();
-             me.textField.focus();
-         }
-    },
-    
-    onPreviousClick: function() {
-        var me = this,
-            matches = me.matches,
-            len = matches.length,
-            idx = me.currentIndex;
-
-        if (len) {
-            me.currentIndex = idx === 0 ? len - 1 : idx - 1;
-            me.gotoCurrent();
-        }
-    },
-    
-    onNextClick: function() {
-        var me = this,
-            matches = me.matches,
-            len = matches.length,
-            idx = me.currentIndex;
-
-        if (len) {
-            me.currentIndex = idx === len - 1 ? 0 : idx + 1;
-            me.gotoCurrent();
-        }
-    },
-		
-    viewConfig: { 
-        stripeRows: true, 
-        getRowClass: function(record) {
-        	if(record.get('tcs') == undefined)
-        		return 'red';
-        	if(record.get('tcs').length != 0)
-        		return ''; 
-        	if(record.get('tcs').length == 0 && !record.get('vat').length && !record.get('vatstr'))
-        		return 'red'; 
-        	if(!record.get('vat').length || record.get('vatstr'))
-        		return 'yellow'; 
-        } 
-    },
     features: [{
     	ftype: 'summary',
     	dock: 'top'

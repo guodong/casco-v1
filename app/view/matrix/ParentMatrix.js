@@ -75,8 +75,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			text: 'Save',
 			glyph: 0xf080,
 			scope: this,
-			handler:function(){
-		     
+			handler:function(){  
              if(me.verification.get('status')==0){Ext.Msg.alert('','已提交，不可编辑');return;}
 			 var data=[];
 			//血的教训，早知道就用这了... me.matrix.sync();

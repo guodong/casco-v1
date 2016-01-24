@@ -8,11 +8,10 @@ Ext.define('casco.view.matrix.Tree', {
 			//console.log(me.getView().up().project);
         	if(!record.get('leaf')) return;
     		var tabs = Ext.getCmp('matrixpanel');
-			//console.log(record.get('id'));
 			var tab = tabs.child('#tab-verification-'+record.data.id);
 			if(!tab){
-			tab = tabs.add({
-				id: 'tab-verification-'+record.data.id,
+			//tabs.removeAll();
+			tab = tabs.add({				id: 'tab-verification-'+record.data.id,
 				xtype: 'matrix.verification',
 				title: 'verification',
 				closable: true,
