@@ -4,7 +4,6 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 	xtype: 'childmatrix',
 	viewModel: 'main',
 	requires: ['casco.view.matrix.MatrixController'
-	          
 	           ],
 	searchValue:null,
 	matches:[],
