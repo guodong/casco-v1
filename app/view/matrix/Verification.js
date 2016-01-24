@@ -151,26 +151,44 @@ Ext.define('casco.view.matrix.Verification', {
 
 
 	me.switchView=function(combo,irecord,rec){
-    
+     
+	  //有rec
       combo.setValue(combo.emptyText);
 	  var v_id=combo.val_id;
 	  var json=[];
       switch(irecord.get('name')){
       case 'ParentMatrix':
-
-          json={'xtype':'parentmatrix'};
-		
+    	 // console.log(rec.parent_versions);
+    	 // console.log(rec.get('parent_versions'));
+    	  if(rec.get('parent_versions').length<=0){return;}
+			Ext.Array.each(rec.get('parent_versions'), function(v) {
+			var tmp={'xtype':'parentmatrix','title':'parentmatrix','id':'parentmatrix'+v.id,
+		    'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
+			tmp['parent_v_id']=v.id;
+			json.push(tmp);
+			});  
 		  break;
 	  case 'ChildMatrix':
-          json={'xtype':'childmatrix'};
+          json={'xtype':'childmatrix','title':'childmatrix','id':'childmatrix'+v_id,
+        		'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
 		  
 		  break;
 	  case  'Summary':
-		  json={'xtype':'summary'};
+		  json={'xtype':'summary','title':'summary','id':'summary'+v_id,
+		       'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
+				  
 		  break;
 	  case  'All':
-		  json=[{'xtype':'parentmatrix'},{'xtype':'childmatrix'}
-				,{'xtype':'summary'}];
+		  	Ext.Array.each(rec.get('parent_versions'), function(v) {
+			var tmp={'xtype':'parentmatrix','title':'parentmatrix','id':'parentmatrix'+v.id,
+		    'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
+			tmp['parent_v_id']=v.id;
+			json.push(tmp);
+			}); 
+		  	json.push({'xtype':'childmatrix','title':'childmatrix','id':'childmatrix'+v_id,
+		        	'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null});
+			json.push({'xtype':'summary','title':'summary','id':'summary'+v_id,
+	        	'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null}); 
 		  break;
 	   default:
 	  }
@@ -182,15 +200,8 @@ Ext.define('casco.view.matrix.Verification', {
 	   }
        else{
 		var tabs= Ext.getCmp('matrixpanel');
-		var tab=tabs.child('#'+record.xtype+v_id);
-		  if(!tab)tab=tabs.add({
-			id:record.xtype+v_id,
-			xtype: record.xtype,
-			title: record.xtype,
-			version:irecord.get('version')?irecord.get('version'):null,
-			closable: true,
-			verification:rec
-		});
+		var tab=tabs.child('#'+record.id);
+		if(!tab)tab=tabs.add(record);
 	    tabs.setActiveTab(tab);
 	   }
 	   }

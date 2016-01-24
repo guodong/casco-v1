@@ -28,12 +28,6 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 		me.array=[];
 		me.stack=[];
 		me.matrix = new casco.store.ChildMatrix();
-		me.matrix.on('load',function(g, records){
-		// var cs = me.getColumns();
-		// var st=me.getStore().getFields('Traceability');
-
-			
-		});
 		me.matrix.load({
 			params:{
 				id: me.verification.get('id')
@@ -154,9 +148,28 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 					}//
 			   }]//customMenu
 			   },
-			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:165,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:170,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:175,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:165,sortable:true,
+			  customMenu:[
+					{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Child Requirement Text',dataIndex:'Child Requirement Text'}]}],
+					 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Child Requirement Text');}
+					}//
+			  }]//customMenu
+			  },
+			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:170,sortable:true,
+			  customMenu:[
+					{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag'}]}],
+					 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Parent Requirement Tag');},
+						
+					}//
+			   }]//customMenu
+			   },
+			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:175,sortable:true,
+			   customMenu:[
+							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Parent Requirement Text',dataIndex:'Parent Requirement Text'}]}],
+							 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Parent Requirement Text');}
+							}//
+					   }]//customMenu
+					   },
 			  {text:'Traceability',dataIndex:'Traceability',header:'Traceability',width:100,sortable:true,
 				  customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
                     { boxLabel: 'OK', name: 'Traceability', inputValue: 'OK'},   
@@ -181,7 +194,13 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 					data : [{"name":"NA", "value":"NA"},{"name":"OK", "value":"OK"},{"name":"NOK", "value":"NOK"}]}),
 			    }
 			  },
-			  {text:'No compliance description',dataIndex:'No compliance description',header:'No compliance description',width:190,sortable:true,editor:{xtype:'textfield'}},
+			  {text:'No compliance description',dataIndex:'No compliance description',header:'No compliance description',width:190,sortable:true,editor:{xtype:'textfield'},
+			  customMenu:[
+						{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'No compliance description',dataIndex:'No compliance description'}]}],
+						 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'No compliance description');}
+						}//
+					   }]//customMenu
+					   },  
 			  {text:'Already described in completeness',dataIndex:'Already described in completeness',header:'Already described in completeness',width:240,sortable:true,
 				 customMenu:[{text:'YES/NO',menu:[{xtype:'radiogroup',items: [  
                     { boxLabel: 'YES', name: 'Already described in completeness', inputValue: 'YES'},   
@@ -192,7 +211,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 					}
 					}]// menu
 			  },{text:'筛选',menu:{items:[{xtype:'innergrid',columns:[{text:'Already described in completeness',dataIndex:'Already described in completeness',width:20}]}],
-					 listeners:{afterrender:function(g, eOpts){g.down('innergrid').getStore().setData(me.store.getData());g.down('innergrid').fireEvent('datachange',me.store.getData(),g.down('innergrid').getColumns()[0].dataIndex);}
+					 listeners:{afterrender:function(g, eOpts){g.down('innergrid').getStore().setData(me.store.getData());g.down('innergrid').fireEvent('datachange',me.store.getData(),'Already described in completeness');}
 				}}//menu
 			  }]// customMenu
 			  ,editor: {
@@ -215,7 +234,11 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 						 me.self_op(the,newValue,oldValue);}
 					}
 					}],// menu
-			  }]// customMenu
+			  } ,{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Child Requirement Tag',dataIndex:'Child Requirement Tag'}]}],
+								 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Child Requirement Tag');}
+								}//
+						   }
+				  ]// customMenu
 			  ,editor: {
 			        xtype: 'combo',
 			        triggerAction:'all',
@@ -226,10 +249,34 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 					data : [{"name":"NA", "value":"NA"},{"name":"OK", "value":"OK"},{"name":"NOK", "value":"NOK"}]}),
 			    }
 			  },
-			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:110,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Verif. opinion justification',dataIndex:'Verif. opinion justification',header:'Verif. opinion justification',width:185,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'CR',dataIndex:'CR',header:'CR',width:50,sortable:true,editor:{xtype:'textfield'}},
-			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:90,sortable:true,editor:{xtype:'textfield'}}
+			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:110,sortable:true,editor:{xtype:'textfield'},
+			  customMenu:[
+							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Verif. Assesst',dataIndex:'Verif. Assesst'}]}],
+							 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Verif. Assesst');}
+							}//
+					   }]//customMenu
+					   },
+			  {text:'Verif. opinion justification',dataIndex:'Verif. opinion justification',header:'Verif. opinion justification',width:185,sortable:true,editor:{xtype:'textfield'},
+			   customMenu:[
+							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Verif. opinion justification',dataIndex:'Verif. opinion justification'}]}],
+							 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Verif. opinion justification');}
+							}//
+					   }]//customMenu
+					   },
+			  {text:'CR',dataIndex:'CR',header:'CR',width:50,sortable:true,editor:{xtype:'textfield'},
+			   customMenu:[
+							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'CR',dataIndex:'CR'}]}],
+							 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'CR');}
+							}//
+					   }]//customMenu
+					   },
+			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:90,sortable:true,editor:{xtype:'textfield'},
+			   customMenu:[
+							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Comment',dataIndex:'Comment'}]}],
+							 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Comment');}
+							}//
+					   }]//customMenu
+					   }
 				];
 
 

@@ -21,9 +21,7 @@ Ext.define('casco.view.matrix.MatrixController', {
 	  var json=[];
       switch(irecord.get('name')){
       case 'ParentMatrix':
-
-          json={'xtype':'parentmatrix'};
-		
+          json={'xtype':'parentmatrix'};//parent_v_id
 		  break;
 	  case 'ChildMatrix':
           json={'xtype':'childmatrix'};

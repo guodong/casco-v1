@@ -62,37 +62,23 @@ Ext.define('casco.view.matrix.InnerGrid', {
 			    });//filter
 			    console.log('parent_ma_c',parent_ma.getData());
 			    me.up('childmatrix').getStore().setData(parent_ma.getData());
-			    me.getView().refresh();
 			    me.up('childmatrix').getView().refresh();
+			    //me.getView().destroy();
+			    me.up('menu').hide();
             	
 			}
 		},'-',{
 		    text: '取消',
 			glyph: 0xf068,
 		    handler:function(){
+			//console.log(me.up());
+			//me.destroy();
 			me.up('menu').hide();
 			}
 		}];
 		
-		
-		//data要做个distinct
-		me.store.on('datachanged',function(g,eOpts){
-			//console.log('已经出发了');
-		//console.log(me.store.getData());
-		});
-		me.addListener("datachange",function(data,index){  
-			console.log('触发事件!stack',me.stack);
-		   if(me.stack.length>0){
-			var json=me.stack.pop();
-			if(json&&json.index==index){
-			me.stack.push(json);
-			me.store.setData(json.data);
-			return;
-			}else{
-			me.stack.push(json);
-			}
-			console.log(me.stack);
-			}//if
+		me.filter=function(data,index){
+			if(!data)return [];
 			var array=[];
 			data.each(function(record){
 				//console.log(index,record.getData()[index],record.getData());
@@ -102,6 +88,30 @@ Ext.define('casco.view.matrix.InnerGrid', {
 				});
 				flag?array.push(record.getData()):'';
 			});
+			return array;
+		}
+		//data要做个distinct
+		me.store.on('datachanged',function(g,eOpts){
+			//console.log('已经出发了');
+		//console.log(me.store.getData());
+		});
+		me.addListener("datachange",function(data,index){  
+			console.log('触发事件!stack',me.stack);
+			var array=[];
+		   if(me.stack.length>0){
+			var json=me.stack.pop();
+			if(json&&json.index==index){
+			me.stack.push(json);
+			//json的store去重
+			array=me.filter(json.store.getData(),index);
+			me.store.setData(array);
+			return;
+			}else{
+			me.stack.push(json);
+			}
+			console.log(me.stack);
+			}//if
+			array=me.filter(data,index);
 			//me.stack.push({'index':index,'data':me.store.getData()});
 			me.store.setData(array);
 	      });

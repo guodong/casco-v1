@@ -41,7 +41,8 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		me.matrix = new casco.store.ParentMatrix();
 		me.matrix.load({
 			params:{
-				id: me.verification.get('id')
+				id: me.verification.get('id'),
+				parent_v_id:me.parent_v_id
 			},
 			synchronous: true,		//同步作用 ？？？
 			callback: function(record){
@@ -129,7 +130,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			glyph: 0xf080,
 			scope: this,
 			handler:function(){
-		    	window.open(API+'parentmatrix/export?v_id='+me.verification.get('id'));
+		    	window.open(API+'parentmatrix/export?v_id='+me.verification.get('id')+'&parent_v_id='+me.parent_v_id);
             	return;
 		}
 		}];
