@@ -115,18 +115,15 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			 });
 			
 			}
-		},/*
-			 * '-',{text: 'Cancel', glyph: 0xf080, scope: this,
-			 * handler:function(){ me.matrix.rejectChanges();
-			 * me.getView().refresh();} },
-			 */'-',{text: 'Export',
+		},'-',{text: 'Export',
 			glyph: 0xf080,
 			scope: this,
 			handler:function(){
 		    	window.open(API+'parentmatrix/export?v_id='+me.verification.get('id')+'&parent_v_id='+me.parent_v_id);
             	return;
-		}
-		}];
+			}
+			},'-',
+		{text: me.title, xtype:'label',margin:'0 50'}];
 
          me.plugins={
 		        ptype: 'cellediting',
