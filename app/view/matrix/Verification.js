@@ -14,6 +14,7 @@ Ext.define('casco.view.matrix.Verification', {
 	forceFit:true,
     initComponent: function(){
     	var me = this;
+    	var p_id=me.id;
     	me.store = new casco.store.Verification();
     	me.store.load({
     		params: {
@@ -215,7 +216,8 @@ Ext.define('casco.view.matrix.Verification', {
 				var job = Ext.create('casco.model.Verification');
 				var win = Ext.create('widget.matrix.create', {
 					project: me.project,
-					job: job
+					job: job,
+					p_id:p_id?p_id:''
 				});
 				win.down('form').loadRecord(job);
 				win.show();
