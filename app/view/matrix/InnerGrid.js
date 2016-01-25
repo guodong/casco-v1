@@ -20,7 +20,8 @@ Ext.define('casco.view.matrix.InnerGrid', {
 		me.data=store;
 		me.filter_obj;
 		//我查这个堆栈有问题!屌屌的
-		me.stack=me.up('childmatrix').stack;
+		console.log(me.up('gridpanel'));
+		me.stack=me.up('gridpanel').stack;
 		//me.columns=me.columns?me.columns:'';
 		//console.log(me.store);
 		me.tbar = [{
@@ -40,7 +41,7 @@ Ext.define('casco.view.matrix.InnerGrid', {
 				}
 			     console.log('filter_obj',me.filter_obj?me.filter_obj.getData():null);
 			    //filterBy的store选取,filter_obj存在说明是index符合,则store变化，否则current
-			    var parent_ma=me.filter_obj||me.up('childmatrix').matrix;
+			    var parent_ma=me.filter_obj||me.up('gridpanel').matrix;
 			    console.log('parent_ma_o',parent_ma.getData());
 			    var records =[]; parent_ma.each(function(r){records.push(r.copy());});
 			    var store2 = new Ext.data.Store({recordType:parent_ma.recordType});
@@ -61,8 +62,8 @@ Ext.define('casco.view.matrix.InnerGrid', {
 			    return flag;
 			    });//filter
 			    console.log('parent_ma_c',parent_ma.getData());
-			    me.up('childmatrix').getStore().setData(parent_ma.getData());
-			    me.up('childmatrix').getView().refresh();
+			    me.up('gridpanel').getStore().setData(parent_ma.getData());
+			    me.up('gridpanel').getView().refresh();
 			    //me.getView().destroy();
 			    me.up('menu').hide();
             	
