@@ -18,7 +18,7 @@ Ext.define('casco.view.matrix.Tree', {
 				child_id:record.data.id?record.data.id:'',
 				project: this.getView().up().project
 			});
-			}
+			}else{tab.store.reload();}
 			tabs.setActiveTab(tab);
     	},//itemdbclick
 		itemcontextmenu:'onCtxMenu'

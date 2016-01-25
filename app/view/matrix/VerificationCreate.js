@@ -13,6 +13,7 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 	width: 700,
 	initComponent: function() {
 		var me = this;
+		var p_id=me.p_id?me.p_id:'';
 		var child_docs = Ext.create('casco.store.Documents');
 		child_docs.load({
 			params: { 
@@ -165,7 +166,13 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 				}
 			}]
 		}],
-
+        me.listeners={
+		destroy:function(g, eOpts){
+		//console.log(p_id);
+		p_id&&Ext.getCmp(p_id).store.reload();
+	
+		}	
+		},
 		me.callParent();
 	}
 });

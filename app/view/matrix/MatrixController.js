@@ -175,6 +175,7 @@ Ext.define('casco.view.matrix.MatrixController', {
 	  },
 
 	createVerification: function() {
+		  
 		Ext.MessageBox.wait('正在处理,请稍候...', 'Create Verification');
 		var form = this.lookupReference('ver_create_form');
 		var meta = form.getValues();
