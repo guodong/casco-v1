@@ -226,18 +226,18 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 					data : [{"name":"YES", "value":"YES"},{"name":"NO", "value":"NO"}]}),
 			    }
 			  },
-			  {text:'Verif. Assessment',dataIndex:'Verif. Assessment',header:'Verif. Assessment',width:135,sortable:true,
+			  {text:'Verif. Assessment',dataIndex:'Verif_Assessment',header:'Verif_Assessment',width:135,sortable:true,
 				  customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',items: [  
-                    { boxLabel: 'OK', name: 'Verif. Assessment', inputValue: 'OK'},   
-                    { boxLabel: 'NOK', name: 'Verif. Assessment', inputValue:'NOK'},
-				    { boxLabel: 'NA', name: 'Verif. Assessment', inputValue: 'NA'}],
+                    { boxLabel: 'OK', name: 'Verif_Assessment', inputValue: 'OK'},   
+                    { boxLabel: 'NOK', name: 'Verif_Assessment', inputValue:'NOK'},
+				    { boxLabel: 'NA', name: 'Verif_Assessment', inputValue: 'NA'}],
 					listeners:{
 						change:function(the,newValue,oldValue){
 						 me.self_op(the,newValue,oldValue);}
 					}
 					}],// menu
-			  } ,{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Verif. Assessment',width:135,dataIndex:'Verif. Assessment'}]}],
-								 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Verif. Assessment');}
+			  } ,{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Verif. Assessment',width:135,dataIndex:'Verif_Assessment'}]}],
+								 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Verif_Assessment');}
 								}//
 						   }
 				  ]// customMenu
@@ -251,13 +251,6 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 					data : [{"name":"NA", "value":"NA"},{"name":"OK", "value":"OK"},{"name":"NOK", "value":"NOK"}]}),
 			    }
 			  },
-			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:110,sortable:true,editor:{xtype:'textfield'},
-			  customMenu:[
-							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Verif. Assesst',width:110,dataIndex:'Verif. Assesst'}]}],
-							 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Verif. Assesst');}
-							}//
-					   }]//customMenu
-					   },
 			  {text:'Verif. opinion justification',dataIndex:'Verif. opinion justification',header:'Verif. opinion justification',width:185,sortable:true,editor:{xtype:'textfield'},
 			   customMenu:[
 							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Verif. opinion justification',width:185,dataIndex:'Verif. opinion justification'}]}],

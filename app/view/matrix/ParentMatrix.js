@@ -240,7 +240,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 					{"name":"Other", "value":"Other"}]}),
 			    }
 			  },
-			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:110,sortable:true,
+			  {text:'Verif. Assesst',dataIndex:'Verif_Assesst',width:110,sortable:true,
 			   customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',items: [  
                     { boxLabel: 'OK', name: 'Verif. Assesst', inputValue: 'OK'},   
                     { boxLabel: 'NOK', name:'Verif. Assesst', inputValue:'NOK'},
@@ -250,8 +250,8 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 						 me.self_op(the,newValue,oldValue);}
 					}
 					}],// menu
-			  },{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Verif. Assesst',width:100,dataIndex:'Verif. Assesst'}]}],
-					 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Verif. Assesst');}}
+			  },{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Verif. Assesst',width:100,dataIndex:'Verif_Assesst'}]}],
+					 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Verif_Assesst');}}
 			  	}]// customMenu
 			  ,editor: {
 			        xtype: 'combo',
