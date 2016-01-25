@@ -1,3 +1,4 @@
+
 /**
 * This class is the controller for the main view for the application. It is
 * specified as the "controller" of the Main view class.
@@ -40,6 +41,7 @@ Ext.define('casco.view.matrix.MatrixController', {
 	  }
 
        //写个递归方便多了啊
+      console.log(record);
        var create_tab=function(record){
        if(Array.isArray(record)){
        Ext.Array.each(record,function(name,index){create_tab(name)});

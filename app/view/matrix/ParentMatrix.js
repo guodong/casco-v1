@@ -26,7 +26,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 	
 	initComponent: function() {
 		var me = this;
-		console.log(me.verification.get('status'));
+//		console.log(me.verification.get('status'));
 //		me.selType=me.verification.get('status')==1?'checkboxmodel':'';
 		me.column_store=Ext.create('Ext.data.Store', {
          fields: ['name', 'value'],
@@ -36,7 +36,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
                  {"name":"空白", "value":"空白"}
            ]
 		});
-		console.log(me.column_store);
+//		console.log(me.column_store);
         me.selModel=me.selModel?me.selModel:'';		//赋值作用？？？
 		me.matrix = new casco.store.ParentMatrix();
 		me.matrix.load({
@@ -46,12 +46,12 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			synchronous: true,		//同步作用 ？？？
 			callback: function(record){
 				me.columns=me.columns_store;
-				console.log(me.columns);	//和push处内容一样？  赋值了什么？？？
+//				console.log(me.columns_store);	//和push处内容一样？  赋值了什么？？？
 				me.ds = new Ext.data.JsonStore({
 							  data: record[0].get('data'),
 							  fields:record[0].get('fieldsNames')
 				});
-				console.log(record[0].get('fieldsNames'));	//undefined???
+//				console.log(record[0].get('fieldsNames'));	//undefined???
 				me.matrix.setData(me.ds.getData());
 				Ext.Array.forEach(record[0].get('columModle'),function(item){	//具体参见动态列的实现
 					var column = Ext.create('Ext.grid.column.Column', {  
@@ -60,11 +60,12 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 //						align:'center',  
 						dataIndex: item['dataIndex']  
 					});  
-					console.log(column);	//求解释constructor结构  数据在哪？？？
+//					console.log(column);	//求解释constructor结构  数据在哪？？？
 					me.columns.push(column);
-					console.log(me.columns);	//一样。。。。
+//					console.log(me.columns);	//一样。。。。
 					//me.headerCt.insert(me.columns.length, column);
 				});
+				console.log(me.columns);
 			me.reconfigure(me.matrix,me.columns);
 			me.customMenuItemsCache = [];
 			me.headerCt.on('menucreate', function (cmp, menu) {

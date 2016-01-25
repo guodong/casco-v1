@@ -175,6 +175,7 @@ Ext.define('casco.view.matrix.Verification', {
 	   default:
 	  }
 
+      
        //写个递归方便多了啊
        var create_tab=function(record){
        if(Array.isArray(record)){
