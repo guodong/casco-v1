@@ -8,9 +8,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 	searchValue:null,
 	matches:[],
 	controller:'matrix',
-	// currentIndex:null,
 	searchRegExp:null,
-	// caseSensitive:false,
 	regExpMode:false,
 	// matched string css class
 	matchCls:'x-livesearch-match',
@@ -21,7 +19,6 @@ Ext.define('casco.view.matrix.ChildMatrix', {
     checkOnly: true
 	}, 
 	// forceFit:true,
-// columnLines:true,
 		
 	initComponent: function(component) {
 		var me = this;
@@ -49,7 +46,12 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 				width:100,  
 				style: "text-align:center;",  
 				align:'center',  
-				dataIndex: item['dataIndex']  
+				dataIndex: item['dataIndex'],
+                customMenu:[
+				{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:item['dataIndex']+' (P)//(C)',dataIndex:item['dataIndex']}]}],
+				 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),item['dataIndex']);}
+				}//
+    			}]//customMenu
 			});  
             me.columns.push(column);
 			// me.headerCt.insert(me.columns.length, column);
@@ -143,21 +145,21 @@ Ext.define('casco.view.matrix.ChildMatrix', {
        	me.columns_store=[
 			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:160,sortable:true,
 			  customMenu:[
-					{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Child Requirement Tag',dataIndex:'Child Requirement Tag'}]}],
+					{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Child Requirement Tag',width:160,dataIndex:'Child Requirement Tag'}]}],
 					 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Child Requirement Tag');}
 					}//
 			   }]//customMenu
 			   },
 			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:165,sortable:true,
 			  customMenu:[
-					{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Child Requirement Text',dataIndex:'Child Requirement Text'}]}],
+					{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Child Requirement Text',width:165,dataIndex:'Child Requirement Text'}]}],
 					 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Child Requirement Text');}
 					}//
 			  }]//customMenu
 			  },
 			  {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:170,sortable:true,
 			  customMenu:[
-					{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag'}]}],
+					{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Parent Requirement Tag',width:170,dataIndex:'Parent Requirement Tag'}]}],
 					 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Parent Requirement Tag');},
 						
 					}//
@@ -165,13 +167,13 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			   },
 			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:175,sortable:true,
 			   customMenu:[
-							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Parent Requirement Text',dataIndex:'Parent Requirement Text'}]}],
+							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Parent Requirement Text',width:175,dataIndex:'Parent Requirement Text'}]}],
 							 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Parent Requirement Text');}
 							}//
 					   }]//customMenu
 					   },
 			  {text:'Traceability',dataIndex:'Traceability',header:'Traceability',width:100,sortable:true,
-				  customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
+				  customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',items: [  
                     { boxLabel: 'OK', name: 'Traceability', inputValue: 'OK'},   
                     { boxLabel: 'NOK', name: 'Traceability', inputValue:'NOK'},
 				    { boxLabel: 'NA', name: 'Traceability', inputValue: 'NA'}],
@@ -180,7 +182,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 						 me.self_op(the,newValue,oldValue);}
 					}
 					}],// menu
-			  },{text:'筛选',menu:[{xtype:'innergrid',columns:[{dataIndex:'Traceability',text:'Traceability'}]}],
+			  },{text:'筛选',menu:[{xtype:'innergrid',columns:[{dataIndex:'Traceability',width:100,text:'Traceability'}]}],
 					listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Traceability');}}
 					//],// menu
 			  }]// customMenu
@@ -196,13 +198,13 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			  },
 			  {text:'No compliance description',dataIndex:'No compliance description',header:'No compliance description',width:190,sortable:true,editor:{xtype:'textfield'},
 			  customMenu:[
-						{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'No compliance description',dataIndex:'No compliance description'}]}],
+						{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'No compliance description',width:190,dataIndex:'No compliance description'}]}],
 						 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'No compliance description');}
 						}//
 					   }]//customMenu
 					   },  
 			  {text:'Already described in completeness',dataIndex:'Already described in completeness',header:'Already described in completeness',width:240,sortable:true,
-				 customMenu:[{text:'YES/NO',menu:[{xtype:'radiogroup',items: [  
+				 customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',items: [  
                     { boxLabel: 'YES', name: 'Already described in completeness', inputValue: 'YES'},   
                     { boxLabel: 'NO', name: 'Already described in completeness', inputValue:'NO'}],
 					 listeners:{
@@ -210,7 +212,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 						 me.self_op(the,newValue,oldValue);}
 					}
 					}]// menu
-			  },{text:'筛选',menu:{items:[{xtype:'innergrid',columns:[{text:'Already described in completeness',dataIndex:'Already described in completeness',width:20}]}],
+			  },{text:'筛选',menu:{items:[{xtype:'innergrid',columns:[{text:'Already described in completeness',width:240,dataIndex:'Already described in completeness',width:20}]}],
 					 listeners:{afterrender:function(g, eOpts){g.down('innergrid').getStore().setData(me.store.getData());g.down('innergrid').fireEvent('datachange',me.store.getData(),'Already described in completeness');}
 				}}//menu
 			  }]// customMenu
@@ -225,7 +227,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			    }
 			  },
 			  {text:'Verif. Assessment',dataIndex:'Verif. Assessment',header:'Verif. Assessment',width:135,sortable:true,
-				  customMenu:[{text:'OK/NOK/NA/Postponed',menu:[{xtype:'radiogroup',items: [  
+				  customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',items: [  
                     { boxLabel: 'OK', name: 'Verif. Assessment', inputValue: 'OK'},   
                     { boxLabel: 'NOK', name: 'Verif. Assessment', inputValue:'NOK'},
 				    { boxLabel: 'NA', name: 'Verif. Assessment', inputValue: 'NA'}],
@@ -234,8 +236,8 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 						 me.self_op(the,newValue,oldValue);}
 					}
 					}],// menu
-			  } ,{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Child Requirement Tag',dataIndex:'Child Requirement Tag'}]}],
-								 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Child Requirement Tag');}
+			  } ,{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Verif. Assessment',width:135,dataIndex:'Verif. Assessment'}]}],
+								 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Verif. Assessment');}
 								}//
 						   }
 				  ]// customMenu
@@ -251,28 +253,28 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			  },
 			  {text:'Verif. Assesst',dataIndex:'Verif. Assesst',header:'Verif. Assesst',width:110,sortable:true,editor:{xtype:'textfield'},
 			  customMenu:[
-							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Verif. Assesst',dataIndex:'Verif. Assesst'}]}],
+							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Verif. Assesst',width:110,dataIndex:'Verif. Assesst'}]}],
 							 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Verif. Assesst');}
 							}//
 					   }]//customMenu
 					   },
 			  {text:'Verif. opinion justification',dataIndex:'Verif. opinion justification',header:'Verif. opinion justification',width:185,sortable:true,editor:{xtype:'textfield'},
 			   customMenu:[
-							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Verif. opinion justification',dataIndex:'Verif. opinion justification'}]}],
+							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Verif. opinion justification',width:185,dataIndex:'Verif. opinion justification'}]}],
 							 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Verif. opinion justification');}
 							}//
 					   }]//customMenu
 					   },
 			  {text:'CR',dataIndex:'CR',header:'CR',width:50,sortable:true,editor:{xtype:'textfield'},
 			   customMenu:[
-							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'CR',dataIndex:'CR'}]}],
+							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'CR',width:50,dataIndex:'CR'}]}],
 							 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'CR');}
 							}//
 					   }]//customMenu
 					   },
 			  {text:'Comment',dataIndex:'Comment',header:'Comment',width:90,sortable:true,editor:{xtype:'textfield'},
 			   customMenu:[
-							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Comment',dataIndex:'Comment'}]}],
+							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Comment',width:90,dataIndex:'Comment'}]}],
 							 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Comment');}
 							}//
 					   }]//customMenu
