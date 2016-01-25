@@ -41,7 +41,8 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		me.matrix = new casco.store.ParentMatrix();
 		me.matrix.load({
 			params:{
-				id: me.verification.get('id')
+				id: me.verification.get('id'),
+				parent_v_id:me.parent_v_id
 			},
 			synchronous: true,		//同步作用 ？？？
 			callback: function(record){
@@ -81,8 +82,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			text: 'Save',
 			glyph: 0xf080,
 			scope: this,
-			handler:function(){
-		     
+			handler:function(){  
              if(me.verification.get('status')==0){Ext.Msg.alert('','已提交，不可编辑');return;}
 			 var data=[];
 			//血的教训，早知道就用这了... me.matrix.sync();
@@ -131,7 +131,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			glyph: 0xf080,
 			scope: this,
 			handler:function(){
-		    	window.open(API+'parentmatrix/export?v_id='+me.verification.get('id'));
+		    	window.open(API+'parentmatrix/export?v_id='+me.verification.get('id')+'&parent_v_id='+me.parent_v_id);
             	return;
 		}
 		}];
