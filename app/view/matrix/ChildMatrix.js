@@ -43,15 +43,17 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			Ext.Array.forEach(record[0].get('columModle'),function(item){
 		    var column = Ext.create('Ext.grid.column.Column', {  
 				text: item['header']+' (P)//(C)',  
-				width:100,  
+				width:150,  
 				style: "text-align:center;",  
 				align:'center',  
 				dataIndex: item['dataIndex'],
+					/*
                 customMenu:[
 				{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:item['dataIndex']+' (P)//(C)',dataIndex:item['dataIndex']}]}],
 				 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),item['dataIndex']);}
 				}//
     			}]//customMenu
+				*/
 			});  
             me.columns.push(column);
 			// me.headerCt.insert(me.columns.length, column);
@@ -173,7 +175,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 					   }]//customMenu
 					   },
 			  {text:'Traceability',dataIndex:'Traceability',header:'Traceability',width:100,sortable:true,
-				  customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',items: [  
+				  customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',columns:1,vertical:true,items: [  
                     { boxLabel: 'OK', name: 'Traceability', inputValue: 'OK'},   
                     { boxLabel: 'NOK', name: 'Traceability', inputValue:'NOK'},
 				    { boxLabel: 'NA', name: 'Traceability', inputValue: 'NA'}],
@@ -204,7 +206,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 					   }]//customMenu
 					   },  
 			  {text:'Already described in completeness',dataIndex:'Already described in completeness',header:'Already described in completeness',width:240,sortable:true,
-				 customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',items: [  
+				 customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',columns:1,vertical:true,items: [  
                     { boxLabel: 'YES', name: 'Already described in completeness', inputValue: 'YES'},   
                     { boxLabel: 'NO', name: 'Already described in completeness', inputValue:'NO'}],
 					 listeners:{
@@ -227,7 +229,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			    }
 			  },
 			  {text:'Verif. Assessment',dataIndex:'Verif_Assessment',header:'Verif. Assessment',width:135,sortable:true,
-				  customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',items: [  
+				  customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',columns:1,vertical:true,items: [  
                     { boxLabel: 'OK', name: 'Verif_Assessment', inputValue: 'OK'},   
                     { boxLabel: 'NOK', name: 'Verif_Assessment', inputValue:'NOK'},
 				    { boxLabel: 'NA', name: 'Verif_Assessment', inputValue: 'NA'}],
