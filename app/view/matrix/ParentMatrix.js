@@ -18,7 +18,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 	
 	multiSelect : true,
 	selModel:{
-// mode:'MULTI',
+// 		mode:'MULTI',
 		selType: "checkboxmodel" ,    // 5.1.0之后就不赞成使用这种方式了。。。
 		checkOnly: false
 	},
@@ -217,7 +217,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 					  }]// customMenu
 					  },
 			  {text:'Defect Type',dataIndex:'Defect Type',header:'Defect Type',width:100,sortable:true,
-				  customMenu:[{text:'批量编辑',menu:[{xtype:'panel',defaultType:'radio',
+				  customMenu:[{text:'批量编辑',menu:[{xtype:'radio',
                     vertical:true,items: [ 
                     { boxLabel: 'Not complete', name: 'Defect Type', inputValue: 'Not complete'},
 				    { boxLabel: 'Wrong coverage', name: 'Defect Type', inputValue: 'Wrong coverage'},   
@@ -242,9 +242,9 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			  },
 			  {text:'Verif. Assesst',dataIndex:'Verif_Assesst',width:110,sortable:true,
 			   customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',items: [  
-                    { boxLabel: 'OK', name: 'Verif. Assesst', inputValue: 'OK'},   
-                    { boxLabel: 'NOK', name:'Verif. Assesst', inputValue:'NOK'},
-				    { boxLabel: 'NA', name: 'Verif. Assesst', inputValue: 'NA'}],
+                    { boxLabel: 'OK', name: 'Verif_Assesst', inputValue: 'OK'},   
+                    { boxLabel: 'NOK', name:'Verif_Assesst', inputValue:'NOK'},
+				    { boxLabel: 'NA', name: 'Verif_Assesst', inputValue: 'NA'}],
 					listeners:{
 						change:function(the,newValue,oldValue){
 						 me.self_op(the,newValue,oldValue);}

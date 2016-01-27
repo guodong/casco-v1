@@ -15,51 +15,51 @@ Ext.define('casco.view.matrix.MatrixController', {
         this.redirectTo('project/' + record.get('id'), true);
 		location.reload();
 	},
-	switchView:function(combo,irecord,rec){
-    
-      combo.setValue(combo.emptyText);
-	  var v_id=combo.val_id;
-	  var json=[];
-      switch(irecord.get('name')){
-      case 'ParentMatrix':
-          json={'xtype':'parentmatrix'};//parent_v_id
-		  break;
-	  case 'ChildMatrix':
-          json={'xtype':'childmatrix'};
-		  
-		  break;
-	  case  'Summary':
-		  json={'xtype':'summary'};
-		  break;
-	  case  'All':
-		  json=[{'xtype':'parentmatrix'},{'xtype':'childmatrix'}
-				,{'xtype':'summary'}];
-		  break;
-	   default:
-	  }
-
-       //写个递归方便多了啊
-      console.log(record);
-       var create_tab=function(record){
-       if(Array.isArray(record)){
-       Ext.Array.each(record,function(name,index){create_tab(name)});
-	   }
-       else{
-		var tabs= Ext.getCmp('matrixpanel');
-		var tab=tabs.child('#'+record.xtype+v_id);
-		  if(!tab)tab=tabs.add({
-			id:record.xtype+v_id,
-			xtype: record.xtype,
-			title: record.xtype,
-			version:irecord.get('version')?irecord.get('version'):null,
-			closable: true,
-			verification:rec
-		});
-	    tabs.setActiveTab(tab);
-	   }
-	   }
-       create_tab(json);
-	},
+//	switchView:function(combo,irecord,rec){
+//    
+//      combo.setValue(combo.emptyText);
+//	  var v_id=combo.val_id;
+//	  var json=[];
+//      switch(irecord.get('name')){
+//      case 'ParentMatrix':
+//          json={'xtype':'parentmatrix'};//parent_v_id
+//		  break;
+//	  case 'ChildMatrix':
+//          json={'xtype':'childmatrix'};
+//		  
+//		  break;
+//	  case  'Summary':
+//		  json={'xtype':'summary'};
+//		  break;
+//	  case  'All':
+//		  json=[{'xtype':'parentmatrix'},{'xtype':'childmatrix'}
+//				,{'xtype':'summary'}];
+//		  break;
+//	   default:
+//	  }
+//
+//       //写个递归方便多了啊
+//      console.log(record);
+//       var create_tab=function(record){
+//       if(Array.isArray(record)){
+//       Ext.Array.each(record,function(name,index){create_tab(name)});
+//	   }
+//       else{
+//		var tabs= Ext.getCmp('matrixpanel');
+//		var tab=tabs.child('#'+record.xtype+v_id);
+//		  if(!tab)tab=tabs.add({
+//			id:record.xtype+v_id,
+//			xtype: record.xtype,
+//			title: record.xtype,
+//			version:irecord.get('version')?irecord.get('version'):null,
+//			closable: true,
+//			verification:rec
+//		});
+//	    tabs.setActiveTab(tab);
+//	   }
+//	   }
+//       create_tab(json);
+//	},
 
 	buildCtxMenu:function(){
 
@@ -87,7 +87,6 @@ Ext.define('casco.view.matrix.MatrixController', {
 	 },
 	
 	 onDelete:function(button){
-       
 	   var callback=Ext.bind(this.onConfirmDelete,undefined,[button],true);
         Ext.Msg.confirm(
 			'Approve deletion',
