@@ -18,7 +18,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 	
 	multiSelect : true,
 	selModel:{
-// mode:'MULTI',
+// 		mode:'MULTI',
 		selType: "checkboxmodel" ,    // 5.1.0之后就不赞成使用这种方式了。。。
 		checkOnly: false
 	},
@@ -188,7 +188,8 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 				  }]// customMenu
 				  },
 			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:110,sortable:true,
-				 customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',items: [  
+				 customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',columns:1,vertical:true,
+					 items: [  
                     { boxLabel: 'OK', name: 'Completeness', inputValue: 'OK'},   
                     { boxLabel: 'NOK', name: 'Completeness', inputValue:'NOK'},
 				    { boxLabel: 'NA', name: 'Completeness', inputValue: 'NA'}],
@@ -219,8 +220,8 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 					  }]// customMenu
 					  },
 			  {text:'Defect Type',dataIndex:'Defect Type',header:'Defect Type',width:100,sortable:true,
-				  customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',//defaultType:'radio',
-                    vertical:true,items: [ 
+				  customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',columns:1,vertical:true,
+                    items: [ 
                     { boxLabel: 'Not complete', name: 'Defect Type', inputValue: 'Not complete'},
 				    { boxLabel: 'Wrong coverage', name: 'Defect Type', inputValue: 'Wrong coverage'},   
                     { boxLabel: 'logic or description mistake in Child requirement', name: 'Defect Type', inputValue:'logic or description mistake in Child requirement'},
@@ -243,7 +244,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			    }
 			  },
 			  {text:'Verif. Assesst',dataIndex:'Verif_Assesst',width:110,sortable:true,
-			   customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',items: [  
+			   customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',columns:1,vertical:true,items: [  
                     { boxLabel: 'OK', name: 'Verif_Assesst', inputValue: 'OK'},   
                     { boxLabel: 'NOK', name:'Verif_Assesst', inputValue:'NOK'},
 				    { boxLabel: 'NA', name: 'Verif_Assesst', inputValue: 'NA'}],
