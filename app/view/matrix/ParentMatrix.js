@@ -145,9 +145,9 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		 if(rows!=undefined){
 		 Ext.Array.each(rows,function(item){
 		 item.set(newValue);
-		// 这行很重要,由于自定义列的后遗症
-		 me.getView().refresh(); 
 		 });
+		 // 这行很重要,由于自定义列的后遗症
+		  me.getView().refresh();
 		 }
 		}
 		
