@@ -219,7 +219,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 					  }]// customMenu
 					  },
 			  {text:'Defect Type',dataIndex:'Defect Type',header:'Defect Type',width:100,sortable:true,
-				  customMenu:[{text:'批量编辑',menu:[{xtype:'panel',defaultType:'radio',
+				  customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',//defaultType:'radio',
                     vertical:true,items: [ 
                     { boxLabel: 'Not complete', name: 'Defect Type', inputValue: 'Not complete'},
 				    { boxLabel: 'Wrong coverage', name: 'Defect Type', inputValue: 'Wrong coverage'},   

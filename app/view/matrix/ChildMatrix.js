@@ -47,11 +47,13 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 				style: "text-align:center;",  
 				align:'center',  
 				dataIndex: item['dataIndex'],
+					/*
                 customMenu:[
 				{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:item['dataIndex']+' (P)//(C)',dataIndex:item['dataIndex']}]}],
 				 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),item['dataIndex']);}
 				}//
     			}]//customMenu
+				*/
 			});  
             me.columns.push(column);
 			// me.headerCt.insert(me.columns.length, column);

@@ -161,7 +161,7 @@ Ext.define('casco.view.matrix.Verification', {
       case 'ParentMatrix':
     	  if(rec.get('parent_versions').length<=0){return;}
 			Ext.Array.each(rec.get('parent_versions'), function(v) {
-			var tmp={'xtype':'parentmatrix','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':'parentmatrix'+v.id,
+			var tmp={'xtype':'parentmatrix','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':v_id+v.id,
 		    'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
 			tmp['parent_v_id']=v.id;
 			json.push(tmp);
@@ -179,7 +179,7 @@ Ext.define('casco.view.matrix.Verification', {
 		  break;
 	  case  'All':
 		  	Ext.Array.each(rec.get('parent_versions'), function(v) {
-			var tmp={'xtype':'parentmatrix','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':'parentmatrix'+v.id,
+			var tmp={'xtype':'parentmatrix','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':v_id+v.id,
 		    'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
 			tmp['parent_v_id']=v.id;
 			json.push(tmp);
