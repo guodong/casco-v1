@@ -64,8 +64,8 @@ Ext.define('casco.view.matrix.InnerGrid', {
 			    console.log('parent_ma_c',parent_ma.getData());
 			    me.up('gridpanel').getStore().setData(parent_ma.getData());
 			    me.up('gridpanel').getView().refresh();
-			    //me.getView().destroy();
-			    me.up('menu').hide();
+			    me.up('menu').setVisible(false);
+				me.setVisible(false);
             	
 			}
 		},'-',{
@@ -73,8 +73,8 @@ Ext.define('casco.view.matrix.InnerGrid', {
 			glyph: 0xf068,
 		    handler:function(){
 			//console.log(me.up());
-			//me.destroy();
-			me.up('menu').hide();
+			me.up('menu').setVisible(false);
+			me.setVisible(false);
 			}
 		}];
 		
@@ -96,7 +96,8 @@ Ext.define('casco.view.matrix.InnerGrid', {
 			//console.log('已经出发了');
 		//console.log(me.store.getData());
 		});
-		me.addListener("datachange",function(data,index){  
+		me.addListener("datachange",function(data,index){
+			me.setVisible(true);//重要
 			console.log('触发事件!stack',me.stack);
 			var array=[];
 		   if(me.stack.length>0){
@@ -115,6 +116,7 @@ Ext.define('casco.view.matrix.InnerGrid', {
 			array=me.filter(data,index);
 			//me.stack.push({'index':index,'data':me.store.getData()});
 			me.store.setData(array);
+			me.getView().setVisible(true);
 	      });
 	  me.callParent();
 	},
