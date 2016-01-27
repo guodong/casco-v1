@@ -226,7 +226,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 					data : [{"name":"YES", "value":"YES"},{"name":"NO", "value":"NO"}]}),
 			    }
 			  },
-			  {text:'Verif. Assessment',dataIndex:'Verif_Assessment',header:'Verif_Assessment',width:135,sortable:true,
+			  {text:'Verif. Assessment',dataIndex:'Verif_Assessment',header:'Verif. Assessment',width:135,sortable:true,
 				  customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',items: [  
                     { boxLabel: 'OK', name: 'Verif_Assessment', inputValue: 'OK'},   
                     { boxLabel: 'NOK', name: 'Verif_Assessment', inputValue:'NOK'},
