@@ -139,6 +139,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		            }
 		        }
 		},
+
          me.self_op=function(the,newValue,oldValue){       
 		 var rows=me.getSelectionModel().getSelection();
 		 if(rows!=undefined){
@@ -195,10 +196,11 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 						change:function(the,newValue,oldValue){
 						 me.self_op(the,newValue,oldValue);}
 					}
-					},{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Completeness',width:110,dataIndex:'Completeness'}]}],
+					}]//menu
+				  },{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Completeness',width:110,dataIndex:'Completeness'}],
 						 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Completeness');}}
-					}],// menu
-			  }]// customMenu
+			  }]//menu
+				  }]
 			  ,editor: {
 			        xtype: 'combo',
 			        triggerAction:'all',
@@ -281,23 +283,12 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			  customMenu:[
 							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Comment',width:90,dataIndex:'Comment'}]}],
 							 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Comment');}
-							}//
+							}//listeners
 					  }]// customMenu
-					  }
-				];
+			  }
+			];
 	
-		me.bbar = ['-',{
-			summaryType: 'count',
-	        summaryRenderer: function(value, summaryData, dataIndex) {
-	            return Ext.String.format('{0} item{1}', value, value !== 1 ? 's' : '');
-	        }
-		}]
 		
-		me.bbar = Ext.create('casco.ux.StatusBar',{
-			defaultText:me.defaultStatusText,
-			name:'searchStatusBar'
-		});
-        
 
         me.listeners={
 
