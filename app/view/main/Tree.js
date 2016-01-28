@@ -28,6 +28,7 @@ Ext.define('casco.view.main.Tree', {
     				tabs.setActiveTab(tab);
     			}
     		});
+    		console.log(document);
 
     	},//itemdbclick
 		itemcontextmenu:function(menutree,record,items,index,e){
@@ -50,7 +51,7 @@ Ext.define('casco.view.main.Tree', {
 						text:'delete',
 						handler:function(){
 					    Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
-							  //Ë¢ÐÂÓÒ±ßµÄÍ¼´æÔÚÄÑµãºÍbug
+							  //Ë¢ï¿½ï¿½ï¿½Ò±ßµï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½Ñµï¿½ï¿½bug
                         
 					   
 						// frames['draw'].src=frames['draw'].src+'&t='+new Date().getTime();

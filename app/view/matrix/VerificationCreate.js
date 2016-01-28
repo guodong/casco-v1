@@ -3,7 +3,7 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 	xtype: 'matrix.create',
 
 	modal: true,
-	title: 'Create Job',
+	title: 'Create Verification Report Job',
 	id: 'ver-create-window',
 	controller: 'matrix',
 	layout: {
@@ -16,10 +16,19 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 		var p_id=me.p_id?me.p_id:'';
 		var child_docs = Ext.create('casco.store.Documents');
 		child_docs.load({
-			params: { 
+			params: {
+				id: me.child_doc.data.id,
 				project_id: me.project.get('id'),
+//				document_id: me.child_doc.data.id
 			}
 		});
+		console.log(child_docs);
+//		var child_doc = me.child_doc;
+//		child_doc.load({
+//			params:{
+//				document_id:me.document.get(id),
+//			}
+//		});
 		var rsdocs = Ext.create('casco.store.Documents');
 		me.items = [{
 			xtype: 'form',
@@ -33,39 +42,36 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 				name: 'project_id',
 				value: me.project.get('id')
 			}, {
-				fieldLabel: 'version',
+				fieldLabel: 'Version',
 				msgTarget: 'under',
 				name: 'version',
 				xtype: 'textfield'
-			}, {
-				xtype: 'combobox',
-				editable: false,
-				fieldLabel: 'Child Document',
-				displayField: 'name',
-				name: 'child_id',
-				valueField: 'id',
-				store:child_docs,
-				allowBlank: false,
-				queryMode: 'local',
-				listeners: {
-					select: function(f, r, i) {
-						//级联选择
+			},
+			{
+				xtype:'textfield',
+				fieldLabel:'Child Document',
+				name:'child_name',
+				value:me.child_doc.data.name,
+				editable:false,
+				listeners:{
+					afterrender:function(c,t){
 						Ext.getCmp('child-version').store.load({
 							params: {
-								document_id: r.get('id')
+								document_id: me.child_doc.data.id
 							}
 						});
 						var grid = Ext.getCmp('parent_doc');
 						me.job.rs_versions = grid.getStore();
 						grid.store.load({
 							params: {
-								document_id: r.get('id'),
+								document_id: me.child_doc.data.id,
 								mode: 'related'
 							}
 						});
 					}
 				}
-			}, {
+			},
+			{
 				fieldLabel: 'Child Version',
 				name: 'child_version_id',
 				store: Ext.create('casco.store.Versions'),
@@ -76,20 +82,7 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 				queryMode: 'local',
 				displayField: 'name',
 				valueField: 'id',
-				listeners: {
-					select: function(f, r, i){
-						/*
-						Ext.getCmp('testing-job-tc-grid').getStore().load({
-							params: {
-								version_id: r.get('id'),
-								act:'stat'
-							}
-						});
-						*/
-					}
-				}
 			},{
-
 			fieldLabel: 'description',
 			labelAlign:'top',
 			name: 'description',
@@ -117,10 +110,11 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 		    columns: [{
 				text: 'Parent doc',
 				dataIndex: 'name',
-				flex: 1
+				width:200
 			}, {
 				text: 'Parent Version',
 				dataIndex: 'version_id',
+				width:200,
 				renderer: function(v, md, record){
 					var versions = record.get('versions');
 					if(versions.length == 0) return;

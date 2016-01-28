@@ -15,11 +15,12 @@ Ext.define('casco.view.matrix.Verification', {
     initComponent: function(){
     	var me = this;
     	var p_id=me.id;
+//    	var child_doc = me.child_doc;
     	me.store = new casco.store.Verification();
     	me.store.load({
     		params: {
     			project_id: me.project.get('id'),
-				child_id:me.child_id?me.child_id:''
+				child_id:me.child_doc.data.id?me.child_doc.data.id:''
     		}
     	});
 		var states = Ext.create('Ext.data.Store', {
@@ -33,19 +34,23 @@ Ext.define('casco.view.matrix.Verification', {
 		});
 		me.columns = [{
 			text : 'version',
-			dataIndex : 'version'
+			dataIndex : 'version',
+			width: 80
 		}, {
 			text : 'author',
-			dataIndex : 'author'
+			dataIndex : 'author',
+			width: 80
 		},{
 			text : 'child:version',
 			dataIndex : 'child_version',
+			width: 120,
 			renderer : function(v) {
 				return v?v.document.name+":"+v.name:'';
 			}
 		},{
 			text: 'parent:versions',
 			dataIndex: 'parent_versions',
+			width: 150,
 			renderer: function(value){
 						var arr = [];
 						Ext.Array.each(value, function(v) {
@@ -55,16 +60,17 @@ Ext.define('casco.view.matrix.Verification', {
 			}
 		}, {
 			text: 'description',
-			dataIndex: 'description'
+			dataIndex: 'description',
+			width: 100
 		},{
 			text: 'created at',
 			dataIndex: 'created_at',
+			width: 110
 			 
 		},{
-			
 			text:'view',
 			dataIndex:'id',
-			width:120,
+			width:140,
 			renderer:function(val_id,metaData,rec){
 			 var id = Ext.id();	 
              Ext.defer(function() {
@@ -89,6 +95,7 @@ Ext.define('casco.view.matrix.Verification', {
 		}, {
 			text: 'status',
 			dataIndex: 'status',
+			width: 60,
 			renderer:function(val,meta,rec){
 			var id=Ext.id();
 			if(val==1){
@@ -218,6 +225,7 @@ Ext.define('casco.view.matrix.Verification', {
 				var win = Ext.create('widget.matrix.create', {
 					project: me.project,
 					job: job,
+					child_doc:me.child_doc,
 					p_id:p_id?p_id:''
 				});
 				win.down('form').loadRecord(job);

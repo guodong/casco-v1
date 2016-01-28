@@ -44,8 +44,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 		    var column = Ext.create('Ext.grid.column.Column', {  
 				text: item['header']+' (P)//(C)',  
 				width:150,  
-				style: "text-align:center;",  
-				align:'center',  
+//				align:'center',  
 				dataIndex: item['dataIndex'],
 					/*
                 customMenu:[
