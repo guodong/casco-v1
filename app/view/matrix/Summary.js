@@ -34,9 +34,11 @@ Ext.define('casco.view.matrix.Summary', {
             	return;
 			}
 		},'-',{
-		    text: me.version,
-			glyph: 0xf068,
-		    xtype:'label'
+		    text: 'Refresh',
+			glyph: 0xf067,
+		    handler: function() {
+				me.store.reload();
+			}
 		}];
 		
 	var north_columns=[
