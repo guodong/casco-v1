@@ -27,10 +27,10 @@ Ext.define('casco.view.main.Tree', {
     				tabs.setActiveTab(tab);
     			}
     		});
+    		console.log(document);
 
     	},//itemdbclick
-		itemcontextmenu:'onCtxMenu'
-    },//lsiteners
+itemcontextmenu:'onCtxMenu'
     displayField: 'name',
     rootVisible : false,
     initComponent: function(){

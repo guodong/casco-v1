@@ -9,13 +9,14 @@ Ext.define('casco.view.matrix.Tree', {
         	if(!record.get('leaf')) return;
     		var tabs = Ext.getCmp('matrixpanel');
 			var tab = tabs.child('#tab-verification-'+record.data.id);
+//			var child_id = casco.model.Document;
 			if(!tab){
 			tabs.removeAll();
 			tab = tabs.add({id: 'tab-verification-'+record.data.id,
 				xtype: 'matrix.verification',
 				title: 'verification',
 				closable: true,
-				child_id:record.data.id?record.data.id:'',
+				child_doc:record,
 				project: this.getView().up().project
 			});
 			}else{tab.store.reload();}

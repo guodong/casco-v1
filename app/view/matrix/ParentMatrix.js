@@ -198,9 +198,10 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 						 me.self_op(the,newValue,oldValue);}
 					}
 					}]//menu
-				  },{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Completeness',width:110,dataIndex:'Completeness'}]}],
+				  },{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Completeness',width:110,dataIndex:'Completeness'}] }],
 						 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Completeness');}}
-			//  }]//menu
+			 
+
 				  }]
 			  ,editor: {
 			        xtype: 'combo',
