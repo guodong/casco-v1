@@ -97,7 +97,7 @@ Ext.define('casco.view.main.MainController', {
 	},
 	onAdd:function(button){
 		console.log(button.itemId);
-		var mark=button.itemId;var type;var text;
+		var mark=button.itemId;var global=this;var type;var text;
 		switch(mark){
         case 'add_rs':
 		 type='rs';text='New RS Document';break;
@@ -111,7 +111,7 @@ Ext.define('casco.view.main.MainController', {
          var menu=button.up().up(),node=menu.treeNode,view=menu.treeView,delay=view.expandDuration+50,newNode,doCreate;
 		 doCreate=function(){
 		 //console.log(location.hash.substring(location.hash.lastIndexOf('/')+1));
-         newNode=node.appendChild({name:text,text:text,type:type,fid:node.id,project_id:location.hash.substring(location.hash.lastIndexOf('/')+1)||'',leaf:true});
+         newNode=node.appendChild({name:text,text:text,type:type,fid:node.id,project_id:global.getView().project.get('id')||'',leaf:true});
 		 }
 		  if(!node.isExpanded()){
             node.expand(false,Ext.callback(this.doCreate,this,[],delay));
@@ -155,8 +155,8 @@ Ext.define('casco.view.main.MainController', {
 			 itemId:'add_folder',
 			 handler:'onAdd'
 			 }]});
-           deleteItem.setText('Delete document');
-		   editItem.setText('Edit document');
+           deleteItem.setText('Delete Folder');
+		   editItem.setText('Edit Folder');
 		   addItem.enable();
 		   deleteItem.enable();
 		   editItem.enable();
@@ -194,7 +194,8 @@ Ext.define('casco.view.main.MainController', {
 				xtype: 'textfield'
 			}
 			});
-     editor.startEdit(menu.treeEle);
+	  console.log(Ext.get(menu.treeEle).query('span'));
+     editor.startEdit(Ext.get(menu.treeEle).query('span')[0]);
      editor.on('complete',function(this_g, value, startValue, eOpts){
 		   console.log(node.id);
 		   var id;
@@ -206,14 +207,8 @@ Ext.define('casco.view.main.MainController', {
 		   model.set(node.getData());
 	  	   model.set('name',value);
 	  	   model.save({callback: function(record, operation, success) {
-			//me.getView().down('tree').store.reload();
-			Ext.getCmp('mtree').getStore().reload();
-			//me.getView().down('tree').getView().refresh();
 	  	    }
 	  	   });
-		  
-		  
-		   
 	});
 	},
 	manage : function() {

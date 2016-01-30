@@ -140,7 +140,7 @@ Ext.define('casco.view.manage.ManageController', {
 		if(!record.data.leaf) return;
 		var tabs = this.lookupReference('main');
 		console.log(json.id);
-		if(json.id=='userlist'&&JSON.parse(localStorage.user).role_id!=1){Ext.Msg.alert('提示','您没有权限查看此列,请联系管理员!');exit;}
+		if(json.id=='userlist'&&JSON.parse(localStorage.user).role_id!=1){Ext.Msg.alert('提示','您没有权限查看此列,请联系管理员!');return;}
 
 			var tab = tabs.child('#tab-' + json.id);
 			if(!tab){

@@ -27,10 +27,9 @@ Ext.define('casco.view.main.Tree', {
     				tabs.setActiveTab(tab);
     			}
     		});
-    		console.log(document);
-
     	},//itemdbclick
 itemcontextmenu:'onCtxMenu'
+	},//listeners
     displayField: 'name',
     rootVisible : false,
     initComponent: function(){
@@ -42,7 +41,6 @@ itemcontextmenu:'onCtxMenu'
     			}
     		}
     	});
-    	
     	this.callParent();
     }
-})
+});

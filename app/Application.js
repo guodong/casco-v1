@@ -46,7 +46,7 @@ Ext.define('casco.Application', {
     },
 
     onUnmatchedRoute: function(hash) {
-        this.redirectTo('selectProject');
+        this.redirectTo('');
         // Do something...
     },
 	onSelect : function() {
