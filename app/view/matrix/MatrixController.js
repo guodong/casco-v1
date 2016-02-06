@@ -191,7 +191,7 @@ Ext.define('casco.view.matrix.MatrixController', {
 		meta.parent_versions = rsvss;
 		var job = Ext.create('casco.model.Verification', meta);
 		job.save({
-			success: function(){
+			callback:function(){
 				Ext.Msg.alert('','创建成功!');
 				var tabs=Ext.getCmp('matrixpanel');
 				var childs=tabs.items;
@@ -203,12 +203,25 @@ Ext.define('casco.view.matrix.MatrixController', {
 				});
 				//Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
 				Ext.getCmp('ver-create-window').destroy();
-			},
-			failure: function(){
-				Ext.Msg.alert('','创建失败，请检查配置');
+			}
+//			success: function(){
+//				Ext.Msg.alert('','创建成功!');
+//				var tabs=Ext.getCmp('matrixpanel');
+//				var childs=tabs.items;
+//				var count=0;
+//				childs.each(function(record){
+//                   count++;
+//				   if(count==1)return;
+//                   record.store.reload();
+//				});
+//				//Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
+//				Ext.getCmp('ver-create-window').destroy();
+//			},
+//			failure: function(){
+//				Ext.Msg.alert('','创建失败，请检查配置');
 			}
 
-		});
+		);
 		
 	},
 	manage : function() {
