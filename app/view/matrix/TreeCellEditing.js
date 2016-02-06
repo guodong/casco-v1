@@ -2,9 +2,10 @@ Ext.define('casco.view.matirx.TreeCellEditing',{
 	alias:'plugin.treecellediting',
 	extend:'Ext.grid.plugin.CellEditing',
 	initComponent:function(tree){
-
-     //var treecolumn=tree.headerCt.treecolumn;
+     console.log('heheda');
+     var treecolumn=tree.headerCt.down('treecolumn');
 	 treecolumn.editor={xtype:'textfield'};//tree.headerCt.editor||{xtype:'textfield'};
+	 console.log(treecolumn);
      this.callParent(arguments);
 
 	},

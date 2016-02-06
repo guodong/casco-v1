@@ -8,6 +8,7 @@ Ext.define('casco.view.main.ItemTree', {
     rootVisible : false,
     initComponent: function(){
     	var me = this;
+    	console.log('I am created');
     	this.store = Ext.create('casco.store.TreeItems', {
     		proxy: {
     			extraParams: {
