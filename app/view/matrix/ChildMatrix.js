@@ -36,15 +36,11 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 							  fields:record[0].get('fieldsNames')
 			});
 		    me.store.setData(me.ds.getData());me.matrix.setData(me.ds.getData());
-			// console.log(me.ds.getData());
 			me.columns=me.columns_store;
-			// innerGrid的store都要来一发
-			// Ext.getCmp('inner_trac').store=me.matrix.getAt(0).get('Traceability');
 			Ext.Array.forEach(record[0].get('columModle'),function(item){
 		    var column = Ext.create('Ext.grid.column.Column', {  
 				text: item['header']+' (P)//(C)',  
-				width:150,  
-//				align:'center',  
+				width:150,   
 				dataIndex: item['dataIndex'],
 					/*
                 customMenu:[
@@ -75,10 +71,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 		     
 			 if(me.verification.get('status')==0){Ext.Msg.alert('','已提交，不可编辑');return;}
 			 var data=[];
-			// 血的教训，早知道就用这了... me.matrix.sync();
-			 var rows=me.getSelectionModel().getSelection();
-			 if(rows==null||rows==undefined||rows==[]||rows=='')
-			 {me.matrix.sync({
+			 me.matrix.sync({
 			 callback: function(record, operation, success){
              },
 			 failure: function(record, operation) {
@@ -88,7 +81,8 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			 success: function(record, operation) {
 			 me.getView().refresh();Ext.Msg.alert('Success', 'Saved successfully.');
 			 }
-			 });return;}
+			 });
+			 /*
 			 Ext.Array.each(rows,function(item){
 			 item.dirty=false;
 			 item.commit(); 
@@ -109,6 +103,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			 
 			 },
 			 });
+			 */
 			
 			}
 		},'-',{text: 'Export',
@@ -126,7 +121,6 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 		 Ext.Array.each(rows,function(item){
 		 item.set(newValue);
 		 });
-		 // 这行很重要,由于自定义列的后遗症
 		 me.getView().refresh(); 
 		 }
 		}

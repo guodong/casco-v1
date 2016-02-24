@@ -207,6 +207,7 @@ Ext.define('casco.view.main.MainController', {
 		   model.set(node.getData());
 	  	   model.set('name',value);
 	  	   model.save({callback: function(record, operation, success) {
+			   Ext.getCmp('mtree').getStore().reload();
 	  	    }
 	  	   });
 	});

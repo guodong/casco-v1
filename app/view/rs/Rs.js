@@ -69,17 +69,8 @@ Ext.define('casco.view.rs.Rs', {
 					     me.store_rs.getAt(0).get('columModle')
 				          
 						  me.columns=me.store_rs.get('columModle');
+						  */
 						
-					 
-						 
-						
-
-						 
-//					me.store.each(function(rs){     
-//						if(rs.tcs.length){
-//							cvd++;
-//						}
-//					});  */
 				}				
 			}
 		});

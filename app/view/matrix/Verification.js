@@ -15,7 +15,6 @@ Ext.define('casco.view.matrix.Verification', {
     initComponent: function(){
     	var me = this;
     	var p_id=me.id;
-//    	var child_doc = me.child_doc;
     	me.store = new casco.store.Verification();
     	me.store.load({
     		params: {
@@ -247,12 +246,26 @@ Ext.define('casco.view.matrix.Verification', {
 					}}, this);
 			}
 		},'-',{
-		 text: 'Export',
+		 text: 'Export Report',
 		 scope: this,
 		 handler:function(){
-         window.open(API+'verification/export?project_id='+me.project.get('id')+'&child_id='+me.child_id);
+         window.open(API+'verification/export?project_id='+me.project.get('id')+'&child_id='+me.child_doc.data.id);
           return;
 		 }
+		},'-',{
+			 text: 'Export All Sheets',
+			 scope: this,
+			 handler:function(){
+			  
+				var view=me.getView();
+				var selection =view.getSelectionModel().getSelection()[0];
+				if (!selection) {
+				 Ext.Msg.alert('请选择某一个版本!');
+				}
+	           window.open(API+'verification/export_all_sheets?project_id='+me.project.get('id')+'&child_id='+me.child_doc.data.id+
+	        		   '&v_id='+selection.get('id'));
+	           return;
+			 }
 		}];
     	this.callParent();
     }

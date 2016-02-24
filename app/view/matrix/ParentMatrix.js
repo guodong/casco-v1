@@ -81,9 +81,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
              if(me.verification.get('status')==0){Ext.Msg.alert('','已提交，不可编辑');return;}
 			 var data=[];
 			// 血的教训，早知道就用这了... me.matrix.sync();
-			 var rows=me.getSelectionModel().getSelection();
-			 if(rows==null||rows==undefined||rows==[]||rows=='')
-			 {me.matrix.sync({
+			 me.matrix.sync({
 			 callback: function(record, operation, success){
              },
 			 failure: function(record, operation) {
@@ -93,7 +91,8 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			 success: function(record, operation) {
 			 me.getView().refresh();Ext.Msg.alert('Success', 'Saved successfully.');
 			 }
-			 });return;}
+			 }); 
+			 /*
 			 Ext.Array.each(rows,function(item){
 			 item.dirty=false;
 			 item.commit(); 
@@ -114,6 +113,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			 
 			 },
 			 });
+			 */
 			
 			}
 		},'-',{text: 'Export',
@@ -125,7 +125,6 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			}
 			},'-',
 		{text: me.title, xtype:'label',margin:'0 50'}];
-
          me.plugins={
 		        ptype: 'cellediting',
 		        clicksToEdit: 1,

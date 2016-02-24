@@ -47,12 +47,6 @@ Ext.define('casco.view.matrix.Top', {
             },
             hidden: localStorage.view == 'manage'?false:true
         },{
-            text: 'Relation view',
-            xtype: 'button',
-            handler: function(){
-            	window.open('/draw/graph2.html');
-            }
-        },{
             xtype: 'combobox',
             editable: false,
             displayField: 'name',
