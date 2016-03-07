@@ -195,8 +195,6 @@ Ext.define('casco.view.rs.Rs', {
 		border: false,
 		store: me.ds,
 		columns: me.cm
-
-
 	   }*/];
 		
       
@@ -233,11 +231,8 @@ Ext.define('casco.view.rs.Rs', {
 		border: false,
 		store: me.ds,
 		cm: me.cm
-
-
 	   }];
          
-
 		me.columns = [{
 			text: "tag",
 			dataIndex: "tag",

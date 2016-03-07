@@ -7,7 +7,6 @@
 */
 Ext.define('casco.view.main.MainController', {
 	extend : 'Ext.app.ViewController',
-
 	alias : 'controller.main',
     initComponent: function(){
 	 var self = this;
@@ -24,7 +23,6 @@ Ext.define('casco.view.main.MainController', {
 			combo.setValue(combo.emptyText);
 			var  model= Ext.create('casco.model.User');
 			model.setId(JSON.parse(localStorage.user).id);
-
 			casco.model.User.load(JSON.parse(localStorage.user).id,{
 				callback:function(record, operation,ops){
 					var win = Ext.create('casco.view.manage.Useredit', {user:record});
@@ -32,7 +30,6 @@ Ext.define('casco.view.main.MainController', {
 					win.show();
 				}
 			});
-
 		}else if(record.get('name')=='2'){
 
 			Ext.Msg.confirm('Confirm', 'Are you sure to logout?', function(choice){if(choice == 'yes'){
@@ -43,7 +40,6 @@ Ext.define('casco.view.main.MainController', {
 					withCredentials: true,
 					success: function(response){
 						var d = Ext.decode(response.responseText);
-
 						if(d.code != 0){
 							Ext.Msg.alert('Error', 'Logout failure.');
 						}else{
@@ -98,7 +94,12 @@ Ext.define('casco.view.main.MainController', {
 	onAdd:function(button){
 		console.log(button.itemId);
 		var mark=button.itemId;var global=this;var type;var text;
+		var menu=button.up().up(),node=menu?menu.treeNode:'',view=menu?menu.treeView:'',delay=view.expandDuration+50,newNode,doCreate;
 		switch(mark){
+		case 'edit_verisons'://Edit versions
+		console.log(button.up().treeNode.id);
+		var win=Ext.create('casco.view.manage.Versions',{'document_id':button.up().treeNode.id});win.show();
+		return;
         case 'add_rs':
 		 type='rs';text='New RS Document';break;
 		case  'add_tc':
@@ -129,7 +130,6 @@ Ext.define('casco.view.main.MainController', {
            this.ctxMenu.treeNode=record;
 		   this.ctxMenu.treeEle=element;
 		   this.ctxMenu.treeView=view;
-		   
 		   var ctxMenu=this.ctxMenu;
 		   var addItem=ctxMenu.getComponent('add');
 		   var editItem=ctxMenu.getComponent('edit');
@@ -161,11 +161,11 @@ Ext.define('casco.view.main.MainController', {
 		   deleteItem.enable();
 		   editItem.enable();
 		   }else{
-
-           addItem.setText('Can\'t Add document');
+           addItem.setText('Edit Versions');
+           addItem.itemId='edit_verisons';
            deleteItem.setText('Delete document');
 		   editItem.setText('Edit document');
-		   addItem.disable();
+		   addItem.enable();
 		   deleteItem.enable();
 		   editItem.enable();
 		   }
@@ -194,7 +194,7 @@ Ext.define('casco.view.main.MainController', {
 				xtype: 'textfield'
 			}
 			});
-	  console.log(Ext.get(menu.treeEle).query('span'));
+	 console.log(Ext.get(menu.treeEle).query('span'));
      editor.startEdit(Ext.get(menu.treeEle).query('span')[0]);
      editor.on('complete',function(this_g, value, startValue, eOpts){
 		   console.log(node.id);

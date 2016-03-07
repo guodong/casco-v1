@@ -1,6 +1,5 @@
 Ext.define('casco.view.manage.Projectadd', {
     extend: 'Ext.window.Window',
-
     xtype: 'widget.projectadd',
     requires: [
                'casco.view.manage.Vatstr',

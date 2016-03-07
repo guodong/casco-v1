@@ -13,7 +13,9 @@ Ext.define('casco.view.main.Main', {
     requires: [
         'Ext.plugin.Viewport',
         'casco.view.main.MainController',
-        'casco.view.main.MainModel'
+        'casco.view.main.MainModel',
+        'casco.view.manage.Versions',
+        'casco.model.Version'
     ],
 
     controller: 'main',

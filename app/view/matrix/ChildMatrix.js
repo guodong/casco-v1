@@ -51,7 +51,6 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 				*/
 			});  
             me.columns.push(column);
-			// me.headerCt.insert(me.columns.length, column);
 			});
 			me.reconfigure(me.store,me.columns);
 			me.customMenuItemsCache = [];

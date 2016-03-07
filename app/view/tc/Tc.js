@@ -29,7 +29,6 @@ Ext.define('casco.view.tc.Tc', {
 			},
 			callback: function(){
 				me.down('combobox').select(me.versions.getAt(0));
-				
 				var latest_v = me.versions.getCount() > 0?me.versions.getAt(0):0;
 				me.curr_version = latest_v;
 				if(latest_v){
@@ -40,7 +39,6 @@ Ext.define('casco.view.tc.Tc', {
 							version_id: latest_v.get('id')
 						},
 					    callback:function(){
-					    
 					    me.columns=me.store_tc.getAt(0).get('columModle'); 
 					    me.ds = new Ext.data.JsonStore({
 										  data: (me.store_tc.getAt(0).get('data')),
@@ -139,18 +137,20 @@ Ext.define('casco.view.tc.Tc', {
 			    var tag='';
 				me.store.each(function(record){
 			  
-				if(record.get('tag')>tag)
-				 
+				if(record.get('tag')>tag)	 
                 tag=record.get('tag');
 				},this);
 				 
-                
-               
+			   var re=/^\[(.*)?\]$/g; 
+               if(re.test(tag)){
 				var suffix=tag.toString().match(/[^\d]+/g);
 			    num=parseInt(tag.toString().match(/\d+/g))+1;
-			//	console.log(suffix);
-			    tag=suffix[0]+num+suffix[1];
-               var win = Ext.create('widget.tcadd',{listeners:{scope: this}, columns:me.columns,version_id: me.curr_version.get('id'),tag_id:tag,project:me.project, document_id:me.document.id});
+				tag=suffix[0]+num+suffix[1];
+				}else{
+				tag=null;
+				}
+
+                var win = Ext.create('widget.tcadd',{listeners:{scope: this}, columns:me.columns,version_id: me.curr_version.get('id'),tag_id:tag,project:me.project, document_id:me.document.id});
                 win.show();
             }
         },'-',{

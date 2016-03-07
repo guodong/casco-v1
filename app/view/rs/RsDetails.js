@@ -35,9 +35,6 @@ Ext.define('casco.view.rs.RsDetails', {
 	//	console.log(me.store);
 		me.vatstrstore = Ext.create('casco.store.Vatstrs');
 //		me.vatstrstore = new casco.store.Vatstrs();
-       
-      
-    
 		me.vatstrstore.load({
     		params: {
     			project_id: me.project.get('id')

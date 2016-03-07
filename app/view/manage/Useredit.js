@@ -110,7 +110,6 @@ Ext.define('casco.view.manage.Useredit', {
 					listeners : {
 
 						  afterRender : function(combo) {
-						 
 						  me.projects.each(function(record){
 						  combo.addValue(record.data.id);//同时下拉框会将与name为firstValue值对应的 text显示
 						 
