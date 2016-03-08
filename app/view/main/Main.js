@@ -20,10 +20,9 @@ Ext.define('casco.view.main.Main', {
 
     controller: 'main',
     viewModel: 'main',
-    
     ui: 'navigation',
+    
     tabBarHeaderPosition: 1,
-
     tabBar: {
         flex: 1,
     },
@@ -33,6 +32,7 @@ Ext.define('casco.view.main.Main', {
     defaults: {
         bodyPadding: 10,
     },
+    
     initComponent: function(){
     	var me = this;
     	var store = Ext.create('casco.store.TreeDocuments', {

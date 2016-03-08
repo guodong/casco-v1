@@ -12,7 +12,7 @@ Ext.define("casco.view.auth.SelectProject",{
     autoShow: true,
     initComponent: function(){
     	var store = Ext.create('casco.store.Projects');
-    	//console.log((localStorage.user));
+    	console.log((localStorage));
     	store.load({
     		params: {
     			user_id: (localStorage.user)?JSON.parse(localStorage.user).id:''

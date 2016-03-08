@@ -1,42 +1,35 @@
-if (typeof exports === 'object') {
+/*! JointJS v0.9.6 - JavaScript diagramming library  2015-12-19 
 
-    var joint = {
-        util: require('../src/core').util,
-        shapes: {
-            basic: require('./joint.shapes.basic')
-        },
-        dia: {
-            Element: require('../src/joint.dia.element').Element,
-            Link: require('../src/joint.dia.link').Link
-        }
-    };
-}
 
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 joint.shapes.fsa = {};
 
-joint.shapes.fsa.State = joint.shapes.basic.Rect.extend({
+joint.shapes.fsa.State = joint.shapes.basic.Circle.extend({
     defaults: joint.util.deepSupplement({
         type: 'fsa.State',
         attrs: {
-            rect: { 'stroke-width': 1 },
-            text: { 'font-weight': 'bold' }
+            circle: { 'stroke-width': 3 },
+            text: { 'font-weight': '800' }
         }
-    }, joint.shapes.basic.Rect.prototype.defaults)
+    }, joint.shapes.basic.Circle.prototype.defaults)
 });
 
 joint.shapes.fsa.StartState = joint.dia.Element.extend({
 
-    markup: '<g class="rotatable"><g class="scalable"><rect/></g></g>',
+    markup: '<g class="rotatable"><g class="scalable"><circle/></g></g>',
 
     defaults: joint.util.deepSupplement({
 
         type: 'fsa.StartState',
         size: { width: 20, height: 20 },
         attrs: {
-            rect: {
+            circle: {
                 transform: 'translate(10, 10)',
                 r: 10,
-                fill: 'black'
+                fill: '#000000'
             }
         }
 
@@ -45,7 +38,7 @@ joint.shapes.fsa.StartState = joint.dia.Element.extend({
 
 joint.shapes.fsa.EndState = joint.dia.Element.extend({
 
-    markup: '<g class="rotatable"><g class="scalable"><rect class="outer"/><rect class="inner"/></g></g>',
+    markup: '<g class="rotatable"><g class="scalable"><circle class="outer"/><circle class="inner"/></g></g>',
 
     defaults: joint.util.deepSupplement({
 
@@ -55,8 +48,8 @@ joint.shapes.fsa.EndState = joint.dia.Element.extend({
             '.outer': {
                 transform: 'translate(10, 10)',
                 r: 10,
-                fill: '#FFFFFF',
-                stroke: 'black'
+                fill: '#ffffff',
+                stroke: '#000000'
             },
 
             '.inner': {
@@ -72,13 +65,8 @@ joint.shapes.fsa.EndState = joint.dia.Element.extend({
 joint.shapes.fsa.Arrow = joint.dia.Link.extend({
 
     defaults: joint.util.deepSupplement({
-	type: 'fsa.Arrow',
+        type: 'fsa.Arrow',
         attrs: { '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' }},
         smooth: true
     }, joint.dia.Link.prototype.defaults)
 });
-
-if (typeof exports === 'object') {
-
-    module.exports = joint.shapes.fsa;
-}

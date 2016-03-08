@@ -19,13 +19,21 @@ Ext.define("casco.view.auth.Login",{
             xtype: 'textfield',
             name: 'account',
             fieldLabel: 'Account',
-            allowBlank: false
+            allowBlank: false,
+            listeners:{
+            	// add 'Enter' event
+            	specialkey:'onKeyEnter'
+            }
         }, {
             xtype: 'textfield',
             name: 'password',
             inputType: 'password',
             fieldLabel: 'Password',
-            allowBlank: false
+            allowBlank: false,
+            listeners:{
+            	// add 'Enter' event
+            	specialkey:'onKeyEnter'
+            }
         }],
         buttons: [{
             text: 'Login',
