@@ -35,6 +35,7 @@ Ext.define('casco.view.main.Main', {
     
     initComponent: function(){
     	var me = this;
+    	console.log(me.project);
     	var store = Ext.create('casco.store.TreeDocuments', {
     		proxy: {
     			extraParams: {
@@ -42,6 +43,7 @@ Ext.define('casco.view.main.Main', {
     			}
     		}
     	});
+    	console.log(store);
     	me.items = [{
             region: 'north',
             xtype: 'top',

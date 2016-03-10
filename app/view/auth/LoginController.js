@@ -11,21 +11,26 @@ Ext.define('casco.view.auth.LoginController', {
 				withCredentials: true,
 				success: function(response){
 					var d = Ext.decode(response.responseText);
-					console.log(response);
-					console.log(d);
 					if(d.code != 0){
 						Ext.Msg.alert('Error', d.data);
 					}else{
 						localStorage.setItem("user", JSON.stringify(d.data));
 						field.up('login').destroy();
-						if(JSON.parse(localStorage.user).role_id=='1'){
-						Ext.widget('selectProject');//管理员的界面
-						}else{//普通用户的视图
-	                    //普通用户直接进入project视图如何
-	                    Ext.widget('selectProject');
+
+						var store = Ext.create('casco.store.Projects');
+				    	store.load({
+				    		params:{
+				    			user_id: JSON.parse(localStorage.user).id
+				    		},
+				    		callback:function(){
+				    			var latest_proj = store.getCount() > 0 ? store.getAt(0) : 0;
+				    			var project_id = latest_proj.get('id');
+				    			console.log(project_id);
+				    			Ext.widget('app-main', {project: latest_proj});
+				    		}
+				    	});
 						}
 					}
-				}
 			});
 		}
 	},
@@ -34,9 +39,6 @@ Ext.define('casco.view.auth.LoginController', {
     	var me = this;
     	var view = this.getView();
     	var form = view.down("form");
-    	console.log(me);
-    	console.log(view);
-    	console.log(form);
     	Ext.Ajax.request({
 			url: API + 'login',
 			params: form.getValues(),
@@ -48,12 +50,19 @@ Ext.define('casco.view.auth.LoginController', {
 				}else{
 					localStorage.setItem("user", JSON.stringify(d.data));
 					me.getView().destroy();
-					if(JSON.parse(localStorage.user).role_id=='1'){
-					Ext.widget('selectProject');//管理员的界面
-					}else{//普通用户的视图
-                    //普通用户直接进入project视图如何
-                    Ext.widget('selectProject');
-					}
+					
+					var store = Ext.create('casco.store.Projects');
+			    	store.load({
+			    		params:{
+			    			user_id: JSON.parse(localStorage.user).id
+			    		},
+			    		callback:function(){
+			    			var latest_proj = store.getCount() > 0 ? store.getAt(0) : 0;
+			    			var project_id = latest_proj.get('id');
+			    			console.log(project_id);
+			    			Ext.widget('app-main', {project: latest_proj});
+			    		}
+			    	});
 				}
 			}
 		});
@@ -61,7 +70,7 @@ Ext.define('casco.view.auth.LoginController', {
     
     onSelectClick: function(){
     	var me = this;
-    	var project_id = this.getView().down('form combo').getValue();
+    	var project_id = this.getView().down('combo').getValue();
     	this.redirectTo('project/'+project_id, true);
     	location.reload();
     },

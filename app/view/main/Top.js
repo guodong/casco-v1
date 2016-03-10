@@ -1,9 +1,9 @@
 Ext.define('casco.view.main.Top', {
     extend: 'Ext.toolbar.Toolbar',
-    alias: 'widget.top',
     xtype: 'top',
     controller: 'main',
     style: {background: '#167abc',padding: '10px',color: '#fff'},
+    
     initComponent: function(){
     	var store = Ext.create('casco.store.Projects');
     	store.load({
@@ -27,8 +27,7 @@ Ext.define('casco.view.main.Top', {
             xtype: 'button',
             handler: 'manage',
             hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false
-        }
-        ,{
+        },{
             text: 'Testing',
             xtype: 'button',
             handler: 'testing'

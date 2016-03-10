@@ -5,9 +5,7 @@
  */
 Ext.define('casco.Application', {
 	extend : 'Ext.app.Application',
-
 	name : 'casco',
-	
 	requires: ['casco.view.auth.SelectProject','casco.model.Project','casco.view.matrix.Matrix'],
 
 	stores : [
@@ -36,7 +34,9 @@ Ext.define('casco.Application', {
 	    	action: 'onTest'
 	    }
 	},
+	
 	defaultToken: 'selectProject',
+//	defaultToken: 'project/:id',
 	listen: {
         controller: {
             '#': {
@@ -49,9 +49,11 @@ Ext.define('casco.Application', {
         this.redirectTo('');
         // Do something...
     },
+    
 	onSelect : function() {
     	Ext.widget('selectProject');
     },
+    
 	onBeforeProject: function(id, action) {
 		Ext.Ajax.request({
 			url: API + 'session',
@@ -62,12 +64,12 @@ Ext.define('casco.Application', {
 					action.stop(true);
 					Ext.widget('login');
 				}else{
-					
 					action.resume();
 				}
 			}
 		});
     },
+    
 	onBeforeSelect: function(action) {
 		Ext.Ajax.request({
 			url: API + 'session',
@@ -78,12 +80,13 @@ Ext.define('casco.Application', {
 					action.stop(true);
 					Ext.widget('login');
 				}else{
-					if(!localStorage.user)localStorage.setItem("user", JSON.stringify(d.data));
+					if(!localStorage.user) localStorage.setItem("user", JSON.stringify(d.data));
 					action.resume();
 				}
 			}
 		});
     },
+    
 	onProject: function(id){
 		var me = this;
 		casco.model.Project.load(id, {
@@ -92,9 +95,11 @@ Ext.define('casco.Application', {
     		}
     	});
 	},
+	
 	onManage: function(){
 		Ext.widget('manage');
 	},
+	
 	onMatrix: function(id){
 		//var handle=Ext.create('casco.view.matrix.Matrix');
 		//hadle.show();
@@ -118,6 +123,7 @@ Ext.define('casco.Application', {
     		}
     	});
 	},
+	
 	launch : function() {
 //		Ext.Ajax.request({
 //			url: API + 'session',
