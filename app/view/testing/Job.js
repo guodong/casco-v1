@@ -85,6 +85,21 @@ Ext.define('casco.view.testing.Job', {
 				win.down('form').loadRecord(job);
 				win.show();
 			}
+		},{
+			text: 'Delete Testjob',
+			glyph: 0xf067,
+			scope: this,
+			handler: function() {
+				Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){   //confirm
+					if(choice == 'yes'){
+						var view=me.getView();
+						var selection =view.getSelectionModel().getSelection()[0];
+						if (selection) {
+							me.store.remove(selection);
+							selection.erase();
+						}
+					}}, this);
+			}
 		}];
     	this.callParent();
     }

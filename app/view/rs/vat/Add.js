@@ -23,6 +23,7 @@ Ext.define('casco.view.rs.vat.Add', {
 			}
 		});
 		me.addSources = function(record) {
+			console.log(record);
 			if (record.data.type != 'item') {
 				return;
 			}
@@ -48,6 +49,7 @@ Ext.define('casco.view.rs.vat.Add', {
 			listeners: {
 				itemdblclick: function(view, record, item, index, e, eOpts) {
 					console.log(record);
+					console.log('Ohhh fuck!shit');
 					me.addSources(record);
 				}
 			}
@@ -69,6 +71,7 @@ Ext.define('casco.view.rs.vat.Add', {
 			hideHeaders: true,
 			listeners: {
 				itemdblclick: function(view, record, item, index, e, eOpts) {
+					console.log(record);
 					me.addVatstring(record);
 				}
 			}
@@ -86,6 +89,7 @@ Ext.define('casco.view.rs.vat.Add', {
 			store: me.vat,
 			listeners: {
 				itemdblclick: function(dv, record, item, index, e) {
+					console.log('fuck shit!');
 					me.vat.remove(record);
 				}
 			}

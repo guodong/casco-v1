@@ -240,8 +240,22 @@ Ext.define('casco.view.matrix.Verification', {
 						var view=me.getView();
 						var selection =view.getSelectionModel().getSelection()[0];
 						if (selection) {
-							me.store.remove(selection);
-							selection.erase();
+							//me.store.remove(selection);
+							selection.erase({
+							waitMsg : '正在删除......',
+							failure: function(record, operation) {
+								// do something if the erase failed
+								Ext.Msg.alert('删除失败!');
+							},
+							success: function(record, operation) {
+								Ext.Msg.alert('删除成功!');
+								// do something if the erase succeeded
+							},
+							callback: function(record, operation, success) {
+								// do something if the erase succeeded or failed
+							}
+							});
+							//view.refresh();
 						}
 					}}, this);
 			}
