@@ -385,8 +385,7 @@ Ext.define('casco.view.tc.Tc', {
     listeners : {//与init并列,不能直接me.*来了进行调用
         celldblclick: function(a,b,c, record, item, index, e) {
         	if(c==0){
-				console.log();
-				window.open('/draw/graph2.html#'+record.get('id')+'&'+record.get('tag'));
+				window.open('/draw/graph2.html#'+record.get('tag')+'&id='+record.get('id'));
 				return;
 			}
         	var win = Ext.create('widget.tcadd',{tc: record, document_id: this.document.id, project: this.project,columns:this.columns});

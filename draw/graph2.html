@@ -2,7 +2,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>2-Way Tree</title>
-
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <script type="text/javascript" src="/jquery.min.js"></script>
 <script type="text/javascript" src="d3.min.js"></script>
 <script type="text/javascript" src="d3.layout.js"></script>
@@ -149,8 +149,8 @@ label{
 			tree.init("http://api.casco.me/dump?id=" + getPar('id'));
 		}); */
 	 
-	    //var API="http://localhost/casco-api/public/";
-		var API="http://localhost:8080/";
+	    var API="http://localhost/casco-api/public/";
+		//var API="http://localhost:8080/";
 		var tree = CollapsibleTree("#categoryHierarchy");
 		function look(){
 			show($("#tag").val());
@@ -161,7 +161,7 @@ label{
 		}
 		function show(id){
 			//tree.init("http://api.casco.me/dump?tag=" + id);
-			tree.init(API+"dump?id=" + id);
+			tree.init(API+"dump?tag="+id);
 			location.hash=id;
 		}
 		window.addEventListener("hashchange", function(){

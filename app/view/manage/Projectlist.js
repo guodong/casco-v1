@@ -62,9 +62,7 @@ Ext.define('casco.view.manage.Projectlist', {
       },{
     	  text:"Build",
 		  width:130,
-		  
           renderer:function(val,meta,rec){
-        
 		  var id=Ext.id();
 		   Ext.defer(function(){
 			  Ext.widget('button', {

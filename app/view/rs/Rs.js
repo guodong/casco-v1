@@ -70,7 +70,6 @@ Ext.define('casco.view.rs.Rs', {
 				var latest_v = me.versions.getCount() > 0?me.versions.getAt(0):0;
 				me.curr_version = latest_v;
 				if(latest_v){
-		
 					me.store_rs.load({
 						scope:this,
 						synchronous: true,
@@ -222,7 +221,7 @@ Ext.define('casco.view.rs.Rs', {
 			celldblclick: function(a,b,c,record){
 				localStorage.tag = record.get('tag');
 				if(c==0){
-					window.open('/draw/graph2.html#'+record.get('id')+"&"+record.get('tag'));
+					window.open('/draw/graph2.html#'+record.get('tag')+"&id="+record.get('id'));
 					return;
 				}
 				var win = Ext.create('widget.rs.rsdetails', {
