@@ -16,6 +16,7 @@ Ext.define('casco.view.rs.vat.Add', {
 	},
 	initComponent: function() {
 		var me = this;
+		console.log('shift');
 		me.vatstrstore = Ext.create('casco.store.Vatstrs');
 		me.vatstrstore.load({
 			params: {

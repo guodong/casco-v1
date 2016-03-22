@@ -42,10 +42,14 @@ Ext.define('casco.view.rs.RsDetails', {
     	});
 		
 		me.addVat = function(record){
-			if(record.data.type == 'folder'){
+			//console.log(record);
+			if(!record.data.leaf){
 				return;
-			}
-			me.vat.loadData([{tag: record.get('name'),id: record.get('id'), type: record.get('type')}], true);
+			};
+			var tmp={tag: record.get('name'),id: record.get('id'), type: record.get('type')};
+			console.log(me.vat);
+			if(Ext.Array.contains(me.vat,tmp))return;
+			me.vat.loadData([tmp], true);
 		};
 
 		
