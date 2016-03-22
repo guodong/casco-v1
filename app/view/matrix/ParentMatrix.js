@@ -179,7 +179,14 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 						}//
 				  }]// customMenu
 				  },
-			  {text:'justification',dataIndex:'justification',header:'justification',width:95,sortable:true,editor:{xtype:'textfield'},
+			  {text:'justification',dataIndex:'justification',header:'justification',width:95,sortable:true,renderer: function(value){
+						var arr = [];//JSON.parse一定要记得
+						Ext.Array.each(JSON.parse(value), function(v) {
+							//console.log(v);
+							arr.push(v.tag);
+						});
+						return arr.join(',	');
+			},
 		  customMenu:[
 						{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'justification',width:95,dataIndex:'justification'}]}],
 						 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'justification');}
