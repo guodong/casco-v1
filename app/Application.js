@@ -46,7 +46,8 @@ Ext.define('casco.Application', {
     },
 
     onUnmatchedRoute: function(hash) {
-        this.redirectTo('');
+    	console.log('unmatched',hash);
+        //this.redirectTo('');
         // Do something...
     },
     

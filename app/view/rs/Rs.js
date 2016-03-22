@@ -11,20 +11,48 @@ Ext.define('casco.view.rs.Rs', {
 	           'casco.ux.StatusBar'
 	           ],
 	           
-//	autoHeight: true,
-//	allowDeselect: false,
+	 
+	           /**
+	            * @private
+	            * search value initialization
+	            */
+	           searchValue: null,
 	           
-    //search参数
-	searchValue:null,
-	matches:[],
-	//currentIndex:null,
-	searchRegExp:null,
-	//caseSensitive:false,
-	regExpMode:false,
-	//matched string css class
-	matchCls:'x-livesearch-match',
-	defaultStatusText:'Nothing Found',
+	           /**
+	            * @private
+	            * The row indexes where matching strings are found. (used by previous and next buttons)
+	            */
+	           indexes: [],
+	           
+	           /**
+	            * @private
+	            * The generated regular expression used for searching.
+	            */
+	           searchRegExp: null,
+	           
+	           /**
+	            * @private
+	            * Case sensitive mode.
+	            */
+	           caseSensitive: false,
+	           
+	           /**
+	            * @private
+	            * Regular expression mode.
+	            */
+	           regExpMode: false,
+	           
+	           /**
+	            * @cfg {String} matchCls
+	            * The matched string css classe.
+	            */
+	           matchCls: 'x-livesearch-match',
+	           
+	           defaultStatusText: 'Nothing Found',	           
+
+	           
 	forceFit:true,
+	bufferedRenderer: false,
 //	columnLines:true,
 		
 	initComponent: function() {
@@ -50,7 +78,6 @@ Ext.define('casco.view.rs.Rs', {
 							version_id: latest_v.get('id')
 						},
 					    callback:function(){
-					   
                             
 					    me.columns=me.store_rs.getAt(0).get('columModle'); 
 					 
@@ -64,19 +91,10 @@ Ext.define('casco.view.rs.Rs', {
 
 						}
 					});
-                        
-							/*
-					     me.store_rs.getAt(0).get('columModle')
-				          
-						  me.columns=me.store_rs.get('columModle');
-						  */
-						
 				}				
 			}
 		});
 		 
-
-		
 		 me.tbar = [{
 			xtype: 'combobox',
 			id: 'docv-'+ me.document.id,
@@ -91,7 +109,6 @@ Ext.define('casco.view.rs.Rs', {
             lastQuery: '',
             listeners: {
             	select: function(combo, record){
-
             		me.curr_version = record;
 					  Ext.Ajax.request({url: API+'rs', params:{
                 			version_id:record.get('id')
@@ -173,7 +190,7 @@ Ext.define('casco.view.rs.Rs', {
                     buffer: 500
                 }
             }
-       },{
+       }, {
            xtype: 'button',
            text: '&lt;',
            tooltip: 'Find Previous Row',
@@ -185,96 +202,21 @@ Ext.define('casco.view.rs.Rs', {
            tooltip: 'Find Next Row',
            handler: me.onNextClick,
            scope: me
-       }/*,{
-       xtype:'gridpanel',
-	   height: 200,
-	   width: 400,
-	   id:'fuck',
-	   region: 'center',
-		split: true,
-		border: false,
-		store: me.ds,
-		columns: me.cm
-	   }*/];
+       }];
 		
-      
 
-
-
-		me.bbar = ['-',{
-			summaryType: 'count',
-	        summaryRenderer: function(value, summaryData, dataIndex) {
-	            return Ext.String.format('{0} item{1}', value, value !== 1 ? 's' : '');
-	        }
-		}]
+//		me.bbar = ['-',{
+//			summaryType: 'count',
+//	        summaryRenderer: function(value, summaryData, dataIndex) {
+//	            return Ext.String.format('{0} item{1}', value, value !== 1 ? 's' : '');
+//	        }
+//		}]
 		
 		me.bbar = Ext.create('casco.ux.StatusBar',{
 			defaultText:me.defaultStatusText,
 			name:'searchStatusBar'
 		});
          
-     
-		 
-		 
-	/*	
-       me.items=[{
-	   xtype:'textfield',
-	   value:'text',
-	   
-	   
-	   },{
-       xtype:'gridpanel',
-	   height: 200,
-	   width: 400,
-	   region: 'center',
-		split: true,
-		border: false,
-		store: me.ds,
-		cm: me.cm
-	   }];
-         
-		me.columns = [{
-			text: "tag",
-			dataIndex: "tag",
-			width: 130,
-	        summaryType: 'count',
-	        summaryRenderer: function(value, summaryData, dataIndex) {
-	            return Ext.String.format('{0} item{1}', value, value !== 1 ? 's' : '');
-	        }
-		}, {
-			text: "allocation",
-			dataIndex: "allocation",
-			flex: 1
-		}, {
-			text: "category",
-			dataIndex: "category",
-			flex:1,
-//			width: 130,
-		}, {
-			text: "tcs",
-			dataIndex: "tcs",
-			width: 250,
-			renderer: function(value) {
-				var str = ""; 
-				Ext.Array.each(value, function(v) {
-					str += v.tag + " ";
-				});
-				return str;
-			}
-		}, {
-			text: "vat",
-			dataIndex: "vat",
-			width: 250,
-			renderer : function(value) {
-				if(!value) return '';
-				var arr = [];
-				Ext.Array.each(value, function(v) {
-			        arr.push(v.tag);
-			    });
-				return arr.join(', ');
-			}
-		}];
-		*/
 		
 		me.listeners = {
 			celldblclick: function(a,b,c,record){
@@ -283,26 +225,9 @@ Ext.define('casco.view.rs.Rs', {
 					window.open('/draw/graph2.html#'+record.get('id')+"&"+record.get('tag'));
 					return;
 				}
-//				if(c==5||c==6){
-//					var st = Ext.create('casco.store.Vat');
-//					st.setData(record.get('vat'));
-//					if(record.get('vatstr'))
-//						st.add({id: record.get('vatstr').id, tag: record.get('vatstr').name});
-//					var wd = Ext.create("casco.view.rs.vat.Add", {
-//						vat: st,
-//						document_id: me.document_id
-//					});
-//					wd.show();
-//					return;
-//				}
-    //            console.log(me.getColumnModel().getColumnHeader());
-      //  record.set('allocation','test herer');
-      //  me.reconfigure(me.store,me.columns);
-      //  console.log(record.getData());
 				var win = Ext.create('widget.rs.rsdetails', {
 					rs: record,
 					pointer:me,
-//					editvat: c==6||c==5,
 					document_id: me.document_id,
 					project:me.project,
 					columns:me.columns,
@@ -317,169 +242,162 @@ Ext.define('casco.view.rs.Rs', {
 		me.callParent(arguments);
 	},
 	
-	afterRender:function(){
-		var me = this;
-		me.callParent(arguments);
-		me.textField= me.down('textfield[name = searchField]');
-		me.statusBar = me.down('statusbar[name = searchStatusBar]');
-		me.view.on('cellkeydown',me.focusTextField,me);
-	},
+	 afterRender: function() {
+	        var me = this;
+	        me.callParent(arguments);
+	        me.textField = me.down('textfield[name=searchField]');
+	        me.statusBar = me.down('statusbar[name=searchStatusBar]');
+	    },
 	
-	focusTextField: function(view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
-        if (e.getKey() === e.S) {
-            e.preventDefault();
-            this.textField.focus();
-        }
-    },
+	// detects html tag
+    tagsRe: /<[^>]*>/gm,
+    
+    // DEL ASCII code
+    tagsProtect: '\x0f',
+	
+//	focusTextField: function(view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+//        if (e.getKey() === e.S) {
+//            e.preventDefault();
+//            this.textField.focus();
+//        }
+//    },
 	
 	tagsRe:/<[^>]*>/gm,  //detects html tag gm 参数
 	tagsProtect:'\x0f',  //DEL ASCII code
 	
-	getSearchValue:function(){
-		var me = this,
-		value = me.textField.getValue();  
-		if(value === ''){
-			return null;
-		}
-		if(!me.regExpMode){
-			value = Ext.String.escapeRegex(value);
-		}else{
-			try{
-				new RegExp(value);
-			}catch(error){
-				me.statusBar.setStatus({
-					text:error.message,
-					iconCls:'x-status-error'
-				});
-				return null;
-			}
-			if(value === '^' || value === '$'){
-				return null;
-			}
-		}
-		return value;
-	},
-	
-	gotoCurrent: function() {
-        var pos = this.matches[this.currentIndex];
-        this.getNavigationModel().setPosition(pos.record, pos.column);
-        this.getSelectionModel().select(pos.record);
+	getSearchValue: function() {
+        var me = this,
+            value = me.textField.getValue();
+            
+        if (value === '') {
+            return null;
+        }
+        if (!me.regExpMode) {
+            value = Ext.String.escapeRegex(value);
+        } else {
+            try {
+                new RegExp(value);
+            } catch (error) {
+                me.statusBar.setStatus({
+                    text: error.message,
+                    iconCls: 'x-status-error'
+                });
+                return null;
+            }
+            // this is stupid
+            if (value === '^' || value === '$') {
+                return null;
+            }
+        }
+
+        return value;
     },
 	
-	onTextFieldChange: function() {
+	
+    onTextFieldChange: function() {
         var me = this,
-        count = 0,
-        view = me.view,
-        cellSelector = view.cellSelector,
-        innerSelector = view.innerSelector;
-        columns = me.visibleColumnManager.getColumns();
+            count = 0,
+            view = me.view,
+            cellSelector = view.cellSelector,
+            innerSelector = view.innerSelector;
 
         view.refresh();
         // reset the statusbar
         me.statusBar.setStatus({
             text: me.defaultStatusText,
-            iconCls: '',
+            iconCls: ''
         });
 
         me.searchValue = me.getSearchValue();
-        me.matches = [];
+        me.indexes = [];
         me.currentIndex = null;
 
         if (me.searchValue !== null) {
             me.searchRegExp = new RegExp(me.getSearchValue(), 'g' + (me.caseSensitive ? '' : 'i'));
-            me.store_rs.each(function(record, idx) {
-                var node = view.getNode(record);
-                
-                if (node) {
-                    Ext.Array.forEach(columns, function(column) {
-                        var cell = Ext.fly(node).down(column.getCellInnerSelector(), true),
-                            matches, cellHTML,
-                            seen;
-
-                        if (cell) {
-                            matches = cell.innerHTML.match(me.tagsRe);
-                            cellHTML = cell.innerHTML.replace(me.tagsRe, me.tagsProtect);
-
-                            // populate indexes array, set currentIndex, and replace wrap matched string in a span
-                            cellHTML = cellHTML.replace(me.searchRegExp, function(m) {
-                                ++count;
-                                if (!seen) {
-                                    me.matches.push({
-                                        record: record,
-                                        column: column
-                                    });
-                                    seen = true;
-                                }
-                                return '<span class="' + me.matchCls + '">' + m + '</span>';
-                            }, me);
-                            // restore protected tags
-                            Ext.each(matches, function(match) {
-                                cellHTML = cellHTML.replace(me.tagsProtect, match);
-                            });
-                            // update cell html
-                            cell.innerHTML = cellHTML;
-                        }
+            
+            
+            me.store.each(function(record, idx) {
+                var td = Ext.fly(view.getNode(idx)).down(cellSelector),
+                    cell, matches, cellHTML;
+                while (td) {
+                    cell = td.down(innerSelector);
+                    matches = cell.dom.innerHTML.match(me.tagsRe);
+                    cellHTML = cell.dom.innerHTML.replace(me.tagsRe, me.tagsProtect);
+                    
+                    // populate indexes array, set currentIndex, and replace wrap matched string in a span
+                    cellHTML = cellHTML.replace(me.searchRegExp, function(m) {
+                       count += 1;
+                       if (Ext.Array.indexOf(me.indexes, idx) === -1) {
+                           me.indexes.push(idx);
+                       }
+                       if (me.currentIndex === null) {
+                           me.currentIndex = idx;
+                       }
+                       return '<span class="' + me.matchCls + '">' + m + '</span>';
                     });
+                    // restore protected tags
+                    Ext.each(matches, function(match) {
+                       cellHTML = cellHTML.replace(me.tagsProtect, match); 
+                    });
+                    // update cell html
+                    cell.dom.innerHTML = cellHTML;
+                    td = td.next();
                 }
-             }, me);
+            }, me);
 
-             // results found
-             if (count) {
-                me.currentIndex = 0;
-                me.gotoCurrent();
+            // results found
+            if (me.currentIndex !== null) {
+                me.getSelectionModel().select(me.currentIndex);
                 me.statusBar.setStatus({
-                    text: Ext.String.format('{0} match{1} found.', count, count === 1 ? 'es' : ''),
+                    text: count + ' matche(s) found.',
                     iconCls: 'x-status-valid'
                 });
-             }
-         }
+            }
+        }
 
-         // no results found
-         if (me.currentIndex === null) {
-             me.getSelectionModel().deselectAll();
-             me.textField.focus();
-         }
+        // no results found
+        if (me.currentIndex === null) {
+            me.getSelectionModel().deselectAll();
+        }
+
+        me.textField.focus();
     },
     
     onPreviousClick: function() {
         var me = this,
-            matches = me.matches,
-            len = matches.length,
-            idx = me.currentIndex;
-
-        if (len) {
-            me.currentIndex = idx === 0 ? len - 1 : idx - 1;
-            me.gotoCurrent();
-        }
+            idx;
+            
+        if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
+            me.currentIndex = me.indexes[idx - 1] || me.indexes[me.indexes.length - 1];
+            me.getSelectionModel().select(me.currentIndex);
+         }
     },
     
     onNextClick: function() {
         var me = this,
-            matches = me.matches,
-            len = matches.length,
-            idx = me.currentIndex;
-
-        if (len) {
-            me.currentIndex = idx === len - 1 ? 0 : idx + 1;
-            me.gotoCurrent();
+            idx;
+            
+        if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
+           me.currentIndex = me.indexes[idx + 1] || me.indexes[0];
+           me.getSelectionModel().select(me.currentIndex);
         }
-    },
+   },
 		
     viewConfig: { 
         stripeRows: true, 
-        getRowClass: function(record) {
-        	if(record.get('tcs') == undefined)
-        		return 'red';
-        	if(record.get('tcs').length != 0)
-        		return ''; 
-        	if(record.get('tcs').length == 0 && !record.get('vat').length && !record.get('vatstr'))
-        		return 'red'; 
-        	if(!record.get('vat').length || record.get('vatstr'))
-        		return 'yellow'; 
-        } 
+//        getRowClass: function(record) {
+//        	if(record.get('tcs') == undefined)
+//        		return 'red';
+//        	if(record.get('tcs').length != 0)
+//        		return ''; 
+//        	if(record.get('tcs').length == 0 && !record.get('vat').length && !record.get('vatstr'))
+//        		return 'red'; 
+//        	if(!record.get('vat').length || record.get('vatstr'))
+//        		return 'yellow'; 
+//        } 
     },
-    features: [{
-    	ftype: 'summary',
-    	dock: 'top'
-    }],	
+//    features: [{
+//    	ftype: 'summary',
+//    	dock: 'top'
+//    }],	
 })

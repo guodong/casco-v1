@@ -11,6 +11,7 @@ Ext.define('casco.view.main.Top', {
     			user_id: JSON.parse(localStorage.user).id
     		}
     	});
+//    	console.log(me.project);
 		var states = Ext.create('Ext.data.Store', {
          fields: ['abbr', 'name'],
          data : [
