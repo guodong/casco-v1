@@ -165,7 +165,10 @@ label{
 			location.hash=id;
 		}
 		window.addEventListener("hashchange", function(){
-			show(location.hash.substr(1));
+			console.log(location.hash.indexOf(":"));
+			if(location.hash.indexOf(":")!=-1){
+				show(location.hash.substring(1,location.hash.indexOf(":")));
+			}else{show(location.hash.substring(1));}
 			$("#tag").val(location.hash.substr(1));
 		}, false);
 	</script>
