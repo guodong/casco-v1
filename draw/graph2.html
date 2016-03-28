@@ -156,19 +156,19 @@ label{
 			show($("#tag").val());
 		}
 		if(location.hash){
-			show(location.hash.substr(1));
+			show(location.hash.substr(1),true);
 			$("#tag").val(location.hash.substr(1));
 		}
-		function show(id){
+		function show(id,mark){
 			//tree.init("http://api.casco.me/dump?tag=" + id);
-			tree.init(API+"dump?tag="+id);
+			mark?tree.init(API+"dump?tag="+id):null;
 			location.hash=id;
 		}
 		window.addEventListener("hashchange", function(){
-			console.log(location.hash.indexOf(":"));
+			//console.log(location.hash.indexOf(":"));
 			if(location.hash.indexOf(":")!=-1){
-				show(location.hash.substring(1,location.hash.indexOf(":")));
-			}else{show(location.hash.substring(1));}
+			show(location.hash.substring(1,location.hash.indexOf(":")),false);
+			}else{show(location.hash.substring(1),true);}
 			$("#tag").val(location.hash.substr(1));
 		}, false);
 	</script>
