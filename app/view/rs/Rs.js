@@ -298,15 +298,6 @@ Ext.define('casco.view.rs.Rs', {
         return value;
     },
     
-    gotoCurrent: function() {
-        var pos = this.matches[this.currentIndex];
-        this.getNavigationModel().setPosition(pos.record, pos.column);
-        this.getSelectionModel().select(pos.record);
-//        this.grid.getView().getNode(pos.column).scrollIntoView();
-//        this.grid.getView().focusRow(  );
-//        this.getSelectionModel().getSelected();
-    },
-	
     onTextFieldChange: function() {
         var me = this,
             count = 0,
@@ -332,7 +323,7 @@ Ext.define('casco.view.rs.Rs', {
             me.store.each(function(record, idx) {
                 var td = Ext.fly(view.getNode(idx)).down(cellSelector),
                     cell, matches, cellHTML;
-                console.log(td);
+//                console.log(td);
                 while (td) {
                     cell = td.down(innerSelector);
                     matches = cell.dom.innerHTML.match(me.tagsRe);
@@ -361,7 +352,10 @@ Ext.define('casco.view.rs.Rs', {
 
             // results found
             if (me.currentIndex !== null) {
+            	console.log(me.currentIndex);
                 me.getSelectionModel().select(me.currentIndex);
+//                Ext.fly(me.getView().getNode(me.currentIndex)).scrollInteView();
+                me.getView().focusRow(me.currentIndex);
                 me.statusBar.setStatus({
                     text: count + ' matche(s) found.',
                     iconCls: 'x-status-valid'
@@ -384,6 +378,8 @@ Ext.define('casco.view.rs.Rs', {
         if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
             me.currentIndex = me.indexes[idx - 1] || me.indexes[me.indexes.length - 1];
             me.getSelectionModel().select(me.currentIndex);
+            me.getView().focusRow(me.currentIndex);
+            
          }
     },
     
@@ -394,6 +390,7 @@ Ext.define('casco.view.rs.Rs', {
         if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
            me.currentIndex = me.indexes[idx + 1] || me.indexes[0];
            me.getSelectionModel().select(me.currentIndex);
+           me.getView().focusRow(me.currentIndex);
         }
    },
    

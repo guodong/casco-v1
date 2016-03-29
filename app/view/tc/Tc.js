@@ -311,15 +311,6 @@ Ext.define('casco.view.tc.Tc', {
 
         return value;
     },
-    
-    gotoCurrent: function() {
-        var pos = this.matches[this.currentIndex];
-        this.getNavigationModel().setPosition(pos.record, pos.column);
-        this.getSelectionModel().select(pos.record);
-//        this.grid.getView().getNode(pos.column).scrollIntoView();
-//        this.grid.getView().focusRow(  );
-//        this.getSelectionModel().getSelected();
-    },
 	
     onTextFieldChange: function() {
         var me = this,
