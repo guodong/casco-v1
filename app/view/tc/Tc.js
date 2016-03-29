@@ -4,20 +4,51 @@ Ext.define('casco.view.tc.Tc', {
     requires: ['casco.view.tc.TcAdd', 'casco.store.Tcs'],
     title : 'TSP-SyRTC',
     allowDeselect: true,
-    
-    //search参数
-	searchValue:null,
-	matches:[],
-	//indexes:[],
-	//currentIndex:null,
-	searchRegExp:null,
-	//caseSensitive:false,
-	regExpMode:false,
-	//matched string css class
-	matchCls:'x-livesearch-match',
-	defaultStatusText:'Nothing Found',
-    forceFit:true,
     viewModel : 'main',
+    
+    /**
+     * @private
+     * search value initialization
+     */
+    searchValue: null,
+    
+    /**
+     * @private
+     * The row indexes where matching strings are found. (used by previous and next buttons)
+     */
+    indexes: [],
+    
+    /**
+     * @private
+     * The generated regular expression used for searching.
+     */
+    searchRegExp: null,
+    
+    /**
+     * @private
+     * Case sensitive mode.
+     */
+    caseSensitive: false,
+    
+    /**
+     * @private
+     * Regular expression mode.
+     */
+    regExpMode: false,
+    
+    /**
+     * @cfg {String} matchCls
+     * The matched string css classe.
+     */
+    matchCls: 'x-livesearch-match',
+    
+    defaultStatusText: 'Nothing Found',	           
+
+    
+    forceFit:true,
+    bufferedRenderer: false,
+    columnLines:true,
+    
     initComponent: function(){
     	var me = this;
     	me.versions = new casco.store.Versions();
@@ -89,10 +120,10 @@ Ext.define('casco.view.tc.Tc', {
             	}
             }
 		},'-',{
-			text: 'Import Doc',
+			text: 'Import',
 			glyph: 0xf093,
 			scope: this,
-			width: 100,
+			width: 90,
 			handler: function() {
 				var win = Ext.create('widget.rs.rsimport', {
 					listeners: {
@@ -107,9 +138,9 @@ Ext.define('casco.view.tc.Tc', {
 				win.show();
 			}
 		},'-',{
-            text: 'Export Doc',
+            text: 'Export',
             glyph: 0xf019,
-            width: 100,
+            width: 90,
             handler : function() {
             	window.open(API+'tc/export?version_id='+me.down('combobox').getValue());
             	return;
@@ -129,9 +160,9 @@ Ext.define('casco.view.tc.Tc', {
 		
 		
         },'-',{
-            text: 'Add Item',
+            text: 'Add',
             glyph: 0xf067,
-            width: 100,
+            width: 80,
             handler : function() {
                 
 			    var tag='';
@@ -154,9 +185,9 @@ Ext.define('casco.view.tc.Tc', {
                 win.show();
             }
         },'-',{
-            text: 'Delete Item',
+            text: 'Delete',
             glyph: 0xf068,
-            width: 100,
+            width: 90,
             handler : function() {
                 Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
 	            var view=me.getView();
@@ -199,7 +230,13 @@ Ext.define('casco.view.tc.Tc', {
            tooltip: 'Find Next Row',
            handler: me.onNextClick,
            scope: me
-       }];
+       },{
+    	   xtype: 'checkbox',
+    	   hideLabel: true,
+    	   margin: '0 12px 0 0',
+    	   handler: me.caseSensitiveToggle,
+    	   scope: me
+       },'  Case sensitive'];
         
         me.bbar = Ext.create('casco.ux.StatusBar',{
 			defaultText:me.defaultStatusText,
@@ -247,50 +284,55 @@ Ext.define('casco.view.tc.Tc', {
 	tagsRe:/<[^>]*>/gm,  //detects html tag gm 参数
 	tagsProtect:'\x0f',  //DEL ASCII code
 	
-	getSearchValue:function(){
-		var me = this,
-		value = me.textField.getValue();  
-		if(value === ''){
-			return null;
-		}
-		if(!me.regExpMode){
-			value = Ext.String.escapeRegex(value);
-		}else{
-			try{
-				new RegExp(value);
-			}catch(error){
-				me.statusBar.setStatus({
-					text:error.message,
-					iconCls:'x-status-error'
-				});
-				return null;
-			}
-			if(value === '^' || value === '$'){
-				return null;
-			}
-		}
-		return value;
-	},
-	
-	gotoCurrent: function() {
+	getSearchValue: function() {
+        var me = this,
+            value = me.textField.getValue();
+            
+        if (value === '') {
+            return null;
+        }
+        if (!me.regExpMode) {
+            value = Ext.String.escapeRegex(value);
+        } else {
+            try {
+                new RegExp(value);
+            } catch (error) {
+                me.statusBar.setStatus({
+                    text: error.message,
+                    iconCls: 'x-status-error'
+                });
+                return null;
+            }
+            // this is stupid
+            if (value === '^' || value === '$') {
+                return null;
+            }
+        }
+
+        return value;
+    },
+    
+    gotoCurrent: function() {
         var pos = this.matches[this.currentIndex];
         this.getNavigationModel().setPosition(pos.record, pos.column);
         this.getSelectionModel().select(pos.record);
+//        this.grid.getView().getNode(pos.column).scrollIntoView();
+//        this.grid.getView().focusRow(  );
+//        this.getSelectionModel().getSelected();
     },
 	
-	onTextFieldChange: function() {
+    onTextFieldChange: function() {
         var me = this,
-        count = 0,
-        view = me.view,
-        cellSelector = view.cellSelector,
-        innerSelector = view.innerSelector;
-        columns = me.visibleColumnManager.getColumns();
+            count = 0,
+            view = me.view,
+            cellSelector = view.cellSelector,
+            innerSelector = view.innerSelector;
 
         view.refresh();
         // reset the statusbar
         me.statusBar.setStatus({
             text: me.defaultStatusText,
-            iconCls: '',
+            iconCls: ''
         });
 
         me.searchValue = me.getSearchValue();
@@ -299,88 +341,85 @@ Ext.define('casco.view.tc.Tc', {
 
         if (me.searchValue !== null) {
             me.searchRegExp = new RegExp(me.getSearchValue(), 'g' + (me.caseSensitive ? '' : 'i'));
+            
+            
             me.store.each(function(record, idx) {
-                var node = view.getNode(record);
-                
-                if (node) {
-                    Ext.Array.forEach(columns, function(column) {
-                        var cell = Ext.fly(node).down(column.getCellInnerSelector(), true),
-                            matches, cellHTML,
-                            seen;
-
-                        if (cell) {
-                            matches = cell.innerHTML.match(me.tagsRe);
-                            cellHTML = cell.innerHTML.replace(me.tagsRe, me.tagsProtect);
-
-                            // populate indexes array, set currentIndex, and replace wrap matched string in a span
-                            cellHTML = cellHTML.replace(me.searchRegExp, function(m) {
-                                ++count;
-                                if (!seen) {
-                                    me.matches.push({
-                                        record: record,
-                                        column: column
-                                    });
-                                    seen = true;
-                                }
-                                return '<span class="' + me.matchCls + '">' + m + '</span>';
-                            }, me);
-                            // restore protected tags
-                            Ext.each(matches, function(match) {
-                                cellHTML = cellHTML.replace(me.tagsProtect, match);
-                            });
-                            // update cell html
-                            cell.innerHTML = cellHTML;
-                        }
+                var td = Ext.fly(view.getNode(idx)).down(cellSelector),
+                    cell, matches, cellHTML;
+                console.log(td);
+                while (td) {
+                    cell = td.down(innerSelector);
+                    matches = cell.dom.innerHTML.match(me.tagsRe);
+                    cellHTML = cell.dom.innerHTML.replace(me.tagsRe, me.tagsProtect);
+                    
+                    // populate indexes array, set currentIndex, and replace wrap matched string in a span
+                    cellHTML = cellHTML.replace(me.searchRegExp, function(m) {
+                       count += 1;
+                       if (Ext.Array.indexOf(me.indexes, idx) === -1) {
+                           me.indexes.push(idx);
+                       }
+                       if (me.currentIndex === null) {
+                           me.currentIndex = idx;
+                       }
+                       return '<span class="' + me.matchCls + '">' + m + '</span>';
                     });
+                    // restore protected tags
+                    Ext.each(matches, function(match) {
+                       cellHTML = cellHTML.replace(me.tagsProtect, match); 
+                    });
+                    // update cell html
+                    cell.dom.innerHTML = cellHTML;
+                    td = td.next();
                 }
-             }, me);
+            }, me);
 
-             // results found
-             if (count) {
-                me.currentIndex = 0;
-                me.gotoCurrent();
+            // results found
+            if (me.currentIndex !== null) {
+                me.getSelectionModel().select(me.currentIndex);
                 me.statusBar.setStatus({
-                    text: Ext.String.format('{0} match{1} found.', count, count === 1 ? 'es' : ''),
+                    text: count + ' matche(s) found.',
                     iconCls: 'x-status-valid'
                 });
-             }
-         }
+            }
+        }
 
-         // no results found
-         if (me.currentIndex === null) {
-             me.getSelectionModel().deselectAll();
-             me.textField.focus();
-         }
+        // no results found
+        if (me.currentIndex === null) {
+            me.getSelectionModel().deselectAll();
+        }
+
+        me.textField.focus();
     },
     
     onPreviousClick: function() {
         var me = this,
-            matches = me.matches,
-            len = matches.length,
-            idx = me.currentIndex;
-
-        if (len) {
-            me.currentIndex = idx === 0 ? len - 1 : idx - 1;
-            me.gotoCurrent();
-        }
+            idx;
+            
+        if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
+            me.currentIndex = me.indexes[idx - 1] || me.indexes[me.indexes.length - 1];
+            me.getSelectionModel().select(me.currentIndex);
+         }
     },
     
     onNextClick: function() {
         var me = this,
-            matches = me.matches,
-            len = matches.length,
-            idx = me.currentIndex;
-
-        if (len) {
-            me.currentIndex = idx === len - 1 ? 0 : idx + 1;
-            me.gotoCurrent();
+            idx;
+            
+        if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
+           me.currentIndex = me.indexes[idx + 1] || me.indexes[0];
+           me.getSelectionModel().select(me.currentIndex);
         }
+   },
+    
+    caseSensitiveToggle: function(checkbox, checked) {
+        this.caseSensitive = checked;
+        this.onTextFieldChange();
     },
     
-    features: [{
-    	ftype: 'summary',
-    	dock: 'top'
-    }],
+//    features: [{
+//    	ftype: 'summary',
+//    	dock: 'top'
+//    }],
     
     listeners : {//与init并列,不能直接me.*来了进行调用
         celldblclick: function(a,b,c, record, item, index, e) {
