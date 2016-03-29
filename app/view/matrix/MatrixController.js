@@ -33,8 +33,9 @@ Ext.define('casco.view.matrix.MatrixController', {
 		meta.parent_versions = rsvss;
 		var job = Ext.create('casco.model.Verification', meta);
 		job.save({
-			callback:function(){
-				Ext.Msg.alert('','创建成功!');
+			callback: function(record,operation){
+				console.log(record.data.success);
+				if(record.data.success){
 				var tabs=Ext.getCmp('matrixpanel');
 				var childs=tabs.items;
 				var count=0;
@@ -43,28 +44,14 @@ Ext.define('casco.view.matrix.MatrixController', {
 				   if(count==1)return;
                    record.store.reload();
 				});
+				Ext.Msg.alert('','创建成功!');
 				//Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
+				}else{
+				Ext.Msg.alert('创建失败!',JSON.stringify(record.data.data));
+				}
 				Ext.getCmp('ver-create-window').destroy();
-			}
-//			success: function(){
-//				Ext.Msg.alert('','创建成功!');
-//				var tabs=Ext.getCmp('matrixpanel');
-//				var childs=tabs.items;
-//				var count=0;
-//				childs.each(function(record){
-//                   count++;
-//				   if(count==1)return;
-//                   record.store.reload();
-//				});
-//				//Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
-//				Ext.getCmp('ver-create-window').destroy();
-//			},
-//			failure: function(){
-//				Ext.Msg.alert('','创建失败，请检查配置');
-			}
-
-		);
-		
+			}//callback
+		});
 	},
 	manage : function() {
 		this.redirectTo('manage', true);
