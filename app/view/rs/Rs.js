@@ -53,7 +53,7 @@ Ext.define('casco.view.rs.Rs', {
 	           
 	forceFit:true,
 	bufferedRenderer: false,
-//	columnLines:true,
+	columnLines:true,
 		
 	initComponent: function() {
 		var me = this;
@@ -201,7 +201,13 @@ Ext.define('casco.view.rs.Rs', {
            tooltip: 'Find Next Row',
            handler: me.onNextClick,
            scope: me
-       }];
+       },{
+    	   xtype: 'checkbox',
+    	   hideLabel: true,
+    	   margin: '0 12px 0 0',
+    	   handler: me.caseSensitiveToggle,
+    	   scope: me
+       },'  Case sensitive'];
 		
 
 //		me.bbar = ['-',{
@@ -254,12 +260,12 @@ Ext.define('casco.view.rs.Rs', {
     // DEL ASCII code
     tagsProtect: '\x0f',
 	
-//	focusTextField: function(view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
-//        if (e.getKey() === e.S) {
-//            e.preventDefault();
-//            this.textField.focus();
-//        }
-//    },
+	focusTextField: function(view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+        if (e.getKey() === e.S) {
+            e.preventDefault();
+            this.textField.focus();
+        }
+    },
 	
 	tagsRe:/<[^>]*>/gm,  //detects html tag gm 参数
 	tagsProtect:'\x0f',  //DEL ASCII code
@@ -291,8 +297,7 @@ Ext.define('casco.view.rs.Rs', {
 
         return value;
     },
-	
-	
+    
     onTextFieldChange: function() {
         var me = this,
             count = 0,
@@ -318,6 +323,7 @@ Ext.define('casco.view.rs.Rs', {
             me.store.each(function(record, idx) {
                 var td = Ext.fly(view.getNode(idx)).down(cellSelector),
                     cell, matches, cellHTML;
+//                console.log(td);
                 while (td) {
                     cell = td.down(innerSelector);
                     matches = cell.dom.innerHTML.match(me.tagsRe);
@@ -346,7 +352,10 @@ Ext.define('casco.view.rs.Rs', {
 
             // results found
             if (me.currentIndex !== null) {
+            	console.log(me.currentIndex);
                 me.getSelectionModel().select(me.currentIndex);
+//                Ext.fly(me.getView().getNode(me.currentIndex)).scrollInteView();
+                me.getView().focusRow(me.currentIndex);
                 me.statusBar.setStatus({
                     text: count + ' matche(s) found.',
                     iconCls: 'x-status-valid'
@@ -369,6 +378,8 @@ Ext.define('casco.view.rs.Rs', {
         if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
             me.currentIndex = me.indexes[idx - 1] || me.indexes[me.indexes.length - 1];
             me.getSelectionModel().select(me.currentIndex);
+            me.getView().focusRow(me.currentIndex);
+            
          }
     },
     
@@ -379,7 +390,13 @@ Ext.define('casco.view.rs.Rs', {
         if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
            me.currentIndex = me.indexes[idx + 1] || me.indexes[0];
            me.getSelectionModel().select(me.currentIndex);
+           me.getView().focusRow(me.currentIndex);
         }
+   },
+   
+   caseSensitiveToggle: function(checkbox, checked) {
+       this.caseSensitive = checked;
+       this.onTextFieldChange();
    },
 		
     viewConfig: { 
