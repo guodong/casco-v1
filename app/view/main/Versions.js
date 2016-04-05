@@ -46,6 +46,26 @@ Ext.define('casco.view.manage.Versions', {
 				return v?v.name:'';
 			}
 		}, {
+			text :'上次导入结果',
+			dataIndex :'result',
+			width :'200',
+			renderer: function(val,meta,rec) {
+            var id = Ext.id();
+            Ext.defer(function() {
+               Ext.widget('button', {
+                  renderTo: id,
+                  text: 'result',
+                  glyph: 0xf040,
+                  scale: 'small',
+                  handler: function() {
+                	 Ext.Msg.alert('导入结果',val);
+                  }
+               });
+            }, 50);
+            return Ext.String.format('<div id="{0}"></div>', id);
+         }
+			
+		},{
 			text :'created_at',
 			dataIndex :'created_at',
 			width :'200'
