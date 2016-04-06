@@ -235,7 +235,7 @@ Ext.define('casco.view.testing.Result', {
 				});
 			}
 		},{
-			text: 'Export Word',
+			text: 'Export Result',
 			glyph: 0xf019,
 			scope: this,
 			handler: function() {

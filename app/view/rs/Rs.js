@@ -210,12 +210,12 @@ Ext.define('casco.view.rs.Rs', {
        },'  Case sensitive'];
 		
 
-//		me.bbar = ['-',{
-//			summaryType: 'count',
-//	        summaryRenderer: function(value, summaryData, dataIndex) {
-//	            return Ext.String.format('{0} item{1}', value, value !== 1 ? 's' : '');
-//	        }
-//		}]
+		me.bbar = ['-',{
+			summaryType: 'count',
+	        summaryRenderer: function(value, summaryData, dataIndex) {
+	            return Ext.String.format('{0} item{1}', value, value !== 1 ? 's' : '');
+	        }
+		}]
 		
 		me.bbar = Ext.create('casco.ux.StatusBar',{
 			defaultText:me.defaultStatusText,
