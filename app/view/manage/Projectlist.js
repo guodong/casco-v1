@@ -46,7 +46,6 @@ Ext.define('casco.view.manage.Projectlist', {
             var id = Ext.id();
             Ext.defer(function() {
                Ext.widget('button', {
-            	   
                   renderTo: id,
                   text: 'Edit Documents',
                   glyph: 0xf040,

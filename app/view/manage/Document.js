@@ -12,9 +12,9 @@ Ext.define('casco.view.manage.Document', {
 	height: '80%',
 	modal: true,
 	maximizable: true,
-    controller: 'main',
+    controller: 'manage',
     viewModel: {
-        type: 'main'
+        type: 'manage'
     },
     layout: {
 		type: 'border'
@@ -22,7 +22,6 @@ Ext.define('casco.view.manage.Document', {
     initComponent : function() {
 		Ext.setGlyphFontFamily('FontAwesome'); // 设置图标字体文件，只有设置了以后才能用glyph属性
 		var me = this;//接受传过来的参数
-	 
 		this.items = [{
 	        xtype: 'tree',
 	        id: 'mtree',
@@ -41,7 +40,6 @@ Ext.define('casco.view.manage.Document', {
 	        reference: 'main',
 	        items:[{
 	            title: 'Main',
-			    
 	            html: '<iframe id="draw" src="/draw/index.html?'+me.project.id+'" style="width:100%;height:100%;border:0"></iframe>'
 	           
 			}]

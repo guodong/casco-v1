@@ -17,11 +17,9 @@ Ext.define('casco.view.main.Main', {
         'casco.view.manage.Versions',
         'casco.model.Version'
     ],
-
     controller: 'main',
     viewModel: 'main',
     ui: 'navigation',
-    
     tabBarHeaderPosition: 1,
     tabBar: {
         flex: 1,

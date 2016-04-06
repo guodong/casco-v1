@@ -28,7 +28,7 @@ Ext.define('casco.view.main.Tree', {
     			}
     		});
     	},//itemdbclick
-itemcontextmenu:'onCtxMenu'
+	itemcontextmenu:'onCtxMenu'
 	},//listeners
     displayField: 'name',
     rootVisible : false,

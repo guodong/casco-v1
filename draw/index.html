@@ -51,6 +51,7 @@ border-color: #5ca941;
 <title>Insert title here</title>
 </head>
 <body>
+	<button id="refresh">Refresh</button>
 	<button id="move">Move</button>
 	<button id="add_link">Link</button>
 	<button id="save">Save</button>
@@ -224,6 +225,9 @@ border-color: #5ca941;
 
 			$("#move").click(function() {
 				active = true;
+			});
+			$("#refresh").click(function() {
+				initnew();
 			});
 			$("#save").click(function() {
 				$.ajax({
