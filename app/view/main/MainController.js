@@ -45,12 +45,14 @@ Ext.define('casco.view.main.MainController', {
 						}else{
 							//首先清空localsotrage
 							localStorage.clear();
+							console.log(Ext.util.Cookies.get('laravel_session'));
+							Ext.util.Cookies.clear('laravel_session');
 							var main=location.hash;
 							// console.log(main);
 							loc=main.match(/^\#([a-z]*).*?$/);//蛋疼，表示project窗口不能销毁
 							//	console.log(loc[1]);
 							var parent=(loc[1]=="project")?"app-main":loc[1];
-							me.getView().up(parent).destroy();
+							me.getView().up(parent)?me.getView().up(parent).destroy():null;
 							me.redirectTo('selectProject', true);
 							location.reload();
 
