@@ -168,14 +168,15 @@ border-color: #5ca941;
 							return;
 						var link = new joint.shapes.fsa.Arrow({
 							target: {
-								x: 0,
-								y: 0
+								x: event.clientX,
+								y: event.clientY
 							},
 							source: {
 								id: cellView.model.id
 							}
 						});
 						linkid = link.id;
+						
 						graph.addCell(link);
 					});
 					paper.on('cell:pointermove', function(cellView, event) {
@@ -204,12 +205,18 @@ border-color: #5ca941;
 							if(target.length) break;
 								
 						};
+						console.log(target)
 						if(!target.length){
-							link.set('target', {x:x,y:y})
+							link.remove();
+							//link.set('target', {x:x,y:y})
 						}else{
 							link.set('target', {
 								id: target[0].model.id,
-							})
+							});
+							if (link.getTargetElement() == link.getSourceElement())
+							{
+								link.remove();
+							}
 						}
 
 					});
