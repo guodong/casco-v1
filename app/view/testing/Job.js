@@ -114,7 +114,35 @@ Ext.define('casco.view.testing.Job', {
 						}
 					}}, this);
 			}
-		}];
+		},{
+			xtype : 'filefield',
+			name : 'file',
+			fieldLabel : 'Template',
+			labelWidth : 60,
+			msgTarget : 'side',
+			allowBlank : false,
+			anchor : 0,
+			width : 200,
+			buttonText : 'Select File'
+		}/*{
+			text: 'Import Template',
+			glyph: 0xf093,
+			scope: this,
+			handler: function() {
+				var win = Ext.create('widget.testing.templateimport', {
+					listeners: {
+						scope: this
+					},
+					//version_id: me.down('combobox').getValue(),
+//					document_id: me.document.id,
+					vstore:me.versions,
+//					type: 'rs'
+				});
+				
+				win.show();
+			}
+				
+		}*/];
     	this.callParent();
     }
 })
