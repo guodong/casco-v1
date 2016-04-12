@@ -8,7 +8,6 @@ Ext.define('casco.view.main.Tree', {
         	var me = this;
         	if(!record.get('leaf')) return;
     		var tabs = Ext.getCmp('workpanel');
-			 
     		var tab = tabs.child('#tab-' + record.get('id'));
     		if(tab){
     			tabs.remove(tab);
