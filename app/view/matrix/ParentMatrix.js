@@ -182,10 +182,9 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			  {text:'justification',dataIndex:'justification',header:'justification',width:95,sortable:true,renderer: function(value){
 						var arr = [];//JSON.parse一定要记得
 						Ext.Array.each(JSON.parse(value), function(v) {
-							//console.log(v);
-							arr.push(v.tag);
+							arr.push(v.comment==undefined?v.tag:(v.tag+': '+v.comment));
 						});
-						return arr.join(',	');
+						return arr.join(', ');
 			},
 		  customMenu:[
 						{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'justification',width:95,dataIndex:'justification'}]}],

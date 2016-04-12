@@ -21,6 +21,11 @@ Ext.define('casco.view.testing.Job', {
     bodyPadding: 0,
     initComponent: function(){
     	var me = this;
+		me.addListener("datachanged",function(){
+		console.log('gagaga!');
+		Ext.getCmp('result-main').getStore().reload(); 
+		Ext.getCmp('testing-step-panel').getStore().reload();
+		});
     	me.store = new casco.store.Testjobs();
     	me.store.load({
     		params: {
@@ -96,7 +101,16 @@ Ext.define('casco.view.testing.Job', {
 						var selection =view.getSelectionModel().getSelection()[0];
 						if (selection) {
 							me.store.remove(selection);
-							selection.erase();
+							selection.erase({
+								success: function(record, operation) {
+								//view.getStore().reload();//级联变动
+								location.reload();
+								//me.fireEvent('datachanged');
+//								Ext.getCmp().getStore().reload();//最好写在listener中
+//								Ext.getCmp().getStore().reload();
+								// do something if the erase succeeded
+								}
+							});
 						}
 					}}, this);
 			}

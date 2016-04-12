@@ -256,9 +256,7 @@ Ext.define('casco.view.testing.Test', {
 					dataIndex: "cr",
 				}]
 			}]
-			
 		}];
-		
 		me.callParent(arguments);
 	}
 })
