@@ -114,6 +114,24 @@ Ext.define('casco.view.testing.Job', {
 						}
 					}}, this);
 			}
+		},{
+			text: 'Import Template',
+			glyph: 0xf093,
+			scope: this,
+			handler: function() {
+				var win = Ext.create('widget.testing.templateimport', {
+					listeners: {
+						scope: this
+					},
+					//version_id: me.down('combobox').getValue(),
+//					document_id: me.document.id,
+					vstore:me.versions,
+//					type: 'rs'
+				});
+				
+				win.show();
+			}
+				
 		}];
     	this.callParent();
     }
