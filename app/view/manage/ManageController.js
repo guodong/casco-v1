@@ -285,8 +285,8 @@ Ext.define('casco.view.manage.ManageController', {
 	  	   model.set('name',value);
 	  	   model.save({callback: function(record, operation, success) {
 			    node.setId(record.get('id'));
-			    console.log(record.get('id'));
-			   //Ext.getCmp('mtree').getView().refresh();
+			 //console.log( Ext.getCmp('draw'));
+			  // Ext.getCmp('draw').items;
 			   //Ext.getCmp('mtree').getStore().reload();
 			  // Ext.getCmp('mtree').reconfigure();
 	  	    }
