@@ -115,16 +115,6 @@ Ext.define('casco.view.testing.Job', {
 					}}, this);
 			}
 		},{
-			xtype : 'filefield',
-			name : 'file',
-			fieldLabel : 'Template',
-			labelWidth : 60,
-			msgTarget : 'side',
-			allowBlank : false,
-			anchor : 0,
-			width : 200,
-			buttonText : 'Select File'
-		}/*{
 			text: 'Import Template',
 			glyph: 0xf093,
 			scope: this,
@@ -142,7 +132,7 @@ Ext.define('casco.view.testing.Job', {
 				win.show();
 			}
 				
-		}*/];
+		}];
     	this.callParent();
     }
 })
