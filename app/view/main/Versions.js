@@ -93,7 +93,7 @@ Ext.define('casco.view.manage.Versions', {
 		var selected=grid.selModel.getSelection();
 		rowEditing.cancelEdit();
 		var newstore =new casco.model.Version({document:me.store.getAt(0).get('document')});
-		console.log(newstore);
+		//console.log(newstore);
 		me.store.insert(selected[0].index,newstore);
 		rowEditing.startEdit(selected[0].index,0);
 		};
@@ -105,6 +105,9 @@ Ext.define('casco.view.manage.Versions', {
 			store :me.store,
 			displayInfo :true,
 			pageSize :50,
+			doRefresh:function(){  
+			 me.store.reload(); 
+			},
 			items : [ '-', {
 				text :'Save Changes',
 				handler : function(item,e) {

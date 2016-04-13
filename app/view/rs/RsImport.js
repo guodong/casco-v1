@@ -154,7 +154,6 @@ Ext.define('casco.view.rs.RsImport', {
 											width:300,
 											buttonText:{yes:'Continue',cancel:'Cancel'},
 											fn:function(buttonid){
-											
 											if(buttonid=='cancel'){self.up('window').destroy();return;}
 											form.submit({// 为什么一直为false
 												url : API + 'docfile',
@@ -162,23 +161,19 @@ Ext.define('casco.view.rs.RsImport', {
 											    params:{'name':me.aflag},
 												success : function(form,action) {
 												 Ext.Msg.alert('Success',action.response.responseText);
-												
-												 // console.log(action);
 												},
-						                        failure: function(form,action) { 
+						                        failure: function(form,action) {
+												 console.log(action.response);
 												 var versions = new casco.store.Versions();
 												 versions.load({
+												 params:{'document_id': me.document_id,'new_update':true},
 											     synchronous: true,
 					                             scope:this,
 										         callback:function(){
-										   		 
 												 // console.log((versions.getAt(0)));
 								                  Ext.Msg.alert('导入结果!',(versions.getAt(0).get('result')));
-												  // Ext.Msg.alert(record.get('result'));
 												 }
 												 });
-
-
 												 self.up('window').destroy();
 					                              var t=Ext.getCmp("docv-"+me.document_id);
 												  t.store.reload();
