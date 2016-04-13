@@ -18,7 +18,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 	
 	multiSelect : true,
 	selModel:{
-// 		mode:'MULTI',
+// mode:'MULTI',
 		selType: "checkboxmodel" ,    // 5.1.0之后就不赞成使用这种方式了。。。
 		checkOnly: false
 	},
@@ -93,27 +93,17 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			 }
 			 }); 
 			 /*
-			 Ext.Array.each(rows,function(item){
-			 item.dirty=false;
-			 item.commit(); 
-			 data.push(item.getData());
-			 });// each
-			 var model=Ext.create('casco.model.Verification',{id:me.verification.get('id')});
-			 model.set('data',data);
-			 model.save({
-			 callback: function(record, operation, success){
-             },
-			 failure: function(record, operation) {
-			  me.getView().refresh(); // 这一行重要哇我晕
-              Ext.Msg.alert('Failed','Save failed!');
-			 },
-			 success: function(record, operation) {
-			 me.getView().refresh(); // 这一行重要哇我晕
-			 Ext.Msg.alert('Success', 'Saved successfully.');
-			 
-			 },
-			 });
-			 */
+				 * Ext.Array.each(rows,function(item){ item.dirty=false;
+				 * item.commit(); data.push(item.getData()); });// each var
+				 * model=Ext.create('casco.model.Verification',{id:me.verification.get('id')});
+				 * model.set('data',data); model.save({ callback:
+				 * function(record, operation, success){ }, failure:
+				 * function(record, operation) { me.getView().refresh(); //
+				 * 这一行重要哇我晕 Ext.Msg.alert('Failed','Save failed!'); }, success:
+				 * function(record, operation) { me.getView().refresh(); //
+				 * 这一行重要哇我晕 Ext.Msg.alert('Success', 'Saved successfully.');
+				 *  }, });
+				 */
 			
 			}
 		},'-',{text: 'Export',
@@ -179,12 +169,28 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 						}//
 				  }]// customMenu
 				  },
-			  {text:'justification',dataIndex:'justification',header:'justification',width:95,sortable:true,renderer: function(value){
-						var arr = [];//JSON.parse一定要记得
-						Ext.Array.each(JSON.parse(value), function(v) {
-							arr.push(v.comment==undefined?v.tag:(v.tag+': '+v.comment));
-						});
-						return arr.join(', ');
+			  {text:'justification',dataIndex:'justification',header:'justification',width:100,sortable:true,renderer: function(value){
+						/*var mySimpleStore = Ext.create('Ext.data.Store',{fields:['tag','comment'],data:[value]});
+						console.log(mySimpleStore);
+						  var id = Ext.id();
+				            Ext.defer(function() {
+				               Ext.widget('combo', {
+				                  renderTo: id,
+				                  fieldLabel:'',
+				                  width:95,
+				                  height:20,
+								  store:mySimpleStore,
+								  diaplayField:'tag',
+								  typeAhead:true,
+								  mode:'local'
+				               });
+				            }, 5);
+				            return Ext.String.format('<div id="{0}"></div>', id);	*/
+						  var arr = [];//JSON.parse一定要记得
+						  Ext.Array.each(JSON.parse(value), function(v) {
+						  arr.push(v.comment==undefined?v.tag:(v.tag+':'+v.comment)); });
+						  return arr.join('<br/>');
+						 
 			},
 		  customMenu:[
 						{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'justification',width:95,dataIndex:'justification'}]}],
@@ -202,7 +208,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 						change:function(the,newValue,oldValue){
 						 me.self_op(the,newValue,oldValue);}
 					}
-					}]//menu
+					}]// menu
 				  },{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Completeness',width:110,dataIndex:'Completeness'}] }],
 						 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Completeness');}}
 			 
@@ -290,7 +296,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			  customMenu:[
 							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Comment',width:90,dataIndex:'Comment'}]}],
 							 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Comment');}
-							}//listeners
+							}// listeners
 					  }]// customMenu
 			  }
 			];
@@ -348,12 +354,11 @@ Ext.define('casco.view.matrix.ParentMatrix', {
             });
         }// if
     },
-	/*afterRender:function(){
-		var me = this;
-		me.callParent(arguments);
-		me.textField= me.down('textfield[name = searchField]');
-		me.statusBar = me.down('statusbar[name = searchStatusBar]');
-		me.view.on('cellkeydown',me.focusTextField,me);
-	}*/
+	/*
+	 * afterRender:function(){ var me = this; me.callParent(arguments);
+	 * me.textField= me.down('textfield[name = searchField]'); me.statusBar =
+	 * me.down('statusbar[name = searchStatusBar]');
+	 * me.view.on('cellkeydown',me.focusTextField,me); }
+	 */
 	
 })

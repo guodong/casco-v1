@@ -186,7 +186,7 @@ Ext.define('casco.view.manage.ManageController', {
          var menu=button.up().up(),node=menu.treeNode,view=menu.treeView,delay=view.expandDuration+50,newNode,doCreate;
 		 doCreate=function(){
 		 //console.log(location.hash.substring(location.hash.lastIndexOf('/')+1));
-         newNode=node.appendChild({name:text,text:text,type:type,fid:node.id,project_id:Ext.getCmp('mtree').project.get('id'),leaf:true});
+         newNode=node.appendChild({name:text,type:type,fid:node.id,project_id:Ext.getCmp('mtree').project.get('id'),leaf:(type!='folder')});
 		 }
 		  if(!node.isExpanded()){
             node.expand(false,Ext.callback(this.doCreate,this,[],delay));
@@ -264,7 +264,7 @@ Ext.define('casco.view.manage.ManageController', {
 			updateEl: true,
 			alignment: 'l-l',
 			autoSize: {
-				width: 'boundEl'
+				width: '20'
 			},
 			field: {
 				xtype: 'textfield'
@@ -273,7 +273,8 @@ Ext.define('casco.view.manage.ManageController', {
 	 console.log(Ext.get(menu.treeEle).query('span'));
      editor.startEdit(Ext.get(menu.treeEle).query('span')[0]);
      editor.on('complete',function(this_g, value, startValue, eOpts){
-		   console.log(node.id);
+		   console.log(node);
+		   node.set('name',value);
 		   var id;
 	       re=/^(([a-z]|[0-9])*-*){3,}([a-z]|[0-9])*$/g; 
            if(re.test(node.id)){
@@ -283,7 +284,11 @@ Ext.define('casco.view.manage.ManageController', {
 		   model.set(node.getData());
 	  	   model.set('name',value);
 	  	   model.save({callback: function(record, operation, success) {
-			   Ext.getCmp('mtree').getStore().reload();
+			    node.setId(record.get('id'));
+			 //console.log( Ext.getCmp('draw'));
+			  // Ext.getCmp('draw').items;
+			   //Ext.getCmp('mtree').getStore().reload();
+			  // Ext.getCmp('mtree').reconfigure();
 	  	    }
 	  	   });
 	});

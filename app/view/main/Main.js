@@ -33,7 +33,6 @@ Ext.define('casco.view.main.Main', {
     
     initComponent: function(){
     	var me = this;
-    	console.log(me.project);
     	var store = Ext.create('casco.store.TreeDocuments', {
     		proxy: {
     			extraParams: {
@@ -41,7 +40,6 @@ Ext.define('casco.view.main.Main', {
     			}
     		}
     	});
-    	console.log(store);
     	me.items = [{
             region: 'north',
             xtype: 'top',
@@ -67,7 +65,7 @@ Ext.define('casco.view.main.Main', {
             id: 'workpanel',
             items:[{
                 title: 'Overview',
-                html: '<iframe id="draw" src="/draw/noedit.html?'+me.project.get('id')+'" style="width:100%;height:100%;border:0"></iframe>'
+                html: '<iframe  src="/draw/noedit.html?'+me.project.get('id')+'" style="width:100%;height:100%;border:0"></iframe>'
             }]
         }];
     	this.callParent();

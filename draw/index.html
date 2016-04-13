@@ -59,8 +59,8 @@ border-color: #5ca941;
 	<script>
 	 
 		// var API = "http://192.168.44.129:8080/";
-		//var API="http://localhost/casco-api/public/";
-		var API="http://localhost:8080/";
+		var API="http://localhost/casco-api/public/";
+		//var API="http://localhost:8080/";
 		//var API = "http://192.100.212.31:8080/";
 		var graph = new joint.dia.Graph;
 		var active = true;
@@ -85,7 +85,7 @@ border-color: #5ca941;
 				//return active?true:false;
 			},
 		});
-		var project_id = location.href.substr(location.href.indexOf('?') + 1);
+		var project_id = location.href.substring(location.href.indexOf('?') + 1,location.href.indexOf('&'));
 	 	var url = API + 'project/' + project_id;
 		//console.log("the url id the "+url);
 		var initnew = function() {
@@ -168,14 +168,15 @@ border-color: #5ca941;
 							return;
 						var link = new joint.shapes.fsa.Arrow({
 							target: {
-								x: 0,
-								y: 0
+								x: event.clientX,
+								y: event.clientY
 							},
 							source: {
 								id: cellView.model.id
 							}
 						});
 						linkid = link.id;
+						
 						graph.addCell(link);
 					});
 					paper.on('cell:pointermove', function(cellView, event) {
@@ -204,12 +205,18 @@ border-color: #5ca941;
 							if(target.length) break;
 								
 						};
+						console.log(target)
 						if(!target.length){
-							link.set('target', {x:x,y:y})
+							link.remove();
+							//link.set('target', {x:x,y:y})
 						}else{
 							link.set('target', {
 								id: target[0].model.id,
-							})
+							});
+							if (link.getTargetElement() == link.getSourceElement())
+							{
+								link.remove();
+							}
 						}
 
 					});
