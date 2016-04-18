@@ -8,7 +8,6 @@ Ext.define('casco.view.testing.TestController', {
 		var record = form.getRecord();
 		form.updateRecord(record);
 	},
-
 	createJob: function() {
 		var form = this.lookupReference('job_create_form');
 		var meta = form.getValues();
@@ -26,7 +25,6 @@ Ext.define('casco.view.testing.TestController', {
 		var tcs = [];
 		var sels = Ext.getCmp('testing-job-tc-grid').getSelection();
 		for(var i in sels){
-		//	console.log(sels[i].get('tc').id);
 			tcs.push(sels[i].get('tc').id);
 		}
 		meta.tcs = tcs;

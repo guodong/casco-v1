@@ -1,9 +1,7 @@
 Ext.define('casco.view.testing.Job', {
     extend: 'Ext.grid.Panel',
     xtype: 'testing.job',
-    
     requires:['casco.store.Testjobs'],
-
     listeners: {
         itemdblclick: function(view, record, item, index, e, eOpts){
         	Ext.getCmp('result-main').job = record;
@@ -115,6 +113,20 @@ Ext.define('casco.view.testing.Job', {
 					}}, this);
 			}
 		},{
+			text: 'Edit Templates',
+			glyph: 0xf093,
+			scope: this,
+			handler: function() {
+				var win = Ext.create('widget.testing.templateimport', {
+					listeners: {
+						scope: this
+					},
+					project_id: me.project.get('id'),
+				});
+				win.show();
+			}
+				
+		},{
 			text: 'Import Template',
 			glyph: 0xf093,
 			scope: this,
@@ -123,12 +135,8 @@ Ext.define('casco.view.testing.Job', {
 					listeners: {
 						scope: this
 					},
-					//version_id: me.down('combobox').getValue(),
-//					document_id: me.document.id,
-					vstore:me.versions,
-//					type: 'rs'
+					project_id: me.project.get('id'),
 				});
-				
 				win.show();
 			}
 				
