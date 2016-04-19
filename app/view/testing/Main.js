@@ -44,6 +44,7 @@ Ext.define('casco.view.testing.Main', {
 				id: 'result-main',
 				width: '60%',
 				region: 'center',
+				project:me.project,
 				scrollable: true,
 			}, {
 				xtype: 'testing.step',

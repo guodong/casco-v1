@@ -9,9 +9,7 @@ Ext.define('casco.view.manage.ManageController', {
 		Ext.Msg.confirm('Confirm', 'Are you sure to logout?', function (choice) {
 			if (choice === 'yes') {
 				localStorage.removeItem('uid');
-
 				this.getView().destroy();
-
 				Ext.widget('login');
 			}
 		}, this);

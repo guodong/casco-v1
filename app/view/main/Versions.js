@@ -22,7 +22,6 @@ Ext.define('casco.view.manage.Versions', {
 				    // commit the changes right after editing finished
 				    e.record.commit();
 				}
-			
 		}
 		});
 		var columns =[{
@@ -97,8 +96,6 @@ Ext.define('casco.view.manage.Versions', {
 		me.store.insert(selected[0].index,newstore);
 		rowEditing.startEdit(selected[0].index,0);
 		};
-			
-			
 			
 		var pagingToolbar = {
 			xtype :'pagingtoolbar',

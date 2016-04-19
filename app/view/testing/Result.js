@@ -27,6 +27,12 @@ Ext.define('casco.view.testing.Result', {
 	                {label: 'failed',   value: 2},
             ]
         });
+		me.tmpstore = Ext.create('casco.store.TestJobTmp');
+		me.tmpstore.load({
+			params : {
+				project_id :me.project.get('id')
+			}
+		});
     	me.store.setListeners({
     		beforeload: function(){
 				var cs = me.getColumns();
@@ -179,9 +185,7 @@ Ext.define('casco.view.testing.Result', {
             scope:this,
             handler : function() {
 	            var view=me.getView();
-//                me.reconfigure(me.store,me.columns);
 				var selection =view.getSelectionModel().getSelection()[0];
-//				var selectc = selection.get('tc');
 				console.log(selection.get('tc').tag);
 				if(!selection){Ext.Msg.alert("请选择TC");return;}
 				window.open('/ace-builds/editor.html?type=python&tc_id='+selection.get('tc_id')+'&tc_tag='+selection.get('tc').tag); 
@@ -238,10 +242,21 @@ Ext.define('casco.view.testing.Result', {
 			text: 'Export Result',
 			glyph: 0xf019,
 			scope: this,
-			handler: function() {
-				window.open(API+'testjob/export?job_id='+me.job.get('id'));
+			xtype: 'combobox',
+            editable: false,
+            displayField: 'name',
+            valueField: 'id',
+            store: me.tmpstore,
+            queryMode: 'local',
+			//itemId:'switcher',	//ManagerController
+            emptyText: 'Switch Template',
+            listeners: {
+            	select:  function(combo, record) {
+				combo.setValue(combo.emptyText);
+				window.open(API+'testjob/export?job_id='+me.job.get('id')+'&tmp_id='+record.get('id'));
             	return;
-			}
+				},
+            }
 		},{
 			text: 'Export Project',
 			glyph: 0xf019,

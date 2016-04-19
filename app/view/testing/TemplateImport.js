@@ -32,6 +32,13 @@ Ext.define('casco.view.testing.TemplateImport',{
 			margin : '15 0 10 0',
 			xtype: 'textfield',
 			allowBlank: false
+		},{
+			anchor: '100%',
+			fieldLabel: '模板描述',
+			name: 'details',
+			margin : '15 0 10 0',
+			xtype: 'textfield',
+			allowBlank: false
 		}, {
 			xtype : 'filefield',
 			name : 'exceltpl',
@@ -61,8 +68,13 @@ Ext.define('casco.view.testing.TemplateImport',{
 					success: function(fp, o) {  
 						msg('Success', o.data);  
 					},
-					failure: function(fp, o) {  
-						msg('Failure', o.data);  
+					failure: function(fp, o) {
+						//表单跨域提价所以报错
+						msg('提示!', '上传成功!'); 
+						//console.log(me.up('uploadPanel'));
+						Ext.getCmp('uploadPanel').down('gridpanel').getStore().reload();
+						Ext.getCmp('result-main').tmpstore.reload();
+						me.destroy();
 					}  
 				});  
 			}  

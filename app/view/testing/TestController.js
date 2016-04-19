@@ -8,6 +8,10 @@ Ext.define('casco.view.testing.TestController', {
 		var record = form.getRecord();
 		form.updateRecord(record);
 	},
+	deleteAll:function(){
+
+	
+	},
 	createJob: function() {
 		var form = this.lookupReference('job_create_form');
 		var meta = form.getValues();
@@ -36,6 +40,5 @@ Ext.define('casco.view.testing.TestController', {
 			}
 		});
 		
-	}
-
+	},
 });

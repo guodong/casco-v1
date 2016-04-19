@@ -115,31 +115,13 @@ Ext.define('casco.view.testing.Job', {
 		},{
 			text: 'Edit Templates',
 			glyph: 0xf093,
-			scope: this,
+			scope: me,
 			handler: function() {
-				var win = Ext.create('widget.testing.templateimport', {
-					listeners: {
-						scope: this
-					},
-					project_id: me.project.get('id'),
+				var win = Ext.create('widget.testing.templateedit', {
+					project: me.project,
 				});
 				win.show();
 			}
-				
-		},{
-			text: 'Import Template',
-			glyph: 0xf093,
-			scope: this,
-			handler: function() {
-				var win = Ext.create('widget.testing.templateimport', {
-					listeners: {
-						scope: this
-					},
-					project_id: me.project.get('id'),
-				});
-				win.show();
-			}
-				
 		}];
     	this.callParent();
     }
