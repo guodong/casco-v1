@@ -50,7 +50,8 @@ Ext.define("casco.view.testing.uploadPanel",{
 			 me.store.reload(); 
 			},
 			items : [ '-', {
-				text :'Save Changes',
+				text :'Save',
+				glyph: 0xf0c7,
 				handler : function(item,e) {
 					me.store.sync({
 					 callback: function(record, operation, success){
@@ -66,12 +67,13 @@ Ext.define("casco.view.testing.uploadPanel",{
 					 Ext.Msg.alert('Success', 'Saved successfully.');}
 					 });
 				}
-			}, {
-				text :'Reject Changes',
+			}/*, {
+				text :'Undo',
+				glyph: 0xf0e2,
 				handler : function() {
 					me.store.rejectChanges();
 				}
-			}, '-' ]
+			}, */,'-']
 		};
     this.gp = new Ext.grid.GridPanel({// 修改为可编辑表格
         border :false,
@@ -80,12 +82,12 @@ Ext.define("casco.view.testing.uploadPanel",{
         columns: [  
             // new Ext.grid.RowNumberer(),
             {header: '文件名', width: 100, sortable: true,dataIndex: 'name', menuDisabled:true,editor: {xtype: 'textfield'}}, 
-            {header: '大小(bytes)', width: 70, sortable: true,dataIndex: 'size', menuDisabled:true,renderer:this.formatFileSize},
+            {header: '大小(bytes)', width: 100, sortable: true,dataIndex: 'size', menuDisabled:true,renderer:this.formatFileSize},
 			{header: '类型', width: 70, sortable: true,dataIndex: 'type', menuDisabled:true,renderer:this.formatFileSize},  
-            {header: '文件说明', width: 100, sortable: true,dataIndex: 'details', menuDisabled:true,editor: {xtype: 'textfield'}},
-			{header: '路径', width: 100, sortable: true,dataIndex: 'path', menuDisabled:true}, 
-			{header: 'created_at', width: 100, sortable: true,dataIndex: 'created_at', menuDisabled:true},  
-			{header: 'updated_at', width: 100, sortable: true,dataIndex: 'updated_at', menuDisabled:true},  
+            {header: '文件说明', width: 150, sortable: true,dataIndex: 'details', menuDisabled:true,editor: {xtype: 'textfield'}},
+//			{header: '路径', width: 100, sortable: true,dataIndex: 'path', menuDisabled:true}, 
+			{header: '创建时间', width: 150, sortable: true,dataIndex: 'created_at', menuDisabled:true},  
+			{header: '修改时间', width: 150, sortable: true,dataIndex: 'updated_at', menuDisabled:true},  
             //{header: ' ',width:40,dataIndex:'id', menuDisabled:true,renderer:this.formatDelBtn}         
         ],
 		bbar :pagingToolbar,
@@ -132,15 +134,16 @@ Ext.define("casco.view.testing.uploadPanel",{
         file_queue_error_handler : 'onFileError' 
     };  */
       me.tbar = [  
-            {text:'添加文件',iconCls:'btn-add',ref:'../addBtn',handler:function(){
+            {text:'添加文件',glyph: 0xf067,handler:function(){
 				var win = Ext.widget('testing.templateimport', {
 					project_id: me.project.get('id'),
 				});
 				win.show();
-	   }},'-',  
-           // {text:'删除文件',ref:'../uploadBtn',iconCls:'btn-up',handler:'startUpload',scope:me},'-',  
-           // {text:'停止上传',ref:'../stopBtn',iconCls:'btn-cancel',handler:'stopUpload',scope:this,disabled:true},'-',
-            {text:'删除所有',ref:'../deleteBtn',iconCls:'btn-clear',handler:'deleteAll',scope:me},'-'  
+	   }}
+//            ,'-',  
+//           // {text:'删除文件',ref:'../uploadBtn',iconCls:'btn-up',handler:'startUpload',scope:me},'-',  
+//           // {text:'停止上传',ref:'../stopBtn',iconCls:'btn-cancel',handler:'stopUpload',scope:this,disabled:true},'-',
+//            {text:'删除所有',ref:'../deleteBtn',iconCls:'btn-clear',handler:'deleteAll',scope:me},'-'  
         ],  
         me.layout ='fit',  
         me.items =[this.gp],

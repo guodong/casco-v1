@@ -90,7 +90,7 @@ Ext.define('casco.view.testing.Job', {
 			}
 		},{
 			text: 'Delete Testjob',
-			glyph: 0xf067,
+			glyph: 0xf068,
 			scope: this,
 			handler: function() {
 				Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){   //confirm
