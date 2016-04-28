@@ -2,10 +2,12 @@ Ext.define('casco.view.testing.TemplateEdit',{
 	extend : 'Ext.window.Window',
 	xtype : 'testing.templateedit',
 	require : ['casco.store.Testjobs','casco.view.testing.uploadPanel'],
+	layout : 'fit',
+//	resizable :true,
 	modal : true,
 	title : 'Template Edit',
 	frame : true,
-	width : 700,
+	width : 750,
 	controller: 'testing',
 	initComponent : function(){
 		var me=this;

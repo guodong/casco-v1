@@ -38,7 +38,7 @@ Ext.define('casco.view.testing.TemplateImport',{
 			name: 'details',
 			margin : '15 0 10 0',
 			xtype: 'textfield',
-			allowBlank: false
+			allowBlank: true
 		}, {
 			xtype : 'filefield',
 			name : 'exceltpl',

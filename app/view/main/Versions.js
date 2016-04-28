@@ -7,7 +7,7 @@ Ext.define('casco.view.manage.Versions', {
 	maximizable :true,
 	modal :true,
 	title :'Versions Management',
-	width :650,
+	width :750,
 	height:300,
 	initComponent : function() {
 		var me = this;
@@ -25,14 +25,14 @@ Ext.define('casco.view.manage.Versions', {
 		}
 		});
 		var columns =[{
-			text :'版本name',
+			text :'版本',
 			dataIndex :'name',
-			width :'200',
+			width :'150',
 			editor : {
 				xtype :'textfield'
 			}
 		}, {
-			text :'导入时的字段(显示的列)',
+			text :'导入字段(显示列)',
 			dataIndex :'headers',
 			width :'300',
 			editor : {
@@ -41,11 +41,12 @@ Ext.define('casco.view.manage.Versions', {
 		}, {
 			text :'所属文档',
 			dataIndex :'document',
+			width :'150',
 			renderer :function(v){
 				return v?v.name:'';
 			}
 		}, {
-			text :'上次导入结果',
+			text :'导入结果日志',
 			dataIndex :'result',
 			width :'200',
 			renderer: function(val,meta,rec) {
@@ -65,13 +66,13 @@ Ext.define('casco.view.manage.Versions', {
          }
 			
 		},{
-			text :'created_at',
+			text :'创建时间',
 			dataIndex :'created_at',
-			width :'200'
+			width :'250'
 		}, {
-			text :'updated_at',
+			text :'修改时间',
 			dataIndex :'updated_at',
-			width :'200'
+			width :'250'
 		}];
 		me.store = Ext.create('casco.store.Versions');
 		me.store.load({
@@ -106,7 +107,8 @@ Ext.define('casco.view.manage.Versions', {
 			 me.store.reload(); 
 			},
 			items : [ '-', {
-				text :'Save Changes',
+				text :'Save',
+				glyph : 0xf0c7,
 				handler : function(item,e) {
 					me.store.sync({
 					 callback: function(record, operation, success){
@@ -121,7 +123,8 @@ Ext.define('casco.view.manage.Versions', {
 					 });
 				}
 			}, {
-				text :'Reject Changes',
+				text :'Undo',
+				glyph: 0xf0e2,
 				handler : function() {
 					me.store.rejectChanges();
 				}
