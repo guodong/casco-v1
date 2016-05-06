@@ -176,26 +176,17 @@ border-color: #5ca941;
 							}
 						});
 						linkid = link.id;
-						if (link.getTargetElement() == link.getSourceElement())
-						{
-							link.remove();
-						}
-						if(link)graph.addCell(link);
+						graph.addCell(link);
 					});
 					paper.on('cell:pointermove', function(cellView, event) {
 						if(active)return false;
 						if (!(cellView.model instanceof joint.shapes.basic.Rect))
 							return;
 						var link = graph.getCell(linkid);
-						if(!link)return;
-						link.set('target', {
+						if(link)link.set('target', {
 							x: event.clientX-$('#myholder').offset().left,
 							y: event.clientY-$('#myholder').offset().top
-						});
-						if (link.getTargetElement() == link.getSourceElement())
-							{
-								link.remove();
-							}
+						})
 					});
 					paper.on('cell:pointerup', function(cellView, event) {
 						if(active)return false;
@@ -226,7 +217,6 @@ border-color: #5ca941;
 								link.remove();
 							}
 						}
-
 					});
 				}
 			});
@@ -242,7 +232,8 @@ border-color: #5ca941;
 				active = true;
 			});
 			$("#refresh").click(function() {
-				initnew();
+			self.location.reload();
+
 			});
 			$("#save").click(function() {
 				$.ajax({
