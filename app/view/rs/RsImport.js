@@ -7,7 +7,6 @@ Ext.define('casco.view.rs.RsImport', {
 	             // 'casco.view.document.version.Create'
 	             ],
 	// uses : [],
-
 	modal : true,
 	title : 'Document Import',
 	width : 500,
@@ -16,7 +15,7 @@ Ext.define('casco.view.rs.RsImport', {
 	viewModel : 'main',
 	initComponent : function() {
 		var me = this;
-		var headers=null;
+		var headers=null,regrex=null;
 		// 获取最近一次的列名吧
 		me.versions = new casco.store.Versions();
 		me.versions.load({
@@ -25,16 +24,17 @@ Ext.define('casco.view.rs.RsImport', {
 				newest:'newest'
 			},
 			callback:function(records, operation, success){
-            
 			// 必须要同步才能取值
-			// console.log(records[0].getData().responseText);
 			if(records[0].getData().responseText!=""){
+			//用loadRecord多好
 			headers=me.versions.getAt(0).get('headers');
-		// console.log(me.down('form').items.getAt(0));
+			regrex=me.versions.getAt(0).get('regrex');
+			//me.down('form').loadRecord(me.versions.getAt(0));
             me.down('form').items.getAt(1).setValue(headers);
+			me.down('form').items.getAt(2).setValue(regrex);
 			}else{
            
-		    if(me.type=="rs") me.down('form').items.getAt(1).setValue("description,implement,source,priority,contribute,category,allocation");
+		    if(me.type=="rs") {me.down('form').items.getAt(1).setValue("description,implement,source,priority,contribute,category,allocation");}
         else if(me.type="tc") me.down('form').items.getAt(1).setValue("test case description,safety,source,test method,pre_condition,test steps");
 			}
 		}// callback
@@ -89,6 +89,14 @@ Ext.define('casco.view.rs.RsImport', {
 				width:'100%',
 				editable:'true',
 				value:headers,
+				validator: function (val) {
+					//哥写的正则,666
+				     	var re=/(([\w]\\+\s?)+,?){1,}/g;
+				        var tn = val.match(re),
+				        errMsg = "输入格式不符合规范,请检查";
+				       // console.log(tn);
+				        return tn==val? true : errMsg;
+				},
 				listeners:{
 					render:function(field,p){
 						Ext.QuickTips.init();
@@ -101,9 +109,36 @@ Ext.define('casco.view.rs.RsImport', {
                         if (e.getKey() == e.ENTER){
                         }  
                     }  
-					
 				}// listenres
-				
+			}, {
+				xtype:'textfield',
+				fieldLabel:'TC regex',
+				name:'regrex',
+				labelWidth:60,
+				width:'100%',
+				hidden:me.type!='tc'?true:false,
+				editable:'true',
+				validator: function (obj) {
+					//作为一个json字符串形式来进行验证的
+				     	var re=/(([\w]+\s?)+,?){1,}/g;
+				        var tn = obj.match(re),
+				        errMsg = "输入格式不符合规范,请检查";
+				       // console.log(tn);
+				        return true;
+				},
+				listeners:{
+					render:function(field,p){
+						Ext.QuickTips.init();
+						Ext.QuickTips.register({
+							target:field.el,
+							text:''
+						});
+					},
+					specialkey: function(field,e){    
+                        if (e.getKey() == e.ENTER){
+                        }  
+                    }  
+				}// listenres
 			},{
 				xtype : 'filefield',
 				name : 'file',
