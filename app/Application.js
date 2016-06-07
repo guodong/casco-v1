@@ -6,7 +6,7 @@
 Ext.define('casco.Application', {
 	extend : 'Ext.app.Application',
 	name : 'casco',
-	requires: ['casco.view.auth.SelectProject','casco.model.Project','casco.view.matrix.Matrix'],
+	requires: ['casco.view.auth.SelectProject','casco.model.Project','casco.view.matrix.Matrix','casco.view.report.Report'],
 
 	stores : [
 	// TODO: add global / shared stores here
@@ -28,6 +28,10 @@ Ext.define('casco.Application', {
 		'matrix(/:id|\/?\s*)':{
 			before:null,
 			action: 'onMatrix',
+		},
+		'report(/:id|\/?\s*)':{
+			before:null,
+			action: 'onReport',
 		},
 	    'testing/:id': {
 	    	before: null,
@@ -114,6 +118,38 @@ Ext.define('casco.Application', {
 			scope:this,
     		success: function(project){
     			Ext.widget('matrix', {project: project});
+    		}
+    	});
+	},
+	onReport: function(id){
+		//var handle=Ext.create('casco.view.matrix.Matrix');
+		//hadle.show();
+		id=id?id.substring(1):null;
+		var me = this;
+		//静态方法会自增id
+		var model=Ext.create('casco.model.Project');
+		model.set('id',id);
+		//麻蛋依赖注入好有依赖性!牵一发动全身
+		model.load({
+			scope:this,
+    		success: function(project){
+    			Ext.widget('report', {project: project});
+    		}
+    	});
+	},
+	onProject: function(id){
+		//var handle=Ext.create('casco.view.matrix.Matrix');
+		//hadle.show();
+		id=id?id.substring(1):null;
+		var me = this;
+		//静态方法会自增id
+		var model=Ext.create('casco.model.Project');
+		model.set('id',id);
+		//麻蛋依赖注入好有依赖性!牵一发动全身
+		model.load({
+			scope:this,
+    		success: function(project){
+    			Ext.widget('project', {project: project});
     		}
     	});
 	},

@@ -35,6 +35,10 @@ Ext.define('casco.view.matrix.Top', {
             text: 'Testing',
             xtype: 'button',
             handler: 'testing'
+        },{
+            text: 'Report',
+            xtype: 'button',
+            handler: 'reporting'
         }/*,{
             text: 'Project',
             xtype: 'button',

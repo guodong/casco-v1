@@ -121,6 +121,10 @@ Ext.define('casco.view.matrix.MatrixController', {
 		}
 		tabs.setActiveTab(tab);
 	},
+	reporting:function(){
+        this.redirectTo('report/' +this.getView().project.get('id'), true);
+		location.reload();
+	},
 	project:function(){
 
         this.redirectTo('project/' +this.getView().project.get('id'), true);
