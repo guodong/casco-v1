@@ -20,22 +20,14 @@ Ext.define('casco.view.report.ReportController', {
 		Ext.MessageBox.wait('正在处理,请稍候...', 'Create Report');
 		var form = this.lookupReference('ver_create_form');
 		var meta = form.getValues();
-		/*rsvsd = Ext.getCmp('parent_doc').getStore();
-		var rsvss = [];
-		rsvsd.each(function(v){
-			var obj = {
-				parent_document_id: v.get('id'),
-				parent_version_id: v.get('version_id')
-			}
-			rsvss.push(obj);//放入的是一个对象啊
-		});
-		*/
+		//var test = Ext.getCmp('testing_item').getStore().getSelectionModel().getSelection()[0];
+		//meta.test_id=test.id;
+		meta.child_id=this.getView().child_doc.data.id?this.getView().child_doc.data.id:'';
 		meta.account=JSON.parse(localStorage.user).account;
-		//meta.parent_versions = rsvss;
-		var job = Ext.create('casco.model.Report', meta);
+		var job = Ext.create('casco.model.Center', meta);
 		job.save({
 			callback: function(record,operation){
-				console.log(record.data.success);
+				//console.log(operation._response.responseText,operation.data);
 				if(record.data.success){
 				var tabs=Ext.getCmp('reportpanel');
 				var childs=tabs.items;
@@ -48,7 +40,8 @@ Ext.define('casco.view.report.ReportController', {
 				Ext.Msg.alert('','创建成功!');
 				//Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
 				}else{
-				Ext.Msg.alert('创建失败!',JSON.stringify(record.data.data));
+				console.log(operation._response.responseText);
+				Ext.Msg.alert('创建失败!',JSON.stringify(operation._response.responseText));
 				}
 				Ext.getCmp('ver-create-window').destroy();
 			}//callback
