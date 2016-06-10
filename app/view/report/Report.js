@@ -14,7 +14,6 @@ Ext.define('casco.view.report.Report', {
         'casco.view.report.ReportController',
         'casco.view.report.ReportModel',
 		'casco.view.report.Tree',
-		//'casco.view.report.ItemTree',
 		'casco.view.report.Top'
     ],
     

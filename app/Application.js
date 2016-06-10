@@ -58,7 +58,6 @@ Ext.define('casco.Application', {
 	onSelect : function() {
     	Ext.widget('selectProject');
     },
-    
 	onBeforeProject: function(id, action) {
 		Ext.Ajax.request({
 			url: API + 'session',
@@ -74,7 +73,6 @@ Ext.define('casco.Application', {
 			}
 		});
     },
-    
 	onBeforeSelect: function(action) {
 		Ext.Ajax.request({
 			url: API + 'session',
@@ -91,8 +89,11 @@ Ext.define('casco.Application', {
 			}
 		});
     },
-    
 	onProject: function(id){
+		var me = this;
+		//静态方法会自增id
+		var model=Ext.create('casco.model.Project');
+		model.set('id',id);
 		var me = this;
 		casco.model.Project.load(id, {
     		success: function(project){
@@ -134,22 +135,6 @@ Ext.define('casco.Application', {
 			scope:this,
     		success: function(project){
     			Ext.widget('report', {project: project});
-    		}
-    	});
-	},
-	onProject: function(id){
-		//var handle=Ext.create('casco.view.matrix.Matrix');
-		//hadle.show();
-		id=id?id.substring(1):null;
-		var me = this;
-		//静态方法会自增id
-		var model=Ext.create('casco.model.Project');
-		model.set('id',id);
-		//麻蛋依赖注入好有依赖性!牵一发动全身
-		model.load({
-			scope:this,
-    		success: function(project){
-    			Ext.widget('project', {project: project});
     		}
     	});
 	},

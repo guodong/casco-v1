@@ -10,7 +10,7 @@ Ext.define('casco.view.report.CenterCreate', {
 		type: 'border'
 	},
 	height: 400,
-	width: 700,
+	 width: 900,
 	initComponent: function() {
 		var me = this;
 		var p_id=me.p_id?me.p_id:'';
@@ -18,13 +18,13 @@ Ext.define('casco.view.report.CenterCreate', {
 		test_job.load({
 			params: {
 				project_id: me.project.get('id'),
-				report:1
+				child_id:me.child_doc.data.id?me.child_doc.data.id:''
 			}
 		});
 		var rsdocs = Ext.create('casco.store.Documents');
 		me.items = [{
 			xtype: 'form',
-			//region: 'west',
+			region: 'west',
 			split: true,
 			reference: 'ver_create_form',
 			bodyPadding: '10',
@@ -39,33 +39,9 @@ Ext.define('casco.view.report.CenterCreate', {
 				name: 'version',
 				xtype: 'textfield'
 			},
-			/*{
-				xtype:'textfield',
-				fieldLabel:'Child Document',
-				name:'child_name',
-				value:me.child_doc.data.name,
-				editable:false,
-				listeners:{
-					afterrender:function(c,t){
-						Ext.getCmp('child-version').store.load({
-							params: {
-								document_id: me.child_doc.data.id
-							}
-						});
-						var grid = Ext.getCmp('parent_doc');
-						me.job.rs_versions = grid.getStore();
-						grid.store.load({
-							params: {
-								document_id: me.child_doc.data.id,
-								mode: 'related'
-							}
-						});
-					}
-				}
-			},*/
 			{
 				fieldLabel: 'Testing name',
-				name: '',
+				name: 'test_id',
 				store: test_job,
 				id: 'child-version',
 				xtype: 'combobox',
@@ -74,7 +50,24 @@ Ext.define('casco.view.report.CenterCreate', {
 				queryMode: 'local',
 				displayField: 'name',
 				valueField: 'id',
-			},{
+				listeners: {
+					select: function(f, r, i) {
+						/*var st = Ext.create('casco.store.Versions');
+						st.load({
+							params: {
+								document_id: r.get('id')
+							},
+							callback: function(){
+							
+							}
+						});
+						*/
+						Ext.getCmp('testing_item').store.load({'id':r.get('id')}
+						);
+					}
+				}
+			},
+			{
 			fieldLabel: 'description',
 			labelAlign:'top',
 			name: 'description',
@@ -84,10 +77,10 @@ Ext.define('casco.view.report.CenterCreate', {
 		}]
 		},{
 			xtype: 'grid',
-			id: 'parent_doc',
+			id: 'testing_item',
 			region: 'center',
 			forceFit:'true',
-			store: Ext.create('casco.store.Documents'),
+			store: Ext.create('casco.store.Testjobs'),
 			plugins: {
 		        ptype: 'cellediting',
 		        clicksToEdit: 1,
@@ -99,36 +92,52 @@ Ext.define('casco.view.report.CenterCreate', {
 		            }
 		        }
 		    },
-		    columns: [{
-				text: 'Parent doc',
-				dataIndex: 'name',
-				width:200
-			}, {
-				text: 'Parent Version',
-				dataIndex: 'version_id',
-				width:200,
-				renderer: function(v, md, record){
-					var versions = record.get('versions');
-					if(versions.length == 0) return;
-					if(!v){
-						record.set('version_id', versions[0].id);
-						return versions[0].name;
-					}
-					for(var i in versions){
-						if(v == versions[i].id){
-							return versions[i].name;
-						}
-					}
-				},
-				editor: {
-			        xtype: 'combobox',
-			        queryMode: 'local',
-					displayField: 'name',
-					valueField: 'id',
-					editable: false
-			    }
+		    columns:  [{
+			text : 'name',
+			dataIndex : 'name'
+		}, {
+			text : 'build',
+			dataIndex : 'build',
+			renderer : function(v) {
+				return v?v.name:'';
 			}
-			]//column
+		}, {
+			text : 'tc',
+			dataIndex : 'tc_version',
+			renderer : function(v) {
+				return v?v.document.name:'';
+			},
+			width: 200
+		}, {
+			text : 'tc version',
+			dataIndex : 'tc_version',
+			renderer : function(v) {
+				return v?v.name:'';
+			},
+			width: 200
+		}, {
+			text: 'rs:version',
+			dataIndex: 'rs_versions',
+			flex: 1,
+			renderer: function(v){
+				var arr = [];
+				for(var i in v){
+					var str = v[i].document.name + ":" + v[i].name;
+					arr.push(str);
+				}
+				return arr.join('; ');//处理过后渲染出来
+			},
+			width: 300
+		}, {
+			text: 'status',
+			dataIndex: 'status',
+			renderer: function(v){
+				return v==0?'<span style="color:red">testing</span>':'<span style="color: green">submited</span>';
+			}
+		}, {
+			text: 'created at',
+			dataIndex: 'created_at'
+		}]//columns
 		}//me.items[1]
 		];
 		me.dockedItems = [{
@@ -141,7 +150,7 @@ Ext.define('casco.view.report.CenterCreate', {
 				text: 'Create Report',
 				glyph: 0xf0c7,
 				listeners: {
-					click: 'createCenter'
+					click: 'createReport'
 				}
 			}, {
 				text: 'Cancel',

@@ -5,7 +5,8 @@ Ext.define('casco.view.report.Center', {
     requires:[
 		//'casco.store.Center','casco.model.Center',
 		'casco.view.report.CenterCreate',
-		'casco.view.report.ReportController'],
+		'casco.view.report.ReportController',
+		'casco.view.report.Verify'],
 
     listeners: {
         itemdblclick: function(view, record, item, index, e, eOpts){
@@ -29,12 +30,12 @@ Ext.define('casco.view.report.Center', {
 			{"abbr":"ALL","name":"All"},
 			{"abbr":"AL", "name":"Parentreport"},
 			{"abbr":"AK", "name":"Childreport"},
-			{"abbr":"AZ", "name":"Summary"}			
+			{"abbr":"AZ", "name":"ReportVerify"}			
 		]
 		});
 		me.columns = [{
 			text : 'version',
-			dataIndex : 'name',
+			dataIndex : 'version',
 			width: 80
 		}, {
 			text : 'author',
@@ -74,69 +75,6 @@ Ext.define('casco.view.report.Center', {
             }, 50);
             return Ext.String.format('<div style="color:0xf0ce" id="{0}" ></div>', id);
 			}//renderer
-		}, {
-			text: 'status',
-			dataIndex: 'status',
-			width: 60,
-			renderer:function(val,meta,rec){
-			var id=Ext.id();
-			if(val==1){
-		    Ext.defer(function(){
-			  Ext.widget('button', {
-			      renderTo:id,
-			      text:'提交',
-				  glyph: 0xf040,
-                  scale: 'small',
-                  listeners: {
-                  click:function(self, e, eOpts){
-				  rec.set('status',0);
-				  //console.log(rec.data);
-				  rec.save({
-					//params:{status:rec.data.status},
-					success: function(){
-						var tabs = Ext.getCmp('reportpanel');
-						tabs.updateLayout();
-						Ext.Msg.alert('','提交成功!');
-						//还应该做一件事情就是刷新tabs
-					},
-					failure: function(){
-						Ext.Msg.alert('','提交失败，请检查配置');
-					}});
-				 // me.store.setData(rec.data);
-				  }
-				  }
-		      });
-		   },70);	   
-          return Ext.String.format('<div id="{0}"></div>',id);
-          }else{
-             Ext.defer(function(){
-			  Ext.widget('button', {
-			      renderTo:id,
-			      text:'撤销',
-				  glyph: 0xf040,
-                  scale: 'small',
-                  listeners: {
-                  click:function(self, e, eOpts){
-				  rec.set('status',1);
-				  rec.save({
-					success: function(){
-						var tabs = Ext.getCmp('reportpanel');
-						tabs.updateLayout();
-						Ext.Msg.alert('','撤销成功!');
-						
-					},
-					failure: function(){
-						Ext.Msg.alert('','撤销失败，请检查配置');
-					}});
-				  }
-				  }
-		      });
-		   },70);
-		   
-          return Ext.String.format('<div id="{0}"></div>',id);
-          }
-          }
-		 
 		}];
 
 
@@ -151,7 +89,7 @@ Ext.define('casco.view.report.Center', {
     	  if(rec.get('parent_versions').length<=0){return;}
 			Ext.Array.each(rec.get('parent_versions'), function(v) {
 			var tmp={'xtype':'parentreport','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':'parentreport'+v_id+v.id,
-		    'Center':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
+		    'Center':rec,'closable':true};
 			tmp['parent_v_id']=v.id;
 			json.push(tmp);
 			});  
@@ -161,10 +99,9 @@ Ext.define('casco.view.report.Center', {
         		'Center':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
 		  
 		  break;
-	  case  'Summary':
-		  json={'xtype':'summary','title':'summary','id':'summary'+v_id,
-		       'Center':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
-				  
+	  case  'ReportVerify':
+		  json={'xtype':'verify','title':'verify','id':'verify'+v_id,
+		       'report':rec,'closable':true};
 		  break;
 	  case  'All':
 		  	Ext.Array.each(rec.get('parent_versions'), function(v) {
@@ -175,8 +112,8 @@ Ext.define('casco.view.report.Center', {
 			}); 
 		  	json.push({'xtype':'childreport','title':rec.get('child_version').document.name+'_Tra','id':'childreport'+v_id,
 		        	'Center':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null});
-			json.push({'xtype':'summary','title':'summary','id':'summary'+v_id,
-	        	'Center':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null}); 
+			json.push({'xtype':'verify','title':'verify','id':'verify'+v_id,
+		       'Center':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null});
 		  break;
 	   default:
 	  }
