@@ -40,7 +40,6 @@ Ext.define('casco.view.report.ReportController', {
 				Ext.Msg.alert('','创建成功!');
 				//Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
 				}else{
-				console.log(operation._response.responseText);
 				Ext.Msg.alert('创建失败!',JSON.stringify(operation._response.responseText));
 				}
 				Ext.getCmp('ver-create-window').destroy();

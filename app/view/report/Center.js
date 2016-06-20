@@ -21,15 +21,15 @@ Ext.define('casco.view.report.Center', {
     	me.store.load({
     		params: {
     			project_id: me.project.get('id'),
-				child_id:me.child_doc.data.id?me.child_doc.data.id:''
+//				child_id:me.child_doc.data.id?me.child_doc.data.id:''
     		}
     	});
 		var states = Ext.create('Ext.data.Store', {
 		fields: ['abbr', 'name'],
 		data : [
 			{"abbr":"ALL","name":"All"},
-			{"abbr":"AL", "name":"Parentreport"},
-			{"abbr":"AK", "name":"Childreport"},
+			{"abbr":"AL", "name":"RquireCoverStatus"},
+			{"abbr":"AK", "name":"TestCaseResults"},
 			{"abbr":"AZ", "name":"ReportVerify"}			
 		]
 		});
@@ -49,13 +49,12 @@ Ext.define('casco.view.report.Center', {
 			text: 'created at',
 			dataIndex: 'created_at',
 			width: 110
-			 
 		},{
 			text:'view',
 			dataIndex:'id',
 			width:140,
 			renderer:function(val_id,metaData,rec){
-			 var id = Ext.id();	 
+			 var id = Ext.id();
              Ext.defer(function() {
                	Ext.create('Ext.form.ComboBox', {
 				store: states,
