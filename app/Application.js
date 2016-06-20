@@ -25,7 +25,7 @@ Ext.define('casco.Application', {
 	    	before: null,
 	    	action: 'onManage'
 	    },
-		'matrix(/:id|\/?\s*)':{
+		'matrix/:id':{
 			before:null,
 			action: 'onMatrix',
 		},
@@ -109,7 +109,7 @@ Ext.define('casco.Application', {
 	onMatrix: function(id){
 		//var handle=Ext.create('casco.view.matrix.Matrix');
 		//hadle.show();
-		id=id?id.substring(1):null;
+		id=id?id:null;
 		var me = this;
 		//静态方法会自增id
 		var model=Ext.create('casco.model.Project');
