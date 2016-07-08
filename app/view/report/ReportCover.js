@@ -6,7 +6,6 @@ Ext.define('casco.view.report.ReportCover', {
 	           
 	initComponent: function() {
 		var me = this;
-//        me.selModel=me.selModel?me.selModel:'';	
 		me.rcover = new casco.store.ReportCover();
 		me.rcover.load({
 			params:{
@@ -37,6 +36,7 @@ Ext.define('casco.view.report.ReportCover', {
 			}, me);
 		    }// callback
 		});  
+		console.log(report_id);
 		 
 		  me.tbar = [{
 			  text: 'Export',

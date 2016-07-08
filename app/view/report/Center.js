@@ -8,12 +8,14 @@ Ext.define('casco.view.report.Center', {
 		'casco.view.report.ReportController',
 		'casco.view.report.Verify'],
 
-    listeners: {
-        itemdblclick: function(view, record, item, index, e, eOpts){
-    	}
-    },
+//    listeners: {
+//        itemdblclick: function(view, record, item, index, e, eOpts){
+//    	}
+//    },
+		
     bodyPadding: 0,
 	forceFit:true,
+	
     initComponent: function(){
     	var me = this;
     	var p_id=me.id;
@@ -21,18 +23,20 @@ Ext.define('casco.view.report.Center', {
     	me.store.load({
     		params: {
     			project_id: me.project.get('id'),
-//				child_id:me.child_doc.data.id?me.child_doc.data.id:''
+				child_id:me.child_doc.data.id?me.child_doc.data.id:''
     		}
     	});
+    	
 		var states = Ext.create('Ext.data.Store', {
 		fields: ['abbr', 'name'],
 		data : [
 			{"abbr":"ALL","name":"All"},
-			{"abbr":"AL", "name":"RquireCoverStatus"},
-			{"abbr":"AK", "name":"TestCaseResults"},
+			{"abbr":"AL", "name":"ReportCover"},
+			{"abbr":"AK", "name":"ReportResults"},
 			{"abbr":"AZ", "name":"ReportVerify"}			
 		]
 		});
+		
 		me.columns = [{
 			text : 'version',
 			dataIndex : 'version',
@@ -61,37 +65,30 @@ Ext.define('casco.view.report.Center', {
 				queryMode: 'local',
 				displayField: 'name',
 				valueField: 'abbr',
-                glyph: 0xf0ce,
-				val_id:val_id,//依赖注入,组件扩展性很好哇
+				val_id:val_id,//依赖注入,组件扩展性很好哇 report id
 			    emptyText: 'Switch View',
 				listeners: {
             	select: function(combo,irecord){
 				   me.switchView(combo,irecord,rec);
-				}
-				},
-				renderTo:id
-				});   
+					}
+               	},
+				renderTo:id  //Ext.id
+				}); 
             }, 50);
-            return Ext.String.format('<div style="color:0xf0ce" id="{0}" ></div>', id);
+            return Ext.String.format('<div style="color:0xf0ce" id="{0}" ></div>', id);  //嵌入combobox
 			}//renderer
 		}];
 
 
-	me.switchView=function(combo,irecord,rec){
-     
+	me.switchView=function(combo,irecord,rec){   //rec:report info
 	  //有rec
       combo.setValue(combo.emptyText);
-	  var v_id=combo.val_id;
+	  var v_id=combo.val_id;  //report id
 	  var json=[];
       switch(irecord.get('name')){
-      case 'Parentreport':
-    	  if(rec.get('parent_versions').length<=0){return;}
-			Ext.Array.each(rec.get('parent_versions'), function(v) {
-			var tmp={'xtype':'parentreport','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':'parentreport'+v_id+v.id,
-		    'Center':rec,'closable':true};
-			tmp['parent_v_id']=v.id;
-			json.push(tmp);
-			});  
+      case 'ReportCover':
+    	  json={'xtype':'reportcover','title':'需求覆盖状态','id':'cover'+v_id,
+    		  'report':rec,'closable':true}; 
 		  break;
 	  case 'Childreport':
           json={'xtype':'childreport','title':rec.get('child_version').document.name+'_Tra','id':'childreport'+v_id,
@@ -133,7 +130,6 @@ Ext.define('casco.view.report.Center', {
        create_tab(json);
 	},
 
-
 		me.tbar = [{
 			text: 'Create Report',
 			glyph: 0xf067,
@@ -146,6 +142,8 @@ Ext.define('casco.view.report.Center', {
 					child_doc:me.child_doc,
 					p_id:p_id?p_id:''
 				});
+//				console.log(child_doc);
+				console.log(job);
 				win.down('form').loadRecord(job);
 				win.show();
 			}

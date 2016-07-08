@@ -1,3 +1,4 @@
+//主界面Head-样式，按钮，Controller-main.MainController
 Ext.define('casco.view.main.Top', {
     extend: 'Ext.toolbar.Toolbar',
     xtype: 'top',
@@ -22,7 +23,7 @@ Ext.define('casco.view.main.Top', {
     	this.items = [{
             xtype: 'label',
             html: 'CASCO TEST CENTER',
-            style: 'font-size: 27px;'
+            style: {'font-size':'27px','font-weight':'bold'}
         },'->',{
             text: 'Manage',
             xtype: 'button',
@@ -37,6 +38,10 @@ Ext.define('casco.view.main.Top', {
             xtype: 'button',
             handler: 'matrix'
         },{
+            text: 'Report',
+            xtype: 'button',
+            handler: 'report'
+        },{
             text: 'Project Stat',
             xtype: 'button',
             handler: function(){
@@ -50,7 +55,7 @@ Ext.define('casco.view.main.Top', {
             valueField: 'id',
             store: store,
             queryMode: 'local',
-			itemId:'switcher',	//ManagerController
+			itemId:'switcher',	//ManageController使用
             emptyText: 'Switch Project',
             listeners: {
             	select: 'switchProject'
@@ -61,7 +66,7 @@ Ext.define('casco.view.main.Top', {
             displayField: 'abbr',
             valueField: 'name',
             store: states,
-			      width: '10%',
+			width: '10%',
             queryMode: 'local',
             emptyText: JSON.parse(localStorage.user).realname,
             listeners: {

@@ -11,9 +11,10 @@ Ext.define('casco.view.report.CenterCreate', {
 	},
 	height: 400,
 	 width: 900,
+	 
 	initComponent: function() {
 		var me = this;
-		var p_id=me.p_id?me.p_id:'';
+		var p_id=me.p_id?me.p_id:'';  //center id
 		var test_job = Ext.create('casco.store.Testjobs');
 		test_job.load({
 			params: {

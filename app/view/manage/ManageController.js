@@ -47,7 +47,7 @@ Ext.define('casco.view.manage.ManageController', {
 		var self = this;
 		var form = this.lookupReference('build_create_form');//获取对应的form表单
 		var build = view.build?view.build:Ext.create('casco.model.Build');
-		build.set(form.getValues());
+		build.set(form.getValues());huchangquw
 		build.save({
 			callback: function(){
 				Ext.Msg.alert('Message', 'Build manage successfully.', function(){

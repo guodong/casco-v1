@@ -1,3 +1,4 @@
+//相关动作具体实现，如btn点击，combobox切换  具体可见Top.js 
 /**
 * This class is the controller for the main view for the application. It is
 * specified as the "controller" of the Main view class.
@@ -8,21 +9,25 @@
 Ext.define('casco.view.main.MainController', {
 	extend : 'Ext.app.ViewController',
 	alias : 'controller.main',
+	
     initComponent: function(){
 	 var self = this;
 	 this.callParent();
 	},
+	
+	//@Top.js
 	switchProject : function(combo, record) {
 		this.redirectTo('project/' + record.get('id'), true);
-		location.reload();
+		location.reload();  //否则组件重复注册 可考虑局部刷新？？ Viewport创建一次，必须Refresh
 	},
+	
 	onCtxMenu:function(){},
+	
+	//@Top.js
 	editUser:function(combo,record){
-
-
 		if(record.get('name')=='1'){
 			combo.setValue(combo.emptyText);
-			var  model= Ext.create('casco.model.User');
+			var model= Ext.create('casco.model.User');
 			model.setId(JSON.parse(localStorage.user).id);
 			casco.model.User.load(JSON.parse(localStorage.user).id,{
 				callback:function(record, operation,ops){
