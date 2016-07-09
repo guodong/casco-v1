@@ -31,7 +31,7 @@ Ext.define('casco.view.matrix.MatrixController', {
 		});
 		meta.account=JSON.parse(localStorage.user).account;
 		meta.parent_versions = rsvss;
-		var job = Ext.create('casco.model.Verification', meta);
+		var job = Ext.create('casco.model.Verification',meta);
 		job.save({
 			callback: function(record,operation){
 				console.log(record.data.success);

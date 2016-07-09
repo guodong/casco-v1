@@ -16,7 +16,7 @@ Ext.define('casco.view.testing.BuildCreate', {
 	    	items: [{
 	            fieldLabel: 'Version',
 	            msgTarget: 'under',
-	            name: 'version',
+	            name: 'name',
 	            xtype: 'textfield'
 	        },{
 	            name: 'project_id',

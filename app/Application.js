@@ -22,19 +22,19 @@ Ext.define('casco.Application', {
 	    	action: 'onSelect'
 	    },
 	    'manage': {
-	    	before: null,
+	    	//before: 'onBeforeManage',
 	    	action: 'onManage'
 	    },
-		'matrix/:id':{
-			before:null,
+		'matrix/:id': {
+			//before: 'onBeforeMatrix',
 			action: 'onMatrix',
 		},
-		'report(/:id|\/?\s*)':{
-			before:null,
+		'report/:id': {
+			//before: //'onBeforeReport',
 			action: 'onReport',
 		},
 	    'testing/:id': {
-	    	before: null,
+	    	//before: 'onBeforeTesting',
 	    	action: 'onTest'
 	    }
 	},
@@ -73,6 +73,52 @@ Ext.define('casco.Application', {
 			}
 		});
     },
+	/*onBeforeTesting: function(id, action) {
+		Ext.Ajax.request({
+			url: API + 'session',
+			withCredentials: true,
+			success: function(response){
+				var d = Ext.decode(response.responseText);
+				if(d.code != 0){
+					action.stop(true);
+					Ext.widget('login');
+				}else{
+					action.resume();
+				}
+			}
+		});
+    },
+	onBeforeReport: function(id, action) {
+		Ext.Ajax.request({
+			url: API + 'session',
+			withCredentials: true,
+			success: function(response){
+				var d = Ext.decode(response.responseText);
+				if(d.code != 0){
+					action.stop(true);
+					Ext.widget('login');
+				}else{
+					action.resume();
+				}
+			}
+		});
+    },
+	onBeforeMatrix: function(id, action) {
+		Ext.Ajax.request({
+			url: API + 'session',
+			withCredentials: true,
+			success: function(response){
+				var d = Ext.decode(response.responseText);
+				if(d.code != 0){
+					action.stop(true);
+					Ext.widget('login');
+				}else{
+					action.resume();
+				}
+			}
+		});
+    },
+	*/
 	onBeforeSelect: function(action) {
 		Ext.Ajax.request({
 			url: API + 'session',
@@ -125,7 +171,7 @@ Ext.define('casco.Application', {
 	onReport: function(id){
 		//var handle=Ext.create('casco.view.matrix.Matrix');
 		//hadle.show();
-		id=id?id.substring(1):null;
+		id=id?id:null;
 		var me = this;
 		//静态方法会自增id
 		var model=Ext.create('casco.model.Project');

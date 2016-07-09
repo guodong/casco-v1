@@ -65,7 +65,7 @@ Ext.define('casco.view.manage.Buildlist', {
 		text: "Version",
 		width:200,
 		anchor: '50%',
-		dataIndex: "version",
+		dataIndex: "name",
 		 
 	}, {
 		text: "created time",

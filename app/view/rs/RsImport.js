@@ -91,11 +91,11 @@ Ext.define('casco.view.rs.RsImport', {
 				value:headers,
 				validator: function (val) {
 					//哥写的正则,666
-				     	var re=/(([\w]\\+\s?)+,?){1,}/g;
+				     	var re=/(([\w]\\+\s?)+){1,}/g;
 				        var tn = val.match(re),
 				        errMsg = "输入格式不符合规范,请检查";
 				       // console.log(tn);
-				        return tn==val? true : errMsg;
+				        return true;
 				},
 				listeners:{
 					render:function(field,p){

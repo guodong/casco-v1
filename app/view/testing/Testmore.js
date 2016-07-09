@@ -1,6 +1,5 @@
 Ext.define('casco.view.testing.Testmore', {
 	extend: 'Ext.window.Window',
-
 	alias: 'widget.testmore',
 	requires: [],
 	modal: true,

@@ -167,7 +167,6 @@ Ext.define('casco.view.tc.Tc', {
                 
 			    var tag='';
 				me.store.each(function(record){
-			  
 				if(record.get('tag')>tag)	 
                 tag=record.get('tag');
 				},this);
@@ -180,7 +179,6 @@ Ext.define('casco.view.tc.Tc', {
 				}else{
 				tag=null;
 				}
-
                 var win = Ext.create('widget.tcadd',{listeners:{scope: this}, columns:me.columns,version_id: me.curr_version.get('id'),tag_id:tag,project:me.project, document_id:me.document.id});
                 win.show();
             }

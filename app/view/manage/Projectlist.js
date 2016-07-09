@@ -16,6 +16,21 @@ Ext.define('casco.view.manage.Projectlist', {
 				var win = Ext.create('casco.view.manage.Projectadd', {store: store});
 				win.show();
 			}
+		},{
+			hidden: localStorage.role == 'staff' ? true: false,
+			text: 'Delete Project',
+			glyph: 0xf067,
+			handler: function() {
+				Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){   //confirm
+					if(choice == 'yes'){
+						var view=me.getView();
+						var selection =view.getSelectionModel().getSelection()[0];
+						if (selection) {
+							me.store.remove(selection);
+							selection.erase();
+						}
+				}}, this);
+			}
 		}];
 		me.callParent();
 	},
