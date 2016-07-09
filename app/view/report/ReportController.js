@@ -39,6 +39,7 @@ Ext.define('casco.view.report.ReportController', {
 				Ext.Msg.alert('','创建成功!');
 				}else{
 				Ext.Msg.alert('创建失败!',JSON.stringify(operation.error.statusText));
+
 				}
 				Ext.getCmp('ver-create-window').destroy();
 			}//callback
@@ -117,12 +118,8 @@ Ext.define('casco.view.report.ReportController', {
 		location.reload();
 	},
 	project:function(){
-
         this.redirectTo('project/' +this.getView().project.get('id'), true);
 		location.reload();
-
-
-
 	}
 
 });
