@@ -21,7 +21,7 @@ Ext.define('casco.view.report.Center', {
     	me.store.load({
     		params: {
     			project_id: me.project.get('id'),
-//				child_id:me.child_doc.data.id?me.child_doc.data.id:''
+				doc_id:me.child_doc.data.id?me.child_doc.data.id:''
     		}
     	});
 		var states = Ext.create('Ext.data.Store', {
@@ -84,16 +84,11 @@ Ext.define('casco.view.report.Center', {
 	  var v_id=combo.val_id;
 	  var json=[];
       switch(irecord.get('name')){
-      case 'Parentreport':
-    	  if(rec.get('parent_versions').length<=0){return;}
-			Ext.Array.each(rec.get('parent_versions'), function(v) {
-			var tmp={'xtype':'parentreport','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':'parentreport'+v_id+v.id,
-		    'Center':rec,'closable':true};
-			tmp['parent_v_id']=v.id;
-			json.push(tmp);
-			});  
+      case 'RquireCoverStatus':
+    	  json={'xtype':'reportcover','title':'reportcover','id':'reportcover_'+v_id,
+        		'report':rec,'closable':true};
 		  break;
-	  case 'TestingResult':
+	  case 'TestCaseResults':
           json={'xtype':'result','title':'testingresult','id':'testing_'+v_id,
         		'report':rec,'closable':true};
 		  break;

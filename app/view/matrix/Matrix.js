@@ -66,7 +66,7 @@ Ext.define('casco.view.matrix.Matrix', {
 			reference: 'rightpanel',
             items:[{
                 title: 'Overview',
-                html: '<iframe id="draw" src="/draw/noedit.html?'+Ext.Object.getKey(me.project,'id')+'" style="width:100%;height:100%;border:0"></iframe>'
+                html: '<iframe id="draw" src="/draw/noedit.html?'+me.project.get('id')+'" style="width:100%;height:100%;border:0"></iframe>'
             }]
         }];
     	this.callParent();
