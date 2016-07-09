@@ -92,6 +92,11 @@ Ext.define('casco.view.main.MainController', {
 	matrix:function(){
         this.redirectTo('matrix/'+this.getView().project.get('id'), true);
 		location.reload();
+	},
+	report:function(){
+        this.redirectTo('report/'+this.getView().project.get('id'), true);
+		location.reload();
 	}
+
 
 });

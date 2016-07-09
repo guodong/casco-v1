@@ -20,14 +20,13 @@ Ext.define('casco.view.report.ReportController', {
 		Ext.MessageBox.wait('正在处理,请稍候...', 'Create Report');
 		var form = this.lookupReference('ver_create_form');
 		var meta = form.getValues();
-		//var test = Ext.getCmp('testing_item').getStore().getSelectionModel().getSelection()[0];
-		//meta.test_id=test.id;
 		meta.child_id=this.getView().child_doc.data.id?this.getView().child_doc.data.id:'';
 		meta.account=JSON.parse(localStorage.user).account;
-		var job = Ext.create('casco.model.Center', meta);
+		//console.log(meta);
+		var job = Ext.create('casco.model.Center',(meta));
 		job.save({
 			callback: function(record,operation){
-				//console.log(operation._response.responseText,operation.data);
+			
 				if(record.data.success){
 				var tabs=Ext.getCmp('reportpanel');
 				var childs=tabs.items;
@@ -38,9 +37,9 @@ Ext.define('casco.view.report.ReportController', {
                    record.store.reload();
 				});
 				Ext.Msg.alert('','创建成功!');
-				//Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
 				}else{
-				Ext.Msg.alert('创建失败!',JSON.stringify(operation._response.responseText));
+				Ext.Msg.alert('创建失败!',JSON.stringify(operation.error.statusText));
+
 				}
 				Ext.getCmp('ver-create-window').destroy();
 			}//callback
@@ -119,12 +118,8 @@ Ext.define('casco.view.report.ReportController', {
 		location.reload();
 	},
 	project:function(){
-
         this.redirectTo('project/' +this.getView().project.get('id'), true);
 		location.reload();
-
-
-
 	}
 
 });

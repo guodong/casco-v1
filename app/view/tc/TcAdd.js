@@ -141,7 +141,6 @@ Ext.Array.each(me.items[0].items,function(name, index, countriesItSelf){
 
 
 Ext.Array.each(me.columns,function(name, index, countriesItSelf){
-
 	if(name.dataIndex=='source'||name.dataIndex=="sources") return;
 	if(!Ext.Array.contains(array,name.dataIndex)){
 

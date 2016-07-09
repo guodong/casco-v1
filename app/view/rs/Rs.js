@@ -122,7 +122,6 @@ Ext.define('casco.view.rs.Rs', {
 					  data: me.json.data,
 					  fields:me.json.fieldsNames
 					 });
-					 
 					 me.columns=me.json.columModle;
 				//	 console.log(me.columns);
 					 me.store.setData(me.ds.getData());
@@ -222,8 +221,65 @@ Ext.define('casco.view.rs.Rs', {
 			name:'searchStatusBar'
 		});
          
-		
+		var onDelete=function(){
+			var grid=me;
+			Ext.MessageBox.confirm('Confirm delete','Are you sure?',function(btn){
+			if(btn=='yes'){
+				 var view=me.getView();
+                 me.reconfigure(me.store,me.columns);
+						var selection =view.getSelectionModel().getSelection()[0];
+						var tc = Ext.create('casco.model.Rs',{id:selection.get('id')});
+				        tc.erase();
+						if (selection) {
+							me.store.remove(selection);
+							selection.erase();
+						}
+	            me.getView().refresh();
+			}
+			});
+			};
+		var onInsertRecord=function(){
+		   var tag='';
+				me.store.each(function(record){
+				if(record.get('tag')>tag)	 
+                tag=record.get('tag');
+				},this);
+			   var re=/^\[(.*)?\]$/g; 
+               if(re.test(tag)){
+				var suffix=tag.toString().match(/[^\d]+/g);
+			    num=parseInt(tag.toString().match(/\d+/g))+1;
+				tag=suffix[0]+num+suffix[1];
+				}else{
+				tag=null;
+				}
+                var win = Ext.create('widget.tcadd',{listeners:{scope: this}, columns:me.columns,version_id: me.curr_version.get('id'),tag_id:tag,project:me.project, document_id:me.document.id});
+                win.show();
+		};
+
+
 		me.listeners = {
+			itemcontextmenu :function(view,record,item,index,e){
+			e.stopEvent();
+			var grid=me;
+			if(!grid.rowCtxMenu){
+			grid.rowCtxMenu=Ext.create('Ext.menu.Menu',{	
+			items:[{
+				text:'Insert Record',
+				handler:onInsertRecord
+			},
+			{
+				text:'Delete Record',
+				handler:onDelete
+			}]});
+			}//if
+			grid.selModel.select(record);
+			grid.rowCtxMenu.showAt(e.getXY());
+		    },
+			destroy : function(thisGrid) {
+				if (thisGrid.rowCtxMenu) {
+					thisGrid.rowCtxMenu.destroy();
+				}
+			},
 			celldblclick: function(a,b,c,record){
 				localStorage.tag = record.get('tag');
 				if(c==0){

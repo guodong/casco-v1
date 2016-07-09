@@ -90,10 +90,9 @@ Ext.define('casco.view.report.Center', {
     	  json={'xtype':'reportcover','title':'需求覆盖状态','id':'cover'+v_id,
     		  'report':rec,'closable':true}; 
 		  break;
-	  case 'Childreport':
-          json={'xtype':'childreport','title':rec.get('child_version').document.name+'_Tra','id':'childreport'+v_id,
-        		'Center':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
-		  
+	  case 'TestingResult':
+          json={'xtype':'result','title':'testingresult','id':'testing_'+v_id,
+        		'report':rec,'closable':true};
 		  break;
 	  case  'ReportVerify':
 		  json={'xtype':'verify','title':'verify','id':'verify'+v_id,
@@ -106,10 +105,10 @@ Ext.define('casco.view.report.Center', {
 			tmp['parent_v_id']=v.id;
 			json.push(tmp);
 			}); 
-		  	json.push({'xtype':'childreport','title':rec.get('child_version').document.name+'_Tra','id':'childreport'+v_id,
-		        	'Center':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null});
+		  	json.push({'xtype':'result','title':'testingresult','id':'testing_'+v_id,
+        		'report':rec,'closable':true});
 			json.push({'xtype':'verify','title':'verify','id':'verify'+v_id,
-		       'Center':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null});
+		       'report':rec,'closable':true});
 		  break;
 	   default:
 	  }
@@ -176,13 +175,6 @@ Ext.define('casco.view.report.Center', {
 						}
 					}}, this);
 			}
-		},'-',{
-		 text: 'Export Report',
-		 scope: this,
-		 handler:function(){
-         window.open(API+'Center/export?project_id='+me.project.get('id')+'&child_id='+me.child_doc.data.id);
-          return;
-		 }
 		},'-',{
 			 text: 'Export All Sheets',
 			 scope: this,

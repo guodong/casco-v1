@@ -35,9 +35,15 @@ Ext.define('casco.view.report.Tree', {
 	    this.store = Ext.create('casco.store.TreeDocuments', {
     		proxy: {
     			extraParams: {
-    				project_id: me.project?me.project.get('id'):''
+    				project_id: me.project?me.project.get('id'):'',
     			}
-    		}
+    		},
+			 filters: [
+        {//不显示rs文档
+            property: 'type',
+            value   : /^((?!rs).)*$/
+        }
+				 ]
     	});
     	this.callParent();
     }
