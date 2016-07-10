@@ -91,7 +91,7 @@ Ext.define('casco.view.report.CenterCreate', {
 		},{
 			text : 'Result	Id',
 			dataIndex : 'result_id',
-			width:300
+			hidden:true
 		},{
 			text : 'Test Case Id',
 			dataIndex : 'tag',

@@ -19,12 +19,14 @@ Ext.define('casco.view.report.ReportController', {
 		  
 		Ext.MessageBox.wait('正在处理,请稍候...', 'Create Report');
 		var form = this.lookupReference('ver_create_form');
-		var meta = form.getValues();var results=[];
+		var meta = form.getValues();var results=[],tcs=[];
 		var sels = Ext.getCmp('testing_item').getSelection();
 		for(var i in sels){
 			results.push(sels[i].getData().result_id);
+			tcs.push(sels[i].getData().id);
 		}
 		meta.results=results;
+		meta.tcs=tcs;
 		meta.doc_id=this.getView().child_doc.data.id?this.getView().child_doc.data.id:'';
 		meta.account=JSON.parse(localStorage.user).account;
 		//console.log(meta);

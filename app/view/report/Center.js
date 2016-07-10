@@ -81,6 +81,7 @@ Ext.define('casco.view.report.Center', {
      
 	  //有rec
       combo.setValue(combo.emptyText);
+	  console.log(rec);
 	  var v_id=combo.val_id;
 	  var json=[];
       switch(irecord.get('name')){

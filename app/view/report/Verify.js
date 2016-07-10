@@ -19,7 +19,8 @@ Ext.define('casco.view.report.Verify', {
 			});
 		 store.load({
 				params: {
-			    report_id:me.report.get('id')
+			    report_id:me.report.get('id'),
+				//doc_id:me.report.get('doc_id')
 				}
 			});
 		me.store = store;
