@@ -114,10 +114,6 @@ Ext.define('casco.view.rs.Rs', {
             			},method:'get',async: false,callback: function(options, success, response) {
 					 me.json = new Ext.util.JSON.decode(response.responseText);
 					 }});
-					 me.cm=Ext.create('Ext.grid.column.Column',{columns:[
-					 { header:'编号', dataIndex:'id',width:200},
-					 { header:'名称', dataIndex:'name',width:300}
-					 ]});
 					  me.ds = new Ext.data.JsonStore({
 					  data: me.json.data,
 					  fields:me.json.fieldsNames
@@ -238,9 +234,10 @@ Ext.define('casco.view.rs.Rs', {
 			}
 			});
 			};
+			
 		var onInsertRecord=function(){
-		   var tag='';
-				me.store.each(function(record){
+				var tag='';
+				me.store.each(function(record){		//取MaxTag+1
 				if(record.get('tag')>tag)	 
                 tag=record.get('tag');
 				},this);
@@ -252,10 +249,17 @@ Ext.define('casco.view.rs.Rs', {
 				}else{
 				tag=null;
 				}
-                var win = Ext.create('widget.tcadd',{listeners:{scope: this}, columns:me.columns,version_id: me.curr_version.get('id'),tag_id:tag,project:me.project, document_id:me.document.id});
+                var win = Ext.create('widget.rs.rsdetails',{
+                	listeners:{scope:this }, 
+                	status: 0,
+                	pointer: me,	
+                	rs: Ext.create('casco.model.Rs'),
+                	columns:me.columns,
+                	version_id: me.curr_version.get('id'),
+                	tag_id:tag,project:me.project, 
+                	document_id:me.document.id});
                 win.show();
 		};
-
 
 		me.listeners = {
 			itemcontextmenu :function(view,record,item,index,e){
@@ -265,7 +269,7 @@ Ext.define('casco.view.rs.Rs', {
 			grid.rowCtxMenu=Ext.create('Ext.menu.Menu',{	
 			items:[{
 				text:'Insert Record',
-				handler:onInsertRecord
+				handler:onInsertRecord,
 			},
 			{
 				text:'Delete Record',
@@ -287,6 +291,7 @@ Ext.define('casco.view.rs.Rs', {
 					return;
 				}
 				var win = Ext.create('widget.rs.rsdetails', {
+					status: 1,
 					rs: record,
 					pointer:me,
 					document_id: me.document_id,

@@ -25,21 +25,22 @@ Ext.define('casco.view.rs.RsDetails', {
 		var me = this;
 		me.store=Ext.create('casco.store.Rss');
 		me.vat = Ext.create('casco.store.Vat');
-		
-		me.store.add([me.rs]);
-
-
+		console.log(me.rs);
+//		me.store.add([me.rs]);
 		if(me.rs){
-					me.vat.setData(me.rs.getData().vat);
-		}
+			me.store.add([me.rs]);
+			me.vat.setData(me.rs.getData().vat);
+		};
 	//	console.log(me.store);
+		
 		me.vatstrstore = Ext.create('casco.store.Vatstrs');
-//		me.vatstrstore = new casco.store.Vatstrs();
+//		me.vatstrstore = new casco.store.Vatstrs();	//same
 		me.vatstrstore.load({
     		params: {
     			project_id: me.project.get('id')
     			}
     	});
+		console.log(me.vatstrstore);
 		
 		me.addVat = function(record){
 			//console.log(record);
@@ -51,8 +52,8 @@ Ext.define('casco.view.rs.RsDetails', {
 			if(Ext.Array.contains(me.vat,tmp))return;
 			me.vat.loadData([tmp], true);
 		};
+		console.log(me.store);
 
-		
 		
 		me.items = [{
 			xtype: 'panel',
@@ -110,13 +111,6 @@ Ext.define('casco.view.rs.RsDetails', {
 			region:'south',
 			split: true,
 			items: ['->',{
-                text: 'Close',
-                glyph: 0xf112,
-                scope: me,
-                handler : this.destroy
-            },{
-            	xtype:'tbspacer',
-            },{
                 text: 'Save',
                 glyph: 0xf0c7,
                 scope: me,
@@ -130,7 +124,7 @@ Ext.define('casco.view.rs.RsDetails', {
             		  var column='';
             		  //console.log(me.down('form').getValues());
             		  //可以不用很low的拼接,可以push2array2join
-            		  var my_rs=Ext.create('casco.model.Rs',{id:rs.get('id')});
+            		  var my_rs=Ext.create('casco.model.Rs',{id:me.status?rs.get('id'):null});
             		  Ext.Object.each(me.down('form').getValues(), function(key, value, myself){
             		  	
             		  	if(key!='id'&&key!='tag'){column+='"'+key+'":"'+value+'",';}
@@ -141,16 +135,22 @@ Ext.define('casco.view.rs.RsDetails', {
             		  my_rs.set('column',column.substr(0,column.length-1));
             		
                 	my_rs.set('vat', vat);
+                	my_rs.set('version_id',me.version_id);
                 	my_rs.save({
                 		callback: function(record, operation, success){
                         //	var t = Ext.ComponentQuery.query("#tab-"+me.document_id)[0];
                         //console.log(me.down('form').getValues());
                           rs.set(me.down('form').getValues());
                           rs.set('vat',vat);
-                          me.pointer.reconfigure(me.pointer.store, me.pointer.columns);
+                          //me.up('gridpanel').store.reload();
+                          t = Ext.ComponentQuery.query("#tab-" + me.document_id)[0];
+						  t.store.reload();
+	
+                          //me.pointer.reconfigure(me.pointer.store, me.pointer.columns);
+                          //me.pointer.getView().refresh();
                           Ext.Msg.alert('更新成功');
                         	//暂时修改前端对象吧
-                          me.destroy();                  
+                          me.destroy();  
 													//var t = Ext.ComponentQuery.query("#tab-" + me.document_id)[0];
 													//t.store.reload();
                         	
@@ -159,6 +159,13 @@ Ext.define('casco.view.rs.RsDetails', {
                 	});
                 	
                 }
+            },{
+            	xtype:'tbspacer',
+            },{
+                text: 'Cancel',
+                glyph: 0xf112,
+                scope: me,
+                handler : this.destroy
             }]
 		},{
 			xtype:'form',
@@ -167,6 +174,14 @@ Ext.define('casco.view.rs.RsDetails', {
 			region:'center',
 			autoScroll:true,
 			items: [{
+				anchor : '100%',
+				fieldLabel : 'Tag',
+				name : 'tag',
+				xtype : 'textfield',
+				allowBlank: true,
+				value: me.tag_id
+				},
+			{
 				xtype: 'gridpanel',
 				fieldLabel: 'gridpanel',
 				id:'inpanel',
@@ -202,19 +217,19 @@ Ext.define('casco.view.rs.RsDetails', {
 		}],
 					 
      
-    
+    console.log(me.columns);
 	  
 	  Ext.Array.each(me.columns, function(name, index, countriesItSelf) {
-		Ext.Array.insert(me.items[2].items,0,
+		  if(name.dataIndex == 'tag') return;
+		Ext.Array.insert(me.items[2].items,1,
 			    [{anchor : '100%',
 				fieldLabel : name.dataIndex,
 				name : name.dataIndex,
 				xtype : 'textarea',
 				maxHeight: 10,
 	            allowBlank: true}]);//插入值即可
-
 		
-        });
+        },this,true);
         
 		//me.redoLayout();		
 	 

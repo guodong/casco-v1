@@ -4,6 +4,7 @@ Ext.define('casco.view.tc.TcController', {
 
 	createTc : function() {
 		var view = this.getView();
+		console.log(view.tc);
 		var tc = Ext.create('casco.model.Tc',{id:view.tc?view.tc.get('id'):null});//view.tc?view.tc:Ext.create('casco.model.Tc');
 		var form = view.down('form');
 		var data = form.getValues(); //提交的数据
@@ -15,10 +16,7 @@ Ext.define('casco.view.tc.TcController', {
     
     var column='';
     Ext.Object.each(data, function(key, value, myself){
-            		  	
     if(key!='id'&&key!='tag'){column+='"'+key+'":"'+value+'",';}
-            	
-            		  	
    });
     
 		data.column=column.substring(0,column.length-1);

@@ -8,7 +8,7 @@ Ext.define('casco.view.tc.TcAdd', {
 	controller: 'tc',
 
 	modal: true,
-	title: 'Tc Item',
+	title: 'TC Item',
 	width: 800,
 	height: 500,
 	autoScroll: true,
@@ -20,6 +20,7 @@ Ext.define('casco.view.tc.TcAdd', {
 
 	initComponent: function() {
 		var me = this;
+		console.log(me);
 		me.sources = Ext.create('casco.store.Sources');
 		me.steps = Ext.create('casco.store.TcSteps');
 		me.steps.load({
@@ -28,10 +29,9 @@ Ext.define('casco.view.tc.TcAdd', {
 			}
 		});
 		if(me.tc){
-
 			var a=new Array();
 			var list=me.tc.get('source')?me.tc.get('source').split(','):null;
-			Ext.Array.each(list,function(name, index, countriesItSelf){
+			Ext.Array.each(list,function(name, index, countriesItSelf){   
 				a.push({tag:name});
 			});
 			me.sources.setData(a);
@@ -131,42 +131,27 @@ Ext.define('casco.view.tc.TcAdd', {
 }];
 
 
-
-
 //	me.doLayout();思路很简单，如果列名有则就添加进去否则next
-var array= new Array();
-Ext.Array.each(me.items[0].items,function(name, index, countriesItSelf){
-	array.push(name.name);
+var array= [];
+Ext.Array.each(me.items[0].items,function(name, index, countriesItSelf){ 	//me.items[0].items，表单项 4项
+	array.push(name.name);  
 });
 
+//console.log(me.columns);	//DB tc.columns  dataIndex,header,width 
 
 Ext.Array.each(me.columns,function(name, index, countriesItSelf){
-	if(name.dataIndex=='source'||name.dataIndex=="sources") return;
+//	console.log(name);
+	if(name.dataIndex=='source'||name.dataIndex=="sources") return;		//过滤动态列中的source
 	if(!Ext.Array.contains(array,name.dataIndex)){
-
-		Ext.Array.insert(me.items[0].items,2,
+		Ext.Array.insert(me.items[0].items,2, 	//写入动态列
 		[{anchor : '100%',
 			fieldLabel : name.dataIndex,
 			name : name.dataIndex,
 			xtype : 'textarea',
 			maxHeight: 50,
 		allowBlank: true}]);//插入值即可
+	}},this,true);
 
-	}
-
-});
-
-/*
-Ext.Array.insert(me.items,0,
-[{anchor : '100%',
-fieldLabel : 'Test',
-name : 'tag',
-xtype : 'textfield',
-allowBlank: false,
-value: me.tag_id}]);//注意一定是[],否则不认数据类型
-*/
-
-// console.log(me.document_id);
 me.callParent(arguments);
 }
 });

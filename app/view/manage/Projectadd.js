@@ -43,6 +43,7 @@ Ext.define('casco.view.manage.Projectadd', {
     	        }, {
     				xtype: 'grid',//貌似后台发送数据是通过store的名字来命名的哦
     				region: 'center',
+    				maxHeight: 200,
     				fieldLabel: 'Participants',
     				dockedItems: [{
     	    	        xtype: 'toolbar', 
@@ -64,6 +65,7 @@ Ext.define('casco.view.manage.Projectadd', {
     			    ],
     			    store: me.participants
     			}, {
+    				maxHeight: 200,
     				xtype : 'vatstr',
     				store: me.vatstrs
     			}],

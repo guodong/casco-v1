@@ -1,9 +1,9 @@
 Ext.define('casco.view.tc.source.Add', {
 	extend: 'Ext.window.Window',
-
 	alias: 'widget.tc.source.add',
 	requires: ['casco.view.main.ItemTree'],
 	controller: 'tc',
+	
 	resizable: true,
 	maximizable: true,
 	modal: true,
@@ -14,19 +14,22 @@ Ext.define('casco.view.tc.source.Add', {
 	layout: {
 		type: 'border'
 	},
+	
 	initComponent: function() {
 		var me = this;
-    console.log(me.columns);
+		console.log(me);
 		me.addSources = function(record){
-			if(record.data.type != 'item'){
+			console.log(record);
+			if(record.data.type != 'item'){		//详见ItemTree
 				return;
 			}
-			me.sources.loadData([{tag: record.data.name,id: record.data.item_id}], true);
+			me.sources.loadData([{tag: record.data.name,id: record.data.item_id}], true);	//ture 保留existing data
 		};
+		
 		me.items = [{
 			xtype: 'itemtree',
 			region: 'west',
-			width: 200,
+			width: 300,
 	        split: true,
 	        collapsible: true,
 			autoScroll: true,
@@ -51,6 +54,7 @@ Ext.define('casco.view.tc.source.Add', {
 		        }
 		    }
 		}];
+		
 		me.dockedItems = [{
 			xtype: 'toolbar',
 			dock: 'bottom',
