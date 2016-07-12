@@ -3,9 +3,9 @@ Ext.define('casco.view.report.Center', {
     xtype: 'report.center',
     controller:'report',
     requires:[
-		//'casco.store.Center','casco.model.Center',
 		'casco.view.report.CenterCreate',
 		'casco.view.report.ReportController',
+		'casco.view.report.ReportCover',
 		'casco.view.report.Verify'],
 
 //    listeners: {
@@ -23,7 +23,7 @@ Ext.define('casco.view.report.Center', {
     	me.store.load({
     		params: {
     			project_id: me.project.get('id'),
-				child_id:me.child_doc.data.id?me.child_doc.data.id:''
+				doc_id:me.child_doc.data.id?me.child_doc.data.id:''
     		}
     	});
     	
@@ -83,26 +83,31 @@ Ext.define('casco.view.report.Center', {
 	me.switchView=function(combo,irecord,rec){   //rec:report info
 	  //有rec
       combo.setValue(combo.emptyText);
-	  var v_id=combo.val_id;  //report id
+	  console.log(rec);
+	  var v_id=combo.val_id;
 	  var json=[];
       switch(irecord.get('name')){
-      case 'ReportCover':
-    	  json={'xtype':'reportcover','title':'需求覆盖状态','id':'cover'+v_id,
-    		  'report':rec,'closable':true}; 
+      case 'RquireCoverStatus':
+    	  json={'xtype':'reportcover','title':'reportcover','id':'reportcover_'+v_id,
+        		'report':rec,'closable':true};
 		  break;
-	  case 'TestingResult':
+	  case 'TestCaseResults':
           json={'xtype':'result','title':'testingresult','id':'testing_'+v_id,
         		'report':rec,'closable':true};
 		  break;
 	  case  'ReportVerify':
-		  json={'xtype':'verify','title':'verify','id':'verify'+v_id,
-		       'report':rec,'closable':true};
+		   Ext.Array.each(rec.get('docs'), function(v) {
+			var tmp={'xtype':'verify','title':v.name,'id':'verify'+rec.id+v.id,
+		    'report':rec,'closable':true};
+			tmp['doc_id']=v.id;
+			json.push(tmp);
+			}); 
 		  break;
 	  case  'All':
-		  	Ext.Array.each(rec.get('parent_versions'), function(v) {
-			var tmp={'xtype':'parentreport','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':'parentreport'+v_id+v.id,
-		    'Center':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
-			tmp['parent_v_id']=v.id;
+		  	Ext.Array.each(rec.get('docs'), function(v) {
+			var tmp={'xtype':'verify','title':v.name,'id':'verify'+rec.id+v.id,
+		    'report':rec,'closable':true};
+			tmp['doc_id']=v.id;
 			json.push(tmp);
 			}); 
 		  	json.push({'xtype':'result','title':'testingresult','id':'testing_'+v_id,

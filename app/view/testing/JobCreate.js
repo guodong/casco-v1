@@ -42,6 +42,8 @@ Ext.define('casco.view.testing.JobCreate', {
 			}, {
 				fieldLabel: 'Name',
 				msgTarget: 'under',
+				allowBlank:false, 
+				blankText:"²»ÄÜÎª¿Õ",
 				name: 'name',
 				xtype: 'textfield'
 			}, {

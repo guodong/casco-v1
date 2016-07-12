@@ -1,4 +1,3 @@
-
 Ext.define('casco.view.manage.Projectlist', {
 	extend: 'Ext.grid.Panel',
 	alias: 'widget.projectlist',

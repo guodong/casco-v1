@@ -25,7 +25,6 @@ Ext.define('casco.view.manage.Useredit', {
          data : [
          {"name":"Staff", "value":"0"},
 		 {"name":"Manager", "value":"1"},
-         {"name":"Admin","value":"2"}
            ]});
 		//var role = Ext.create('casco.store.Roles');  //报错 [Ext.create] Unrecognized class name / alias
 		

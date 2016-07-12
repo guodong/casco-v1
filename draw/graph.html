@@ -24,6 +24,7 @@
 
 </style>
 <body>
+<script src="common.js"></script>
 <script src="d3.v3.min.js"></script>
 <script>
 function getPar(par){
@@ -63,7 +64,7 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.json("http://localhost/dump?document_id="+getPar('document_id'), function(error, flare) {
+d3.json(API+"/dump?document_id="+getPar('document_id'), function(error, flare) {
   root = flare;
   root.x0 = height / 2;
   root.y0 = 0;

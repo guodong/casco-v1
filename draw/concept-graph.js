@@ -60,7 +60,8 @@ var CollapsibleTree = function(elt) {
       var duration = d3.event && d3.event.altKey ? 5000 : 500;
 
       // Compute the new tree layout.
-      var nodes = tree.nodes(root).reverse();console.log(nodes)
+      var nodes = tree.nodes(root).reverse();
+	  console.log(nodes)
 
       // Normalize for fixed-depth.
       nodes.forEach(function(d) { d.y = d.depth * 120; });
@@ -79,7 +80,7 @@ var CollapsibleTree = function(elt) {
       nodeEnter.append("svg:circle")
           .attr("r", 5)
           .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; })
-          .on("click", function(d){location.hash=d.name});
+          .on("click", function(d){location.hash=d.id});
 
       nodeEnter.append("svg:text")
           // .attr("x", function(d) { return d.children || d._children ? -10 : 10; })

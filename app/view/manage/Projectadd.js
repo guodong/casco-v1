@@ -14,11 +14,31 @@ Ext.define('casco.view.manage.Projectadd', {
     controller: 'manage',
     initComponent: function(){
     	var me = this;
-    	me.participants = Ext.create('casco.store.Users');
-    	me.vatstrs = Ext.create('casco.store.Vatstrs');
-    	if(me.project){console.log(me.project.get('participants'));
-    		me.participants.setData(me.project.get('participants'));
-    		me.vatstrs.setData(me.project.get('vatstrs'));
+    	me.participants = Ext.create('Ext.data.Store', {
+			 model: 'Ext.data.Model',
+			 proxy: {
+				 type: 'rest',
+				 url: API+'user',
+				 reader: {
+					 type: 'json',	
+				 }
+			 },
+			 autoLoad: true
+			});
+    	me.vatstrs = Ext.create('Ext.data.Store', {
+			 model: 'Ext.data.Model',
+			 proxy: {
+				 type: 'rest',
+				 url: API+'vatstr',
+				 reader: {
+					 type: 'json',	
+				 }
+			 },
+			 autoLoad: true
+			});
+    	if(me.project){
+    		me.participants.setData(me.project);
+    		me.vatstrs.setData(me.project);
     	}
     	Ext.apply(me, {
     		items: [{
@@ -61,7 +81,13 @@ Ext.define('casco.view.manage.Projectadd', {
     	    	        }]
     	    	    }],
     			    columns: [
-    			        { text: 'Participants',  dataIndex: 'realname', flex: 1}
+    			        { text: 'Participants',  dataIndex: 'participants', flex: 1,render:function(record){
+							 Ext.Array.each(JSON.parse(record), function(v) {
+							  console.log(v);
+							 arr.push(v.account?v.account:{});
+							 return arr.join(',');});
+						}//render
+						}//text
     			    ],
     			    store: me.participants
     			}, {

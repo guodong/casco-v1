@@ -19,12 +19,20 @@ Ext.define('casco.view.report.ReportController', {
 		  
 		Ext.MessageBox.wait('正在处理,请稍候...', 'Create Report');
 		var form = this.lookupReference('ver_create_form');
-		var meta = form.getValues();
-		meta.child_id=this.getView().child_doc.data.id?this.getView().child_doc.data.id:'';
+		var meta = form.getValues();var results=[],tcs=[];
+		var sels = Ext.getCmp('testing_item').getSelection();
+		for(var i in sels){
+			results.push(sels[i].getData().result_id);
+			tcs.push(sels[i].getData().id);
+		}
+		meta.results=results;
+		meta.tcs=tcs;
+		meta.doc_id=this.getView().child_doc.data.id?this.getView().child_doc.data.id:'';
 		meta.account=JSON.parse(localStorage.user).account;
 		//console.log(meta);
-		var job = Ext.create('casco.model.Center',(meta));
+		var job = Ext.create('casco.model.Center',meta);
 		job.save({
+			timeout: 100000000,
 			callback: function(record,operation){
 			
 				if(record.data.success){
@@ -38,8 +46,7 @@ Ext.define('casco.view.report.ReportController', {
 				});
 				Ext.Msg.alert('','创建成功!');
 				}else{
-				Ext.Msg.alert('创建失败!',JSON.stringify(operation.error.statusText));
-
+				Ext.Msg.alert('创建失败!',JSON.stringify(operation.error?operation.error.statusText:operation._response.responseText));
 				}
 				Ext.getCmp('ver-create-window').destroy();
 			}//callback
@@ -113,8 +120,8 @@ Ext.define('casco.view.report.ReportController', {
 		}
 		tabs.setActiveTab(tab);
 	},
-	reporting:function(){
-        this.redirectTo('report/' +this.getView().project.get('id'), true);
+	matrix:function(){
+        this.redirectTo('matrix/' +this.getView().project.get('id'), true);
 		location.reload();
 	},
 	project:function(){
