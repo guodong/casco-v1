@@ -18,7 +18,7 @@ Ext.define('casco.view.manage.Userlist', {
 			//hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false,  //用户权限
 			text: 'Add User',
 			glyph: 0xf067,	//resources
-			xtype:'buttontransparent',	//???细节，透明处理
+			xtype:'buttontransparent',	//
 			handler: function() {
 				var win = Ext.create('casco.view.manage.Useradd', {store: store});
 				win.show();

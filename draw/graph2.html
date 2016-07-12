@@ -3,6 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>2-Way Tree</title>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<script type="text/javascript" src="common.js"></script>
 <script type="text/javascript" src="/jquery.min.js"></script>
 <script type="text/javascript" src="d3.min.js"></script>
 <script type="text/javascript" src="d3.layout.js"></script>
@@ -118,17 +119,19 @@ label{
 </style>
 <body>
 	<div class="sidebar">
-		<label>Tag标签</label>
+		<label>当前Tag标签</label>
 		<input type="text" id="tag" placeholder="输入Tag标签">
 		<p>
-		<button class="button" style="margin-left: 40px" onclick="look()">查看</button>
+		<!--<button class="button" style="margin-left: 40px" onclick="look()">查看</button>-->
 	</div>
 
-	<div id="categoryHierarchy" class="main"></div>
 
+	<div id="categoryHierarchy" class="main"></div>
 	<script type="text/javascript" src="concept-graph.js"></script>
 
 	<script>
+		
+
 		function getPar(par) {
 			var local_url = document.location.href;
 		 
@@ -148,29 +151,27 @@ label{
 			var tree = CollapsibleTree("#categoryHierarchy");
 			tree.init("http://api.casco.me/dump?id=" + getPar('id'));
 		}); */
-	 
-	    var API="http://localhost/casco-api/public/";
-		//var API="http://localhost:8080/";
+
 		var tree = CollapsibleTree("#categoryHierarchy");
 		function look(){
 			show($("#tag").val());
 		}
 		if(location.hash){
 			show(location.hash.substr(1),true);
-			$("#tag").val(location.hash.substr(1));
 		}
 		function show(id,mark){
 			//tree.init("http://api.casco.me/dump?tag=" + id);
-			mark?tree.init(API+"dump?tag="+id):null;
+			mark?tree.init(API+"dump?id="+id):null;
 			location.hash=id;
+			$("#tag").val(location.hash.substr(1).split('&')[0]);
 		}
 		window.addEventListener("hashchange", function(){
-			//console.log(location.hash.indexOf(":"));
+		
 			if(location.hash.indexOf(":")!=-1){
 			show(location.hash.substring(1,location.hash.indexOf(":")),false);
 			}else{show(location.hash.substring(1),true);}
-			$("#tag").val(location.hash.substr(1));
 		}, false);
+
 	</script>
 </body>
 </html>

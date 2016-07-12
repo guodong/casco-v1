@@ -3,9 +3,9 @@ Ext.define('casco.view.report.Center', {
     xtype: 'report.center',
     controller:'report',
     requires:[
-		//'casco.store.Center','casco.model.Center',
 		'casco.view.report.CenterCreate',
 		'casco.view.report.ReportController',
+		'casco.view.report.ReportCover',
 		'casco.view.report.Verify'],
 
     listeners: {
@@ -94,14 +94,18 @@ Ext.define('casco.view.report.Center', {
         		'report':rec,'closable':true};
 		  break;
 	  case  'ReportVerify':
-		  json={'xtype':'verify','title':'verify','id':'verify'+v_id,
-		       'report':rec,'closable':true};
+		   Ext.Array.each(rec.get('docs'), function(v) {
+			var tmp={'xtype':'verify','title':v.name,'id':'verify'+rec.id+v.id,
+		    'report':rec,'closable':true};
+			tmp['doc_id']=v.id;
+			json.push(tmp);
+			}); 
 		  break;
 	  case  'All':
-		  	Ext.Array.each(rec.get('parent_versions'), function(v) {
-			var tmp={'xtype':'parentreport','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':'parentreport'+v_id+v.id,
-		    'Center':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
-			tmp['parent_v_id']=v.id;
+		  	Ext.Array.each(rec.get('docs'), function(v) {
+			var tmp={'xtype':'verify','title':v.name,'id':'verify'+rec.id+v.id,
+		    'report':rec,'closable':true};
+			tmp['doc_id']=v.id;
 			json.push(tmp);
 			}); 
 		  	json.push({'xtype':'result','title':'testingresult','id':'testing_'+v_id,

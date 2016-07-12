@@ -120,8 +120,8 @@ Ext.define('casco.view.report.ReportController', {
 		}
 		tabs.setActiveTab(tab);
 	},
-	reporting:function(){
-        this.redirectTo('report/' +this.getView().project.get('id'), true);
+	matrix:function(){
+        this.redirectTo('matrix/' +this.getView().project.get('id'), true);
 		location.reload();
 	},
 	project:function(){

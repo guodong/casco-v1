@@ -14,13 +14,6 @@ Ext.define('casco.view.report.CenterCreate', {
 	initComponent: function() {
 		var me = this;
 		var p_id=me.p_id?me.p_id:'';
-		var test_job = Ext.create('casco.store.Testjobs');
-		test_job.load({
-			params: {
-				project_id: me.project.get('id'),
-				child_id:me.child_doc.data.id?me.child_doc.data.id:''
-			}
-		});
 		var rsdocs = Ext.create('casco.store.Documents');
 		var result_store=Ext.create('Ext.data.Store', {
 			 model: 'Ext.data.Model',

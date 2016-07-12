@@ -2,52 +2,72 @@ Ext.define('casco.view.report.ReportCover', {
 	extend: 'Ext.grid.Panel',
 	xtype: 'reportcover',
 	viewModel: 'main',
+	plugins: {
+		ptype: 'cellediting',
+		clicksToEdit: 1
+	},
+	selModel:new Ext.selection.Model({mode:"MULTI"}),
 	requires: [],      
 	           
 	initComponent: function() {
 		var me = this;
-//        me.selModel=me.selModel?me.selModel:'';	
-		me.rcover = new casco.store.ReportCover();
-		me.rcover.load({
+		me.store = new casco.store.ReportCover();
+		me.store.load({
 			params:{
 				report_id: me.report.get('id')  //其他参数？
 			},
-			synchronous: true,		
-			callback: function(record){
-				me.columns=me.columns_store;
-				me.ds = new Ext.data.JsonStore({
-							  data: record[0].get('data'),
-							  fields:record[0].get('fieldsNames')
-				});
-				me.rcover.setData(me.ds.getData());
-				Ext.Array.forEach(record[0].get('columModle'),function(item){	// 具体参见动态列的实现
-					var column = Ext.create('Ext.grid.column.Column', {  
-						text: item['header'],
-						width:140,  
-						// align:'center',
-						dataIndex: item['dataIndex']  
-					});  
-					me.columns.push(column);
-					// me.headerCt.insert(me.columns.length, column);
-				});
-			me.reconfigure(me.rcover,me.columns);
-			me.customMenuItemsCache = [];
-			me.headerCt.on('menucreate', function (cmp, menu) {
-            menu.on('beforeshow', me.showHeaderMenu, me);
-			}, me);
-		    }// callback
+			synchronous: true
 		});  
 		 
 		  me.tbar = [{
+			text: 'Save',
+			glyph: 0xf080,
+			scope: this,
+			handler:function(){  
+			 var data=[];
+			// 血的教训，早知道就用这了... me.matrix.sync();
+			 me.store.sync({
+			 callback: function(record, operation, success){
+             },
+			 failure: function(record, operation) {
+			  me.getView().refresh(); // 这一行重要哇我晕
+              Ext.Msg.alert('Failed','Save failed!');
+			 },
+			 success: function(record, operation) {
+			 me.getView().refresh();Ext.Msg.alert('Success', 'Saved successfully.');
+			 }
+			 }); 
+			 /*
+				 * Ext.Array.each(rows,function(item){ item.dirty=false;
+				 * item.commit(); data.push(item.getData()); });// each var
+				 * model=Ext.create('casco.model.Verification',{id:me.verification.get('id')});
+				 * model.set('data',data); model.save({ callback:
+				 * function(record, operation, success){ }, failure:
+				 * function(record, operation) { me.getView().refresh(); //
+				 * 这一行重要哇我晕 Ext.Msg.alert('Failed','Save failed!'); }, success:
+				 * function(record, operation) { me.getView().refresh(); //
+				 * 这一行重要哇我晕 Ext.Msg.alert('Success', 'Saved successfully.');
+				 *  }, });
+				 */
+			
+			}
+		},{
 			  text: 'Export',
 			  glyph: 0xf080,
 			  scope: this,
 			  handler:function(){
-				  window.open(API+'reportcover/export?v_id='+me.report.get('id')+'&parent_id='+me.parent_id);  //?URL
+				  window.open(API+'reportcover/export?report_id='+me.report.get('id'));  //?URL
 				  return;
 			  }
 			},
 			'-',
+			{
+		    text: 'Refresh',
+			glyph: 0xf067,
+		    handler: function() {
+				me.store.reload();
+			}
+			},
 			{text: '需求覆盖状态', xtype:'label',margin:'0 50'}
 			];
 		  
@@ -76,70 +96,18 @@ Ext.define('casco.view.report.ReportCover', {
 //		 }
 //		}
 		
-		me.columns_store=[
-			 {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:170,sortable:true,
-			 customMenu:[
-							{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Parent Requirement Tag',width:170,dataIndex:'Parent Requirement Tag'}]}],
-							 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Parent Requirement Tag');}
-							}//
-					   }]// customMenu
-					   },
-			  {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:175,sortable:true,
-//		    customMenu:[
-//						{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Parent Requirement Text',width:175,dataIndex:'Parent Requirement Text'}]}],
-//						 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Parent Requirement Text');}
-//						}//
-//				   }]// customMenu
-				   },
-			  {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:160,sortable:true,
-//		   customMenu:[
-//						{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Child Requirement Tag',width:160,dataIndex:'Child Requirement Tag'}]}],
-//						 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Child Requirement Tag');}
-//						}//
-//				   }]// customMenu
-				   },
-			  {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:165,sortable:true,
-//		   customMenu:[
-//						{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'Child Requirement Text',width:165,dataIndex:'Child Requirement Text'}]}],
-//						 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'Child Requirement Text');}
-//						}//
-//				  }]// customMenu
-				  },
-			  {text:'result',dataIndex:'result',header:'result',width:80,sortable:true,
-		   customMenu:[
-		               {text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'result',width:80,dataIndex:'result'}]}],
-		            	listeners:{focus:function(g,eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'result');}}
-		               }
-		               ],			  
-				  },
-			  {text:'justification',dataIndex:'justification',header:'justification',width:100,sortable:true,renderer: function(value){
-						  var arr = [];//JSON.parse一定要记得
-						  Ext.Array.each(JSON.parse(value), function(v) {
-						  arr.push(v.comment==undefined?v.tag:(v.tag+':'+v.comment)); });
-						  return arr.join('<br/>');
-			},
-//		  customMenu:[
-//						{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'justification',width:95,dataIndex:'justification'}]}],
-//						 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'justification');}
-//						}//
-//				  }]// customMenu
-				  },
-			  {text:'Comment',dataIndex:'comment',header:'Comment',width:90,sortable:true}
+		me.columns=[
+			 {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:170,sortable:true},
+			 {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:175,sortable:true},
+			 {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:160,sortable:true},
+			 {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:165,sortable:true},
+			 {text:'result',dataIndex:'result',header:'result',width:80,sortable:true},
+			 {text:'justification',dataIndex:'justification',header:'justification',width:100,sortable:true,editor:{xtype:'textfield'}},
+			 {text:'allocation',dataIndex:'allocation',header:'allocation',width:100,sortable:true,render:function(record){}},
+			 {text:'Comment',dataIndex:'comment',header:'Comment',width:90,sortable:true,editor:{xtype:'textfield'}}
 			];
 	
-		
-
-        me.listeners={
-
-        beforeedit:function(editor, e, eOpts){
-        // 编辑按钮事件监听,并不会fireEvent
-		if(me.verification.get('status')==1){
-        return true;
-		}else{
-		return false;
-        }
-
-		}}
+        me.listeners={}
 		me.callParent(arguments);
 		},
 

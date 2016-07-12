@@ -2,31 +2,53 @@ Ext.define('casco.view.report.Verify', {
 	extend: 'Ext.panel.Panel',
 	layout:'anchor',
 	xtype:'verify',
+	multiSelect : true,
 	requires: [],
 	initComponent: function() {
 		var me = this;
-		var store = 
-			Ext.create('Ext.data.Store', {
-			 model: 'Ext.data.Model',
-			 proxy: {
-				 type: 'rest',
-				 url: API+'center/verify',
-				 reader: {
-					 type: 'json',	
-				 }
-			 },
-			 autoLoad: true
-			});
-		 store.load({
-				params: {
-			    report_id:me.report.get('id'),
-				//doc_id:me.report.get('doc_id')
-				}
-			});
+		var store = Ext.create('casco.store.Verify', {
+    		proxy: {
+    			extraParams: {
+    			report_id:me.report.get('id'),
+				doc_id:me.doc_id?me.doc_id:null
+    			}
+    		}
+    	});
+		store.load();
 		me.store = store;
-		var selModel=new Ext.selection.Model({mode:"MULTI"});
-        me.selModel=selModel;
 		me.tbar = [{
+			text: 'Save',
+			glyph: 0xf080,
+			scope: this,
+			handler:function(){  
+			 var data=[];
+			// 血的教训，早知道就用这了... me.matrix.sync();
+			 me.store.sync({
+			 callback: function(record, operation, success){
+             },
+			 failure: function(record, operation) {
+			  me.getView().refresh(); // 这一行重要哇我晕
+              Ext.Msg.alert('Failed','Save failed!');
+			 },
+			 success: function(record, operation) {
+			 me.getView().refresh();Ext.Msg.alert('Success', 'Saved successfully.');
+			 }
+			 }); 
+			 /*
+				 * Ext.Array.each(rows,function(item){ item.dirty=false;
+				 * item.commit(); data.push(item.getData()); });// each var
+				 * model=Ext.create('casco.model.Verification',{id:me.verification.get('id')});
+				 * model.set('data',data); model.save({ callback:
+				 * function(record, operation, success){ }, failure:
+				 * function(record, operation) { me.getView().refresh(); //
+				 * 这一行重要哇我晕 Ext.Msg.alert('Failed','Save failed!'); }, success:
+				 * function(record, operation) { me.getView().refresh(); //
+				 * 这一行重要哇我晕 Ext.Msg.alert('Success', 'Saved successfully.');
+				 *  }, });
+				 */
+			
+			}
+		},{
 			text: 'Export',
 			glyph: 0xf067,
 			handler: function() {
@@ -42,6 +64,11 @@ Ext.define('casco.view.report.Verify', {
 		}];
 		
 	var north_columns=[
+	{
+		text: "Req ID",
+		dataIndex: "id",
+		hidden:true
+	}, 
 	{
 		text: "Req ID",
 		dataIndex: "tag",
@@ -62,6 +89,7 @@ Ext.define('casco.view.report.Verify', {
 	}, {
 		text: "Comment",
 		dataIndex: "comment",
+		editor:{xtype:'textfield'},
 		width: 120
 	}];
 	
@@ -69,6 +97,11 @@ Ext.define('casco.view.report.Verify', {
 			xtype: 'gridpanel',
 			forceFit:true,
 			title:'',
+			plugins: {
+			ptype: 'cellediting',
+			clicksToEdit: 1
+			},
+			selModel:new Ext.selection.Model({mode:"MULTI"}),
 			columns:north_columns,
 			anchor:'100%, 100%',
 			forceFit:true,
