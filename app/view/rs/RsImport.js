@@ -57,6 +57,9 @@ Ext.define('casco.view.rs.RsImport', {
 				queryMode : 'local',
 				editable : true,
 				width : '100%',
+				allowBlank: false,
+				blankText: 'Version不能为空，请输入或选择',
+				msgTarget : 'side',
 				lastQuery: '',
 				listeners : {
 					beforequery : function(e) {
@@ -66,10 +69,12 @@ Ext.define('casco.view.rs.RsImport', {
 					blur:function(e){
 						var input = e.getRawValue().trim();
 						e.setRawValue(input);
-						if(input == '') 
-							Ext.Msg.alert('Error','Vesrion is NULL ！');
-						else if(e.store.find('name',input) == -1){
-							Ext.Msg.alert('Notice','New Version: '+ input);
+						//输入为空的判断
+//						if(input == '') 
+//							Ext.Msg.alert('Error','Vesrion is NULL ！');
+//						else 
+						if(input != '' && e.store.find('name',input) == -1){
+							Ext.Msg.alert('Notice','您创建了版本: '+ input + ' ,将在该版本中导入文档');
 							me.aflag = input;
 						}
 							// else Ext.Msg.alert('Notice','Exist Version: '+
@@ -146,6 +151,7 @@ Ext.define('casco.view.rs.RsImport', {
 				labelWidth : 60,
 				msgTarget : 'side',
 				allowBlank : false,
+				blankText: '请选择需要导入的文档',
 				anchor : 0,
 				width : '100%',
 				buttonText : 'Select File'
@@ -169,6 +175,7 @@ Ext.define('casco.view.rs.RsImport', {
 				handler : function() {
 					var self = this;var obj=null;
 					var form = this.up('form').getForm();
+					console.log(form);
 					// Ext.Msg.alert('Test',);
 					if(me.aflag) form.findField('isNew').setValue(1);
 					if (form.isValid()) {

@@ -59,7 +59,11 @@ Ext.define('casco.view.tc.TcAdd', {
 			fieldLabel : 'Tag',
 			name : 'tag',
 			xtype : 'textfield',
-			allowBlank: true,
+			allowBlank: false,
+			blankText: 'Tag不能为空，请输入Tag',
+			regex: /(\[.+\])/,
+			regexText: 'Tag格式错误，须包含[]且不为空',
+			msgTarget: 'side',
 			value: me.tag_id
 		}/*, {
 		anchor : '100%',

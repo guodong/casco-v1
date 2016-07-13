@@ -30,7 +30,7 @@ Ext.define('casco.view.manage.Vatstr', {
     		dockedItems: [{
     	        xtype: 'toolbar',
     	        dock: 'bottom',
-    	        items: [{
+    	        items: ['->',{
     	            glyph: 0xf067,
     	            text: 'Add',
     	            scope: me,

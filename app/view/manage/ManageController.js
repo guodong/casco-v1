@@ -47,7 +47,7 @@ Ext.define('casco.view.manage.ManageController', {
 		var self = this;
 		var form = this.lookupReference('build_create_form');//获取对应的form表单
 		var build = view.build?view.build:Ext.create('casco.model.Build');
-		build.set(form.getValues());huchangquw
+		build.set(form.getValues());
 		build.save({
 			callback: function(){
 				Ext.Msg.alert('Message', 'Build manage successfully.', function(){
@@ -295,7 +295,7 @@ Ext.define('casco.view.manage.ManageController', {
 		var json = record.data;
 		if(!record.data.leaf) return;
 		var tabs = this.lookupReference('main');
-		console.log(json.id);
+//		console.log(json.id);
 		if(json.id=='userlist'&&JSON.parse(localStorage.user).role_id!=1){Ext.Msg.alert('提示','您没有权限查看此列,请联系管理员!');return;}
 
 			var tab = tabs.child('#tab-' + json.id);

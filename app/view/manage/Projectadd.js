@@ -9,36 +9,16 @@ Ext.define('casco.view.manage.Projectadd', {
     resizable: true,
     maximizable: true,
     modal: true,
-    title: 'Create Project',
+    title: 'Project Info',
     width: 300,
     controller: 'manage',
     initComponent: function(){
     	var me = this;
-    	me.participants = Ext.create('Ext.data.Store', {
-			 model: 'Ext.data.Model',
-			 proxy: {
-				 type: 'rest',
-				 url: API+'user',
-				 reader: {
-					 type: 'json',	
-				 }
-			 },
-			 autoLoad: true
-			});
-    	me.vatstrs = Ext.create('Ext.data.Store', {
-			 model: 'Ext.data.Model',
-			 proxy: {
-				 type: 'rest',
-				 url: API+'vatstr',
-				 reader: {
-					 type: 'json',	
-				 }
-			 },
-			 autoLoad: true
-			});
-    	if(me.project){
-    		me.participants.setData(me.project);
-    		me.vatstrs.setData(me.project);
+    	me.participants = Ext.create('casco.store.Users');
+    	me.vatstrs = Ext.create('casco.store.Vatstrs');
+    	if(me.project){console.log(me.project.get('participants'));
+    		me.participants.setData(me.project.get('participants'));
+    		me.vatstrs.setData(me.project.get('vatstrs'));
     	}
     	Ext.apply(me, {
     		items: [{
@@ -59,16 +39,17 @@ Ext.define('casco.view.manage.Projectadd', {
     	            name: 'description',
     	            labelAlign: 'top',
     	            msgTarget: 'under',
+    	            grow: true,	//automatically grow and shrink to its content
     	            xtype: 'textarea'
     	        }, {
     				xtype: 'grid',//貌似后台发送数据是通过store的名字来命名的哦
     				region: 'center',
-    				maxHeight: 200,
     				fieldLabel: 'Participants',
+    				maxHeight: 200,
     				dockedItems: [{
     	    	        xtype: 'toolbar', 
     	    	        dock: 'bottom',
-    	    	        items: [{
+    	    	        items: ['->',{
     	    	            glyph: 0xf067,
     	    	            text: 'Edit Participants',
     	    	            handler: function(){
@@ -81,18 +62,12 @@ Ext.define('casco.view.manage.Projectadd', {
     	    	        }]
     	    	    }],
     			    columns: [
-    			        { text: 'Participants',  dataIndex: 'participants', flex: 1,render:function(record){
-							 Ext.Array.each(JSON.parse(record), function(v) {
-							  console.log(v);
-							 arr.push(v.account?v.account:{});
-							 return arr.join(',');});
-						}//render
-						}//text
+    			        { text: 'Participants',  dataIndex: 'realname', flex: 1}
     			    ],
     			    store: me.participants
     			}, {
-    				maxHeight: 200,
     				xtype : 'vatstr',
+    				maxHeight: 200,
     				store: me.vatstrs
     			}],
     			buttons: ['->', {
@@ -116,3 +91,4 @@ Ext.define('casco.view.manage.Projectadd', {
         this.hide();
     }
 });
+
