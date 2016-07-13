@@ -14,18 +14,7 @@ Ext.define('casco.view.report.CenterCreate', {
 	 
 	initComponent: function() {
 		var me = this;
-<<<<<<< HEAD
-		var p_id=me.p_id?me.p_id:'';  //center id
-		var test_job = Ext.create('casco.store.Testjobs');
-		test_job.load({
-			params: {
-				project_id: me.project.get('id'),
-				child_id:me.child_doc.data.id?me.child_doc.data.id:''
-			}
-		});
-=======
 		var p_id=me.p_id?me.p_id:'';
->>>>>>> 32b1dc192a9c341a4bee32810bcf0117a9a8129f
 		var rsdocs = Ext.create('casco.store.Documents');
 		var result_store=Ext.create('Ext.data.Store', {
 			 model: 'Ext.data.Model',
@@ -122,10 +111,16 @@ Ext.define('casco.view.report.CenterCreate', {
 			width: 200
 		}, {
 			text: 'created at',
-			dataIndex: 'created_at'
+			dataIndex: 'created_at',
+			render:function(v){
+			return  v.date;
+			}
 		}, {
 			text: 'updated at',
-			dataIndex: 'updated_at'
+			dataIndex: 'updated_at',
+			render:function(v){
+			return v.date;
+			}
 		}]//columns
 		}//me.items[1]
 		];

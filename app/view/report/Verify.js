@@ -27,11 +27,12 @@ Ext.define('casco.view.report.Verify', {
 			 callback: function(record, operation, success){
              },
 			 failure: function(record, operation) {
-			  me.getView().refresh(); // 这一行重要哇我晕
+			  me.down('gridpanel').getView().refresh(); // 这一行重要哇我晕
               Ext.Msg.alert('Failed','Save failed!');
 			 },
 			 success: function(record, operation) {
-			 me.getView().refresh();Ext.Msg.alert('Success', 'Saved successfully.');
+			 me.down('gridpanel').getView().refresh();
+			 Ext.Msg.alert('Success', 'Saved successfully.');
 			 }
 			 }); 
 			 /*
