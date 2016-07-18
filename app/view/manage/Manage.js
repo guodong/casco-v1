@@ -20,7 +20,7 @@ Ext.define('casco.view.manage.Manage', {
 
 		this.items = [{		
 			region: 'north',
-			xtype: 'top'
+			xtype: 'manage_top'
 		}, {
 			xtype: 'treepanel',
 			title: "Management",

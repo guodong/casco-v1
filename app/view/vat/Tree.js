@@ -1,0 +1,42 @@
+Ext.define('casco.view.vat.Tree', {
+    extend: 'Ext.tree.Panel',
+    requires: [],
+    alias: 'widget.vat_tree',
+    
+    listeners: {
+        itemdblclick: function(view, record, item, index, e, eOpts){
+        	var me = this;
+			//console.log(me.getView().up().project);
+        	if(!record.get('leaf')) return;
+    		var tabs = Ext.getCmp('vatpanel');
+			var tab = tabs.child('#tab-vat-'+record.data.id);
+			console.log(tab);
+//			var child_id = casco.model.Document;
+			if(!tab){
+			tabs.removeAll();
+			tab = tabs.add({id: 'tab-vat-'+record.data.id,
+				xtype: 'matrix.v',
+				title: 'verification',
+				closable: true,
+				child_doc:record,
+				project: this.getView().up().project
+			});
+			}else{tab.store.reload();}
+			tabs.setActiveTab(tab);
+    	},//itemdbclick
+		itemcontextmenu:'onCtxMenu'
+    },//lsiteners
+    displayField: 'name',
+    rootVisible : false,
+    initComponent: function(){
+    	var me = this;
+	    this.store = Ext.create('casco.store.TreeDocuments', {
+    		proxy: {
+    			extraParams: {
+    				project_id: me.project?me.project.get('id'):''
+    			}
+    		}
+    	});
+    	this.callParent();
+    }
+})

@@ -1,4 +1,4 @@
-Ext.define('casco.store.Vat', {
+Ext.define('casco.store.Vats', {
     extend: 'Ext.data.Store',
     model: 'casco.model.Vat',
     pageSize: 0, //disable paging

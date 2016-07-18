@@ -31,6 +31,7 @@ Ext.define('casco.view.main.Tree', {
 	},//listeners
     displayField: 'name',
     rootVisible : false,
+    
     initComponent: function(){
     	var me = this;
 	    this.store = Ext.create('casco.store.TreeDocuments', {

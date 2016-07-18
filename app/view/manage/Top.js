@@ -1,9 +1,10 @@
-Ext.define('casco.view.matrix.Top', {
+//主界面Head-样式，按钮，Controller-main.MainController
+Ext.define('casco.view.manage.Top', {
     extend: 'Ext.toolbar.Toolbar',
-    alias: 'widget.matrix_top',
-    xtype: 'matrix_top',
-    controller: 'matrix',
+    xtype: 'manage_top',
+    controller: 'main',
     style: {background: '#167abc',padding: '10px',color: '#fff'},
+    
     initComponent: function(){
     	var store = Ext.create('casco.store.Projects');
     	store.load({
@@ -11,56 +12,26 @@ Ext.define('casco.view.matrix.Top', {
     			user_id: JSON.parse(localStorage.user).id
     		}
     	});
+//    	console.log(me.project);
 		var states = Ext.create('Ext.data.Store', {
          fields: ['abbr', 'name'],
          data : [
-          
          {"abbr":"EditInfo", "name":"1"},
 		 {"abbr":"Logout", "name":"2"}
-		
-        
            ]});
 
     	this.items = [{
             xtype: 'label',
             html: 'CASCO TEST CENTER',
-            style: 'font-size: 27px;'
+            style: {'font-size':'27px','font-weight':'bold'}
         },'->',{
-            text: 'Manage',
-            xtype: 'button',
-            handler: 'manage',
-            hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false
-        },{
-        	text:'Vat',
-        	xtype: 'button',
-        	handler: 'vat'
-        },{
-            text: 'Testing',
-            xtype: 'button',
-            handler: 'testing'
-        },{
-            text: 'Report',
-            xtype: 'button',
-            handler: 'reporting'
-        }/*,{
-            text: 'Project',
-            xtype: 'button',
-            handler: 'project'
-        }*/,{
-            text: 'Project Stat',
-            xtype: 'button',
-            handler: function(){
-            	window.open("/prostat/projectstat-tmp.htm");
-            },
-            hidden: localStorage.view == 'manage'?false:true
-        },{
             xtype: 'combobox',
             editable: false,
             displayField: 'name',
             valueField: 'id',
             store: store,
             queryMode: 'local',
-			itemId:'switcher',	//ManagerController
+			itemId:'switcher',	//ManageController使用
             emptyText: 'Switch Project',
             listeners: {
             	select: 'switchProject'

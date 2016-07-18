@@ -4,7 +4,7 @@ Ext.define('casco.view.rs.RsDetails', {
     
     requires: [
            'casco.store.Vatstrs',
-           'casco.store.Vat',
+           'casco.store.Vats',
            'casco.view.rs.vat.VatTree'
     ],
     
@@ -24,7 +24,7 @@ Ext.define('casco.view.rs.RsDetails', {
 	initComponent:function(){
 		var me = this;
 		me.store=Ext.create('casco.store.Rss');
-		me.vat = Ext.create('casco.store.Vat');
+		me.vat = Ext.create('casco.store.Vats');
 		console.log(me.rs);
 //		me.store.add([me.rs]);
 		if(me.rs){

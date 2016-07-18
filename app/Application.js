@@ -25,6 +25,10 @@ Ext.define('casco.Application', {
 	    	//before: 'onBeforeManage',
 	    	action: 'onManage'
 	    },
+	    'vat/:id':{
+	    	//before: 'onBeforeVat',
+	    	action: 'onVat'
+	    },
 		'matrix/:id': {
 			//before: 'onBeforeMatrix',
 			action: 'onMatrix',
@@ -152,6 +156,18 @@ Ext.define('casco.Application', {
 		Ext.widget('manage');
 	},
 	
+	onVat: function(id){
+		var me = this;
+		var model = Ext.create('casco.model.Project');
+		model.set('id',id);
+		model.load({
+			scope: this,
+			success:function(project){
+				Ext.widget('vat',{project: project});
+			}
+		});
+	},
+	
 	onMatrix: function(id){
 		//var handle=Ext.create('casco.view.matrix.Matrix');
 		//hadle.show();
@@ -168,6 +184,7 @@ Ext.define('casco.Application', {
     		}
     	});
 	},
+	
 	onReport: function(id){
 		//var handle=Ext.create('casco.view.matrix.Matrix');
 		//hadle.show();

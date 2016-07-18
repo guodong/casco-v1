@@ -68,10 +68,17 @@ Ext.define('casco.view.main.MainController', {
 			}}, this);//confirm
 		}//else
 	},
+	
 	manage : function() {
 		this.redirectTo('manage', true);
 		location.reload();
 	},
+	
+	vat: function(){
+		this.redirectTo('vat/' +this.getView().project.get('id'), true);
+		location.reload();
+	},
+	
 	testing : function() {
 		this.redirectTo('testing/' + this.getView().project.get('id'));
 		location.reload();
