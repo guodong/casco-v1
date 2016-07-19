@@ -169,29 +169,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 						}//
 				  }]// customMenu
 				  },
-			  {text:'justification',dataIndex:'justification',header:'justification',width:100,sortable:true,renderer: function(value){
-						/*var mySimpleStore = Ext.create('Ext.data.Store',{fields:['tag','comment'],data:[value]});
-						console.log(mySimpleStore);
-						  var id = Ext.id();
-				            Ext.defer(function() {
-				               Ext.widget('combo', {
-				                  renderTo: id,
-				                  fieldLabel:'',
-				                  width:95,
-				                  height:20,
-								  store:mySimpleStore,
-								  diaplayField:'tag',
-								  typeAhead:true,
-								  mode:'local'
-				               });
-				            }, 5);
-				            return Ext.String.format('<div id="{0}"></div>', id);	*/
-						  var arr = [];//JSON.parse一定要记得
-						  Ext.Array.each(JSON.parse(value), function(v) {
-						  arr.push(v.comment==undefined?v.tag:(v.tag+':'+v.comment)); });
-						  return arr.join('<br/>');
-						 
-			},
+			  {text:'justification',dataIndex:'justification',header:'justification',width:100,sortable:true,editor: {xtype: 'textfield'},
 		  customMenu:[
 						{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'justification',width:95,dataIndex:'justification'}]}],
 						 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'justification');}

@@ -30,6 +30,10 @@ Ext.define('casco.view.main.Top', {
             handler: 'manage',
             hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false
         },{
+        	text:'Vat',
+        	xtype: 'button',
+        	handler: 'vat'
+        },{
             text: 'Testing',
             xtype: 'button',
             handler: 'testing'

@@ -15,6 +15,7 @@ Ext.define('casco.view.matrix.Verification', {
     initComponent: function(){
     	var me = this;
     	var p_id=me.id;
+    	console.log(p_id);
     	me.store = new casco.store.Verification();
     	me.store.load({
     		params: {

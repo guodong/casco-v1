@@ -43,7 +43,7 @@ Ext.define('casco.view.testing.JobCreate', {
 				fieldLabel: 'Name',
 				msgTarget: 'under',
 				allowBlank:false, 
-				blankText:"²»ÄÜÎª¿Õ",
+				blankText:"ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½",
 				name: 'name',
 				xtype: 'textfield'
 			}, {
@@ -68,7 +68,6 @@ Ext.define('casco.view.testing.JobCreate', {
 				queryMode: 'local',
 				listeners: {
 					select: function(f, r, i) {
-						//¼¶ÁªÑ¡Ôñ
 						Ext.getCmp('test-tc-version').store.load({
 							params: {
 								document_id: r.get('id')
@@ -98,7 +97,7 @@ Ext.define('casco.view.testing.JobCreate', {
 				valueField: 'id',
 				listeners: {
 					select: function(f, r, i){
-						//¼¶Áª´¦
+						//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 						Ext.getCmp('testing-job-tc-grid').getStore().load({
 							params: {
 								version_id: r.get('id'),
@@ -118,7 +117,9 @@ Ext.define('casco.view.testing.JobCreate', {
 		        clicksToEdit: 1,
 		        listeners: {
 		            beforeedit: function(editor, e) {
+		            	console.log(e);
 		            	var combo = e.grid.columns[e.colIdx].getEditor(e.record);
+		            	console.log(e.record.get('versions'));
 		            	var st = Ext.create('casco.store.Versions', {data: e.record.get('versions')});
 		            	combo.setStore(st);
 		            }
@@ -132,6 +133,7 @@ Ext.define('casco.view.testing.JobCreate', {
 				text: 'Version',
 				dataIndex: 'version_id',
 				renderer: function(v, md, record){
+					console.log(record);
 					var versions = record.get('versions');
 					if(versions.length == 0) return;
 					if(!v){

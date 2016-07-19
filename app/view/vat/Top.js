@@ -1,30 +1,30 @@
-Ext.define('casco.view.matrix.Top', {
+Ext.define('casco.view.vat.Top', {
     extend: 'Ext.toolbar.Toolbar',
-    alias: 'widget.matrix_top',
-    xtype: 'matrix_top',
-    controller: 'matrix',
+    alias: 'widget.vat_top',
+    controller: 'vat',
+    
     style: {background: '#167abc',padding: '10px',color: '#fff'},
+    
     initComponent: function(){
+    	var me = this;
     	var store = Ext.create('casco.store.Projects');
     	store.load({
     		params:{
     			user_id: JSON.parse(localStorage.user).id
     		}
     	});
+    	
 		var states = Ext.create('Ext.data.Store', {
          fields: ['abbr', 'name'],
          data : [
-          
          {"abbr":"EditInfo", "name":"1"},
 		 {"abbr":"Logout", "name":"2"}
-		
-        
            ]});
 
     	this.items = [{
             xtype: 'label',
             html: 'CASCO TEST CENTER',
-            style: 'font-size: 27px;'
+            style: {'font-size':'27px','font-weight':'bold'}
         },'->',{
             text: 'Manage',
             xtype: 'button',

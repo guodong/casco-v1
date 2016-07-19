@@ -4,6 +4,7 @@ Ext.define('casco.view.matrix.ItemTree', {
     displayField: 'name',
     header: false,
     rootVisible : false,
+    
     initComponent: function(){
     	var me = this;
     	this.store = Ext.create('casco.store.TreeItems', {

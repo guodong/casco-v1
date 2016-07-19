@@ -6,9 +6,10 @@
 * TODO - Replace this content of this view to suite the needs of your
 * application.
 */
-Ext.define('casco.view.matrix.MatrixController', {
+Ext.define('casco.view.vat.VatController', {
 	extend : 'Ext.app.ViewController',
-	alias : 'controller.matrix',
+	alias : 'controller.vat',
+	
 	switchProject : function(combo, record) {
 		
 	   //top的view啊
@@ -16,9 +17,13 @@ Ext.define('casco.view.matrix.MatrixController', {
 		location.reload();
 	},
 	
+	//Vat
 	vat: function(){
 		this.redirectTo('vat/' +this.getView().project.get('id'), true);
 		location.reload();
+	},
+	createView: function(){
+		
 	},
 	
 	createVerification: function() {
