@@ -22,6 +22,9 @@ Ext.define('casco.view.vat.VatController', {
 		this.redirectTo('vat/' +this.getView().project.get('id'), true);
 		location.reload();
 	},
+	createView: function(){
+		
+	},
 	
 	createVerification: function() {
 		  

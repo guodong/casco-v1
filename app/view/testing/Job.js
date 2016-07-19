@@ -37,6 +37,7 @@ Ext.define('casco.view.testing.Job', {
 			text : 'build',
 			dataIndex : 'build',
 			renderer : function(v) {
+				console.log(v);
 				return v?v.name:'';
 			}
 		}, {
@@ -81,6 +82,7 @@ Ext.define('casco.view.testing.Job', {
 			scope: this,
 			handler: function() {
 				var job = Ext.create('casco.model.Testjob');
+				console.log(job);
 				var win = Ext.create('widget.testing.jobcreate', {
 					project: me.project,
 					job: job
