@@ -15,6 +15,14 @@ Ext.define('casco.view.report.Verify', {
     		}
     	});
 		store.load();
+		var resultStore = Ext.create('Ext.data.Store', {
+        	model: 'casco.model.Result',
+            data : [
+	                {label: 'untested',   value: 0},
+	                {label: 'passed',   value: 1},
+	                {label: 'failed',   value: 2},
+            ]
+        });
 		me.store = store;
 		me.tbar = [{
 			text: 'Save',
@@ -79,11 +87,40 @@ Ext.define('casco.view.report.Verify', {
 		text: "Description",
 		dataIndex: "description",
 		width: 120
-	}, {
-		text: "Result",
-		dataIndex: "result",
-		width: 120
-	}, {
+	},
+	{
+		    xtype: 'gridcolumn',
+		    dataIndex: 'result',
+			width: 120,
+		    renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
+		        return resultStore.findRecord('value', value).get('label');
+		    },
+		    text: 'Result',
+			typeAhead:false, 
+		    editor: {
+		        xtype: 'combobox',
+				disabledCls: '',
+		        queryMode: 'local',
+				displayField: 'label',
+				valueField: 'value',
+				editable: false,
+				readOnly: true,
+		        store: resultStore,
+		        listeners: {
+		        	select: function(combo, r){
+	        		/*	var rd = me.getSelectionModel().getSelection()[0];
+		        		if(r.get('value') != 0){
+		        			rd.set('exec_at', Ext.Date.format(new Date(), 'Y-m-d H:i:s'));
+		        		}
+	        			Ext.each(rd.get('tc').steps, function(step){
+	        				step.result = r.get('value');
+	        			});
+	        			Ext.getCmp('testing-step-panel').down('grid').reconfigure();
+						*/
+		        	}
+		        }
+		    }
+		}, {
 		text: "Test case ID",
 		dataIndex: "test_case",
 		width: 120

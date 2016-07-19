@@ -79,8 +79,7 @@ Ext.define('casco.view.testing.Result', {
 			dataIndex: 'tc',
 			flex:1,
 			renderer: function(v) {
-				var column=JSON.parse('{'+v.column+'}');
-				return column.description||column['test case description']||''
+				return  v.description;
 			}
 		}, {
 			text: "source",
@@ -102,11 +101,12 @@ Ext.define('casco.view.testing.Result', {
 			dataIndex: "tc",
 			width: 100,
 			renderer: function(v) {
-				var str = "";
-				for ( var i in v.testmethods) {
-					str += v.testmethods[i].name;
-				}
-				return str;
+			//	var str = "";
+			//	for ( var i in v.testmethods) {
+			//		str += v.testmethods[i].name;
+			//	}
+			//	return str;
+			return v.testmethods;
 			}
 		}, {
 			text: "begin at",

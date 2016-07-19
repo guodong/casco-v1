@@ -11,28 +11,17 @@ Ext.define('casco.view.report.CenterCreate', {
 	},
 	height: 400,
 	 width: 900,
-	 
 	initComponent: function() {
 		var me = this;
 		var p_id=me.p_id?me.p_id:'';
-		var rsdocs = Ext.create('casco.store.Documents');
-		var result_store=Ext.create('Ext.data.Store', {
-			 model: 'Ext.data.Model',
-			 proxy: {
-				 type: 'rest',
-				 url: API+'center/results',
-				 reader: {
-					 type: 'json',	
-				 }
-			 }
-			});
-		//console.log(me.project.get('id'),me.child_doc.data.id);
-		result_store.reload({
-			params:{
-			  tc_id:me.child_doc.data.id?me.child_doc.data.id:'',
-			  project_id:me.project.get('id')
+		var test_job = Ext.create('casco.store.Testjobs');
+		test_job.load({
+			params: {
+				project_id: me.project.get('id'),
+				child_id:me.child_doc.data.id?me.child_doc.data.id:''
 			}
-			});
+		});
+		var rsdocs = Ext.create('casco.store.Documents');
 		me.items = [{
 			xtype: 'form',
 			region: 'west',
@@ -49,24 +38,39 @@ Ext.define('casco.view.report.CenterCreate', {
 				msgTarget: 'under',
 				name: 'version',
 				xtype: 'textfield'
-			},{
-				fieldLabel: 'description',
-				labelAlign:'top',
-				name: 'description',
-				xtype: 'textarea',
-				flex:1,
-				anchor :'100%'
+			},
+			{
+				fieldLabel: 'Testing name',
+				name: 'test_id',
+				store: test_job,
+				id: 'child-version',
+				xtype: 'combobox',
+				allowBlank: false,
+				editable: false,
+				queryMode: 'local',
+				displayField: 'name',
+				valueField: 'id',
+				listeners: {
+					select: function(f, r, i) {
+						Ext.getCmp('testing_item').store.load({'id':r.get('id')}
+						);
+					}
+				}
+			},
+			{
+			fieldLabel: 'description',
+			labelAlign:'top',
+			name: 'description',
+			xtype: 'textarea',
+			flex:1,
+			anchor :'100%'
 		}]
 		},{
 			xtype: 'grid',
 			id: 'testing_item',
 			region: 'center',
-			forceFit: 'true',
-			store: result_store,
-			selModel: {
-				selType: 'checkboxmodel',
-				checkOnly: true
-			},
+			forceFit:'true',
+			store: Ext.create('casco.store.Testjobs'),
 			plugins: {
 		        ptype: 'cellediting',
 		        clicksToEdit: 1,
@@ -79,48 +83,50 @@ Ext.define('casco.view.report.CenterCreate', {
 		        }
 		    },
 		    columns:  [{
-			text : 'Test Case Id',
-			dataIndex : 'id',
-			hidden:true
-		},{
-			text : 'Result	Id',
-			dataIndex : 'result_id',
-			hidden:true
-		},{
-			text : 'Test Case Id',
-			dataIndex : 'tag',
-			width:300
+			text : 'name',
+			dataIndex : 'name'
 		}, {
-			text : 'Test Case Description',
-			dataIndex : 'description',
+			text : 'build',
+			dataIndex : 'build',
 			renderer : function(v) {
-				return v;
+				return v?v.name:'';
 			}
 		}, {
-			text: 'Status',
+			text : 'tc',
+			dataIndex : 'tc_version',
+			renderer : function(v) {
+				return v?v.document.name:'';
+			},
+			width: 200
+		}, {
+			text : 'tc version',
+			dataIndex : 'tc_version',
+			renderer : function(v) {
+				return v?v.name:'';
+			},
+			width: 200
+		}, {
+			text: 'rs:version',
+			dataIndex: 'rs_versions',
+			flex: 1,
+			renderer: function(v){
+				var arr = [];
+				for(var i in v){
+					var str = v[i].document.name + ":" + v[i].name;
+					arr.push(str);
+				}
+				return arr.join('; ');//处理过后渲染出来
+			},
+			width: 300
+		}, {
+			text: 'status',
 			dataIndex: 'status',
 			renderer: function(v){
 				return v==0?'<span style="color:red">testing</span>':'<span style="color: green">submited</span>';
 			}
 		}, {
-			text : 'Version Tested',
-			dataIndex : 'build',
-			renderer : function(v) {
-				return v;
-			},
-			width: 200
-		}, {
 			text: 'created at',
-			dataIndex: 'created_at',
-			render:function(v){
-			return  v.date;
-			}
-		}, {
-			text: 'updated at',
-			dataIndex: 'updated_at',
-			render:function(v){
-			return v.date;
-			}
+			dataIndex: 'created_at'
 		}]//columns
 		}//me.items[1]
 		];

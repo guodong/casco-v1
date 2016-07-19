@@ -140,10 +140,15 @@ Ext.define('casco.view.rs.RsDetails', {
                 		callback: function(record, operation, success){
                           rs.set(me.down('form').getValues());
                           rs.set('vat',vat);
-                         // me.up().getStore().reload();
-						  console.log(Ext.ComponentQuery.query("#tab-"+me.document_id)[0]);
-                          me.pointer.reconfigure(me.pointer.store_rs, me.pointer.columns);
-                          me.pointer.getView().refresh();
+
+                          //me.up('gridpanel').store.reload();
+                          if(!me.status){
+                        	  t = Ext.ComponentQuery.query("#tab-" + me.document_id)[0];
+    						  t.store.reload();
+                          }else{
+                              me.pointer.reconfigure(me.pointer.store, me.pointer.columns);
+                              me.pointer.getView().refresh();
+                          }
                           Ext.Msg.alert('更新成功');
                         	//暂时修改前端对象吧
                           me.destroy();  
@@ -173,9 +178,13 @@ Ext.define('casco.view.rs.RsDetails', {
 				anchor : '100%',
 				fieldLabel : 'Tag',
 				name : 'tag',
+				value: me.tag_id,
 				xtype : 'textfield',
-				allowBlank: true,
-				value: me.tag_id
+				allowBlank: false,
+				blankText: 'Tag不能为空，请输入Tag',
+				regex: /(\[.+\])/,
+				regexText: 'Tag格式错误，须包含[]且不为空',
+				msgTarget : 'side'
 				},
 			{
 				xtype: 'gridpanel',
@@ -222,7 +231,7 @@ Ext.define('casco.view.rs.RsDetails', {
 				fieldLabel : name.dataIndex,
 				name : name.dataIndex,
 				xtype : 'textarea',
-				maxHeight: 10,
+				grow: true,
 	            allowBlank: true}]);//插入值即可
 		
         },this,true);
