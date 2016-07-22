@@ -30,7 +30,10 @@ Ext.define('casco.view.vat.VatView',{
 //		});
 		me.columns = [{
 			text : 'name',
-			dataIndex : 'name'
+			dataIndex: 'name'
+		},{
+			text: 'description',
+			dataIndex: 'description'
 		},{
 			text : 'tc',
 			dataIndex : 'tc_version',
@@ -62,13 +65,15 @@ Ext.define('casco.view.vat.VatView',{
 		}];
 		
 		me.tbar = [{
-			text: 'Create View',
+			text: 'Create Vat',
 			glyph: 0xf067,
 			scope: this,
 			handler: function() {
-				var vv = Ext.create('casco.model.Vat');
-				console.log(vv);
-				var win = Ext.create('widget.vat.viewcreate', {
+				var vv = Ext.create('casco.model.Vat',{
+					id: null
+				});
+//				console.log(vv);
+				var win = Ext.create('widget.vat.vatcreate', {
 					project: me.project,
 					document: me.document,
 					p_id:p_id?p_id:'',
@@ -78,7 +83,7 @@ Ext.define('casco.view.vat.VatView',{
 				win.show();
 			}
 		},{
-			text: 'Delete View',
+			text: 'Delete Vat',
 			glyph: 0xf068,
 			scope: this,
 			handler: function() {

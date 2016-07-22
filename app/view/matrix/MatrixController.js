@@ -22,13 +22,15 @@ Ext.define('casco.view.matrix.MatrixController', {
 	},
 	
 	createVerification: function() {
-		  
 		Ext.MessageBox.wait('正在处理,请稍候...', 'Create Verification');
 		var form = this.lookupReference('ver_create_form');
 		var meta = form.getValues();
+		console.log(meta);
 		rsvsd = Ext.getCmp('parent_doc').getStore();
+		console.log(rsvsd);
 		var rsvss = [];
 		rsvsd.each(function(v){
+			console.log(v);
 			var obj = {
 				parent_document_id: v.get('id'),
 				parent_version_id: v.get('version_id')
@@ -59,6 +61,7 @@ Ext.define('casco.view.matrix.MatrixController', {
 			}//callback
 		});
 	},
+	
 	manage : function() {
 		this.redirectTo('manage', true);
 		location.reload();

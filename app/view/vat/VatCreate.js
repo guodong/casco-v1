@@ -1,11 +1,11 @@
-Ext.define('casco.view.vat.ViewCreate', {
+Ext.define('casco.view.vat.VatCreate', {
 	extend: 'Ext.window.Window',
-	xtype: 'vat.viewcreate',
+	xtype: 'vat.vatcreate',
 	modal: true,
 	controller: 'vat',
 	
 	title: 'Create Vat View',
-	id: 'vat-view-create',
+	id: 'vat-view-create-window',
 	layout: {
 		type: 'border'
 	},
@@ -15,7 +15,7 @@ Ext.define('casco.view.vat.ViewCreate', {
 	initComponent: function() {
 		var me = this;
 		me.rs_versions = [];
-		console.log(me.document);
+//		console.log(me.document);
 		var tcvs = Ext.create('casco.store.Versions');
 		tcvs.load({
 			params:{
@@ -82,7 +82,7 @@ Ext.define('casco.view.vat.ViewCreate', {
 				}
 			},{
 				xtype: 'textarea',
-				fieldLabel: 'Decription',
+				fieldLabel: 'Description',
 				labelAlign:'top',
 				name: 'description',
 				anchor: '100%',
@@ -113,7 +113,7 @@ Ext.define('casco.view.vat.ViewCreate', {
 				text: 'Version',
 				dataIndex: 'version_id',
 				renderer: function(v, md, record){
-					console.log(record);
+//					console.log(record);
 					var versions = record.get('versions');
 					if(versions.length == 0) return;
 					if(!v){
@@ -161,7 +161,7 @@ Ext.define('casco.view.vat.ViewCreate', {
 				text: 'Save',
 				glyph: 0xf0c7,
 				listeners: {
-					click: 'createView'
+					click: 'createVat'
 				}
 			}, {
 				text: 'Cancel',

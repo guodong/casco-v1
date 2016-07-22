@@ -22,16 +22,57 @@ Ext.define('casco.view.vat.VatController', {
 		this.redirectTo('vat/' +this.getView().project.get('id'), true);
 		location.reload();
 	},
-	createView: function(){
-		
+	
+	createVat: function(){
+		var form = this.lookupReference('vat_view_create_form');
+		var meta = form.getValues(); //tc info
+		var rsvsd = Ext.getCmp('vat-view-rs').getStore(); //RS info
+		var rsvss = [];
+		rsvsd.each(function(v){
+			var obj = {
+				rs_document_id: v.get('id'),
+				rs_version_id: v.get('version_id')
+			}
+			rsvss.push(obj);//放入的是一个对象啊
+		});
+		console.log(rsvss);
+		meta.rs_versions = rsvss;
+//		var tcs = [];
+//		var sels = Ext.getCmp('tc_version').getSelection();
+//		for(var i in sels){
+//			tcs.push(sels[i].get('tc').id);
+//		}
+//		meta.tcs = tcs;
+		console.log(meta);
+		var vat = Ext.create('casco.model.Vat', meta);
+		vat.save({
+			callback: function(record,operation){
+				console.log(record);
+				if(record.data.success){
+				var tabs=Ext.getCmp('vatpanel');
+				var childs=tabs.items;
+				var count=0;
+				childs.each(function(record){
+                   count++;
+				   if(count==1)return;
+                   record.store.reload();
+				});
+				Ext.Msg.alert('','创建成功!');
+				//Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
+				}else{
+				Ext.Msg.alert('创建失败!',JSON.stringify(record.data.data));
+				}
+				Ext.getCmp('vat-view-create-window').destroy();
+			}//callback
+		});
 	},
 	
 	createVerification: function() {
 		  
-		Ext.MessageBox.wait('正在处理,请稍候...', 'Create Verification');
-		var form = this.lookupReference('ver_create_form');
+//		Ext.MessageBox.wait('正在处理,请稍候...', 'Create Verification');
+		var form = this.lookupReference('vat_create_form');
 		var meta = form.getValues();
-		rsvsd = Ext.getCmp('parent_doc').getStore();
+		var rsvsd = Ext.getCmp('parent_doc').getStore();
 		var rsvss = [];
 		rsvsd.each(function(v){
 			var obj = {

@@ -28,6 +28,7 @@ Ext.define('casco.view.testing.TestController', {
 		meta.rs_versions = rsvss;
 		var tcs = [];
 		var sels = Ext.getCmp('testing-job-tc-grid').getSelection();
+		console.log(sels);
 		for(var i in sels){
 			tcs.push(sels[i].get('tc').id);
 		}
