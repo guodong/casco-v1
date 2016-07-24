@@ -11,8 +11,6 @@ Ext.define('casco.view.vat.VatController', {
 	alias : 'controller.vat',
 	
 	switchProject : function(combo, record) {
-		
-	   //top的view啊
         this.redirectTo('project/' + record.get('id'), true);
 		location.reload();
 	},
@@ -25,44 +23,33 @@ Ext.define('casco.view.vat.VatController', {
 	createView: function(){
 		
 	},
-	
-	createVerification: function() {
-		  
-		Ext.MessageBox.wait('正在处理,请稍候...', 'Create Verification');
-		var form = this.lookupReference('ver_create_form');
+	createJob: function() {
+		var form = this.lookupReference('job_create_form');
 		var meta = form.getValues();
-		rsvsd = Ext.getCmp('parent_doc').getStore();
+		rsvsd = Ext.getCmp('testing-job-rs').getStore();
 		var rsvss = [];
 		rsvsd.each(function(v){
 			var obj = {
-				parent_document_id: v.get('id'),
-				parent_version_id: v.get('version_id')
+				rs_document_id: v.get('id'),
+				rs_version_id: v.get('version_id')
 			}
 			rsvss.push(obj);//放入的是一个对象啊
 		});
-		meta.account=JSON.parse(localStorage.user).account;
-		meta.parent_versions = rsvss;
-		var job = Ext.create('casco.model.Verification',meta);
+		meta.rs_versions = rsvss;
+		var tcs = [];
+		var sels = Ext.getCmp('testing-job-tc-grid').getSelection();
+		for(var i in sels){
+			tcs.push(sels[i].get('tc').id);
+		}
+		meta.tcs = tcs;
+		var job = Ext.create('casco.model.Testjob', meta);
 		job.save({
-			callback: function(record,operation){
-				console.log(record.data.success);
-				if(record.data.success){
-				var tabs=Ext.getCmp('matrixpanel');
-				var childs=tabs.items;
-				var count=0;
-				childs.each(function(record){
-                   count++;
-				   if(count==1)return;
-                   record.store.reload();
-				});
-				Ext.Msg.alert('','创建成功!');
-				//Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
-				}else{
-				Ext.Msg.alert('创建失败!',JSON.stringify(record.data.data));
-				}
-				Ext.getCmp('ver-create-window').destroy();
-			}//callback
+			success: function(){
+				Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
+				Ext.getCmp('testing-job-create-window').destroy();
+			}
 		});
+		
 	},
 	manage : function() {
 		this.redirectTo('manage', true);
@@ -72,8 +59,6 @@ Ext.define('casco.view.vat.VatController', {
 
 	},
 	editUser:function(combo,record){
-
-
 		if(record.get('name')=='1'){
 			combo.setValue(combo.emptyText);
 			var  model= Ext.create('casco.model.User');
@@ -98,17 +83,13 @@ Ext.define('casco.view.vat.VatController', {
 						if(d.code != 0){
 							Ext.Msg.alert('Error', 'Logout failure.');
 						}else{
-							//首先清空localsotrage
 							localStorage.clear();
 							var main=location.hash;
-							// console.log(main);
 							loc=main.match(/^\#([a-z]*).*?$/);//蛋疼，表示project窗口不能销毁
-							//	console.log(loc[1]);
 							var parent=(loc[1]=="project")?"app-main":loc[1];
 							me.getView().up(parent).destroy();
 							me.redirectTo('selectProject', true);
 							location.reload();
-
 						}
 					}//success
 				});//request
