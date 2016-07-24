@@ -91,42 +91,31 @@ Ext.define('casco.view.report.CenterCreate', {
 			renderer : function(v) {
 				return v?v.name:'';
 			}
-		}, {
-			text : 'tc',
-			dataIndex : 'tc_version',
-			renderer : function(v) {
-				return v?v.document.name:'';
-			},
-			width: 200
-		}, {
-			text : 'tc version',
-			dataIndex : 'tc_version',
-			renderer : function(v) {
-				return v?v.name:'';
-			},
-			width: 200
-		}, {
-			text: 'rs:version',
-			dataIndex: 'rs_versions',
+		},{
+			text: 'vat_version',
+			dataIndex: 'vatbuild',
 			flex: 1,
 			renderer: function(v){
-				var arr = [];
+				/*var arr = [];
 				for(var i in v){
 					var str = v[i].document.name + ":" + v[i].name;
 					arr.push(str);
 				}
 				return arr.join('; ');//处理过后渲染出来
-			},
-			width: 300
+				*/
+				return v?v.name:'';
+			}
 		}, {
 			text: 'status',
 			dataIndex: 'status',
 			renderer: function(v){
 				return v==0?'<span style="color:red">testing</span>':'<span style="color: green">submited</span>';
-			}
+			},
+			width: 200
 		}, {
 			text: 'created at',
-			dataIndex: 'created_at'
+			dataIndex: 'created_at',
+			width: 200
 		}]//columns
 		}//me.items[1]
 		];

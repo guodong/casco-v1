@@ -20,7 +20,6 @@ Ext.define('casco.view.testing.Job', {
     initComponent: function(){
     	var me = this;
 		me.addListener("datachanged",function(){
-		console.log('gagaga!');
 		Ext.getCmp('result-main').getStore().reload(); 
 		Ext.getCmp('testing-step-panel').getStore().reload();
 		});
@@ -37,32 +36,21 @@ Ext.define('casco.view.testing.Job', {
 			text : 'build',
 			dataIndex : 'build',
 			renderer : function(v) {
-				console.log(v);
 				return v?v.name:'';
 			}
-		}, {
-			text : 'tc',
-			dataIndex : 'tc_version',
-			renderer : function(v) {
-				return v?v.document.name:'';
-			}
-		}, {
-			text : 'tc version',
-			dataIndex : 'tc_version',
-			renderer : function(v) {
-				return v?v.name:'';
-			}
-		}, {
-			text: 'rs:version',
-			dataIndex: 'rs_versions',
+		},{
+			text: 'vat_version',
+			dataIndex: 'vatbuild',
 			flex: 1,
 			renderer: function(v){
-				var arr = [];
+				/*var arr = [];
 				for(var i in v){
 					var str = v[i].document.name + ":" + v[i].name;
 					arr.push(str);
 				}
 				return arr.join('; ');//处理过后渲染出来
+				*/
+				return v?v.name:'';
 			}
 		}, {
 			text: 'status',

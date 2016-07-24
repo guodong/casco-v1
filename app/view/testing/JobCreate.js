@@ -14,14 +14,13 @@ Ext.define('casco.view.testing.JobCreate', {
 	initComponent: function() {
 		var me = this;
 		me.rs_versions = [];
-		var tcdocs = Ext.create('casco.store.Documents');
-		tcdocs.load({
+		var vat = Ext.create('casco.store.Vats');
+		vat.load({
 			params: {
 				project_id: me.project.get('id'),
 				type: 'tc'
 			}
 		});
-		var rsdocs = Ext.create('casco.store.Documents');
 		var builds = Ext.create('casco.store.Builds');
 		builds.load({
 			params: {
@@ -56,7 +55,7 @@ Ext.define('casco.view.testing.JobCreate', {
 				valueField: 'id',
 				allowBlank: false,
 				store: builds
-			}, {
+			}/*, {
 				xtype: 'combobox',
 				editable: false,
 				fieldLabel: 'Tc Document',
@@ -84,11 +83,11 @@ Ext.define('casco.view.testing.JobCreate', {
 						});
 					}
 				}
-			}, {
-				fieldLabel: 'Tc Version',
-				name: 'tc_version_id',
-				store: Ext.create('casco.store.Versions'),
-				id: 'test-tc-version',
+			}*/, {
+				fieldLabel: 'Vat Version',
+				name: 'vat_build_id',
+				store: vat,
+				id: 'vat_build_id',
 				xtype: 'combobox',
 				allowBlank: false,
 				editable: false,
@@ -97,17 +96,17 @@ Ext.define('casco.view.testing.JobCreate', {
 				valueField: 'id',
 				listeners: {
 					select: function(f, r, i){
-						//������
+						console.log(r);
 						Ext.getCmp('testing-job-tc-grid').getStore().load({
 							params: {
-								version_id: r.get('id'),
+								version_id: r.get('tc_version_id'),
 								act:'stat'
 							}
 						});
 					}
 				}
 			}]
-		}, {
+		}, /*{
 			xtype: 'grid',
 			id: 'testing-job-rs',
 			region: 'center',
@@ -154,7 +153,7 @@ Ext.define('casco.view.testing.JobCreate', {
 					editable: false
 			    }
 			}]
-		},{
+		},*/{
 			xtype: 'grid',
 			id: 'testing-job-tc-grid',
 			region: 'south',
@@ -168,26 +167,20 @@ Ext.define('casco.view.testing.JobCreate', {
 				text: 'tag',
 				dataIndex: 'tc',
 				renderer: function(v) {
-				return v.tag
+				return v.tag;
 			}
 			},{
 				text: 'description',
 				dataIndex: 'tc',
 				flex: 1,
-			  renderer: function(v) {
-			  var column=JSON.parse('{'+v.column+'}');
-				//console.log(column);
-				return column.description||column['test case description']||''
-			  }
+				renderer: function(v) {
+				return v.description;
+			}
 			}, {
 			text: "test method",
 			dataIndex: "tc",
 			renderer: function(v) {
-				var str = "";
-				for ( var i in v.testmethods) {
-					str += v.testmethods[i].name;
-				}
-				return str;
+				return v.testmethods;
 			}
 		}]
 		}];
