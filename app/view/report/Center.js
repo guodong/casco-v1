@@ -31,8 +31,8 @@ Ext.define('casco.view.report.Center', {
 		fields: ['abbr', 'name'],
 		data : [
 			{"abbr":"ALL","name":"All"},
-			{"abbr":"AL", "name":"ReportCover"},
-			{"abbr":"AK", "name":"ReportResults"},
+			{"abbr":"AL", "name":"ReportCoverStatus"},
+			{"abbr":"AK", "name":"TestCaseResults"},
 			{"abbr":"AZ", "name":"ReportVerify"}			
 		]
 		});
@@ -87,7 +87,7 @@ Ext.define('casco.view.report.Center', {
 	  var v_id=combo.val_id;
 	  var json=[];
       switch(irecord.get('name')){
-      case 'RquireCoverStatus':
+      case 'ReportCoverStatus':
     	  json={'xtype':'reportcover','title':'reportcover','id':'reportcover_'+v_id,
         		'report':rec,'closable':true};
 		  break;

@@ -62,6 +62,7 @@ Ext.define('casco.view.report.Result', {
 				displayField: 'label',
 				valueField: 'value',
 				editable: false,
+				readOnly:true,
 		        store: resultStore,
 		        listeners: {
 		        	select: function(combo, r){

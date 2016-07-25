@@ -17,9 +17,15 @@ Ext.define('casco.view.report.ReportCover', {
 				report_id: me.report.get('id')  //其他参数？
 			},
 			synchronous: true
-		});  
-		console.log(report_id);
-		 
+		}); 
+		var resultStore = Ext.create('Ext.data.Store', {
+        	model: 'casco.model.Result',
+            data : [
+	                {label: 'untested',   value: 0},
+	                {label: 'passed',   value: 1},
+	                {label: 'failed',   value: 2},
+            ]
+        });
 		  me.tbar = [{
 			text: 'Save',
 			glyph: 0xf080,
@@ -102,7 +108,37 @@ Ext.define('casco.view.report.ReportCover', {
 			 {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:175,sortable:true},
 			 {text:'Child Requirement Tag',dataIndex:'Child Requirement Tag',header:'Child Requirement Tag',width:160,sortable:true},
 			 {text:'Child Requirement Text',dataIndex:'Child Requirement Text',header:'Child Requirement Text',width:165,sortable:true},
-			 {text:'result',dataIndex:'result',header:'result',width:80,sortable:true},
+			 {  xtype: 'gridcolumn',
+		    dataIndex: 'result',
+			width: 120,
+		    renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
+		        return resultStore.findRecord('value', value).get('label');
+		    },
+		    text: 'Result',
+			typeAhead:false, 
+		    editor: {
+		        xtype: 'combobox',
+				disabledCls: '',
+		        queryMode: 'local',
+				displayField: 'label',
+				valueField: 'value',
+				readOnly: true,
+		        store: resultStore,
+		        listeners: {
+		        	select: function(combo, r){
+	        		/*	var rd = me.getSelectionModel().getSelection()[0];
+		        		if(r.get('value') != 0){
+		        			rd.set('exec_at', Ext.Date.format(new Date(), 'Y-m-d H:i:s'));
+		        		}
+	        			Ext.each(rd.get('tc').steps, function(step){
+	        				step.result = r.get('value');
+	        			});
+	        			Ext.getCmp('testing-step-panel').down('grid').reconfigure();
+						*/
+		        	}
+		        }
+		    }//editor
+			},
 			 {text:'justification',dataIndex:'justification',header:'justification',width:100,sortable:true,editor:{xtype:'textfield'}},
 			 {text:'allocation',dataIndex:'allocation',header:'allocation',width:100,sortable:true,render:function(record){}},
 			 {text:'Comment',dataIndex:'comment',header:'Comment',width:90,sortable:true,editor:{xtype:'textfield'}}

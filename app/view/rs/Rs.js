@@ -250,7 +250,6 @@ Ext.define('casco.view.rs.Rs', {
 				tag=null;
 				}
                 var win = Ext.create('widget.rs.rsdetails',{
-                	listeners:{scope:this }, 
                 	status: 0,
                 	pointer: me,	
                 	rs: Ext.create('casco.model.Rs'),
@@ -297,9 +296,7 @@ Ext.define('casco.view.rs.Rs', {
 					document_id: me.document_id,
 					project:me.project,
 					columns:me.columns,
-					
 				});
-			    
 				win.down('form').loadRecord(record);
 				win.show();
 			}

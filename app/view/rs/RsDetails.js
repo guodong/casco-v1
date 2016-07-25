@@ -138,10 +138,9 @@ Ext.define('casco.view.rs.RsDetails', {
                 	my_rs.set('version_id',me.version_id);
                 	my_rs.save({
                 		callback: function(record, operation, success){
-                        //	var t = Ext.ComponentQuery.query("#tab-"+me.document_id)[0];
-                        //console.log(me.down('form').getValues());
                           rs.set(me.down('form').getValues());
                           rs.set('vat',vat);
+
                           //me.up('gridpanel').store.reload();
                           if(!me.status){
                         	  t = Ext.ComponentQuery.query("#tab-" + me.document_id)[0];
