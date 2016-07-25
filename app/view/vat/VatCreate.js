@@ -73,13 +73,13 @@ Ext.define('casco.view.vat.VatCreate', {
 				queryMode: 'local',
 				displayField: 'name',
 				valueField: 'id',
-				listeners: {
-					select: function(f, r, i) {
-						var grid = Ext.getCmp('vat-view-rs');
-						me.vat.rs_versions = grid.getStore();
-						console.log(me.vat);
-					}
-				}
+//				listeners: {
+//					select: function(f, r, i) {
+//						var grid = Ext.getCmp('vat-view-rs');
+//						me.vat.rs_versions = grid.getStore();
+//						console.log(me.vat);
+//					}
+//				}
 			},{
 				xtype: 'textarea',
 				fieldLabel: 'Description',
@@ -126,21 +126,6 @@ Ext.define('casco.view.vat.VatCreate', {
 						}
 					}
 				},
-//				renderer: function(v, md, record){
-//					
-//					var versions = record.get('versions');
-////					console.log(versions);
-//					if(versions.length == 0) return;
-//					if(!v){
-//						record.set('version_id', versions[0].id);
-//						return versions[0].name;
-//					}
-//					for(var i in versions){
-//						if(v == versions[i].id){
-//							return versions[i].name;
-//						}
-//					}
-//				},
 				editor: {
 			        xtype: 'combobox',
 			        queryMode: 'local',

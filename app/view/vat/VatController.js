@@ -43,20 +43,34 @@ Ext.define('casco.view.vat.VatController', {
 //			tcs.push(sels[i].get('tc').id);
 //		}
 //		meta.tcs = tcs;
-		console.log(meta);
 		var vat = Ext.create('casco.model.Vat', meta);
+//		vat.save({
+//			success:function(){
+//				var tabs=Ext.getCmp('vatpanel');
+//				var childs=tabs.items;
+//				childs.each(function(record){
+//					console.log(record);
+//					record.store.reload();
+//				});
+//				Ext.getCmp('vat-view-create-window').destroy();
+//			}
+//		});
 		vat.save({
 			callback: function(record,operation){
-				console.log(record);
-				if(record.data.success){
+				if(record.data){
 				var tabs=Ext.getCmp('vatpanel');
 				var childs=tabs.items;
-				var count=0;
 				childs.each(function(record){
-                   count++;
-				   if(count==1)return;
-                   record.store.reload();
+					console.log(record);
+					record.store.reload();
 				});
+//				console.log(childs);
+//				var count=0;
+//				childs.each(function(record){
+//                   count++;
+//				   if(count==1)return;
+//                   record.store.reload();
+//				});
 				Ext.Msg.alert('','创建成功!');
 				//Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
 				}else{
@@ -112,9 +126,8 @@ Ext.define('casco.view.vat.VatController', {
 	save : function(){
 
 	},
+	
 	editUser:function(combo,record){
-
-
 		if(record.get('name')=='1'){
 			combo.setValue(combo.emptyText);
 			var  model= Ext.create('casco.model.User');
