@@ -5,17 +5,6 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 	viewModel: 'main',
 	requires: [],      
 	           
-    // search参数
-	searchValue:null,
-	matches:[],
-	// currentIndex:null,
-	searchRegExp:null,
-	// caseSensitive:false,
-	regExpMode:false,
-	// matched string css class
-	matchCls:'x-livesearch-match',
-	defaultStatusText:'Nothing Found',
-	
 	multiSelect : true,
 	selModel:{
 // mode:'MULTI',

@@ -35,44 +35,20 @@ Ext.define('casco.view.vat.VatController', {
 		});
 		console.log(rsvss);
 		meta.rs_versions = rsvss;
-//		var tcs = [];
-//		var sels = Ext.getCmp('tc_version').getSelection();
-//		for(var i in sels){
-//			tcs.push(sels[i].get('tc').id);
-//		}
-//		meta.tcs = tcs;
 		var vat = Ext.create('casco.model.Vat', meta);
-//		vat.save({
-//			success:function(){
-//				var tabs=Ext.getCmp('vatpanel');
-//				var childs=tabs.items;
-//				childs.each(function(record){
-//					console.log(record);
-//					record.store.reload();
-//				});
-//				Ext.getCmp('vat-view-create-window').destroy();
-//			}
-//		});
 		vat.save({
 			callback: function(record,operation){
 				if(record.data){
-				var tabs=Ext.getCmp('vatpanel');
-				var childs=tabs.items;
-				childs.each(function(record){
-					console.log(record);
-					record.store.reload();
-				});
-//				console.log(childs);
-//				var count=0;
-//				childs.each(function(record){
-//                   count++;
-//				   if(count==1)return;
-//                   record.store.reload();
-//				});
-				Ext.Msg.alert('','创建成功!');
+					var tabs=Ext.getCmp('vatpanel');
+					var childs=tabs.items;
+					childs.each(function(record){
+						console.log(record);
+						record.store.reload();
+					});
+					Ext.Msg.alert('','创建成功!');
 				//Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
 				}else{
-				Ext.Msg.alert('创建失败!',JSON.stringify(record.data.data));
+					Ext.Msg.alert('创建失败!',JSON.stringify(record.data.data));
 				}
 				Ext.getCmp('vat-view-create-window').destroy();
 			}//callback
@@ -83,9 +59,7 @@ Ext.define('casco.view.vat.VatController', {
 		this.redirectTo('manage', true);
 		location.reload();
 	},
-	save : function(){
-
-	},
+	
 	
 	editUser:function(combo,record){
 		if(record.get('name')=='1'){
@@ -125,6 +99,7 @@ Ext.define('casco.view.vat.VatController', {
 			}}, this);//confirm
 		}//else
 	},
+	
 	testing : function() {
 		this.redirectTo('testing/' + this.getView().project.get('id'));
 		location.reload();
@@ -142,10 +117,12 @@ Ext.define('casco.view.vat.VatController', {
 		}
 		tabs.setActiveTab(tab);
 	},
+	
 	reporting:function(){
         this.redirectTo('report/' +this.getView().project.get('id'), true);
 		location.reload();
 	},
+	
 	project:function(){
 
         this.redirectTo('project/' +this.getView().project.get('id'), true);
