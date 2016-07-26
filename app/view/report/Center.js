@@ -31,9 +31,9 @@ Ext.define('casco.view.report.Center', {
 		fields: ['abbr', 'name'],
 		data : [
 			{"abbr":"ALL","name":"All"},
-			{"abbr":"AL", "name":"ReportCoverStatus"},
-			{"abbr":"AK", "name":"TestCaseResults"},
-			{"abbr":"AZ", "name":"ReportVerify"}			
+			{"abbr":"ReportCoverStatus", "name":"需求覆盖状态"},
+			{"abbr":"TestCaseResults", "name":"用例测试结果"},
+			{"abbr":"ReportVerify", "name":"分配本阶段需求"}			
 		]
 		});
 		
@@ -86,7 +86,7 @@ Ext.define('casco.view.report.Center', {
 	  console.log(rec);
 	  var v_id=combo.val_id;
 	  var json=[];
-      switch(irecord.get('name')){
+      switch(irecord.get('abbr')){
       case 'ReportCoverStatus':
     	  json={'xtype':'reportcover','title':'reportcover','id':'reportcover_'+v_id,
         		'report':rec,'closable':true};
@@ -97,17 +97,17 @@ Ext.define('casco.view.report.Center', {
 		  break;
 	  case  'ReportVerify':
 		   Ext.Array.each(rec.get('docs'), function(v) {
-			var tmp={'xtype':'verify','title':v.name,'id':'verify'+rec.id+v.id,
+			var tmp={'xtype':'verify','title':v.document.name+":"+v.name,'id':'verify'+rec.id+v.id,
 		    'report':rec,'closable':true};
-			tmp['doc_id']=v.id;
+			tmp['doc_id']=v.id;//version_id
 			json.push(tmp);
 			}); 
 		  break;
 	  case  'All':
 		  	Ext.Array.each(rec.get('docs'), function(v) {
-			var tmp={'xtype':'verify','title':v.name,'id':'verify'+rec.id+v.id,
+			var tmp={'xtype':'verify','title':v.document.name+":"+v.name,'id':'verify'+rec.id+v.id,
 		    'report':rec,'closable':true};
-			tmp['doc_id']=v.id;
+			tmp['doc_id']=v.id;//version_id
 			json.push(tmp);
 			}); 
 		  	json.push({'xtype':'result','title':'testingresult','id':'testing_'+v_id,
