@@ -30,7 +30,6 @@ Ext.define('casco.view.report.ReportController', {
 		meta.doc_id=this.getView().child_doc.data.id?this.getView().child_doc.data.id:'';
 		meta.account=JSON.parse(localStorage.user).account;
 		var job = Ext.create('casco.model.Center',meta);
-		Ext.Ajax.timeout=0;
 		job.save({
 			callback: function(record,operation){
 				if(record.data.success){

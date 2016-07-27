@@ -96,12 +96,14 @@ Ext.define('casco.view.report.Center', {
         		'report':rec,'closable':true};
 		  break;
 	  case  'ReportVerify':
+		   var tmps=[];
 		   Ext.Array.each(rec.get('docs'), function(v) {
 			var tmp={'xtype':'verify','title':v.document.name+":"+v.name,'id':'verify'+rec.id+v.id,
 		    'report':rec,'closable':true};
 			tmp['doc_id']=v.id;//version_id
-			json.push(tmp);
+			tmps.push(tmp);
 			}); 
+			json={title:'分配给本阶段验证需求', xtype: 'tabpanel',items:tmps,'closable':true};
 		  break;
 	  case  'All':
 		  	Ext.Array.each(rec.get('docs'), function(v) {
