@@ -6,7 +6,8 @@ Ext.define('casco.view.vat.VatRelations',{
 	
 	forceFit: true,
 	columnLines: true,
-	
+	plugins: 'gridfilters',
+		
 	initComponent: function(){
 		var me = this;
 		me.vatres = Ext.create('casco.store.VatRelations');
@@ -20,6 +21,9 @@ Ext.define('casco.view.vat.VatRelations',{
 		me.columns = [{
 			text: 'TC',
 			dataIndex: 'tc_tag_name',
+			filter: {
+				type: 'string'
+			}
 		},{
 			text: 'TC-Version',
 			dataIndex: 'tc_version_name',
@@ -28,7 +32,10 @@ Ext.define('casco.view.vat.VatRelations',{
 			dataIndex: 'rs_tag_name',
 		},{
 			text: 'VAT-Doc',
-			dataIndex: 'rs_doc_name'
+			dataIndex: 'rs_doc_name',
+			filter: {
+				type: 'string'
+			}
 		},{
 			text: 'VAT-Version',
 			dataIndex: 'rs_version_name'

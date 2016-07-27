@@ -51,13 +51,8 @@ Ext.define('casco.view.vat.VatView',{
 			text: 'rs:version',
 			dataIndex: 'rs_versions',
 			flex: 1,
-			renderer: function(v){
-				var arr = [];
-				for(var i in v){
-					var str = v[i].document.name + ":" + v[i].name;
-					arr.push(str);
-				}
-				return arr.join('; ');//处理过后渲染出来
+			renderer: function(value,metadata,record){ //value-rs_versions(current cell); metadata-cell metadata; record-Ext.data.Model
+				return getPreview(value,metadata,record);
 			}
 		}, {
 			text: 'created at',
@@ -74,7 +69,6 @@ Ext.define('casco.view.vat.VatView',{
 				text: 'Show Relation',
 				renderTo: id,
 				handler: function(){
-					console.log(rec);
 					var json = [];
 					json.push({
 						'xtype': 'vatrelations',
@@ -84,11 +78,8 @@ Ext.define('casco.view.vat.VatView',{
 					    'closable':true,
 //					    version:irecord.get('version')?irecord.get('version'):null
 					});
-					console.log(json);
 					var tabs = Ext.getCmp('vatpanel');
-					console.log(tabs);
 					var tab = tabs.child('#'+json[0].id);
-					console.log(tab);
 					if(!tab) tab = tabs.add(json[0]);
 					tabs.setActiveTab(tab);
 				}
@@ -106,7 +97,6 @@ Ext.define('casco.view.vat.VatView',{
 				var vv = Ext.create('casco.model.Vat',{
 					id: null
 				});
-//				console.log(vv);
 				var win = Ext.create('widget.vat.vatcreate', {
 					project: me.project,
 					document: me.document,
@@ -134,62 +124,18 @@ Ext.define('casco.view.vat.VatView',{
 			}
 		}];
 		
-		me.chooseView = function(combo,irecord,rec){ //combo-chose,combo-record,vat_build_record
-			console.log(rec);
-			console.log(combo);
-			console.log(irecord);
-			  //有rec
-//		      combo.setValue(combo.emptyText);
-			  var v_id=combo.val_id;
-			  var json=[];
-		      switch(irecord.get('name')){
-		      case 'TC-RS':
-		    	  if(rec.get('parent_versions').length<=0){return;}
-					Ext.Array.each(rec.get('parent_versions'), function(v) {
-					var tmp={'xtype':'parentmatrix','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':'parentmatrix'+v_id+v.id,
-				    'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
-					tmp['parent_v_id']=v.id;
-					json.push(tmp);
-					});  
-				  break;
-			  case 'RS-TC':
-		          json={'xtype':'childmatrix','title':rec.get('child_version').document.name+'_Tra','id':'childmatrix'+v_id,
-		        		'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
-				  
-				  break;
-			  case  'All':
-				  	Ext.Array.each(rec.get('parent_versions'), function(v) {
-					var tmp={'xtype':'parentmatrix','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':'parentmatrix'+v_id+v.id,
-				    'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
-					tmp['parent_v_id']=v.id;
-					json.push(tmp);
-					}); 
-				  	json.push({'xtype':'childmatrix','title':rec.get('child_version').document.name+'_Tra','id':'childmatrix'+v_id,
-				        	'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null});
-					json.push({'xtype':'summary','title':'summary','id':'summary'+v_id,
-			        	'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null}); 
-				  break;
-			   default:
-			  }
-
-		      
-		       //写个递归方便多了啊
-		       var create_tab=function(record){
-		       if(Array.isArray(record)){
-		       Ext.Array.each(record,function(name,index){create_tab(name)});
-			   }
-		       else{
-				var tabs= Ext.getCmp('matrixpanel');
-				var tab=tabs.child('#'+record.id);
-				
-				if(!tab)tab=tabs.add(record);
-			    tabs.setActiveTab(tab);
-			   }
-			   }
-		       create_tab(json);
-			
+		function getPreview(value,metadata,record){ //record-rsversions
+			var tmp = [];
+			var rsvs = record.data.rs_versions;
+			for(var i in rsvs){
+				var str = rsvs[i].document.name + "-" + rsvs[i].name;
+				tmp.push(str);
+			}
+			var value = tmp.join(' ; ');
+		    metadata.tdAttr = 'data-qtip="' + value + '"' ; //提示信息
+		    return value;
 		};
-
+		
     	this.callParent();
     }
 })

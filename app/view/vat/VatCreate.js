@@ -22,8 +22,6 @@ Ext.define('casco.view.vat.VatCreate', {
 				document_id: me.document.get('id')
 			}
 		});
-		var rsvs = Ext.create('casco.store.Versions');
-		console.log(rsvs);
 		var rsdocs = Ext.create('casco.store.Documents');
 		rsdocs.load({
 			params: {
@@ -155,7 +153,7 @@ Ext.define('casco.view.vat.VatCreate', {
 				glyph: 0xf112,
 				scope: me,
 				handler: function(){
-					Ext.getCmp('vat-view-create').destroy();
+					Ext.getCmp('vat-view-create-window').destroy();
 					me.destroy();
 				}
 			}]

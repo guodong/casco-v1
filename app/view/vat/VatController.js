@@ -118,6 +118,11 @@ Ext.define('casco.view.vat.VatController', {
 		tabs.setActiveTab(tab);
 	},
 	
+	matrix:function(){
+        this.redirectTo('matrix/'+this.getView().project.get('id'), true);
+		location.reload();
+	},
+	
 	reporting:function(){
         this.redirectTo('report/' +this.getView().project.get('id'), true);
 		location.reload();
