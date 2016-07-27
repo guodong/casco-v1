@@ -8,24 +8,20 @@ Ext.define('casco.view.tc.TcController', {
 		var tc = Ext.create('casco.model.Tc',{id:view.tc?view.tc.get('id'):null});//view.tc?view.tc:Ext.create('casco.model.Tc');
 		var form = view.down('form');
 		var data = form.getValues(); //提交的数据
-		data.source = [];
-	//	console.log(view.sources.getData());
+		data.source = "";
 		view.sources.each(function(s){
-			data.source.push(s.get('tag'));
+			data.source+=(s.get('tag')+',');
 		});
-    
-    var column='';
-    Ext.Object.each(data, function(key, value, myself){
-    if(key!='id'&&key!='tag'){column+='"'+key+'":"'+value+'",';}
-   });
-    
-		data.column=column.substring(0,column.length-1);
+		data.source=data.source.substring(0,data.source.length-1);
+		data.column={};
+		Ext.Object.each(data, function(key, value, myself){
+		if(key!='id'&&key!='tag'&&key!='column'){data.column[key]=value;}
+	    });
 		data.document_id = view.document_id;//还可以这样动态添加啊
 		data.version_id=view.version_id;
 		data.steps = [];
 		var i = 1;
 		view.steps.each(function(s){
-		//	console.log(s.data);
 			data.steps.push({ 
 				"num": s.data.num,
 				"actions": s.data.actions,
@@ -33,11 +29,12 @@ Ext.define('casco.view.tc.TcController', {
 			});
 			i++;
 		});
-		
-		//var tc = Ext.create('casco.model.Tc');console.log(tc.get('tag'))
+		//data.column=data.column.substring(0,data.column.length-1);
+		//data.column+='"test steps:"'+JSON.stringify(data.steps)+'"';
+		console.log(data.column);
+		data.steps=JSON.stringify(data.steps);
 		tc.set(data);
 		tc.save({
-			
 			callback: function(record, operation, success) {
 				form.up("window").destroy();
 				var t = Ext.ComponentQuery.query("#tab-" + data.document_id)[0];

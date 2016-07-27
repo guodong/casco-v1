@@ -29,12 +29,9 @@ Ext.define('casco.view.report.ReportController', {
 		meta.tcs=tcs;
 		meta.doc_id=this.getView().child_doc.data.id?this.getView().child_doc.data.id:'';
 		meta.account=JSON.parse(localStorage.user).account;
-		//console.log(meta);
 		var job = Ext.create('casco.model.Center',meta);
 		job.save({
-			timeout: 100000000,
 			callback: function(record,operation){
-			
 				if(record.data.success){
 				var tabs=Ext.getCmp('reportpanel');
 				var childs=tabs.items;

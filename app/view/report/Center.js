@@ -30,10 +30,10 @@ Ext.define('casco.view.report.Center', {
 		var states = Ext.create('Ext.data.Store', {
 		fields: ['abbr', 'name'],
 		data : [
-			{"abbr":"ALL","name":"All"},
-			{"abbr":"AL", "name":"ReportCoverStatus"},
-			{"abbr":"AK", "name":"TestCaseResults"},
-			{"abbr":"AZ", "name":"ReportVerify"}			
+			{"abbr":"All","name":"All"},
+			{"abbr":"ReportCoverStatus", "name":"需求覆盖状态"},
+			{"abbr":"TestCaseResults", "name":"用例测试结果"},
+			{"abbr":"ReportVerify", "name":"分配本阶段需求"}			
 		]
 		});
 		
@@ -86,7 +86,7 @@ Ext.define('casco.view.report.Center', {
 	  console.log(rec);
 	  var v_id=combo.val_id;
 	  var json=[];
-      switch(irecord.get('name')){
+      switch(irecord.get('abbr')){
       case 'ReportCoverStatus':
     	  json={'xtype':'reportcover','title':'reportcover','id':'reportcover_'+v_id,
         		'report':rec,'closable':true};
@@ -96,20 +96,24 @@ Ext.define('casco.view.report.Center', {
         		'report':rec,'closable':true};
 		  break;
 	  case  'ReportVerify':
+		   var tmps=[];
 		   Ext.Array.each(rec.get('docs'), function(v) {
-			var tmp={'xtype':'verify','title':v.name,'id':'verify'+rec.id+v.id,
+			var tmp={'xtype':'verify','title':v.document.name+":"+v.name,'id':'verify'+rec.id+v.id,
 		    'report':rec,'closable':true};
-			tmp['doc_id']=v.id;
-			json.push(tmp);
+			tmp['doc_id']=v.id;//version_id
+			tmps.push(tmp);
 			}); 
+			json={title:'分配给本阶段验证需求', xtype: 'tabpanel',items:tmps,'closable':true};
 		  break;
 	  case  'All':
-		  	Ext.Array.each(rec.get('docs'), function(v) {
-			var tmp={'xtype':'verify','title':v.name,'id':'verify'+rec.id+v.id,
+		  	var tmps=[];
+		   Ext.Array.each(rec.get('docs'), function(v) {
+			var tmp={'xtype':'verify','title':v.document.name+":"+v.name,'id':'verify'+rec.id+v.id,
 		    'report':rec,'closable':true};
-			tmp['doc_id']=v.id;
-			json.push(tmp);
+			tmp['doc_id']=v.id;//version_id
+			tmps.push(tmp);
 			}); 
+			json.push({title:'分配给本阶段验证需求', xtype: 'tabpanel',items:tmps,'closable':true});
 		  	json.push({'xtype':'result','title':'testingresult','id':'testing_'+v_id,
         		'report':rec,'closable':true});
 			json.push({'xtype':'verify','title':'verify','id':'verify'+v_id,

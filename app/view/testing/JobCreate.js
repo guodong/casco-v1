@@ -21,6 +21,7 @@ Ext.define('casco.view.testing.JobCreate', {
 				type: 'tc'
 			}
 		});
+		var vats = Ext.create('casco.store.Vats');
 		var builds = Ext.create('casco.store.Builds');
 		builds.load({
 			params: {
@@ -42,7 +43,7 @@ Ext.define('casco.view.testing.JobCreate', {
 				fieldLabel: 'Name',
 				msgTarget: 'under',
 				allowBlank:false, 
-				blankText:"����Ϊ��",
+				blankText:"不能为空",
 				name: 'name',
 				xtype: 'textfield'
 			}, {
@@ -55,35 +56,7 @@ Ext.define('casco.view.testing.JobCreate', {
 				valueField: 'id',
 				allowBlank: false,
 				store: builds
-			}/*, {
-				xtype: 'combobox',
-				editable: false,
-				fieldLabel: 'Tc Document',
-				displayField: 'name',
-				name: 'tc_id',
-				valueField: 'id',
-				store: tcdocs,
-				allowBlank: false,
-				queryMode: 'local',
-				listeners: {
-					select: function(f, r, i) {
-						Ext.getCmp('test-tc-version').store.load({
-							params: {
-								document_id: r.get('id')
-							}
-						});
-						var grid = Ext.getCmp('testing-job-rs');
-						me.job.rs_versions = grid.getStore();
-						grid.store.load({
-							params: {
-								document_id: r.get('id'),
-								type: 'rs',
-								mode: 'related'
-							}
-						});
-					}
-				}
-			}*/, {
+			},{
 				fieldLabel: 'Vat Version',
 				name: 'vat_build_id',
 				store: vat,
@@ -96,64 +69,46 @@ Ext.define('casco.view.testing.JobCreate', {
 				valueField: 'id',
 				listeners: {
 					select: function(f, r, i){
-						console.log(r);
 						Ext.getCmp('testing-job-tc-grid').getStore().load({
 							params: {
 								version_id: r.get('tc_version_id'),
 								act:'stat'
 							}
 						});
+						Ext.getCmp('vat_tc').setValue(r.get('tc_version').document.name+':'+r.get('tc_version').name);
+						Ext.getCmp('testing-job-rs').getStore().setData(r.get('rs_versions'));
+
+						//console.log(Ext.getCmp('testing-job-rs').getStore().getData());
+
 					}
 				}
+			},
+			{	
+				fieldLabel: 'Tc Version',
+				msgTarget: 'under',
+				id:'vat_tc',
+				xtype: 'textfield',
 			}]
-		}, /*{
+		},  {
 			xtype: 'grid',
 			id: 'testing-job-rs',
 			region: 'center',
-			store: Ext.create('casco.store.Documents'),
-			plugins: {
-		        ptype: 'cellediting',
-		        clicksToEdit: 1,
-		        listeners: {
-		            beforeedit: function(editor, e) {
-		            	console.log(e);
-		            	var combo = e.grid.columns[e.colIdx].getEditor(e.record);
-		            	console.log(e.record.get('versions'));
-		            	var st = Ext.create('casco.store.Versions', {data: e.record.get('versions')});
-		            	combo.setStore(st);
-		            }
-		        }
-		    },
+			store: vats,
 		    columns: [{
 				text: 'Rs doc',
-				dataIndex: 'name',
-				flex: 1
+				dataIndex: 'document',
+				flex: 1,
+				renderer: function(v) {
+				return v.name;
+				}
 			}, {
 				text: 'Version',
-				dataIndex: 'version_id',
+				dataIndex: 'name',
 				renderer: function(v, md, record){
-					console.log(record);
-					var versions = record.get('versions');
-					if(versions.length == 0) return;
-					if(!v){
-						record.set('version_id', versions[0].id);
-						return versions[0].name;
-					}
-					for(var i in versions){
-						if(v == versions[i].id){
-							return versions[i].name;
-						}
-					}
+				return v
 				},
-				editor: {
-			        xtype: 'combobox',
-			        queryMode: 'local',
-					displayField: 'name',
-					valueField: 'id',
-					editable: false
-			    }
 			}]
-		},*/{
+		},{
 			xtype: 'grid',
 			id: 'testing-job-tc-grid',
 			region: 'south',

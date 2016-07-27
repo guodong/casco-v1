@@ -17,7 +17,7 @@ Ext.define('casco.view.testing.TestController', {
 		var meta = form.getValues();
 		var tcs = [];
 		var sels = Ext.getCmp('testing-job-tc-grid').getSelection();
-		console.log(sels);
+		//console.log(sels);
 		for(var i in sels){
 			tcs.push(sels[i].get('tc').id);
 		}

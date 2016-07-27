@@ -31,14 +31,6 @@ Ext.define('casco.view.vat.VatCreate', {
 		});
 		console.log(rsdocs);
 		
-//		var tcdoc = Ext.create('casco.store.Documents');
-//		tcdoc.load({
-//			params:{
-//				id: me.document.data.id,
-//			}
-//		});
-//		console.log(tcdoc);
-		
 		me.items = [{
 			xtype: 'form',
 			region: 'west',
