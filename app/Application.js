@@ -123,7 +123,7 @@ Ext.define('casco.Application', {
 		});
     },
 	*/
-	onBeforeSelect: function(action) {
+	onBeforeSelect: function(action) { //判断服务器用户登录状态
 		Ext.Ajax.request({
 			url: API + 'session',
 			withCredentials: true,

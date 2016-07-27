@@ -23,6 +23,7 @@ Ext.define('casco.view.vat.VatCreate', {
 			}
 		});
 		var rsvs = Ext.create('casco.store.Versions');
+		console.log(rsvs);
 		var rsdocs = Ext.create('casco.store.Documents');
 		rsdocs.load({
 			params: {
@@ -30,6 +31,7 @@ Ext.define('casco.view.vat.VatCreate', {
 				type: 'rs'
 			}
 		});
+		console.log(rsdocs);
 		
 		me.items = [{
 			xtype: 'form',
@@ -65,13 +67,13 @@ Ext.define('casco.view.vat.VatCreate', {
 				queryMode: 'local',
 				displayField: 'name',
 				valueField: 'id',
-//				listeners: {
-//					select: function(f, r, i) {
-//						var grid = Ext.getCmp('vat-view-rs');
-//						me.vat.rs_versions = grid.getStore();
-//						console.log(me.vat);
-//					}
-//				}
+				listeners: {
+					select: function(f, r, i) {
+						var grid = Ext.getCmp('vat-view-rs');
+						me.vat.rs_versions = grid.getStore();
+						console.log(me.vat);
+					}
+				}
 			},{
 				xtype: 'textarea',
 				fieldLabel: 'Description',

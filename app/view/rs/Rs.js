@@ -121,11 +121,11 @@ Ext.define('casco.view.rs.Rs', {
 					 me.columns=me.json.columModle;
 				//	 console.log(me.columns);
 					 me.store.setData(me.ds.getData());
-                     me.reconfigure(me.store,me.columns);
+                     me.reconfigure(me.store,me.columns); //用columns 对grid panel 重载
 					
             	},
             	beforequery : function(e){
-            		e.query = new RegExp(e.query.trim(), 'i');
+            		e.query = new RegExp(e.query.trim(), 'i'); //去除string两端空格
             		e.forceAll = true;
         	   	}
             }  

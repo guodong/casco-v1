@@ -5,8 +5,9 @@ Ext.define('casco.view.vat.VatView',{
 	viewModel: 'vat',
 	requires: [],
 	
-    bodyPadding: 0,
+//    bodyPadding: 0,
 	forceFit:true,
+	columnLines: true,
 	
     initComponent: function(){
     	var me = this;
@@ -19,15 +20,15 @@ Ext.define('casco.view.vat.VatView',{
     		}
     	});
 		
-//		var states = Ext.create('Ext.data.Store', {
-//		fields: ['abbr', 'name'],
-//		data : [
-//			{"abbr":"ALL","name":"All"},
-//			{"abbr":"AL", "name":"ParentMatrix"},
-//			{"abbr":"AK", "name":"ChildMatrix"},
-//			{"abbr":"AZ", "name":"Summary"}			
-//		]
-//		});
+		var chioces = Ext.create('Ext.data.Store', {
+		fields: ['abbr', 'name'],
+		data : [
+		    {"abbr":"all", "name":"ALL"},
+			{"abbr":"forward","name":"TC-RS"},
+			{"abbr":"backward", "name":"RS-TC"}
+		]
+		});
+		
 		me.columns = [{
 			text : 'name',
 			dataIndex: 'name'
@@ -61,7 +62,40 @@ Ext.define('casco.view.vat.VatView',{
 		}, {
 			text: 'created at',
 			dataIndex: 'created_at',
-			width: 200
+			width: 150
+		},{
+			text:'view',
+			dataIndex:'id',
+			width:130,
+			renderer:function(val_id,metaData,rec){ //data value from current cell,column_cell,vat_build_data
+			 var id = Ext.id();	 
+             Ext.defer(function(e) {	//延迟调用 miliseconds
+               	Ext.create('Ext.button.Button', {
+				text: 'Show Relation',
+				renderTo: id,
+				handler: function(){
+					console.log(rec);
+					var json = [];
+					json.push({
+						'xtype': 'vatrelations',
+						'title': rec.get('tc_version').document.name+'-'+rec.data.name,
+						'id': 'vatrelation'+val_id,
+					    'relation': rec,
+					    'closable':true,
+//					    version:irecord.get('version')?irecord.get('version'):null
+					});
+					console.log(json);
+					var tabs = Ext.getCmp('vatpanel');
+					console.log(tabs);
+					var tab = tabs.child('#'+json[0].id);
+					console.log(tab);
+					if(!tab) tab = tabs.add(json[0]);
+					tabs.setActiveTab(tab);
+				}
+				});   
+            }, 50);
+            return Ext.String.format('<div style="color:0xf0ce" id="{0}" ></div>', id);
+			}//renderer
 		}];
 		
 		me.tbar = [{
@@ -99,6 +133,62 @@ Ext.define('casco.view.vat.VatView',{
 					}}, this);
 			}
 		}];
+		
+		me.chooseView = function(combo,irecord,rec){ //combo-chose,combo-record,vat_build_record
+			console.log(rec);
+			console.log(combo);
+			console.log(irecord);
+			  //有rec
+//		      combo.setValue(combo.emptyText);
+			  var v_id=combo.val_id;
+			  var json=[];
+		      switch(irecord.get('name')){
+		      case 'TC-RS':
+		    	  if(rec.get('parent_versions').length<=0){return;}
+					Ext.Array.each(rec.get('parent_versions'), function(v) {
+					var tmp={'xtype':'parentmatrix','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':'parentmatrix'+v_id+v.id,
+				    'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
+					tmp['parent_v_id']=v.id;
+					json.push(tmp);
+					});  
+				  break;
+			  case 'RS-TC':
+		          json={'xtype':'childmatrix','title':rec.get('child_version').document.name+'_Tra','id':'childmatrix'+v_id,
+		        		'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
+				  
+				  break;
+			  case  'All':
+				  	Ext.Array.each(rec.get('parent_versions'), function(v) {
+					var tmp={'xtype':'parentmatrix','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':'parentmatrix'+v_id+v.id,
+				    'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
+					tmp['parent_v_id']=v.id;
+					json.push(tmp);
+					}); 
+				  	json.push({'xtype':'childmatrix','title':rec.get('child_version').document.name+'_Tra','id':'childmatrix'+v_id,
+				        	'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null});
+					json.push({'xtype':'summary','title':'summary','id':'summary'+v_id,
+			        	'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null}); 
+				  break;
+			   default:
+			  }
+
+		      
+		       //写个递归方便多了啊
+		       var create_tab=function(record){
+		       if(Array.isArray(record)){
+		       Ext.Array.each(record,function(name,index){create_tab(name)});
+			   }
+		       else{
+				var tabs= Ext.getCmp('matrixpanel');
+				var tab=tabs.child('#'+record.id);
+				
+				if(!tab)tab=tabs.add(record);
+			    tabs.setActiveTab(tab);
+			   }
+			   }
+		       create_tab(json);
+			
+		};
 
     	this.callParent();
     }
