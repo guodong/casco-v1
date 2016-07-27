@@ -15,17 +15,17 @@ Ext.define('casco.view.vat.VatRelations',{
 				vat_build_id: me.relation.id
 			}
 		})
-		console.log(me.vatres);
+		me.store = me.vatres;
 		
 		me.columns = [{
 			text: 'TC',
-			dataIndex: 'tc_tag',
+			dataIndex: 'tc_tag_name',
 		},{
 			text: 'TC-Version',
 			dataIndex: 'tc_version_name',
 		},{
 			text: 'VAT',
-			dataIndex: 'rs_tag',
+			dataIndex: 'rs_tag_name',
 		},{
 			text: 'VAT-Doc',
 			dataIndex: 'rs_doc_name'
