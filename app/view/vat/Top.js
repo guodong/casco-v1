@@ -39,6 +39,10 @@ Ext.define('casco.view.vat.Top', {
             xtype: 'button',
             handler: 'testing'
         },{
+            text: 'Matrix',
+            xtype: 'button',
+            handler: 'matrix'
+        },{
             text: 'Report',
             xtype: 'button',
             handler: 'reporting'

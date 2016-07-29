@@ -11,46 +11,6 @@ Ext.define('casco.view.rs.Rs', {
 	           'casco.ux.StatusBar'
 	           ],
 	           
-	 
-	           /**
-	            * @private
-	            * search value initialization
-	            */
-	           searchValue: null,
-	           
-	           /**
-	            * @private
-	            * The row indexes where matching strings are found. (used by previous and next buttons)
-	            */
-	           indexes: [],
-	           
-	           /**
-	            * @private
-	            * The generated regular expression used for searching.
-	            */
-	           searchRegExp: null,
-	           
-	           /**
-	            * @private
-	            * Case sensitive mode.
-	            */
-	           caseSensitive: false,
-	           
-	           /**
-	            * @private
-	            * Regular expression mode.
-	            */
-	           regExpMode: false,
-	           
-	           /**
-	            * @cfg {String} matchCls
-	            * The matched string css classe.
-	            */
-	           matchCls: 'x-livesearch-match',
-	           
-	           defaultStatusText: 'Nothing Found',	           
-
-	           
 	forceFit:true,
 	bufferedRenderer: false,
 	columnLines:true,
@@ -305,18 +265,25 @@ Ext.define('casco.view.rs.Rs', {
 		me.callParent(arguments);
 	},
 	
+/*
+ * Live Search Module Cofigures
+ */	
+    searchValue: null, //search value initialization
+    indexes: [], //The row indexes where matching strings are found. (used by previous and next buttons)
+    searchRegExp: null, //The generated regular expression used for searching.
+    caseSensitive: false, //Case sensitive mode.
+    regExpMode: false, //Regular expression mode.
+    tagsRe:/<[^>]*>/gm,  //detects html tag gm 参数
+	tagsProtect:'\x0f',  //DEL ASCII code
+    matchCls: 'x-livesearch-match', //@cfg {String} matchCls  The matched string css classe.
+    defaultStatusText: 'Nothing Found',	 
+	
 	 afterRender: function() {
 	        var me = this;
 	        me.callParent(arguments);
 	        me.textField = me.down('textfield[name=searchField]');
 	        me.statusBar = me.down('statusbar[name=searchStatusBar]');
 	    },
-	
-	// detects html tag
-    tagsRe: /<[^>]*>/gm,
-    
-    // DEL ASCII code
-    tagsProtect: '\x0f',
 	
 	focusTextField: function(view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
         if (e.getKey() === e.S) {
@@ -325,13 +292,9 @@ Ext.define('casco.view.rs.Rs', {
         }
     },
 	
-	tagsRe:/<[^>]*>/gm,  //detects html tag gm 参数
-	tagsProtect:'\x0f',  //DEL ASCII code
-	
 	getSearchValue: function() {
         var me = this,
             value = me.textField.getValue();
-            
         if (value === '') {
             return null;
         }
@@ -352,7 +315,6 @@ Ext.define('casco.view.rs.Rs', {
                 return null;
             }
         }
-
         return value;
     },
     
@@ -362,22 +324,17 @@ Ext.define('casco.view.rs.Rs', {
             view = me.view,
             cellSelector = view.cellSelector,
             innerSelector = view.innerSelector;
-
         view.refresh();
         // reset the statusbar
         me.statusBar.setStatus({
             text: me.defaultStatusText,
             iconCls: ''
         });
-
         me.searchValue = me.getSearchValue();
         me.indexes = [];
         me.currentIndex = null;
-
         if (me.searchValue !== null) {
             me.searchRegExp = new RegExp(me.getSearchValue(), 'g' + (me.caseSensitive ? '' : 'i'));
-            
-            
             me.store.each(function(record, idx) {
                 var td = Ext.fly(view.getNode(idx)).down(cellSelector),
                     cell, matches, cellHTML;
@@ -437,14 +394,12 @@ Ext.define('casco.view.rs.Rs', {
             me.currentIndex = me.indexes[idx - 1] || me.indexes[me.indexes.length - 1];
             me.getSelectionModel().select(me.currentIndex);
             me.getView().focusRow(me.currentIndex);
-            
          }
     },
     
     onNextClick: function() {
         var me = this,
             idx;
-            
         if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
            me.currentIndex = me.indexes[idx + 1] || me.indexes[0];
            me.getSelectionModel().select(me.currentIndex);
