@@ -30,7 +30,6 @@ Ext.define('casco.view.report.Verify', {
 			scope: this,
 			handler:function(){  
 			 var data=[];
-			// 血的教训，早知道就用这了... me.matrix.sync();
 			 me.store.sync({
 			 callback: function(record, operation, success){
              },
@@ -43,25 +42,14 @@ Ext.define('casco.view.report.Verify', {
 			 Ext.Msg.alert('Success', 'Saved successfully.');
 			 }
 			 }); 
-			 /*
-				 * Ext.Array.each(rows,function(item){ item.dirty=false;
-				 * item.commit(); data.push(item.getData()); });// each var
-				 * model=Ext.create('casco.model.Verification',{id:me.verification.get('id')});
-				 * model.set('data',data); model.save({ callback:
-				 * function(record, operation, success){ }, failure:
-				 * function(record, operation) { me.getView().refresh(); //
-				 * 这一行重要哇我晕 Ext.Msg.alert('Failed','Save failed!'); }, success:
-				 * function(record, operation) { me.getView().refresh(); //
-				 * 这一行重要哇我晕 Ext.Msg.alert('Success', 'Saved successfully.');
-				 *  }, });
-				 */
 			
 			}
 		},{
 			text: 'Export',
 			glyph: 0xf067,
 			handler: function() {
-			 	window.open(API+'/verification/summary_export?v_id='+(me.verification.get('id')?me.verification.get('id'):''));
+				console.log(me.doc_id);
+			 	window.open(API+'center/export_verify?report_id='+(me.report.get('id')||'')+'&doc_id='+(me.doc_id||''));
             	return;
 			}
 		},'-',{

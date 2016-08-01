@@ -99,25 +99,25 @@ Ext.define('casco.view.report.Center', {
 		   var tmps=[];
 		   Ext.Array.each(rec.get('docs'), function(v) {
 			var tmp={'xtype':'verify','title':v.document.name+":"+v.name,'id':'verify'+rec.id+v.id,
-		    'report':rec,'closable':true};
-			tmp['doc_id']=v.id;//version_id
+		    'report':rec,'doc_id':v.id,'closable':true};
+			//tmp['doc_id']=v.id;//version_id
 			tmps.push(tmp);
 			}); 
 			json={title:'分配给本阶段验证需求', xtype: 'tabpanel',items:tmps,'closable':true};
 		  break;
 	  case  'All':
 		  	var tmps=[];
-		   Ext.Array.each(rec.get('docs'), function(v) {
+		    Ext.Array.each(rec.get('docs'), function(v) {
 			var tmp={'xtype':'verify','title':v.document.name+":"+v.name,'id':'verify'+rec.id+v.id,
-		    'report':rec,'closable':true};
-			tmp['doc_id']=v.id;//version_id
+		    'report':rec,'doc_id':v.id,'closable':true};
+			//tmp['doc_id']=v.id;//version_id
 			tmps.push(tmp);
 			}); 
 			json.push({title:'分配给本阶段验证需求', xtype: 'tabpanel',items:tmps,'closable':true});
 		  	json.push({'xtype':'result','title':'testingresult','id':'testing_'+v_id,
         		'report':rec,'closable':true});
-			json.push({'xtype':'verify','title':'verify','id':'verify'+v_id,
-		       'report':rec,'closable':true});
+			json.push({'xtype':'reportcover','title':'reportcover','id':'reportcover_'+v_id,
+        		'report':rec,'closable':true});
 		  break;
 	   default:
 	  }
@@ -194,8 +194,7 @@ Ext.define('casco.view.report.Center', {
 				if (!selection) {
 				 Ext.Msg.alert('请选择某一个版本!');
 				}
-	           window.open(API+'Center/export_all_sheets?project_id='+me.project.get('id')+'&child_id='+me.child_doc.data.id+
-	        		   '&v_id='+selection.get('id'));
+	           window.open(API+'center/export_all_sheets?report_id='+selection.get('id')||'');
 	           return;
 			 }
 		}];
