@@ -85,9 +85,11 @@ Ext.define('casco.view.testing.JobCreate', {
 			},
 			{	
 				fieldLabel: 'Tc Version',
+				name: 'tc_version_name',
 				msgTarget: 'under',
 				id:'vat_tc',
 				xtype: 'textfield',
+				editable: false
 			}]
 		},  {
 			xtype: 'grid',

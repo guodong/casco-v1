@@ -1,6 +1,6 @@
 Ext.define('casco.view.vat.Tree', {
     extend: 'Ext.tree.Panel',
-    requires: [],
+    requires: ['casco.view.vat.VatView'],
     alias: 'widget.vat_tree',
     
     listeners: {

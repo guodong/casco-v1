@@ -15,7 +15,8 @@ Ext.define('casco.view.vat.VatRelations',{
 			params: {
 				vat_build_id: me.relation.id
 			}
-		})
+		});
+		console.log(me.vatres);
 		me.store = me.vatres;
 		
 		me.columns = [{
@@ -41,7 +42,7 @@ Ext.define('casco.view.vat.VatRelations',{
 			dataIndex: 'rs_version_name'
 		}];
 		
-		me.callParent(arguments);
+		this.callParent();
 	}
 	
 });

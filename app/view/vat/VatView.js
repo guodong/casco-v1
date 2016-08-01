@@ -3,7 +3,9 @@ Ext.define('casco.view.vat.VatView',{
 	extend: 'Ext.grid.Panel',
 	xtype: 'vat.view',
 	viewModel: 'vat',
-	requires: [],
+	requires: ['casco.store.Vats',
+	           'casco.view.vat.VatRelations',
+	           'Ext.grid.filters.Filters'], //Needed
 	
 //    bodyPadding: 0,
 	forceFit:true,
@@ -63,26 +65,26 @@ Ext.define('casco.view.vat.VatView',{
 			dataIndex:'id',
 			width:130,
 			renderer:function(val_id,metaData,rec){ //data value from current cell,column_cell,vat_build_data
-			 var id = Ext.id();	 
+			 var id = Ext.id();
              Ext.defer(function(e) {	//延迟调用 miliseconds
                	Ext.create('Ext.button.Button', {
 				text: 'Show Relation',
 				renderTo: id,
 				handler: function(){
-					var json = [];
-					json.push({
-						'xtype': 'vatrelations',
-						'title': rec.get('tc_version').document.name+'-'+rec.data.name,
-						'id': 'vatrelation'+val_id,
-					    'relation': rec,
-					    'closable':true,
-//					    version:irecord.get('version')?irecord.get('version'):null
-					});
 					var tabs = Ext.getCmp('vatpanel');
-					var tab = tabs.child('#'+json[0].id);
-					if(!tab) tab = tabs.add(json[0]);
-					tabs.setActiveTab(tab);
-				}
+					console.log(tabs);
+					var tab = tabs.child('#vatrelations'+val_id); 
+					console.log(rec);
+					if(!tab) tab = tabs.add({
+						xtype: 'vatrelations',
+						title: rec.get('tc_version').document.name + '-' +rec.data.name,
+						id: 'vatrelations'+val_id,
+					    relation: rec,
+					    closable: true
+					});
+					console.log(tab);
+					tabs.setActiveTab('vatrelations'+val_id);
+				},
 				});   
             }, 50);
             return Ext.String.format('<div style="color:0xf0ce" id="{0}" ></div>', id);
