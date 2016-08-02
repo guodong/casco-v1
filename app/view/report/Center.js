@@ -40,7 +40,22 @@ Ext.define('casco.view.report.Center', {
 		me.columns = [{
 			text : 'version',
 			dataIndex : 'version',
-			width: 80
+			width: 80,
+			renderer:function(value,metadata,record){
+				var tmp = [];
+				console.log(record);
+				var tcvs = record.data.testjob.vatbuild.tc_version;
+				var rsvs = record.data.docs;
+				var str = "VAT信息："+record.data.testjob.vatbuild.name+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"TC文档信息：" + tcvs.document.name + "-" + tcvs.name + "<br/>" + "RS文档信息：";
+				tmp.push(str);
+				for(var i in rsvs){
+					str = "[" + rsvs[i].document.name + "-" + rsvs[i].name + "]";
+					tmp.push(str);
+				}
+				var value = tmp.join(' ');
+			    metadata.tdAttr = 'data-qtip="' + value + '\n"'  ; //提示信息
+			    return record.data.version;
+			}
 		}, {
 			text : 'author',
 			dataIndex : 'author',

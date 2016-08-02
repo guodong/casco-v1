@@ -128,13 +128,14 @@ Ext.define('casco.view.vat.VatView',{
 		
 		function getPreview(value,metadata,record){ //record-rsversions
 			var tmp = [];
+//			tmp.push("RS文档版本信息：");
 			var rsvs = record.data.rs_versions;
 			for(var i in rsvs){
-				var str = rsvs[i].document.name + "-" + rsvs[i].name;
+				var str = "["+rsvs[i].document.name + "-" + rsvs[i].name+"]";
 				tmp.push(str);
 			}
-			var value = tmp.join(' ; ');
-		    metadata.tdAttr = 'data-qtip="' + value + '"' ; //提示信息
+			var value = tmp.join('  ');
+		    metadata.tdAttr = 'data-qtip="' + "RS文档信息:  <br/>"+value + '"' ; //提示信息
 		    return value;
 		};
 		

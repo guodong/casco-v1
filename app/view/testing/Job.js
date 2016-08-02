@@ -2,6 +2,9 @@ Ext.define('casco.view.testing.Job', {
     extend: 'Ext.grid.Panel',
     xtype: 'testing.job',
     requires:['casco.store.Testjobs'],
+    
+    forceFit: true,
+    
     listeners: {
         itemdblclick: function(view, record, item, index, e, eOpts){
         	Ext.getCmp('result-main').job = record;
@@ -29,6 +32,7 @@ Ext.define('casco.view.testing.Job', {
     			project_id: me.project.get('id')
     		}
     	});
+    	
 		me.columns = [{
 			text : 'name',
 			dataIndex : 'name'
@@ -41,28 +45,19 @@ Ext.define('casco.view.testing.Job', {
 		},{
 			text: 'vat_version',
 			dataIndex: 'vatbuild',
-			flex: 1,
-			renderer: function(v){
-				/*var arr = [];
-				for(var i in v){
-					var str = v[i].document.name + ":" + v[i].name;
-					arr.push(str);
-				}
-				return arr.join('; ');//处理过后渲染出来
-				*/
-				return v?v.name:'';
+			renderer: function(value,metadata,record){ //value-rs_versions(current cell); metadata-cell metadata; record-Ext.data.Model
+				return getPreview(value,metadata,record);
 			}
-		}, {
+		},{
 			text: 'status',
 			dataIndex: 'status',
 			renderer: function(v){
 				return v==0?'<span style="color:red">testing</span>':'<span style="color: green">submited</span>';
 			},
-			width: 200
+//			width: 200
 		}, {
 			text: 'created at',
 			dataIndex: 'created_at',
-			width: 200
 		}];
 		me.tbar = [{
 			text: 'Create Testjob',
@@ -89,16 +84,7 @@ Ext.define('casco.view.testing.Job', {
 						var selection =view.getSelectionModel().getSelection()[0];
 						if (selection) {
 							me.store.remove(selection);
-							selection.erase({
-								success: function(record, operation) {
-								//view.getStore().reload();//级联变动
-								location.reload();
-								//me.fireEvent('datachanged');
-//								Ext.getCmp().getStore().reload();//最好写在listener中
-//								Ext.getCmp().getStore().reload();
-								// do something if the erase succeeded
-								}
-							});
+							selection.erase();
 						}
 					}}, this);
 			}
@@ -113,6 +99,23 @@ Ext.define('casco.view.testing.Job', {
 				win.show();
 			}
 		}];
+		
+		function getPreview(value,metadata,record){ //record-rsversions
+			var tmp = [];
+			console.log(record);
+			var tcvs = record.data.vatbuild.tc_version;
+			var rsvs = record.data.vatbuild.rs_versions;
+			var str = "TC文档信息：" + tcvs.document.name + "-" + tcvs.name + "<br/>" + "RS文档信息：";
+			tmp.push(str);
+			for(var i in rsvs){
+				str = "[" + rsvs[i].document.name + "-" + rsvs[i].name + "]";
+				tmp.push(str);
+			}
+			var value = tmp.join(' ');
+		    metadata.tdAttr = 'data-qtip="' + value + '\n"'  ; //提示信息
+		    return record.data.vatbuild.name;
+		};
+		
     	this.callParent();
     }
 })
