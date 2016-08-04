@@ -18,7 +18,7 @@ Ext.define('casco.view.report.Verify', {
 		var resultStore = Ext.create('Ext.data.Store', {
         	model: 'casco.model.Result',
             data : [
-	                {label: 'untested',   value: 0},
+	                {label: 'untested',  value: 0},
 	                {label: 'passed',   value: 1},
 	                {label: 'failed',   value: 2},
             ]

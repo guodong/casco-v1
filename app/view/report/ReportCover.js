@@ -1,14 +1,10 @@
 Ext.define('casco.view.report.ReportCover', {
 	extend: 'Ext.grid.Panel',
 	xtype: 'reportcover',
-	viewModel: 'main',
 	plugins: {
 		ptype: 'cellediting',
 		clicksToEdit: 1
 	},
-	selModel:new Ext.selection.Model({mode:"MULTI"}),
-	requires: [],      
-	           
 	initComponent: function() {
 		var me = this;
 		me.store = new casco.store.ReportCover();
@@ -78,31 +74,6 @@ Ext.define('casco.view.report.ReportCover', {
 			{text: '需求覆盖状态', xtype:'label',margin:'0 50'}
 			];
 		  
-//         me.plugins={
-//		        ptype: 'cellediting',
-//		        clicksToEdit: 1,
-//				autoCancel:false,
-//				listeners: {
-//		            edit: function(editor, e) {
-//					// commit 不好
-//		            // e.record.commit();
-//					e.record.set(e.field,e.value);
-//					me.getView().refresh(); 
-//		            }
-//		        }
-//		},
-
-//         me.self_op=function(the,newValue,oldValue){       
-//		 var rows=me.getSelectionModel().getSelection();
-//		 if(rows!=undefined){
-//		 Ext.Array.each(rows,function(item){
-//		 item.set(newValue);
-//		 });
-//		 // 这行很重要,由于自定义列的后遗症
-//		  me.getView().refresh();
-//		 }
-//		}
-		
 		me.columns=[
 			 {text:'Parent Requirement Tag',dataIndex:'Parent Requirement Tag',header:'Parent Requirement Tag',width:170,sortable:true},
 			 {text:'Parent Requirement Text',dataIndex:'Parent Requirement Text',header:'Parent Requirement Text',width:175,sortable:true},
@@ -143,53 +114,9 @@ Ext.define('casco.view.report.ReportCover', {
 			 {text:'allocation',dataIndex:'allocation',header:'allocation',width:100,sortable:true,render:function(record){}},
 			 {text:'Comment',dataIndex:'comment',header:'Comment',width:90,sortable:true,editor:{xtype:'textfield'}}
 			];
-	
-        me.listeners={}
-		me.callParent(arguments);
+
+			this.callParent();
 		},
 
-	showHeaderMenu: function (menu) {
-        var me = this;
-        me.removeCustomMenuItems(menu);
-        me.addCustomMenuitems(menu);
-    },
 
-  
-    removeCustomMenuItems: function (menu) {
-        var me = this,
-            menuItem;
-
-        while (menuItem = me.customMenuItemsCache.pop()) {
-            menu.remove(menuItem.getItemId(), false);
-        }
-    },
-
-    addCustomMenuitems: function (menu) {
-        var me = this,
-            renderedItems;
-
-        var menuItems = menu.activeHeader.customMenu || [];
-
-        if (menuItems.length > 0) {
-
-			 menu.removeAll();
-            if (menu.activeHeader.renderedCustomMenuItems === undefined) {
-                renderedItems = menu.add(menuItems);
-                menu.activeHeader.renderedCustomMenuItems = renderedItems;
-            } else {
-                renderedItems = menu.activeHeader.renderedCustomMenuItems;
-                menu.add(renderedItems);
-            }
-            Ext.each(renderedItems, function (renderedMenuItem) {
-                me.customMenuItemsCache.push(renderedMenuItem);
-            });
-        }// if
-    },
-	/*
-	 * afterRender:function(){ var me = this; me.callParent(arguments);
-	 * me.textField= me.down('textfield[name = searchField]'); me.statusBar =
-	 * me.down('statusbar[name = searchStatusBar]');
-	 * me.view.on('cellkeydown',me.focusTextField,me); }
-	 */
-	
 })

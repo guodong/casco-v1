@@ -5,7 +5,6 @@ Ext.define('casco.view.report.Center', {
     requires:[
 		'casco.view.report.CenterCreate',
 		'casco.view.report.ReportController',
-		'casco.view.report.ReportCover',
 		'casco.view.report.Verify'],
 
 //    listeners: {
@@ -43,10 +42,12 @@ Ext.define('casco.view.report.Center', {
 			width: 80,
 			renderer:function(value,metadata,record){
 				var tmp = [];
-				console.log(record);
-				var tcvs = record.data.testjob.vatbuild.tc_version;
-				var rsvs = record.data.docs;
-				var str = "VAT信息："+record.data.testjob.vatbuild.name+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"TC文档信息：" + tcvs.document.name + "-" + tcvs.name + "<br/>" + "RS文档信息：";
+				//请判断一下,到处都是bug
+				//console.log(record.get('testjob'));
+				//console.log(record.get('testjob').get('vatbuild').get('tc_version')||'');
+				//var tcvs = record.get('testjob').get('vatbuild').get('tc_version')||'';
+				var rsvs = record.get('docs')||[];
+				var str = "VAT信息："+((record.get('testjob')||'').vatbuild.name)+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"TC文档信息：" +  record.get('testjob').vatbuild.tc_version.document.name + "-" +   record.get('testjob').vatbuild.tc_version.name + "<br/>" + "RS文档信息：";
 				tmp.push(str);
 				for(var i in rsvs){
 					str = "[" + rsvs[i].document.name + "-" + rsvs[i].name + "]";
@@ -54,7 +55,7 @@ Ext.define('casco.view.report.Center', {
 				}
 				var value = tmp.join(' ');
 			    metadata.tdAttr = 'data-qtip="' + value + '\n"'  ; //提示信息
-			    return record.data.version;
+			    return record.get('version');
 			}
 		}, {
 			text : 'author',
