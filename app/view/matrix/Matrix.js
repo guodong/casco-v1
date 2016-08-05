@@ -15,7 +15,7 @@ Ext.define('casco.view.matrix.Matrix', {
         'casco.view.matrix.MatrixModel',
 		'casco.view.matrix.Tree',
 		'casco.view.matrix.ItemTree',
-		'casco.view.matrix.Top'
+		'casco.view.main.Top'
     ],
     
     controller: 'matrix',
@@ -44,7 +44,7 @@ Ext.define('casco.view.matrix.Matrix', {
     	});
     	me.items = [{
             region: 'north',
-            xtype: 'matrix_top',
+            xtype: 'top',
             reference:'top',
             project: me.project
         },{

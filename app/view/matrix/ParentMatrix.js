@@ -158,7 +158,13 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 						}//
 				  }]// customMenu
 				  },
-			  {text:'justification',dataIndex:'justification',header:'justification',width:100,sortable:true,editor: {xtype: 'textfield'},
+			  {text:'justification',dataIndex:'justification',header:'justification',width:100,sortable:true,renderer:function(value){
+				var arr=[];value=value||null;
+				Ext.Array.each(JSON.parse(value), function(v) {
+					arr.push(v.tag||'');
+				});
+				return arr.join(',');
+			  },//render
 		  customMenu:[
 						{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'justification',width:95,dataIndex:'justification'}]}],
 						 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'justification');}

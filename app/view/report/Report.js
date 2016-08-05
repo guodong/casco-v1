@@ -14,7 +14,7 @@ Ext.define('casco.view.report.Report', {
         'casco.view.report.ReportController',
         'casco.view.report.ReportModel',
 		'casco.view.report.Tree',
-		'casco.view.report.Top'
+		'casco.view.main.Top'
     ],
     
     controller: 'report',
@@ -43,7 +43,7 @@ Ext.define('casco.view.report.Report', {
     	});
     	me.items = [{
             region: 'north',
-            xtype: 'report_top',
+            xtype: 'top',
             reference:'top',
             project: me.project
         },{

@@ -104,11 +104,11 @@ Ext.define('casco.view.report.Center', {
 	  var json=[];
       switch(irecord.get('abbr')){
       case 'ReportCoverStatus':
-    	  json={'xtype':'reportcover','title':'reportcover','id':'reportcover_'+v_id,
+    	  json={'xtype':'reportcover','title':'需求覆盖状态','id':'reportcover_'+v_id,
         		'report':rec,'closable':true};
 		  break;
 	  case 'TestCaseResults':
-          json={'xtype':'result','title':'testingresult','id':'testing_'+v_id,
+          json={'xtype':'result','title':'用例测试结果','id':'testing_'+v_id,
         		'report':rec,'closable':true};
 		  break;
 	  case  'ReportVerify':
@@ -130,9 +130,9 @@ Ext.define('casco.view.report.Center', {
 			tmps.push(tmp);
 			}); 
 			json.push({title:'分配给本阶段验证需求', xtype: 'tabpanel',items:tmps,'closable':true});
-		  	json.push({'xtype':'result','title':'testingresult','id':'testing_'+v_id,
+		  	json.push({'xtype':'result','title':'用例测试结果','id':'testing_'+v_id,
         		'report':rec,'closable':true});
-			json.push({'xtype':'reportcover','title':'reportcover','id':'reportcover_'+v_id,
+			json.push({'xtype':'reportcover','title':'需求覆盖状态','id':'reportcover_'+v_id,
         		'report':rec,'closable':true});
 		  break;
 	   default:

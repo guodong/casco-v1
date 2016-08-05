@@ -111,7 +111,15 @@ Ext.define('casco.view.report.ReportCover', {
 		    }//editor
 			},
 			 {text:'justification',dataIndex:'justification',header:'justification',width:100,sortable:true,editor:{xtype:'textfield'}},
-			 {text:'allocation',dataIndex:'allocation',header:'allocation',width:100,sortable:true,render:function(record){}},
+			 {text:'allocation',dataIndex:'allocation',header:'allocation',width:100,sortable:true,
+				renderer:function(value){
+				var arr=[];value=value||null;
+				Ext.Array.each(JSON.parse(value), function(v) {
+					arr.push(v.tag||'');
+				});
+				return arr.join(',');
+			  }//render
+			 },
 			 {text:'Comment',dataIndex:'comment',header:'Comment',width:90,sortable:true,editor:{xtype:'textfield'}}
 			];
 
