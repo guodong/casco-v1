@@ -14,11 +14,21 @@ Ext.define('casco.view.report.Verify', {
     			}
     		}
     	});
-		store.load();
+		store.load({
+	      scope: this,
+          callback: function(records, operation, success) {
+		  if(records.length==0){
+		  Ext.destroy(me);
+		  //var tabs=Ext.getCmp('reportpanel');
+		 // console.log(tabs);
+		 // tabs.remove(me,true);
+		  }
+		  }
+          });
 		var resultStore = Ext.create('Ext.data.Store', {
         	model: 'casco.model.Result',
             data : [
-	                {label: 'untested',   value: 0},
+	                {label: 'untested',  value: 0},
 	                {label: 'passed',   value: 1},
 	                {label: 'failed',   value: 2},
             ]

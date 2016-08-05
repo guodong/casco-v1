@@ -11,7 +11,7 @@ Ext.define('casco.view.vat.Vat', {
 	xtype: 'vat',
     requires: ['casco.view.vat.VatController',
                'casco.store.TreeDocuments',
-               'casco.view.vat.Top',
+               'casco.view.main.Top',
                'casco.store.Projects',
                'casco.view.vat.Tree',
                'casco.view.vat.VatModel',

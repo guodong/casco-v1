@@ -106,13 +106,6 @@ Ext.define('casco.view.rs.Rs', {
 				
 				win.show();
 				}   
-		},'-',{
-			text: 'View Doc',
-			glyph: 0xf108,
-			scope: this,
-			handler: function() {
-				window.open("/viewdoc.html?file="+me.curr_version.get('filename'),"_blank","width=800,height=900");
-			}
 		},
 //		'-',{
 //			text: 'View Graph',
