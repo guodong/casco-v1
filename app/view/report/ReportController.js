@@ -9,12 +9,21 @@
 Ext.define('casco.view.report.ReportController', {
 	extend : 'Ext.app.ViewController',
 	alias : 'controller.report',
+	
+	//Project
 	switchProject : function(combo, record) {
 		
 	   //top的view啊
         this.redirectTo('project/' + record.get('id'), true);
 		location.reload();
 	},
+	
+	//Vat
+	vat: function(){
+		this.redirectTo('vat/' +this.getView().project.get('id'), true);
+		location.reload();
+	},
+	
 	createReport: function() {
 		  
 		Ext.MessageBox.wait('正在处理,请稍候...', 'Create Report');
@@ -121,6 +130,13 @@ Ext.define('casco.view.report.ReportController', {
         this.redirectTo('matrix/' +this.getView().project.get('id'), true);
 		location.reload();
 	},
+	
+	//Report
+	reporting: function(){
+		this.redirectTo('report/' +this.getView().project.get('id'), true);
+		location.reload();
+	},
+	
 	project:function(){
         this.redirectTo('project/' +this.getView().project.get('id'), true);
 		location.reload();

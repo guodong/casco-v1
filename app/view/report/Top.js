@@ -24,14 +24,17 @@ Ext.define('casco.view.report.Top', {
     	this.items = [{
             xtype: 'label',
             html: 'CASCO TEST CENTER',
-            style: 'font-size: 27px;'
+            style: {'font-size':'27px','font-weight':'bold'}
         },'->',{
             text: 'Manage',
             xtype: 'button',
             handler: 'manage',
             hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false
-        }
-        ,{
+        },{
+        	text:'Vat',
+        	xtype: 'button',
+        	handler: 'vat'
+        },{
             text: 'Testing',
             xtype: 'button',
             handler: 'testing'
@@ -44,6 +47,10 @@ Ext.define('casco.view.report.Top', {
             xtype: 'button',
             handler: 'project'
         }*/,{
+        	text: 'Report',
+        	xtype: 'button',
+        	handler: 'reporting'
+        },{
             text: 'Project Stat',
             xtype: 'button',
             handler: function(){
