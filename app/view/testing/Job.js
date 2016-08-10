@@ -56,6 +56,12 @@ Ext.define('casco.view.testing.Job', {
 			},
 //			width: 200
 		}, {
+			text: 'last_modified',
+			dataIndex: 'user',
+			renderer: function(v){
+				return v?v.realname:'';
+			}
+		},{
 			text: 'created at',
 			dataIndex: 'created_at',
 		}];
@@ -102,7 +108,6 @@ Ext.define('casco.view.testing.Job', {
 		
 		function getPreview(value,metadata,record){ //record-rsversions
 			var tmp = [];
-			console.log(record);
 			var tcvs = record.data.vatbuild.tc_version;
 			var rsvs = record.data.vatbuild.rs_versions;
 			var str = "TC文档信息：" + tcvs.document.name + "-" + tcvs.name + "<br/>" + "RS文档信息：";

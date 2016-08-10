@@ -22,7 +22,6 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 //				document_id: me.child_doc.data.id
 			}
 		});
-		console.log(child_docs);
 //		var child_doc = me.child_doc;
 //		child_doc.load({
 //			params:{
@@ -41,7 +40,7 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 				xtype: 'hiddenfield',
 				name: 'project_id',
 				value: me.project.get('id')
-			}, {
+			},{
 				fieldLabel: 'Version',
 				msgTarget: 'under',
 				name: 'version',

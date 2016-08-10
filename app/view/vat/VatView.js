@@ -3,9 +3,9 @@ Ext.define('casco.view.vat.VatView',{
 	extend: 'Ext.grid.Panel',
 	xtype: 'vat.view',
 	viewModel: 'vat',
-	requires: ['casco.store.Vats',
-	           'casco.view.vat.VatRelations',
-	           'Ext.grid.filters.Filters'], //Needed
+	requires: ['casco.store.Vats'
+//	           'Ext.grid.filters.Filters'
+	           ], //Needed
 	
 //    bodyPadding: 0,
 	forceFit:true,
@@ -71,19 +71,62 @@ Ext.define('casco.view.vat.VatView',{
 				text: 'Show Relation',
 				renderTo: id,
 				handler: function(){
-					var tabs = Ext.getCmp('vatpanel');
-					console.log(tabs);
-					var tab = tabs.child('#vatrelations'+val_id); 
 					console.log(rec);
-					if(!tab) tab = tabs.add({
-						xtype: 'vatrelations',
-						title: rec.get('tc_version').document.name + '-' +rec.data.name,
-						id: 'vatrelations'+val_id,
-					    relation: rec,
-					    closable: true
+					var tab_json=[];
+					var vatres = Ext.create('casco.store.VatRelations');
+					vatres.load({
+						params: {
+							vat_build_id: val_id
+						}
 					});
-					console.log(tab);
-					tabs.setActiveTab('vatrelations'+val_id);
+					vatres.on('load',function(){ //Stor加载
+						var vatres_data = vatres.getData().items[0];
+						console.log(vatres_data.get('tc_vat'));
+						console.log(vatres_data.get('vat_tc'));
+						tab_json.push({
+							'xtype': 'tc_vat_relations',
+							'title': vatres_data.data.vat_build_name+':'+vatres_data.data.tc_doc_name,
+							'id': 'vatrelations'+val_id+vatres_data.data.tc_version_id,
+							'relations': vatres_data.get('tc_vat'),
+							'closable': true
+							});
+//						if(vatres_data.get('tc_vat')!=[]){
+//							tab_json.push({
+//								'xtype': 'tc_vat_relations',
+//								'title': vatres_data.data.vat_build_name+':'+vatres_data.data.tc_doc_name,
+//								'id': 'vatrelations'+val_id+vatres_data.data.tc_version_id,
+//								'relations': vatres_data.get('tc_vat'),
+//								'closable': true
+//								});
+//						}
+						if(vatres_data.get('vat_tc')!=[]){
+							Ext.Array.each(vatres_data.get('vat_tc'),function(v){
+								console.log(v[0].rs_doc_name);
+								var tmp={
+									'xtype': 'vat_tc_relations',
+									'title': vatres_data.data.vat_build_name+':'+v[0].rs_doc_name,
+									'id': 'vatrelations'+val_id+v[0].rs_version_id,
+									'relations': v,
+									'closable': true
+								};
+								tab_json.push(tmp);
+							});
+						}
+						
+						var create_tab=function(record){ //写个递归方便多了啊
+							if(!record) return;
+							  if(Array.isArray(record)){
+								   Ext.Array.each(record,function(name,index){create_tab(name)});
+							   }else{
+								   var tabs= Ext.getCmp('vatpanel');
+								   var tab=tabs.child('#'+record.id);
+								   console.log(record.id);
+								   if(!tab)tab=tabs.add(record);
+								   tabs.setActiveTab(tab);
+						   		}
+						  }
+					       create_tab(tab_json);
+					});
 				},
 				});   
             }, 50);
@@ -123,6 +166,16 @@ Ext.define('casco.view.vat.VatView',{
 							//view.refresh();
 						}
 					}}, this);
+			}
+		},{
+			text: 'Export Relations',
+			glyph: 0xf080,
+			scope: this,
+			handler: function(){
+				var win=Ext.create('widget.vat.twowayrelation',{
+					project: me.project,
+				});
+				win.show();
 			}
 		}];
 		

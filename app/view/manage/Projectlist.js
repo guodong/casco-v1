@@ -2,6 +2,8 @@ Ext.define('casco.view.manage.Projectlist', {
 	extend: 'Ext.grid.Panel',
 	alias: 'widget.projectlist',
 	requires: ['casco.view.manage.Projectadd'],
+	
+	forceFit: true,
 	initComponent: function() {
 		var me = this;
 		var store = Ext.create('casco.store.Projects');
@@ -70,7 +72,7 @@ Ext.define('casco.view.manage.Projectlist', {
                   }
                });
             }, 50);
-            return Ext.String.format('<div id="{0}"></div>', id);
+            return Ext.String.format('<div id="{0}" style="margin-left:auto;margin-right:auto"></div>', id);
          }
       },{
     	  text:"Build",

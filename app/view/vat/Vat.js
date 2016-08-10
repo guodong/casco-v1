@@ -15,8 +15,7 @@ Ext.define('casco.view.vat.Vat', {
                'casco.store.Projects',
                'casco.view.vat.Tree',
                'casco.view.vat.VatModel',
-               'casco.store.VatRelations',
-               'casco.view.vat.VatRelations'],
+               'casco.store.VatRelations'],
     
     controller: 'vat',
     viewModel: 'vat',
