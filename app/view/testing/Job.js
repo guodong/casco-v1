@@ -56,6 +56,12 @@ Ext.define('casco.view.testing.Job', {
 			},
 //			width: 200
 		}, {
+			text: 'last_modified',
+			dataIndex: 'user',
+			renderer: function(v){
+				return v?v.realname:'';
+			}
+		},{
 			text: 'created at',
 			dataIndex: 'created_at',
 		}];

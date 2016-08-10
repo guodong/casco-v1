@@ -26,6 +26,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		});
 		me.stack=[];
         me.selModel=me.selModel?me.selModel:'';		// 赋值作用？？？
+        me.child_type=me.verification.get('child_version').document.type;
 		me.matrix = new casco.store.ParentMatrix();
 		me.matrix.load({
 			params:{
@@ -159,17 +160,27 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 				  }]// customMenu
 				  },
 			  {text:'justification',dataIndex:'justification',header:'justification',width:100,sortable:true,renderer:function(value){
-				var arr=[];value=value||null;
-				Ext.Array.each(JSON.parse(value), function(v) {
-					arr.push(v.tag||'');
-				});
-				return arr.join(',');
+				  console.log(value);
+				  if("tc"==me.verification.get('child_version').document.type){
+					  var arr=[];value=value||null;
+						Ext.Array.each(JSON.parse(value), function(v) {
+							arr.push(v.tag||'');
+						});
+						return arr.join(',');
+				  }else{
+					  return value;
+				  }
+				
 			  },//render
 		  customMenu:[
 						{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'justification',width:95,dataIndex:'justification'}]}],
 						 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'justification');}
 						}//
 				  }]// customMenu
+			  ,editor: {
+				  xtype: 'textfield',
+				  disabled: ("tc"==me.child_type)?true:false
+			  }
 				  },
 			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:110,sortable:true,
 				 customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',columns:1,vertical:true,

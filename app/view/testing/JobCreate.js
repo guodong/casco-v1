@@ -39,7 +39,11 @@ Ext.define('casco.view.testing.JobCreate', {
 				xtype: 'hiddenfield',
 				name: 'project_id',
 				value: me.project.get('id')
-			}, {
+			},{
+				xtype: 'hiddenfield',
+				name: 'user_id',
+				value: JSON.parse(localStorage.user).id
+			},{
 				fieldLabel: 'Name',
 				msgTarget: 'under',
 				allowBlank:false, 

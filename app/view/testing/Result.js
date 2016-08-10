@@ -209,6 +209,13 @@ Ext.define('casco.view.testing.Result', {
 			glyph: 0xf0c7,
 			handler: function() {
 				var out = [];
+				me.job.set('user_id',JSON.parse(localStorage.user).id);
+				me.job.save();
+				Ext.getCmp('joblist').getStore().reload();
+				console.log(me);
+//				me.job.reload({
+//					project_id :me.project.get('id')
+//				});
 				me.getStore().each(function(r){
 					var steps = [];
 					Ext.each(r.get('tc').steps, function(step){
@@ -232,11 +239,13 @@ Ext.define('casco.view.testing.Result', {
 			scope: this,
 			handler: function() {
 				me.job.set('status', 1);
+				me.job.set('user_id',JSON.parse(localStorage.user).id);
 				me.job.save({
 					success: function(){
 						Ext.Msg.alert('Success', 'Submit successfully.')
 					}
 				});
+				Ext.getCmp('joblist').getStore().reload();
 			}
 		},{
 			text: 'Export Result',

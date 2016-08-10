@@ -167,6 +167,16 @@ Ext.define('casco.view.vat.VatView',{
 						}
 					}}, this);
 			}
+		},{
+			text: 'Export Relations',
+			glyph: 0xf080,
+			scope: this,
+			handler: function(){
+				var win=Ext.create('widget.vat.twowayrelation',{
+					project: me.project,
+				});
+				win.show();
+			}
 		}];
 		
 		function getPreview(value,metadata,record){ //record-rsversions
