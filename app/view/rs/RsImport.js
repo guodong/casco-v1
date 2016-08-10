@@ -3,10 +3,8 @@ Ext.define('casco.view.rs.RsImport', {
 	alias : 'widget.rs.rsimport',
 	requires : [ 
 	             'casco.store.Rss', 
-	             'casco.store.Versions',
-	             // 'casco.view.document.version.Create'
+	             'casco.store.Versions'
 	             ],
-	// uses : [],
 	modal : true,
 	title : 'Document Import',
 	width : 500,
@@ -35,7 +33,7 @@ Ext.define('casco.view.rs.RsImport', {
 			}else{
            
 		    if(me.type=="rs") {me.down('form').items.getAt(1).setValue("description,implement,source,priority,contribute,category,allocation");}
-        else if(me.type="tc") me.down('form').items.getAt(1).setValue("test case description,safety,source,test method,pre_condition,test steps");
+		    else if(me.type="tc") me.down('form').items.getAt(1).setValue("test case description,safety,source,test method,pre_condition,test steps");
 			}
 		}// callback
 		});
