@@ -81,27 +81,29 @@ Ext.define('casco.view.vat.VatView',{
 					});
 					vatres.on('load',function(){ //Stor加载
 						var vatres_data = vatres.getData().items[0];
-						console.log(vatres_data.get('tc_vat'));
-						console.log(vatres_data.get('vat_tc'));
-						tab_json.push({
-							'xtype': 'tc_vat_relations',
-							'title': vatres_data.data.vat_build_name+':'+vatres_data.data.tc_doc_name,
-							'id': 'vatrelations'+val_id+vatres_data.data.tc_version_id,
-							'relations': vatres_data.get('tc_vat'),
-							'closable': true
+						console.log(vatres_data.get('parent_vat'));
+						if(vatres_data.get('parent_vat')!=[]){
+							Ext.Array.each(vatres_data.get('parent_vat'),function(v){
+								var tmp={
+									'xtype': 'tc_vat_relations',
+									'title': 'P-'+vatres_data.data.vat_build_name+':'+v[0].rs_doc_name,
+									'id': 'vatrelations-p'+val_id+v[0].rs_version_id,
+									'relations': v,
+									'closable': true
+								};
+								tab_json.push(tmp);
 							});
-//						if(vatres_data.get('tc_vat')!=[]){
-//							tab_json.push({
-//								'xtype': 'tc_vat_relations',
-//								'title': vatres_data.data.vat_build_name+':'+vatres_data.data.tc_doc_name,
-//								'id': 'vatrelations'+val_id+vatres_data.data.tc_version_id,
-//								'relations': vatres_data.get('tc_vat'),
-//								'closable': true
-//								});
-//						}
+						}
+//						tab_json.push({
+//							'xtype': 'tc_vat_relations',
+//							'title': vatres_data.data.vat_build_name+':'+vatres_data.data.tc_doc_name,
+//							'id': 'vatrelations'+val_id+vatres_data.data.tc_version_id,
+//							'relations': vatres_data.get('tc_vat'),
+//							'closable': true
+//							});
 						if(vatres_data.get('vat_tc')!=[]){
 							Ext.Array.each(vatres_data.get('vat_tc'),function(v){
-								console.log(v[0].rs_doc_name);
+//								console.log(v[0].rs_doc_name);
 								var tmp={
 									'xtype': 'vat_tc_relations',
 									'title': vatres_data.data.vat_build_name+':'+v[0].rs_doc_name,
