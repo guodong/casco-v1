@@ -2,7 +2,6 @@ Ext.define('casco.view.vat.TwoWayRelation', {
 	extend: 'Ext.window.Window',
 	xtype: 'vat.twowayrelation',
 	modal: true,
-	
 	title: 'Relation Exporting',
 	id: 'two-way-relation-window',
 	height: 380,
@@ -10,13 +9,6 @@ Ext.define('casco.view.vat.TwoWayRelation', {
 	
 	initComponent: function() {
 		var me = this;
-//		me.rs_versions = [];
-//		console.log(me.document);
-//		tcvs.load({
-//			params:{
-//				document_id: me.document.get('id')
-//			}
-//		});
 		var parentDocs = Ext.create('casco.store.Documents');
 		parentDocs.load({
 			params: {
@@ -32,7 +24,6 @@ Ext.define('casco.view.vat.TwoWayRelation', {
 		});
 		var parentVs = Ext.create('casco.store.Versions');
 		var childVs = Ext.create('casco.store.Versions');
-		
 		me.items = [{
 			xtype: 'form',
 			reference: 'two_way_relation_form',
@@ -132,6 +123,31 @@ Ext.define('casco.view.vat.TwoWayRelation', {
 				text: 'Export',
 				glyph: 0xf080,
 				handler: function(){
+					var self = this;var obj=null;
+					var form = me.down('form').getForm();
+					console.log(form);
+					if (form.isValid()) {
+						// ajax请求				
+						                    setTimeout(function(){Ext.destroy(me);},1000);
+											form.submit({// 为什么一直为false
+												url : API + 'vat/export',
+												//waitMsg : 'Uploading file...',
+												listeners:{
+												actioncomplete:function(){
+												this.destroy();
+												}
+												},
+												success : function(form,action) {
+													 self.up('window').destroy();
+												},
+						                        failure: function(form,action) {
+													 self.up('window').destroy();
+												}
+											});// submit
+											
+						 }//valid
+						
+					
 					
 				}
 			}, {
