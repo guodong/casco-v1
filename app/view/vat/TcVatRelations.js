@@ -16,20 +16,17 @@ Ext.define('casco.view.vat.TcVatRelations',{
 		console.log(me.store);
 		
 		me.columns = [{
-			text: 'TC',
-			dataIndex: 'tc_tag_name'
+			text: 'Parent-Tag',
+			dataIndex: 'rs_tag_name',
+			width: '20%'
 		},{
-			text: 'TC-Version',
-			dataIndex: 'tc_version_name'
+			text: 'Parent-Version',
+			dataIndex: 'rs_version_name',
+			width: '20%'
 		},{
 			text: 'VAT',
-			dataIndex: 'rs_tag_name'
-		},{
-			text: 'VAT-Doc',
-			dataIndex: 'rs_doc_name'
-		},{
-			text: 'VAT-Version',
-			dataIndex: 'rs_version_name'
+			dataIndex: 'rs_vat',
+			width: '60%'
 		}];
 		
 		this.callParent();

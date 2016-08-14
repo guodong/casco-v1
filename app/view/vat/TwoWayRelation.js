@@ -65,6 +65,7 @@ Ext.define('casco.view.vat.TwoWayRelation', {
 				queryMode: 'local',
 				displayField: 'name',
 				valueField: 'id',
+				disabled: true
 			},{
 				fieldLabel: 'Child Document',
 				name: 'child_doc_name',
