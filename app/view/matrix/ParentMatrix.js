@@ -51,7 +51,11 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 					me.columns.push(column);
 					// me.headerCt.insert(me.columns.length, column);
 				});
+<<<<<<< HEAD
 //				console.log(me.columns);
+=======
+				me.store.setData(me.matrix.getData());
+>>>>>>> 9306599e92c54377e5fd2b63764cc211e9a29013
 			me.reconfigure(me.matrix,me.columns);
 			me.customMenuItemsCache = [];
 			me.headerCt.on('menucreate', function (cmp, menu) {
@@ -166,20 +170,16 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 							arr.push(v.tag||'');
 						});
 						return arr.join(',');
-				  }else{
-					  return value;
-				  }
+				//  }else{
+				//	  return value;
+				//  }
 				
 			  },//render
 		  customMenu:[
 						{text:'筛选',menu:[{xtype:'innergrid',columns:[{text:'justification',width:95,dataIndex:'justification'}]}],
 						 listeners:{focus:function(g, eOpts){g.down('innergrid').fireEvent('datachange',me.store.getData(),'justification');}
 						}//
-				  }]// customMenu
-			  ,editor: {
-				  xtype: 'textfield',
-				  disabled: ("tc"==me.child_type)?true:false
-			  }
+				  }]// customMen
 				  },
 			  {text:'Completeness',dataIndex:'Completeness',header:'Completeness',width:110,sortable:true,
 				 customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',columns:1,vertical:true,

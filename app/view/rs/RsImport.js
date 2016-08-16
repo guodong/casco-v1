@@ -113,7 +113,16 @@ Ext.define('casco.view.rs.RsImport', {
                         }  
                     }  
 				}// listenres
-			}, {
+			},{
+				   xtype:'checkboxfield',
+				   fieldLabel:'IsMerge',
+				   checked:false,
+				   name:'ismerge',
+				   hidden:me.type!='tc'?true:false,
+                   inputValue:'1',
+				   uncheckedValue:'0',
+				   boxLabel:'是否含有合并单元格'
+			},{
 				xtype:'textfield',
 				fieldLabel:'TC regex',
 				name:'regrex',
