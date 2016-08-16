@@ -51,7 +51,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 					me.columns.push(column);
 					// me.headerCt.insert(me.columns.length, column);
 				});
-				console.log(me.columns);
+//				console.log(me.columns);
 			me.reconfigure(me.matrix,me.columns);
 			me.customMenuItemsCache = [];
 			me.headerCt.on('menucreate', function (cmp, menu) {
@@ -160,7 +160,6 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 				  }]// customMenu
 				  },
 			  {text:'justification',dataIndex:'justification',header:'justification',width:100,sortable:true,renderer:function(value){
-				  console.log(value);
 				  if("tc"==me.verification.get('child_version').document.type){
 					  var arr=[];value=value||null;
 						Ext.Array.each(JSON.parse(value), function(v) {
@@ -260,6 +259,12 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 					store:Ext.create('Ext.data.Store', {
 					fields: ['name', 'value'],
 					data : [{"name":"NA", "value":"NA"},{"name":"OK", "value":"OK"},{"name":"NOK", "value":"NOK"}]}),
+					listeners: {
+						select: function(combo,record,index){
+//							console.log(combo,record,index);
+							
+						}
+					}
 			    }
 			  },
 			  {text:'Verif Assest justifiaction',dataIndex:'Verif Assest justifiaction',header:'Verif Assest justifiaction',width:175,sortable:true,editor:{xtype:'textfield'},

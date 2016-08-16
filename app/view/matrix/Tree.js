@@ -12,7 +12,7 @@ Ext.define('casco.view.matrix.Tree', {
 //			var child_id = casco.model.Document;
 			if(!tab){
 			tabs.removeAll();
-			console.log(record);
+//			console.log(record);
 			tab = tabs.add({id: 'tab-verification-'+record.data.id,
 				xtype: 'matrix.verification',
 				title: 'verification',

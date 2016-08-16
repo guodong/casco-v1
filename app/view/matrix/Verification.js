@@ -15,7 +15,7 @@ Ext.define('casco.view.matrix.Verification', {
     initComponent: function(){
     	var me = this;
     	var p_id=me.id;
-    	console.log(p_id);
+//    	console.log(p_id);
     	me.store = new casco.store.Verification();
     	me.store.load({
     		params: {
@@ -159,7 +159,6 @@ Ext.define('casco.view.matrix.Verification', {
 
 
 	me.switchView=function(combo,irecord,rec){
-		console.log(rec);
 	  //有rec
       combo.setValue(combo.emptyText);
 	  var v_id=combo.val_id;
@@ -202,14 +201,13 @@ Ext.define('casco.view.matrix.Verification', {
       
        //写个递归方便多了啊
        var create_tab=function(record){
-    	   console.log(record);
        if(Array.isArray(record)){
        Ext.Array.each(record,function(name,index){create_tab(name)});
 	   }
        else{
 		var tabs= Ext.getCmp('matrixpanel');
 		var tab=tabs.child('#'+record.id);
-		console.log(tab);
+//		console.log(tab);
 		if(!tab)tab=tabs.add(record);
 	    tabs.setActiveTab(tab);
 	   }
