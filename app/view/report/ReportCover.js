@@ -44,11 +44,7 @@ Ext.override(Ext.grid.plugin.RowExpander, { // Override to fire collapsebody & e
         } else {
             fireView = view;
         }
-//通过grid触发事件，而不是view
         this.grid.fireEvent(isCollapsed ? 'expandbody' : 'collapsebody', row.dom, record, nextBd);
-//下面为ext论坛的解决办法，无效
-//fireView.fireEvent(isCollapsed ? 'expandbody' : 'collapsebody', row.dom, record, nextBd);
-        // Coalesce laying out due to view size changes
         Ext.resumeLayouts(true);
     },
 });
@@ -71,53 +67,57 @@ Ext.define('casco.view.report.ReportCover', {
             synchronous: true
         });
         var expander = new Ext.grid.plugin.RowExpander({
-            rowBodyTpl : new Ext.XTemplate(['<div id="myrow-{id}" ></div>'])
+            rowBodyTpl : new Ext.XTemplate(['<div  class="detailData" ></div>'])
         });
 
         me.plugins =[expander];
         var resultStore = Ext.create('Ext.data.Store', {
             model: 'casco.model.Result',
             data: [
-                {label: 'untested', value: 0},
-                {label: 'passed', value: 1},
-                {label: 'failed', value: 2},
+                {label: '<span style="color:blue">untested</span>', value: 0},
+                {label: '<span style="color:green">passed</span>', value: 1},
+                {label: '<span style="color:red">failed</span>', value: 2},
             ]
         });
 
         me.listeners={
             expandbody: function (expander, r, body, rowIndex) {
 
-                var id=Ext.id();
                 // if (Ext.DomQuery.select("div.x-panel-bwrap", body).length == 0) {
                 var data = r.get('common');
-				console.log(data);
-                var store = new Ext.data.SimpleStore({
-                    fields: ["Child Requirement Tag","allocation", "justification", "comment"]
-                    , data: data
-                });
-				var row ="myrow-"+r.get("id");
+				console.log(r.get('common'));
+                var store = new casco.store.ReportCovers();
+				store.load({id:data.join(',')});
+				var row=Ext.DomQuery.select("div.detailData",body);
 				console.log('the row is the'+row);
                 var grid = new Ext.grid.GridPanel(
                     {
+					    storeId:'innerStore',
                         store: store,
                         columns:[
                     {
                         text: 'Child Requirement Tag',
                         dataIndex: 'Child Requirement Tag',
                         header: 'Child Requirement Tag',
-                        width: 100,
+                        width: 200,
+						menuDisabled:true,
+						resizable:false,
                         sortable: true
                     },
                     {
                         text: 'justification',
                         dataIndex: 'justification',
                         header: 'justification',
-                        width: 100,
+                        width: 150,
                         sortable: true,
+						menuDisabled:true,
+						resizable:false,
                         editor: {xtype: 'textfield'}
                     },
                     {
-                        text: 'allocation', dataIndex: 'allocation', header: 'allocation', width: 100, sortable: true,
+                        text: 'allocation', dataIndex: 'allocation', header: 'allocation', width: 150, sortable: true,
+						menuDisabled:true,
+						resizable:false,
                         renderer: function (value) {
                             var arr = [];
                             value = value || null;
@@ -131,22 +131,40 @@ Ext.define('casco.view.report.ReportCover', {
                         text: 'Comment',
                         dataIndex: 'comment',
                         header: 'Comment',
-                        width: 90,
+                        width: 150,
+						menuDisabled:true,
+						resizable:false,
                         sortable: true,
                         editor: {xtype: 'textfield'}
-                    }
-                ],
+                    }],
+						collapsible:true,
+						animCollapse:false,
+						iconCls:'icon-grid',
                         autoWidth: true,
                         autoHeight: true,
-                        renderTo: row,
+						preventHeader:true,
+                        renderTo: row[0],
                         plugins: {
                             ptype: 'cellediting',
                             clicksToEdit: 1
                         }
-                    }
-                );
+                    });
+
+					grid.getEl().swallowEvent([
+						'mousedown','mouseup','contextmenu','beforefocus','focus','mouseover','mouseout'
+						,'mousemove']);
                 //  }//if
             }//expandbody
+			,
+			collapsebody:function(rowNode,record,expandRow,opts){
+				var detailData=Ext.DomQuery.select("div.detailData",expandRow);
+				var parent=detailData[0];
+				var child=parent.firstChild;
+				while(child){
+				child.parentNode.removeChild(child);
+				child=child.nextSibling;
+				}
+			}
         }
         me.tbar = [{
             text: 'Save',
@@ -154,8 +172,8 @@ Ext.define('casco.view.report.ReportCover', {
             scope: this,
             handler: function () {
                 var data = [];
-                // 血的教训，早知道就用这了... me.matrix.sync();
-                me.store.sync({
+                console.log(Ext.data.StoreManager.lookup('innerStore'));
+				Ext.data.StoreManager.lookup('innerStore').sync({
                     callback: function (record, operation, success) {
                     },
                     failure: function (record, operation) {
@@ -196,17 +214,17 @@ Ext.define('casco.view.report.ReportCover', {
 
 		},
             {
-                text: 'Parent_Requirement_Tag',
-                dataIndex: 'Parent_Requirement_Tag',
-                header: 'Parent_Requirement_Tag',
-                width: 600,
+                text: 'Parent Requirement Tag',
+                dataIndex: 'Parent Requirement Tag',
+                header: 'Parent Requirement Tag',
+                width: 300,
                 sortable: true
             },
             {
                 text: 'Parent Requirement Text',
                 dataIndex: 'Parent Requirement Text',
                 header: 'Parent Requirement Text',
-                width: 600,
+                width: 300,
                 sortable: true
             },
             {

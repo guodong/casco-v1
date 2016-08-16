@@ -19,18 +19,15 @@ Ext.define('casco.view.report.Verify', {
           callback: function(records, operation, success) {
 		  if(records.length==0){
 		  Ext.destroy(me);
-		  //var tabs=Ext.getCmp('reportpanel');
-		 // console.log(tabs);
-		 // tabs.remove(me,true);
 		  }
 		  }
           });
 		var resultStore = Ext.create('Ext.data.Store', {
         	model: 'casco.model.Result',
             data : [
-	                {label: 'untested',  value: 0},
-	                {label: 'passed',   value: 1},
-	                {label: 'failed',   value: 2},
+	            {label: '<span style="color:blue">untested</span>', value: 0},
+                {label: '<span style="color:green">passed</span>', value: 1},
+                {label: '<span style="color:red">failed</span>', value: 2},
             ]
         });
 		me.store = store;
