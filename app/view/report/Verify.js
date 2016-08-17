@@ -27,7 +27,7 @@ Ext.define('casco.view.report.Verify', {
             data : [
 	            {label: '<span style="color:blue">untested</span>', value: 0},
                 {label: '<span style="color:green">passed</span>', value: 1},
-                {label: '<span style="color:red">failed</span>', value: 2},
+                {label: '<span style="color:red">failed</span>', value: -1},
             ]
         });
 		me.store = store;

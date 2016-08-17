@@ -16,7 +16,7 @@ Ext.define('casco.view.testing.Step', {
             data : [
 	                {label: 'untested',   value: 0},
 	                {label: 'passed',   value: 1},
-	                {label: 'failed',   value: 2},
+	                {label: 'failed',   value: -1},
             ]
         });
     	me.items = [{
