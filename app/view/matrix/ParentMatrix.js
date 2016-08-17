@@ -51,11 +51,8 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 					me.columns.push(column);
 					// me.headerCt.insert(me.columns.length, column);
 				});
-<<<<<<< HEAD
-//				console.log(me.columns);
-=======
-				me.store.setData(me.matrix.getData());
->>>>>>> 9306599e92c54377e5fd2b63764cc211e9a29013
+
+			me.store.setData(me.matrix.getData());
 			me.reconfigure(me.matrix,me.columns);
 			me.customMenuItemsCache = [];
 			me.headerCt.on('menucreate', function (cmp, menu) {
@@ -169,7 +166,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 						Ext.Array.each(JSON.parse(value), function(v) {
 							arr.push(v.tag||'');
 						});
-						return arr.join(',');
+						return arr.join(',');}
 				//  }else{
 				//	  return value;
 				//  }
