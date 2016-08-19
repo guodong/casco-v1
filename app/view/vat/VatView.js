@@ -71,7 +71,7 @@ Ext.define('casco.view.vat.VatView',{
 				text: 'Show Relation',
 				renderTo: id,
 				handler: function(){
-					console.log(rec);
+//					console.log(rec);
 					var tab_json=[];
 					var vatres = Ext.create('casco.store.VatRelations');
 					vatres.load({
@@ -81,7 +81,7 @@ Ext.define('casco.view.vat.VatView',{
 					});
 					vatres.on('load',function(){ //Stor加载
 						var vatres_data = vatres.getData().items[0];
-						console.log(vatres_data.get('parent_vat'));
+//						console.log(vatres_data.get('parent_vat'));
 						if(vatres_data.get('parent_vat')!=[]){
 							Ext.Array.each(vatres_data.get('parent_vat'),function(v){
 								var tmp={
@@ -122,7 +122,7 @@ Ext.define('casco.view.vat.VatView',{
 							   }else{
 								   var tabs= Ext.getCmp('vatpanel');
 								   var tab=tabs.child('#'+record.id);
-								   console.log(record.id);
+//								   console.log(record.id);
 								   if(!tab)tab=tabs.add(record);
 								   tabs.setActiveTab(tab);
 						   		}

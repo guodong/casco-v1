@@ -11,9 +11,7 @@ Ext.define('casco.view.vat.VatTcRelations',{
 	initComponent: function(){
 		var me = this;
 		me.store=Ext.create('Ext.data.Store');
-		console.log(me.relations);
 		me.store.loadData(me.relations);
-		console.log(me.store);
 		
 		me.columns = [{
 			text: 'VAT',

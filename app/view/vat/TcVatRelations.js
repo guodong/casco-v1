@@ -11,9 +11,9 @@ Ext.define('casco.view.vat.TcVatRelations',{
 	initComponent: function(){
 		var me = this;
 		me.store=Ext.create('Ext.data.Store');
-		console.log(me.relations);
+//		console.log(me.relations);
 		me.store.loadData(me.relations);
-		console.log(me.store);
+//		console.log(me.store);
 		
 		me.columns = [{
 			text: 'Parent-Tag',

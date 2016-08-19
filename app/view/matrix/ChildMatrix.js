@@ -130,8 +130,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 				autoCancel:false,
 				listeners: {
 		            edit: function(editor, e) {
-					e.record.set(e.field,e.value);
-					me.getView().refresh(); 
+					me.getView().refreshNode(e.record); 
 		            }
 		        }
 		},
