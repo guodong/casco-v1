@@ -29,7 +29,7 @@ Ext.define('casco.view.rs.RsImport', {
 			regrex=me.versions.getAt(0).get('regrex');
 			//me.down('form').loadRecord(me.versions.getAt(0));
             me.down('form').items.getAt(1).setValue(headers);
-			me.down('form').items.getAt(2).setValue(regrex);
+			me.down('form').items.getAt(3).setValue(regrex);
 			}else{
            
 		    if(me.type=="rs") {me.down('form').items.getAt(1).setValue("description,implement,source,priority,contribute,category,allocation");}

@@ -92,19 +92,6 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			 me.getView().refresh();Ext.Msg.alert('Success', 'Saved successfully.');
 			 }
 			 }); 
-			 /*
-				 * Ext.Array.each(rows,function(item){ item.dirty=false;
-				 * item.commit(); data.push(item.getData()); });// each var
-				 * model=Ext.create('casco.model.Verification',{id:me.verification.get('id')});
-				 * model.set('data',data); model.save({ callback:
-				 * function(record, operation, success){ }, failure:
-				 * function(record, operation) { me.getView().refresh(); //
-				 * 这一行重要哇我晕 Ext.Msg.alert('Failed','Save failed!'); }, success:
-				 * function(record, operation) { me.getView().refresh(); //
-				 * 这一行重要哇我晕 Ext.Msg.alert('Success', 'Saved successfully.');
-				 *  }, });
-				 */
-			
 			}
 		},'-',{text: 'Export',
 			glyph: 0xf080,
