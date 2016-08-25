@@ -163,15 +163,26 @@ Ext.define('casco.view.manage.Versions', {
 			selType :'rowmodel',
 			store :me.store,
 			listeners:{
-					itemcontextmenu :doRowCtxMenu,
-					destroy : function(thisGrid) {
+		
+					beforeedit:function(editor, e, eOpts){
+					if(me.edit==1){
+					//this.swallowEvent(['itemcontextmenu'],true);
+					return  false;
+					}else{
+					return true;
+					}},
+					itemcontextmenu :function (global , record , item , index , e , eOpts ){
+
+					if(!me.edit)doRowCtxMenu(global , record , item , index , e , eOpts );
+
+					},destroy : function(thisGrid) {
 						if (thisGrid.rowCtxMenu) {
 							thisGrid.rowCtxMenu.destroy();
 						}
 					}
 			}// listeners
 		}];
-		
+       
 	me.callParent(arguments);
 },
 doHide : function() {

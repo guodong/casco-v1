@@ -34,7 +34,7 @@ Ext.define('casco.view.testing.Result', {
     	var resultStore = Ext.create('Ext.data.Store', {
         	model: 'casco.model.Result',
             data : [
-	                {label: 'untested',   value: 0},
+	                {label: 'untested', value: 0},
 	                {label: 'passed',   value: 1},
 	                {label: 'failed',   value: -1},
             ]
@@ -163,7 +163,7 @@ Ext.define('casco.view.testing.Result', {
 		}, {
 		    xtype: 'gridcolumn',
 		    dataIndex: 'result',
-			  width: 120,
+			width: 120,
 		    renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
 		        return resultStore.findRecord('value', value).get('label');
 		    },

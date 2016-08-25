@@ -1,8 +1,45 @@
+/*Ext.override(Ext.grid.Panel, { 
+    checkThatContextIsParentGridView: function(e){
+        var target = Ext.get(e.target);
+        var parentGridView = target.up('.x-grid-view');
+		console.log(parentGridView,this.el);
+        if (this.el != parentGridView) {
+            // event of different grid caused by grids nesting 
+            return false;
+        } else {
+            return true;
+        }
+    },
+    processItemEvent: function( type , view , cell , recordIndex , cellIndex , e ) {
+		console.log(e);
+        if (e.target && !this.checkThatContextIsParentGridView(e)) {
+            return false;
+        } else {
+            return this.callParent([ type , view , cell , recordIndex , cellIndex , e ]);
+        }
+    }
+});*/
+
+
+Ext.override(Ext.grid.ColumnManager,{
+ getHeaderIndex: function(header) {
+	 //屌不屌?
+        if (header&&header.isGroupHeader) {
+            // Get the first header for the particular group header. The .getHeaderColumns API
+            // will sort out if it's to be just visible columns or all columns.
+            header = this.getHeaderColumns(header)[0];
+        }
+        return Ext.Array.indexOf(this.getColumns(), header);
+    }
+
+});
+
+		
+
 Ext.override(Ext.grid.plugin.RowExpander, { // Override to fire collapsebody & expandbody
     init: function(grid) {
         this.callParent(arguments);
 //        grid.getView().addEvents('collapsebody', 'expandbody');//ext论坛找到的解决办法，这样也无法添加事件
-//存储grid对象
         this.grid=grid;
        // this.grid.addEvents('collapsebody', 'expandbody');//给grid对象添加事件
     },
@@ -28,7 +65,6 @@ Ext.override(Ext.grid.plugin.RowExpander, { // Override to fire collapsebody & e
         // Sync the height and class of the row on the locked side
         if (me.grid.ownerLockable) {
             ownerLock = me.grid.ownerLockable;
-//            fireView = ownerLock.getView();
             view = ownerLock.lockedGrid.view;
             fireView=ownerLock.lockedGrid.view;
             rowHeight = row.getHeight();
@@ -49,12 +85,14 @@ Ext.override(Ext.grid.plugin.RowExpander, { // Override to fire collapsebody & e
     },
 });
 
+
 Ext.define('casco.view.report.ReportCover', {
     extend: 'Ext.grid.Panel',
     xtype: 'reportcover',
     selModel: {
-        selType: 'cellmodel'
-    },
+                //preventFocus:true,
+                mode : "SINGLE"
+            },
     collapsible: true,
     animCollapse: false,
     initComponent: function () {
@@ -85,40 +123,29 @@ Ext.define('casco.view.report.ReportCover', {
 
                 // if (Ext.DomQuery.select("div.x-panel-bwrap", body).length == 0) {
                 var data = r.get('common');
-				console.log(r.get('common'));
                 var store = new casco.store.ReportCovers();
 				store.load({id:data.join(',')});
 				var row=Ext.DomQuery.select("div.detailData",body);
-				console.log('the row is the'+row);
                 var grid = new Ext.grid.GridPanel(
-                    {
-					    storeId:'innerStore',
+				 {
                         store: store,
                         columns:[
                     {
                         text: 'Child Requirement Tag',
                         dataIndex: 'Child Requirement Tag',
-                        header: 'Child Requirement Tag',
                         width: 200,
 						menuDisabled:true,
 						resizable:false,
                         sortable: true
                     },
                     {
-                        text: 'justification',
-                        dataIndex: 'justification',
-                        header: 'justification',
+                        text: 'vat',
+                        dataIndex: 'vat',
                         width: 150,
                         sortable: true,
 						menuDisabled:true,
 						resizable:false,
-                        editor: {xtype: 'textfield'}
-                    },
-                    {
-                        text: 'allocation', dataIndex: 'allocation', header: 'allocation', width: 150, sortable: true,
-						menuDisabled:true,
-						resizable:false,
-                        renderer: function (value) {
+						renderer: function (value) {
                             var arr = [];
                             value = value || null;
                             Ext.Array.each(JSON.parse(value), function (v) {
@@ -128,14 +155,19 @@ Ext.define('casco.view.report.ReportCover', {
                         }//render
                     },
                     {
+                        text: 'vat_result', dataIndex: 'vat_result',  width: 150, sortable: true,
+						menuDisabled:true,
+						resizable:false,
+						editor:{xtype:'textfield'}
+                    },
+                    {
                         text: 'Comment',
                         dataIndex: 'comment',
-                        header: 'Comment',
                         width: 150,
 						menuDisabled:true,
 						resizable:false,
                         sortable: true,
-                        editor: {xtype: 'textfield'}
+						editor:{xtype:'textfield'}
                     }],
 						collapsible:true,
 						animCollapse:false,
@@ -147,13 +179,10 @@ Ext.define('casco.view.report.ReportCover', {
                         plugins: {
                             ptype: 'cellediting',
                             clicksToEdit: 1
-                        }
+                        },
                     });
-
-					grid.getEl().swallowEvent([
-						'mousedown','mouseup','contextmenu','beforefocus','focus','mouseover','mouseout'
-						,'mousemove']);
-                //  }//if
+					grid.getEl().swallowEvent(['mousedown', 'mouseup', 'click','contextmenu', 'mouseover', 'mouseout','dblclick', 'mousemove', 'focusmove','focuschange', 'focusin', 'focus','focusenter']);
+				//  }//if
             }//expandbody
 			,
 			collapsebody:function(rowNode,record,expandRow,opts){
@@ -172,20 +201,14 @@ Ext.define('casco.view.report.ReportCover', {
             scope: this,
             handler: function () {
                 var data = [];
-                console.log(Ext.data.StoreManager.lookup('innerStore'));
-				Ext.data.StoreManager.lookup('innerStore').sync({
-                    callback: function (record, operation, success) {
-                    },
-                    failure: function (record, operation) {
-                        me.getView().refresh(); // 这一行重要哇我晕
-                        Ext.Msg.alert('Failed', 'Save failed!');
-                    },
-                    success: function (record, operation) {
-                        me.getView().refresh();
-                        Ext.Msg.alert('Success', 'Saved successfully.');
-                    }
-                });
-
+				//有那么多store怎么破
+				var detailData=Ext.DomQuery.select("div.detailData");
+				for(var i=0;i<detailData.length;i++){
+				if(detailData[i].childNodes.length>0){
+				var compoment=Ext.getCmp(detailData[i].childNodes[0].id);
+				compoment&&compoment.store.sync();
+				}
+				}
             }
         }, {
             text: 'Export',
@@ -207,12 +230,7 @@ Ext.define('casco.view.report.ReportCover', {
             {text: '需求覆盖状态', xtype: 'label', margin: '0 50'}
         ];
 
-        me.columns = [{
-				 dataIndex: 'id',
-                header: 'id',
-			    hidden:true
-
-		},
+        me.columns = [
             {
                 text: 'Parent Requirement Tag',
                 dataIndex: 'Parent Requirement Tag',
@@ -235,29 +253,7 @@ Ext.define('casco.view.report.ReportCover', {
                     return resultStore.findRecord('value', value).get('label');
                 },
                 text: 'Result',
-                typeAhead: false,
-                editor: {
-                    xtype: 'combobox',
-                    disabledCls: '',
-                    queryMode: 'local',
-                    displayField: 'label',
-                    valueField: 'value',
-                    readOnly: true,
-                    store: resultStore,
-                    listeners: {
-                        select: function (combo, r) {
-                            /*	var rd = me.getSelectionModel().getSelection()[0];
-                             if(r.get('value') != 0){
-                             rd.set('exec_at', Ext.Date.format(new Date(), 'Y-m-d H:i:s'));
-                             }
-                             Ext.each(rd.get('tc').steps, function(step){
-                             step.result = r.get('value');
-                             });
-                             Ext.getCmp('testing-step-panel').down('grid').reconfigure();
-                             */
-                        }
-                    }
-                }//editor
+                typeAhead: false
             }
         ];
         this.callParent();

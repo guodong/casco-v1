@@ -35,10 +35,6 @@ Ext.define('casco.view.tc.Tc', {
 										  data: (me.store_tc.getAt(0).get('data')),
 										  fields:Ext.encode(me.store_tc.getAt(0).get('fieldsNames'))	//后端数据封装为JSON String
 						});
-//					    console.log(me.store_tc.getAt(0));
-//					    console.log(me.store_tc.getAt(0).get('data'));
-//					    console.log(me.store_tc.getAt(0).get('fieldsNames'));
-//					    console.log(me.ds);
                         me.store_tc.setData(me.ds.getData());
 						me.reconfigure(me.store_tc,me.columns);
 						}
@@ -66,11 +62,6 @@ Ext.define('casco.view.tc.Tc', {
             			},method:'get',async: false,callback: function(options, success, response) {	//options-ajax
 					 me.json = new Ext.util.JSON.decode(response.responseText);		//后端封装数据JSON->Obj columnModle data fieldsNames 
 					 }});
-//					 me.cm=Ext.create('Ext.grid.column.Column',{columns:[
-//					 { header:'编号', dataIndex:'id',width:200},
-//					 { header:'名称', dataIndex:'name',width:300}
-//					 ]});
-//					 console.dir(me.cm);
 					  me.ds = new Ext.data.JsonStore({
 					  data: me.json.data,
 					  fields:me.json.fieldsNames
@@ -103,6 +94,14 @@ Ext.define('casco.view.tc.Tc', {
             width: 90,
             handler : function() {
             	window.open(API+'tc/export?version_id='+me.down('combobox').getValue());
+            }
+        },'-',{
+            text: 'Versions',
+            glyph: 0xf05a,
+			border:true,
+            width: 110,
+            handler : function() {
+            	var win=Ext.create('casco.view.manage.Versions',{'document_id':me.document.id,'edit':1});win.show();
             }
         },'->',{
             xtype: 'textfield',
@@ -160,44 +159,13 @@ Ext.define('casco.view.tc.Tc', {
         				text:'Delete Record',
         				handler:me.onDeleteRecord,
         				scope: me
-        			}/*,{
-        				text:'Edit Record',
-        				handler:me.onEditRecord,
-        				scope: me
-        			}*/]});
+        			}]});
         			}//if
         			grid.selModel.select(record);
         			grid.rowCtxMenu.showAt(e.getXY());
-        		    }
-//        			destroy : function(thisGrid) {
-//        				if (thisGrid.rowCtxMenu) {
-//        					thisGrid.rowCtxMenu.destroy();
-//        				}
-//        			}        	
+        		    }	
         };
         
-        
-		/*
-        me.columns = [
-		{text: "tag", dataIndex: "tag", width: 200, hideable: false,
-		  summaryType: 'count',
-		  summaryRenderer: function(value, summaryData, dataIndex) {
-		      return Ext.String.format('{0} item{1}', value, value !== 1 ? 's' : '');
-		  }},
-		{text: "source", dataIndex: "source_json", width: 200, autoShow: false, renderer : function(value) {
-			var arr = [];
-			Ext.Array.each(value, function(v) {
-		      arr.push(v);
-		  }   //之前数组的处理
-		  
-		  );
-			return arr.join(', ');
-		}},
-		{text: "test method", dataIndex: "testmethods", width: 100, renderer: function(tm){console.log(tm);var str="";for(var i in tm){str+=tm[i].name}return str;}},
-		{text: "pre condition", dataIndex: "pre_condition", flex: 1},
-		];
-
-		*/
     	me.callParent(arguments);
     },
 
@@ -239,23 +207,6 @@ Ext.define('casco.view.tc.Tc', {
         }},this);
 	},
 	
-/*	//编辑TC
-	onEditRecord: function(){
-		var me = this;
-		var view = me.getView();
-		var selection = view.getSelectionModel().getSelection()[0];
-		var record = Ext.create('casco.model.Tc',{
-			id:selection.get('id')
-		});
-		console.log(record);
-		var win = Ext.create('widget.tcadd',{
-			tc: record, 
-			document_id: me.document.id, 
-			project: me.project,
-			columns:me.columns});
-        win.down('form').loadRecord(record);
-        win.show();
-	},*/
 
 	/*
 	 * Live Search Module Cofigures

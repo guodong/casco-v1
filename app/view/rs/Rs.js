@@ -121,7 +121,15 @@ Ext.define('casco.view.rs.Rs', {
 			handler: function() {
 				window.open('/stat/cover.htm#'+me.curr_version.get('id'));
 			}
-		},'->',{
+		},'-',{
+            text: 'Versions',
+            glyph: 0xf05a,
+			border:true,
+            width: 110,
+            handler : function() {
+            	var win=Ext.create('casco.view.manage.Versions',{'document_id':me.document.id,'edit':1});win.show();
+            }
+        },'->',{
             xtype: 'textfield',
             fieldLabel: 'Search',  
             labelWidth: 50,
@@ -154,12 +162,7 @@ Ext.define('casco.view.rs.Rs', {
     	   margin: '0 12px 0 0',
     	   handler: me.caseSensitiveToggle,
     	   scope: me
-       },'  Case sensitive'];
-				
-//		me.bbar = Ext.create('casco.ux.StatusBar',{
-//			defaultText:me.defaultStatusText,
-//			name:'searchStatusBar'
-//		});
+       },'  Case sensitive'];			
 		 
 		 me.bbar = [{
 			 xtype: 'statusbar',
@@ -211,47 +214,54 @@ Ext.define('casco.view.rs.Rs', {
 		};
 
 		me.listeners = {
-			itemcontextmenu :function(view,record,item,index,e){
-			e.stopEvent();
-			var grid=me;
-			if(!grid.rowCtxMenu){
-			grid.rowCtxMenu=Ext.create('Ext.menu.Menu',{	
-			items:[{
-				text:'Insert Record',
-				handler:onInsertRecord,
-			},
-			{
-				text:'Delete Record',
-				handler:onDelete
-			}]});
-			}//if
-			grid.selModel.select(record);
-			grid.rowCtxMenu.showAt(e.getXY());
-		    },
-			destroy : function(thisGrid) {
-				if (thisGrid.rowCtxMenu) {
-					thisGrid.rowCtxMenu.destroy();
+
+				afterrender:function(){
+				me.getEl().swallowEvent(['mousedown', 'mouseup', 'headerclick','click','beforefocus','contextmenu', 'focus','mouseover', 'mouseout','dblclick', 'mousemove', 'focusmove','focuschange', 'focus','focusin','focusenter']);
+				},
+				reconfigure:function(){
+				console.log('heheda');
+				me.getEl().swallowEvent(['mousedown', 'mouseup', 'headerclick','click','beforefocus','contextmenu', 'focus','mouseover', 'mouseout','dblclick', 'mousemove', 'focusmove','focuschange', 'focus','focusin','focusenter']);
+				},
+				itemcontextmenu :function(view,record,item,index,e){
+				e.stopEvent();
+				var grid=me;
+				if(!grid.rowCtxMenu){
+				grid.rowCtxMenu=Ext.create('Ext.menu.Menu',{	
+				items:[{
+					text:'Insert Record',
+					handler:onInsertRecord,
+				},
+				{
+					text:'Delete Record',
+					handler:onDelete
+				}]});
+				}//if
+				grid.selModel.select(record);
+				grid.rowCtxMenu.showAt(e.getXY());
+			    },
+				destroy : function(thisGrid) {
+					if (thisGrid.rowCtxMenu) {
+						thisGrid.rowCtxMenu.destroy();
+					}
+				},
+				celldblclick: function(a,b,c,record){
+					localStorage.tag = record.get('tag');
+					if(c==0){
+						window.open('/draw/graph2.html#'+record.get('tag')+"&id="+record.get('id'));
+						return;
+					}
+					var win = Ext.create('widget.rs.rsdetails', {
+						status: 1,
+						rs: record,
+						pointer:me,
+						document_id: me.document_id,
+						project:me.project,
+						columns:me.columns,
+					});
+					win.down('form').loadRecord(record);
+					win.show();
 				}
-			},
-			celldblclick: function(a,b,c,record){
-				localStorage.tag = record.get('tag');
-				if(c==0){
-					window.open('/draw/graph2.html#'+record.get('tag')+"&id="+record.get('id'));
-					return;
-				}
-				var win = Ext.create('widget.rs.rsdetails', {
-					status: 1,
-					rs: record,
-					pointer:me,
-					document_id: me.document_id,
-					project:me.project,
-					columns:me.columns,
-				});
-				win.down('form').loadRecord(record);
-				win.show();
-			}
-		};
-		
+			};
 		me.callParent(arguments);
 	},
 	
@@ -401,23 +411,6 @@ Ext.define('casco.view.rs.Rs', {
    caseSensitiveToggle: function(checkbox, checked) {
        this.caseSensitive = checked;
        this.onTextFieldChange();
-   },
-		
-//    viewConfig: { 
-//        stripeRows: true,  //default true
-//        getRowClass: function(record) {
-//        	if(record.get('tcs') == undefined)
-//        		return 'red';
-//        	if(record.get('tcs').length != 0)
-//        		return ''; 
-//        	if(record.get('tcs').length == 0 && !record.get('vat').length && !record.get('vatstr'))
-//        		return 'red'; 
-//        	if(!record.get('vat').length || record.get('vatstr'))
-//        		return 'yellow'; 
-//        } 
-//    },
-//    features: [{
-//    	ftype: 'summary',
-//    	dock: 'top'
-//    }],	
+   }
+			
 })

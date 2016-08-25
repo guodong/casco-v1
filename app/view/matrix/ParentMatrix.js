@@ -1,4 +1,3 @@
-// 160121 Q T
 Ext.define('casco.view.matrix.ParentMatrix', {
 	extend: 'Ext.grid.Panel',
 	xtype: 'parentmatrix',
@@ -13,7 +12,6 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		checkOnly: false
 	},
 // columnLines:true,
-	
 	initComponent: function() {
 		var me = this;
 // me.selType=me.verification.get('status')==1?'checkboxmodel':'';
@@ -64,6 +62,18 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		    }// callback
 		});  
 		 
+		 me.plugins=[{
+		        ptype: 'cellediting',
+		        clicksToEdit: 2,
+				listeners: {
+		            edit: function(editor, e) {
+					//headache
+					me.getView().refreshNode(e.record); 
+		            } 
+			   	
+		        }
+				
+		}],
 		  me.tbar = [{
 			text: 'Save',
 			glyph: 0xf080,
@@ -83,19 +93,6 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			 me.getView().refresh();Ext.Msg.alert('Success', 'Saved successfully.');
 			 }
 			 }); 
-			 /*
-				 * Ext.Array.each(rows,function(item){ item.dirty=false;
-				 * item.commit(); data.push(item.getData()); });// each var
-				 * model=Ext.create('casco.model.Verification',{id:me.verification.get('id')});
-				 * model.set('data',data); model.save({ callback:
-				 * function(record, operation, success){ }, failure:
-				 * function(record, operation) { me.getView().refresh(); //
-				 * 这一行重要哇我晕 Ext.Msg.alert('Failed','Save failed!'); }, success:
-				 * function(record, operation) { me.getView().refresh(); //
-				 * 这一行重要哇我晕 Ext.Msg.alert('Success', 'Saved successfully.');
-				 *  }, });
-				 */
-			
 			}
 		},'-',{text: 'Export',
 			glyph: 0xf080,
@@ -210,7 +207,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 						}//
 				  }]// customMen
 			  ,editor: {
-//				  xtype: 'textfield',
+				  xtype: 'textfield',
 				  disabled: ("tc"==me.child_type)?true:false
 			  }
 				  },
@@ -326,7 +323,6 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		
 
         me.listeners={
-
         beforeedit:function(editor, e, eOpts){
         // 编辑按钮事件监听,并不会fireEvent
 		if(me.verification.get('status')==1){
