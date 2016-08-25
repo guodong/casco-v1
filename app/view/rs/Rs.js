@@ -8,11 +8,9 @@ Ext.define('casco.view.rs.Rs', {
 	           'casco.store.Rss',
 	           'casco.view.rs.RsImport',
 	           'casco.view.rs.RsDetails',
-	           'casco.ux.StatusBar'
 	           ],
 	           
 	forceFit:true,
-	bufferedRenderer: false,
 	columnLines:true,
 		
 	initComponent: function() {
@@ -128,7 +126,8 @@ Ext.define('casco.view.rs.Rs', {
             fieldLabel: 'Search',  
             labelWidth: 50,
             name: 'searchField', 
-            //hideLabel: true,
+            emptyText: 'Search',
+            hideLabel: true,
             width: 200,
             listeners: {
                 change: {
@@ -156,19 +155,17 @@ Ext.define('casco.view.rs.Rs', {
     	   handler: me.caseSensitiveToggle,
     	   scope: me
        },'  Case sensitive'];
-		
-
-		me.bbar = ['-',{
-			summaryType: 'count',
-	        summaryRenderer: function(value, summaryData, dataIndex) {
-	            return Ext.String.format('{0} item{1}', value, value !== 1 ? 's' : '');
-	        }
-		}]
-		
-		me.bbar = Ext.create('casco.ux.StatusBar',{
-			defaultText:me.defaultStatusText,
+				
+//		me.bbar = Ext.create('casco.ux.StatusBar',{
+//			defaultText:me.defaultStatusText,
+//			name:'searchStatusBar'
+//		});
+		 
+		 me.bbar = [{
+			 xtype: 'statusbar',
+			 defaultText:me.defaultStatusText,
 			name:'searchStatusBar'
-		});
+		 }];
          
 		var onDelete=function(){
 			var grid=me;
@@ -261,6 +258,7 @@ Ext.define('casco.view.rs.Rs', {
 /*
  * Live Search Module Cofigures
  */	
+	bufferedRenderer: false, //searchlive need
     searchValue: null, //search value initialization
     indexes: [], //The row indexes where matching strings are found. (used by previous and next buttons)
     searchRegExp: null, //The generated regular expression used for searching.
@@ -360,7 +358,7 @@ Ext.define('casco.view.rs.Rs', {
 
             // results found
             if (me.currentIndex !== null) {
-            	console.log(me.currentIndex);
+//            	console.log(me.currentIndex);
                 me.getSelectionModel().select(me.currentIndex);
 //                Ext.fly(me.getView().getNode(me.currentIndex)).scrollInteView();
                 me.getView().focusRow(me.currentIndex);
@@ -405,8 +403,8 @@ Ext.define('casco.view.rs.Rs', {
        this.onTextFieldChange();
    },
 		
-    viewConfig: { 
-        stripeRows: true, 
+//    viewConfig: { 
+//        stripeRows: true,  //default true
 //        getRowClass: function(record) {
 //        	if(record.get('tcs') == undefined)
 //        		return 'red';
@@ -417,7 +415,7 @@ Ext.define('casco.view.rs.Rs', {
 //        	if(!record.get('vat').length || record.get('vatstr'))
 //        		return 'yellow'; 
 //        } 
-    },
+//    },
 //    features: [{
 //    	ftype: 'summary',
 //    	dock: 'top'

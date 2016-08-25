@@ -5,6 +5,7 @@ Ext.define('casco.view.matrix.Tree', {
     listeners: {
         itemdblclick: function(view, record, item, index, e, eOpts){
         	var me = this;
+        	console.log(record);
 			//console.log(me.getView().up().project);
         	if(!record.get('leaf')) return;
     		var tabs = Ext.getCmp('matrixpanel');
