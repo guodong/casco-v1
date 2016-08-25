@@ -26,7 +26,7 @@ Ext.define('casco.view.matrix.Verification', {
 		var states = Ext.create('Ext.data.Store', {
 		fields: ['abbr', 'name'],
 		data : [
-			{"abbr":"ALL","name":"All"},
+			//{"abbr":"ALL","name":"All"},
 			{"abbr":"AL", "name":"ParentMatrix"},
 			{"abbr":"AK", "name":"ChildMatrix"},
 			{"abbr":"AZ", "name":"Summary"}			
@@ -168,8 +168,7 @@ Ext.define('casco.view.matrix.Verification', {
     	  if(rec.get('parent_versions').length<=0){return;}
 			Ext.Array.each(rec.get('parent_versions'), function(v) {
 			var tmp={'xtype':'parentmatrix','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':'parentmatrix'+v_id+v.id,
-		    'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
-			tmp['parent_v_id']=v.id;
+		    'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null,'parent_v_id':v.id};
 			json.push(tmp);
 			});  
 		  break;
@@ -180,21 +179,20 @@ Ext.define('casco.view.matrix.Verification', {
 		  break;
 	  case  'Summary':
 		  json={'xtype':'summary','title':'summary','id':'summary'+v_id,
-		       'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
-				  
+		       'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null}; 
 		  break;
-	  case  'All':
+	 /* case  'All':
 		  	Ext.Array.each(rec.get('parent_versions'), function(v) {
 			var tmp={'xtype':'parentmatrix','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':'parentmatrix'+v_id+v.id,
-		    'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
-			tmp['parent_v_id']=v.id;
+		    'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null,'parent_v_id':v.id};
 			json.push(tmp);
 			}); 
-		  	json.push({'xtype':'childmatrix','title':rec.get('child_version').document.name+'_Tra','id':'childmatrix'+v_id,
-		        	'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null});
 			json.push({'xtype':'summary','title':'summary','id':'summary'+v_id,
-	        	'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null}); 
+	        	'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null});
+			json.push({'xtype':'childmatrix','title':rec.get('child_version').document.name+'_Tra','id':'childmatrix'+v_id,
+		        	'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null});
 		  break;
+		 */
 	   default:
 	  }
 
@@ -207,7 +205,6 @@ Ext.define('casco.view.matrix.Verification', {
        else{
 		var tabs= Ext.getCmp('matrixpanel');
 		var tab=tabs.child('#'+record.id);
-//		console.log(tab);
 		if(!tab)tab=tabs.add(record);
 	    tabs.setActiveTab(tab);
 	   }

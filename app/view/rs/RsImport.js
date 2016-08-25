@@ -31,7 +31,6 @@ Ext.define('casco.view.rs.RsImport', {
             me.down('form').items.getAt(1).setValue(headers);
 			me.down('form').items.getAt(3).setValue(regrex);
 			}else{
-           
 		    if(me.type=="rs") {me.down('form').items.getAt(1).setValue("description,implement,source,priority,contribute,category,allocation");}
 		    else if(me.type="tc") me.down('form').items.getAt(1).setValue("test case description,safety,source,test method,pre_condition,test steps");
 			}
@@ -216,19 +215,17 @@ Ext.define('casco.view.rs.RsImport', {
 											     synchronous: true,
 					                             scope:this,
 										         callback:function(){
-												 // console.log((versions.getAt(0)));
+												  Ext.Ajax.request({
+												  url: API + 'version/export',
+												  method: 'get',
+												  params:{id:versions.getAt(0).get('id')}
+												  });//ajax
 								                  Ext.Msg.alert('导入结果!',(versions.getAt(0).get('result')));
 												 }
-												 });
+												 });//load
 												 self.up('window').destroy();
 					                              var t=Ext.getCmp("docv-"+me.document_id);
 												  t.store.reload();
-					    	                     /*
-													 * var t =
-													 * Ext.ComponentQuery.query("#tab-"+me.document_id)[0];
-													 * t.store_rs.reload();
-													 * t.getView().refresh();
-													 */
 												  }// failure
 											});// submit
 										}// function

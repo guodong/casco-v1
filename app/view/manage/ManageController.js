@@ -30,11 +30,6 @@ Ext.define('casco.view.manage.ManageController', {
 					var t = Ext.ComponentQuery.query("#tab-userlist")[0];	//Array[0]
 					//if(!view.user)t.store.add(user);//edit 就不对了的
 					if(t)t.store.reload();
-					//swtich处也要更新
-					//	console.log(Ext.getCmp('switcher'));
-
-					//	console.log(Ext.getCmp('top').getComponent('switcher'));
-					//  console.log(view.top.getComponent('switcher'));
 					Ext.ComponentQuery.query("#switcher")[0]&&Ext.ComponentQuery.query("#switcher")[0].store.reload();
 					form.up("window").destroy();
 				});
@@ -57,9 +52,6 @@ Ext.define('casco.view.manage.ManageController', {
 				});
 			}
 		});
-
-
-
 	},
 	createmethod: function () {
 		var view = this.getView();
@@ -105,10 +97,6 @@ Ext.define('casco.view.manage.ManageController', {
 				//最好再刷新一下user,不然userlist那边store仍然没改变
 				var u=Ext.ComponentQuery.query("#tab-userlist")[0];
 				if(u){u.store.reload();}
-
-
-
-
 			}
 		});
 	},
@@ -206,7 +194,6 @@ Ext.define('casco.view.manage.ManageController', {
 		   var addItem=ctxMenu.getComponent('add');
 		   var editItem=ctxMenu.getComponent('edit');
 		   var deleteItem=ctxMenu.getComponent('delete');
-          
 		   if(!record.isLeaf()){
            addItem.setText('Add document');
 		   addItem.itemId=null;

@@ -7,7 +7,19 @@ Ext.define('casco.view.testing.Result', {
         ptype: 'cellediting',
         clicksToEdit: 1
     },
+	multiSelect : true,
+	selModel:{
+// mode:'MULTI',
+		selType: "checkboxmodel" ,    // 5.1.0之后就不赞成使用这种方式了。。。
+		checkOnly: false
+	},
     listeners : {
+		  afterrender:function(){
+			var me = this;
+			me.headerCt.on('menucreate', function (cmp, menu) {
+            menu.on('beforeshow', me.showHeaderMenu, me);
+			});
+		},
           cellclick: function(a,b,c, record, item, index, e) {
         	Ext.getCmp('testing-step-panel').down('form').loadRecord(record);
         	Ext.getCmp('testing-step').store.loadData(record.get('tc').steps);
@@ -68,12 +80,21 @@ Ext.define('casco.view.testing.Result', {
     			}
     		}
     	});
+		 me.self_op=function(the,newValue,oldValue){       
+		 var rows=me.getSelectionModel().getSelection();
+		 if(rows!=undefined){
+		 Ext.Array.each(rows,function(item){
+		 item.set(newValue);
+		 });
+		  me.getView().refresh();
+		 }
+		}
+		me.customMenuItemsCache = [];
 		me.columns = [{
 			text: 'tc',
-			dataIndex: 'tc',
-			renderer: function(v) {
-				return v.tag
-			}
+			dataIndex: 'tag',
+			sortable : true,
+			width: 200
 		}, {
 			text: 'description',
 			dataIndex: 'tc',
@@ -81,7 +102,7 @@ Ext.define('casco.view.testing.Result', {
 			renderer: function(v) {
 				return  v.description;
 			}
-		}, {
+		}, /*{
 			text: "source",
 			dataIndex: "tc",
 			width: 200,
@@ -96,16 +117,11 @@ Ext.define('casco.view.testing.Result', {
 //				});
 				return value.source||'';
 			}
-		}, {
+		},*/ {
 			text: "test method",
 			dataIndex: "tc",
 			width: 100,
 			renderer: function(v) {
-			//	var str = "";
-			//	for ( var i in v.testmethods) {
-			//		str += v.testmethods[i].name;
-			//	}
-			//	return str;
 			return v.testmethods;
 			}
 		}, {
@@ -152,10 +168,21 @@ Ext.define('casco.view.testing.Result', {
 		    xtype: 'gridcolumn',
 		    dataIndex: 'result',
 			width: 120,
+			sortable : true,
 		    renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
 		        return resultStore.findRecord('value', value).get('label');
 		    },
 		    text: 'Result',
+			customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',columns:1,vertical:true,items: [  
+                    { boxLabel: 'untested', name: 'result', inputValue: '0'},   
+                    { boxLabel: 'passed', name:'result', inputValue:'1'},
+				    { boxLabel: 'failed', name: 'result', inputValue: '-1'}],
+					listeners:{
+						change:function(the,newValue,oldValue){
+						 me.self_op(the,newValue,oldValue);}
+					}
+					}],// menu
+			}],
 		    editor: {
 		        xtype: 'combobox',
 				disabledCls: '',
@@ -189,7 +216,6 @@ Ext.define('casco.view.testing.Result', {
 				console.log(selection.get('tc').tag);
 				if(!selection){Ext.Msg.alert("请选择TC");return;}
 				window.open('/ace-builds/editor.html?type=python&tc_id='+selection.get('tc_id')+'&tc_tag='+selection.get('tc').tag); 
-	          //  me.getView().refresh();
             }
         },{
             text: 'Edit robot',
@@ -212,10 +238,6 @@ Ext.define('casco.view.testing.Result', {
 				me.job.set('user_id',JSON.parse(localStorage.user).id);
 				me.job.save();
 				Ext.getCmp('joblist').getStore().reload();
-				console.log(me);
-//				me.job.reload({
-//					project_id :me.project.get('id')
-//				});
 				me.getStore().each(function(r){
 					var steps = [];
 					Ext.each(r.get('tc').steps, function(step){
@@ -276,5 +298,40 @@ Ext.define('casco.view.testing.Result', {
 			}
 		}];
     	this.callParent();
-    }
+    },
+	showHeaderMenu: function (menu) {
+        var me = this;
+		//console.log(menu,menu.activeHeader);
+		//if(menu.activeHeader&&menu.activeHeader.dataIndex=="result"){
+		//console.log('haha');
+		me.removeCustomMenuItems(menu);
+        me.addCustomMenuitems(menu);
+		//}
+    },
+    removeCustomMenuItems: function (menu) {
+        var me = this,
+            menuItem;
+        while (menuItem = me.customMenuItemsCache.pop()) {
+			console.log(menuItem);
+            menu.remove(menuItem.getItemId(), false);
+        }
+    },
+    addCustomMenuitems: function (menu) {
+        var me = this,
+            renderedItems;
+        var menuItems = menu.activeHeader.customMenu ||[];
+        if (menuItems.length > 0) {
+			 menu.removeAll();
+            if (menu.activeHeader.renderedCustomMenuItems === undefined) {
+                renderedItems = menu.add(menuItems);
+                menu.activeHeader.renderedCustomMenuItems = renderedItems;
+            } else {
+                renderedItems = menu.activeHeader.renderedCustomMenuItems;
+                menu.add(renderedItems);
+            }
+            Ext.each(renderedItems, function (renderedMenuItem) {
+                me.customMenuItemsCache.push(renderedMenuItem);
+            });
+        }// if
+    },
 })

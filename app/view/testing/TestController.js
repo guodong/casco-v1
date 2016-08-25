@@ -9,8 +9,6 @@ Ext.define('casco.view.testing.TestController', {
 		form.updateRecord(record);
 	},
 	deleteAll:function(){
-
-	
 	},
 	createJob: function() {
 		var form = this.lookupReference('job_create_form');
