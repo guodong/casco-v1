@@ -1,26 +1,3 @@
-/*Ext.override(Ext.grid.Panel, { 
-    checkThatContextIsParentGridView: function(e){
-        var target = Ext.get(e.target);
-        var parentGridView = target.up('.x-grid-view');
-		console.log(parentGridView,this.el);
-        if (this.el != parentGridView) {
-            // event of different grid caused by grids nesting 
-            return false;
-        } else {
-            return true;
-        }
-    },
-    processItemEvent: function( type , view , cell , recordIndex , cellIndex , e ) {
-		console.log(e);
-        if (e.target && !this.checkThatContextIsParentGridView(e)) {
-            return false;
-        } else {
-            return this.callParent([ type , view , cell , recordIndex , cellIndex , e ]);
-        }
-    }
-});*/
-
-
 Ext.override(Ext.grid.ColumnManager,{
  getHeaderIndex: function(header) {
 	 //屌不屌?
@@ -54,7 +31,6 @@ Ext.override(Ext.grid.plugin.RowExpander, { // Override to fire collapsebody & e
             ownerLock, rowHeight, fireView;
 
 
-        // Suspend layouts because of possible TWO views having their height change
         Ext.suspendLayouts();
         row[addOrRemoveCls](me.rowCollapsedCls);
         Ext.fly(nextBd)[addOrRemoveCls](me.rowBodyHiddenCls);
@@ -62,16 +38,11 @@ Ext.override(Ext.grid.plugin.RowExpander, { // Override to fire collapsebody & e
         view.refreshSize();
 
 
-        // Sync the height and class of the row on the locked side
         if (me.grid.ownerLockable) {
             ownerLock = me.grid.ownerLockable;
             view = ownerLock.lockedGrid.view;
             fireView=ownerLock.lockedGrid.view;
             rowHeight = row.getHeight();
-            // EXTJSIV-9848: in Firefox the offsetHeight of a row may not match
-            // it is actual rendered height due to sub-pixel rounding errors. To ensure
-            // the rows heights on both sides of the grid are the same, we have to set
-            // them both.
             row.setHeight(isCollapsed ? rowHeight : '');
             row = Ext.fly(view.getNode(rowIdx), '_rowExpander');
             row.setHeight(isCollapsed ? rowHeight : '');
@@ -90,7 +61,6 @@ Ext.define('casco.view.report.ReportCover', {
     extend: 'Ext.grid.Panel',
     xtype: 'reportcover',
     selModel: {
-                //preventFocus:true,
                 mode : "SINGLE"
             },
     collapsible: true,
@@ -105,9 +75,8 @@ Ext.define('casco.view.report.ReportCover', {
             synchronous: true
         });
         var expander = new Ext.grid.plugin.RowExpander({
-            rowBodyTpl : new Ext.XTemplate(['<div  class="detailData" ></div>'])
+            rowBodyTpl : new Ext.XTemplate(['<div  class="detailData"  style="width:400px;float:left;overflow-x:hidden"  scroll="no" ></div><!--<div  class="detailVat" style="margin-left:10px;float:left;overflow-x: hidden" scroll="no"></div>-->'])
         });
-
         me.plugins =[expander];
         var resultStore = Ext.create('Ext.data.Store', {
             model: 'casco.model.Result',
@@ -120,12 +89,12 @@ Ext.define('casco.view.report.ReportCover', {
 
         me.listeners={
             expandbody: function (expander, r, body, rowIndex) {
-
-                // if (Ext.DomQuery.select("div.x-panel-bwrap", body).length == 0) {
-                var data = r.get('common');
+                var data = r.get('id');
+				//console.log(data);
                 var store = new casco.store.ReportCovers();
-				store.load({id:data.join(',')});
+				store.load({params:{p_id:data}});
 				var row=Ext.DomQuery.select("div.detailData",body);
+				var col=Ext.DomQuery.select("div.detailVat",body);
                 var grid = new Ext.grid.GridPanel(
 				 {
                         store: store,
@@ -133,11 +102,47 @@ Ext.define('casco.view.report.ReportCover', {
                     {
                         text: 'Child Requirement Tag',
                         dataIndex: 'Child Requirement Tag',
-                        width: 200,
+                        width: 150,
 						menuDisabled:true,
 						resizable:false,
                         sortable: true
                     },
+					 {
+						xtype: 'gridcolumn',
+						dataIndex: 'result',
+						width: 70,
+						renderer: function (value, metaData, record, rowIndex, colIndex, store, view) {
+							return resultStore.findRecord('value', value).get('label');
+						},
+						text: 'Result',
+						typeAhead: false
+					},
+                    {
+                        text: 'Comment',
+                        dataIndex: 'comment',
+						width: 200,
+						menuDisabled:true,
+						resizable:false,
+                        sortable: true,
+						editor:{xtype:'textfield'}
+                    }],
+						collapsible:true,
+						animCollapse:false,
+						iconCls:'icon-grid',
+                        autoWidth: true,
+                        autoHeight: true,
+						scrollable:false,
+						preventHeader:true,
+                        renderTo: row[0],
+                        plugins: {
+                            ptype: 'cellediting',
+                            clicksToEdit: 1
+                        }
+                    });
+			var right_grid = new Ext.grid.GridPanel(
+				 {
+                        store: Ext.create('Ext.data.Store',{r}),
+                        columns:[
                     {
                         text: 'vat',
                         dataIndex: 'vat',
@@ -159,29 +164,22 @@ Ext.define('casco.view.report.ReportCover', {
 						menuDisabled:true,
 						resizable:false,
 						editor:{xtype:'textfield'}
-                    },
-                    {
-                        text: 'Comment',
-                        dataIndex: 'comment',
-                        width: 150,
-						menuDisabled:true,
-						resizable:false,
-                        sortable: true,
-						editor:{xtype:'textfield'}
                     }],
 						collapsible:true,
 						animCollapse:false,
 						iconCls:'icon-grid',
                         autoWidth: true,
                         autoHeight: true,
+						scrollable:false,
 						preventHeader:true,
-                        renderTo: row[0],
+                      //  renderTo: col[0],
                         plugins: {
                             ptype: 'cellediting',
                             clicksToEdit: 1
                         },
                     });
 					grid.getEl().swallowEvent(['mousedown', 'mouseup', 'click','contextmenu', 'mouseover', 'mouseout','dblclick', 'mousemove', 'focusmove','focuschange', 'focusin', 'focus','focusenter']);
+				//	right_grid.getEl().swallowEvent(['mousedown', 'mouseup', 'click','contextmenu', 'mouseover', 'mouseout','dblclick', 'mousemove', 'focusmove','focuschange', 'focusin', 'focus','focusenter']);
 				//  }//if
             }//expandbody
 			,
@@ -235,17 +233,17 @@ Ext.define('casco.view.report.ReportCover', {
                 text: 'Parent Requirement Tag',
                 dataIndex: 'Parent Requirement Tag',
                 header: 'Parent Requirement Tag',
-                width: 300,
+                width: 400,
                 sortable: true
             },
             {
                 text: 'Parent Requirement Text',
                 dataIndex: 'Parent Requirement Text',
                 header: 'Parent Requirement Text',
-                width: 300,
+                width: 350,
                 sortable: true
             },
-            {
+             {
                 xtype: 'gridcolumn',
                 dataIndex: 'result',
                 fit:true,

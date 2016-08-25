@@ -13,11 +13,7 @@ Ext.define('casco.view.testing.Job', {
         	Ext.getCmp('result-main').store.load({
         		params: {
         			job_id: record.get('id')
-        		},
-//        		callback: function(){
-//        			var it = Ext.ComponentQuery.query(".testit");console.log(it)
-//        			it.setDisabled();
-//        		}
+        		}
         	});
     	}
     },

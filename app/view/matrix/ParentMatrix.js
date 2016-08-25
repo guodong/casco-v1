@@ -14,7 +14,6 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 // columnLines:true,
 	initComponent: function() {
 		var me = this;
-// me.selType=me.verification.get('status')==1?'checkboxmodel':'';
 		me.column_store=Ext.create('Ext.data.Store', {
          fields: ['name', 'value'],
          data : [
@@ -44,11 +43,9 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 					var column = Ext.create('Ext.grid.column.Column', {  
 						text: item['header']+' (P)//(C)',
 						width:140,  
-						// align:'center',
 						dataIndex: item['dataIndex']  
 					});  
 					me.columns.push(column);
-					// me.headerCt.insert(me.columns.length, column);
 				});
 				me.store.setData(me.matrix.getData());
 			me.reconfigure(me.matrix,me.columns);
@@ -67,10 +64,8 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		        clicksToEdit: 2,
 				listeners: {
 		            edit: function(editor, e) {
-					//headache
 					me.getView().refreshNode(e.record); 
 		            } 
-			   	
 		        }
 				
 		}],
