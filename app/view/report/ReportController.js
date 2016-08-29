@@ -66,8 +66,6 @@ Ext.define('casco.view.report.ReportController', {
 
 	},
 	editUser:function(combo,record){
-
-
 		if(record.get('name')=='1'){
 			combo.setValue(combo.emptyText);
 			var  model= Ext.create('casco.model.User');

@@ -104,22 +104,7 @@ Ext.define('casco.view.testing.Result', {
 			renderer: function(v) {
 				return  v.description;
 			}
-		}, /*{
-			text: "source",
-			dataIndex: "tc",
-			width: 200,
-			autoShow: false,
-			hidden: true,
-			renderer: function(value) {
-				var value = JSON.parse('{'+value.column+'}');
-				
-//				var arr = [];
-//				Ext.Array.each(value, function(v) {
-//					arr.push(v);
-//				});
-				return value.source||'';
-			}
-		},*/ {
+		},  {
 			text: "test method",
 			dataIndex: "tc",
 			width: 100,

@@ -11,6 +11,7 @@ Ext.define('casco.view.report.Report', {
 	xtype: 'report',
     requires: [
         'Ext.plugin.Viewport',
+		//'casco.model.ReportVats',
         'casco.view.report.ReportController',
         'casco.view.report.ReportModel',
 		'casco.view.report.Tree',
