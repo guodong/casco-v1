@@ -1,9 +1,11 @@
 Ext.define('casco.view.testing.Job', {
     extend: 'Ext.grid.Panel',
     xtype: 'testing.job',
-    requires:['casco.store.Testjobs'],
+    requires:['casco.store.Testjobs',
+              'Ext.grid.filters.Filters'],
     
     forceFit: true,
+    plugins: 'gridfilters',
     
     listeners: {
         itemdblclick: function(view, record, item, index, e, eOpts){
@@ -37,12 +39,18 @@ Ext.define('casco.view.testing.Job', {
 			dataIndex : 'build',
 			renderer : function(v) {
 				return v?v.name:'';
+			},
+			filter:{
+				type: 'string',
 			}
 		},{
 			text: 'vat_version',
 			dataIndex: 'vatbuild',
 			renderer: function(value,metadata,record){ //value-rs_versions(current cell); metadata-cell metadata; record-Ext.data.Model
 				return getPreview(value,metadata,record);
+			},
+			filter:{
+				type: 'string',
 			}
 		},{
 			text: 'status',

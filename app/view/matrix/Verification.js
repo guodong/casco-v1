@@ -167,32 +167,30 @@ Ext.define('casco.view.matrix.Verification', {
       case 'ParentMatrix':
     	  if(rec.get('parent_versions').length<=0){return;}
 			Ext.Array.each(rec.get('parent_versions'), function(v) {
-			var tmp={'xtype':'parentmatrix','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':'parentmatrix'+v_id+v.id,
+			var tmp={'xtype':'parentmatrix','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com_'+rec.get('version'),'id':'parentmatrix'+v_id+v.id,
 		    'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null,'parent_v_id':v.id};
 			json.push(tmp);
 			});  
 		  break;
 	  case 'ChildMatrix':
-          json={'xtype':'childmatrix','title':rec.get('child_version').document.name+'_Tra','id':'childmatrix'+v_id,
+          json={'xtype':'childmatrix','title':rec.get('child_version').document.name+'_Tra_'+rec.get('version'),'id':'childmatrix'+v_id,
         		'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
-		  
 		  break;
 	  case  'Summary':
-		  json={'xtype':'summary','title':'summary','id':'summary'+v_id,
-		       'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null}; 
+		  json={'xtype':'summary','title':'summary_'+rec.get('version'),'id':'summary'+v_id,
+		       'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null};
 		  break;
-	 /* case  'All':
+	 case  'All':
 		  	Ext.Array.each(rec.get('parent_versions'), function(v) {
-			var tmp={'xtype':'parentmatrix','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com','id':'parentmatrix'+v_id+v.id,
+			var tmp={'xtype':'parentmatrix','title':v.document.name+'_'+rec.get('child_version').document.name+'_Com_'+rec.get('version'),'id':'parentmatrix'+v_id+v.id,
 		    'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null,'parent_v_id':v.id};
 			json.push(tmp);
 			}); 
-			json.push({'xtype':'summary','title':'summary','id':'summary'+v_id,
-	        	'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null});
-			json.push({'xtype':'childmatrix','title':rec.get('child_version').document.name+'_Tra','id':'childmatrix'+v_id,
+		  	json.push({'xtype':'childmatrix','title':rec.get('child_version').document.name+'_Tra_'+rec.get('version'),'id':'childmatrix'+v_id,
 		        	'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null});
+			json.push({'xtype':'summary','title':'summary_'+rec.get('version'),'id':'summary'+v_id,
+	        	'verification':rec,'closable':true,version:irecord.get('version')?irecord.get('version'):null}); 
 		  break;
-		 */
 	   default:
 	  }
 

@@ -7,7 +7,8 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 	multiSelect : true,
 	selModel:{
 // mode:'MULTI',
-		selType: "checkboxmodel" ,    // 5.1.0之后就不赞成使用这种方式了。。。
+//		selType: "checkboxmodel" ,    // 5.1.0之后就不赞成使用这种方式了。。。
+		type: 'checkboxmodel',
 		checkOnly: false
 	},
 // columnLines:true,
@@ -95,8 +96,54 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		    	window.open(API+'parentmatrix/export?v_id='+me.verification.get('id')+'&parent_v_id='+me.parent_v_id);
             	return;
 			}
-			},'-',
-		{text: me.title, xtype:'label',margin:'0 50'}];
+			},'->',{
+	            xtype: 'textfield',
+//	          fieldLabel: 'Search',  
+	          labelWidth: 50,
+	          name: 'searchField',
+	          emptyText: 'Search',
+	          //hideLabel: true,
+	          width: 200,
+	          listeners: {
+	              change: {
+	                  fn: me.onTextFieldChange,
+	                  scope: this,
+	                  buffer: 500
+	              }
+	          }
+	     }, {
+	         xtype: 'button',
+	         text: '&lt;',
+	         tooltip: 'Find Previous Row',
+	         handler: me.onPreviousClick,
+	         scope: me
+	     },{
+	         xtype: 'button',
+	         text: '&gt;',
+	         tooltip: 'Find Next Row',
+	         handler: me.onNextClick,
+	         scope: me
+	     }];
+         me.plugins={
+		        ptype: 'cellediting',
+		        clicksToEdit: 1,
+				autoCancel:false,
+				listeners: {
+		            edit: function(editor, e) {
+					// commit 不好
+		            // e.record.commit();
+					e.record.set(e.field,e.value);
+					me.getView().refresh(); 
+		            }
+		        }
+		},
+		
+		me.bbar = [{
+			 xtype: 'statusbar',
+			 defaultText:me.defaultStatusText,
+			name:'searchStatusBar'
+		 }];
+
          me.self_op=function(the,newValue,oldValue){       
 		 var rows=me.getSelectionModel().getSelection();
 		 if(rows!=undefined){
@@ -282,7 +329,10 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		}}
 		me.callParent(arguments);
 		},
-
+		
+	/*
+	 * Batch editing Module realize
+	 */	
 	showHeaderMenu: function (menu) {
         var me = this;
         me.removeCustomMenuItems(menu);
@@ -326,5 +376,148 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 	 * me.down('statusbar[name = searchStatusBar]');
 	 * me.view.on('cellkeydown',me.focusTextField,me); }
 	 */
+    
+    /*
+     * Live Search Module Cofigures
+     */	
+    	bufferedRenderer: false, //否则 fly...down 会报错
+        searchValue: null, //search value initialization
+        indexes: [], //The row indexes where matching strings are found. (used by previous and next buttons)
+        searchRegExp: null, //The generated regular expression used for searching.
+        caseSensitive: false, //Case sensitive mode.
+        regExpMode: false, //Regular expression mode.
+        tagsRe:/<[^>]*>/gm,  //detects html tag gm 参数
+    	tagsProtect:'\x0f',  //DEL ASCII code
+        matchCls: 'x-livesearch-match', //@cfg {String} matchCls  The matched string css classe.
+        defaultStatusText: 'Nothing Found',	 
+    	
+    	 afterRender: function() {
+    	        var me = this;
+    	        me.callParent(arguments);
+    	        me.textField = me.down('textfield[name=searchField]');
+    	        me.statusBar = me.down('statusbar[name=searchStatusBar]');
+    	    },
+    	
+    	focusTextField: function(view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+            if (e.getKey() === e.S) {
+                e.preventDefault();
+                this.textField.focus();
+            }
+        },
+    	
+    	getSearchValue: function() {
+            var me = this,
+                value = me.textField.getValue();
+            if (value === '') {
+                return null;
+            }
+            if (!me.regExpMode) {
+                value = Ext.String.escapeRegex(value);
+            } else {
+                try {
+                    new RegExp(value);
+                } catch (error) {
+                    me.statusBar.setStatus({
+                        text: error.message,
+                        iconCls: 'x-status-error'
+                    });
+                    return null;
+                }
+                // this is stupid
+                if (value === '^' || value === '$') {
+                    return null;
+                }
+            }
+            return value;
+        },
+        
+        onTextFieldChange: function() {
+            var me = this,
+                count = 0,
+                view = me.view,
+                cellSelector = view.cellSelector,
+                innerSelector = view.innerSelector;
+            view.refresh();
+            // reset the statusbar
+            me.statusBar.setStatus({
+                text: me.defaultStatusText,
+                iconCls: ''
+            });
+            me.searchValue = me.getSearchValue();
+            me.indexes = [];
+            me.currentIndex = null;
+            if (me.searchValue !== null) {
+                me.searchRegExp = new RegExp(me.getSearchValue(), 'g' + (me.caseSensitive ? '' : 'i'));
+                me.store.each(function(record, idx) {
+                    var td = Ext.fly(view.getNode(idx)).down(cellSelector),
+                        cell, matches, cellHTML;
+//                    console.log(td);
+                    while (td) {
+                        cell = td.down(innerSelector);
+                        matches = cell.dom.innerHTML.match(me.tagsRe);
+                        cellHTML = cell.dom.innerHTML.replace(me.tagsRe, me.tagsProtect);
+                        
+                        // populate indexes array, set currentIndex, and replace wrap matched string in a span
+                        cellHTML = cellHTML.replace(me.searchRegExp, function(m) {
+                           count += 1;
+                           if (Ext.Array.indexOf(me.indexes, idx) === -1) {
+                               me.indexes.push(idx);
+                           }
+                           if (me.currentIndex === null) {
+                               me.currentIndex = idx;
+                           }
+                           return '<span class="' + me.matchCls + '">' + m + '</span>';
+                        });
+                        // restore protected tags
+                        Ext.each(matches, function(match) {
+                           cellHTML = cellHTML.replace(me.tagsProtect, match); 
+                        });
+                        // update cell html
+                        cell.dom.innerHTML = cellHTML;
+                        td = td.next();
+                    }
+                }, me);
+
+                // results found
+                if (me.currentIndex !== null) {
+//                	console.log(me.currentIndex);
+                    me.getSelectionModel().select(me.currentIndex);
+//                    Ext.fly(me.getView().getNode(me.currentIndex)).scrollInteView();
+                    me.getView().focusRow(me.currentIndex);
+                    me.statusBar.setStatus({
+                        text: count + ' matche(s) found.',
+                        iconCls: 'x-status-valid'
+                    });
+                }
+            }
+
+            // no results found
+            if (me.currentIndex === null) {
+                me.getSelectionModel().deselectAll();
+            }
+
+            me.textField.focus();
+        },
+        
+        onPreviousClick: function() {
+            var me = this,
+                idx;
+                
+            if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
+                me.currentIndex = me.indexes[idx - 1] || me.indexes[me.indexes.length - 1];
+                me.getSelectionModel().select(me.currentIndex);
+                me.getView().focusRow(me.currentIndex);
+             }
+        },
+        
+        onNextClick: function() {
+            var me = this,
+                idx;
+            if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
+               me.currentIndex = me.indexes[idx + 1] || me.indexes[0];
+               me.getSelectionModel().select(me.currentIndex);
+               me.getView().focusRow(me.currentIndex);
+            }
+       }
 	
 })

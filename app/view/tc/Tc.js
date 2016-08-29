@@ -5,49 +5,7 @@ Ext.define('casco.view.tc.Tc', {
     viewModel : 'main', 	//Binding
     allowDeselect: true, 	// single时，可取消选定
     
-    
-    // Live search paras
-    /**
-     * @private
-     * search value initialization
-     */
-    searchValue: null,
-    
-    /**
-     * @private
-     * The row indexes where matching strings are found. (used by previous and next buttons)
-     */
-    indexes: [],
-    
-    /**
-     * @private
-     * The generated regular expression used for searching.
-     */
-    searchRegExp: null,
-    
-    /**
-     * @private
-     * Case sensitive mode.
-     */
-    caseSensitive: false,
-    
-    /**
-     * @private
-     * Regular expression mode.
-     */
-    regExpMode: false,
-    
-    /**
-     * @cfg {String} matchCls
-     * The matched string css classe.
-     */
-    matchCls: 'x-livesearch-match',
-    
-    defaultStatusText: 'Nothing Found',	           
-/* ----------------------------------------------*/
-    
     forceFit:true,
-    bufferedRenderer: false,
     columnLines:true,
     
     initComponent: function(){
@@ -150,7 +108,8 @@ Ext.define('casco.view.tc.Tc', {
             fieldLabel: 'Search',  
             labelWidth: 50,
             name: 'searchField', 
-            //hideLabel: true,
+            emptyText: 'Search',
+            hideLabel: true,
             width: 200,
             listeners: {
                 change: {
@@ -179,10 +138,11 @@ Ext.define('casco.view.tc.Tc', {
     	   scope: me
        },'  Case sensitive'];
         
-        me.bbar = Ext.create('casco.ux.StatusBar',{
-			defaultText:me.defaultStatusText,
+        me.bbar = [{
+			 xtype: 'statusbar',
+			 defaultText:me.defaultStatusText,
 			name:'searchStatusBar'
-		});
+		 }];
         
         me.listeners = {
         		//右键点击菜单
@@ -248,145 +208,153 @@ Ext.define('casco.view.tc.Tc', {
 	},
 	
 
-    afterRender:function(){
-		var me = this;
-		me.callParent(arguments);
-		me.textField= me.down('textfield[name = searchField]');
-		me.statusBar = me.down('statusbar[name = searchStatusBar]');
-	},
-	
-	focusTextField: function(view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
-        if (e.getKey() === e.S) {
-            e.preventDefault();
-            this.textField.focus();
-        }
-    },
-	
-	tagsRe:/<[^>]*>/gm,  //detects html tag gm 参数
-	tagsProtect:'\x0f',  //DEL ASCII code
-	
-	getSearchValue: function() {
-        var me = this,
-            value = me.textField.getValue();
-            
-        if (value === '') {
-            return null;
-        }
-        if (!me.regExpMode) {
-            value = Ext.String.escapeRegex(value);
-        } else {
-            try {
-                new RegExp(value);
-            } catch (error) {
-                me.statusBar.setStatus({
-                    text: error.message,
-                    iconCls: 'x-status-error'
-                });
-                return null;
-            }
-            // this is stupid
-            if (value === '^' || value === '$') {
-                return null;
-            }
-        }
+	/*
+	 * Live Search Module Cofigures
+	 */	
+		bufferedRenderer: false, //searchlive need
+	    searchValue: null, //search value initialization
+	    indexes: [], //The row indexes where matching strings are found. (used by previous and next buttons)
+	    searchRegExp: null, //The generated regular expression used for searching.
+	    caseSensitive: false, //Case sensitive mode.
+	    regExpMode: false, //Regular expression mode.
+	    tagsRe:/<[^>]*>/gm,  //detects html tag gm 参数
+		tagsProtect:'\x0f',  //DEL ASCII code
+	    matchCls: 'x-livesearch-match', //@cfg {String} matchCls  The matched string css classe.
+	    defaultStatusText: 'Nothing Found',	 
+		
+		 afterRender: function() {
+		        var me = this;
+		        me.callParent(arguments);
+		        me.textField = me.down('textfield[name=searchField]');
+		        me.statusBar = me.down('statusbar[name=searchStatusBar]');
+		    },
+		
+		focusTextField: function(view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+	        if (e.getKey() === e.S) {
+	            e.preventDefault();
+	            this.textField.focus();
+	        }
+	    },
+		
+		getSearchValue: function() {
+	        var me = this,
+	            value = me.textField.getValue();
+	        if (value === '') {
+	            return null;
+	        }
+	        if (!me.regExpMode) {
+	            value = Ext.String.escapeRegex(value);
+	        } else {
+	            try {
+	                new RegExp(value);
+	            } catch (error) {
+	                me.statusBar.setStatus({
+	                    text: error.message,
+	                    iconCls: 'x-status-error'
+	                });
+	                return null;
+	            }
+	            // this is stupid
+	            if (value === '^' || value === '$') {
+	                return null;
+	            }
+	        }
+	        return value;
+	    },
+	    
+	    onTextFieldChange: function() {
+	        var me = this,
+	            count = 0,
+	            view = me.view,
+	            cellSelector = view.cellSelector,
+	            innerSelector = view.innerSelector;
+	        view.refresh();
+	        // reset the statusbar
+	        me.statusBar.setStatus({
+	            text: me.defaultStatusText,
+	            iconCls: ''
+	        });
+	        me.searchValue = me.getSearchValue();
+	        me.indexes = [];
+	        me.currentIndex = null;
+	        if (me.searchValue !== null) {
+	            me.searchRegExp = new RegExp(me.getSearchValue(), 'g' + (me.caseSensitive ? '' : 'i'));
+	            me.store.each(function(record, idx) {
+	                var td = Ext.fly(view.getNode(idx)).down(cellSelector),
+	                    cell, matches, cellHTML;
+//	                console.log(td);
+	                while (td) {
+	                    cell = td.down(innerSelector);
+	                    matches = cell.dom.innerHTML.match(me.tagsRe);
+	                    cellHTML = cell.dom.innerHTML.replace(me.tagsRe, me.tagsProtect);
+	                    
+	                    // populate indexes array, set currentIndex, and replace wrap matched string in a span
+	                    cellHTML = cellHTML.replace(me.searchRegExp, function(m) {
+	                       count += 1;
+	                       if (Ext.Array.indexOf(me.indexes, idx) === -1) {
+	                           me.indexes.push(idx);
+	                       }
+	                       if (me.currentIndex === null) {
+	                           me.currentIndex = idx;
+	                       }
+	                       return '<span class="' + me.matchCls + '">' + m + '</span>';
+	                    });
+	                    // restore protected tags
+	                    Ext.each(matches, function(match) {
+	                       cellHTML = cellHTML.replace(me.tagsProtect, match); 
+	                    });
+	                    // update cell html
+	                    cell.dom.innerHTML = cellHTML;
+	                    td = td.next();
+	                }
+	            }, me);
 
-        return value;
-    },
-	
-    onTextFieldChange: function() {
-        var me = this,
-            count = 0,
-            view = me.view,
-            cellSelector = view.cellSelector,
-            innerSelector = view.innerSelector;
+	            // results found
+	            if (me.currentIndex !== null) {
+//	            	console.log(me.currentIndex);
+	                me.getSelectionModel().select(me.currentIndex);
+//	                Ext.fly(me.getView().getNode(me.currentIndex)).scrollInteView();
+	                me.getView().focusRow(me.currentIndex);
+	                me.statusBar.setStatus({
+	                    text: count + ' matche(s) found.',
+	                    iconCls: 'x-status-valid'
+	                });
+	            }
+	        }
 
-        view.refresh();
-        // reset the statusbar
-        me.statusBar.setStatus({
-            text: me.defaultStatusText,
-            iconCls: ''
-        });
+	        // no results found
+	        if (me.currentIndex === null) {
+	            me.getSelectionModel().deselectAll();
+	        }
 
-        me.searchValue = me.getSearchValue();
-        me.indexes = [];
-        me.currentIndex = null;
-
-        if (me.searchValue !== null) {
-            me.searchRegExp = new RegExp(me.getSearchValue(), 'g' + (me.caseSensitive ? '' : 'i'));
-            
-            
-            me.store.each(function(record, idx) {
-                var td = Ext.fly(view.getNode(idx)).down(cellSelector),
-                    cell, matches, cellHTML;
-                console.log(td);
-                while (td) {
-                    cell = td.down(innerSelector);
-                    matches = cell.dom.innerHTML.match(me.tagsRe);
-                    cellHTML = cell.dom.innerHTML.replace(me.tagsRe, me.tagsProtect);
-                    
-                    // populate indexes array, set currentIndex, and replace wrap matched string in a span
-                    cellHTML = cellHTML.replace(me.searchRegExp, function(m) {
-                       count += 1;
-                       if (Ext.Array.indexOf(me.indexes, idx) === -1) {
-                           me.indexes.push(idx);
-                       }
-                       if (me.currentIndex === null) {
-                           me.currentIndex = idx;
-                       }
-                       return '<span class="' + me.matchCls + '">' + m + '</span>';
-                    });
-                    // restore protected tags
-                    Ext.each(matches, function(match) {
-                       cellHTML = cellHTML.replace(me.tagsProtect, match); 
-                    });
-                    // update cell html
-                    cell.dom.innerHTML = cellHTML;
-                    td = td.next();
-                }
-            }, me);
-
-            // results found
-            if (me.currentIndex !== null) {
-                me.getSelectionModel().select(me.currentIndex);
-                me.statusBar.setStatus({
-                    text: count + ' matche(s) found.',
-                    iconCls: 'x-status-valid'
-                });
-            }
-        }
-
-        // no results found
-        if (me.currentIndex === null) {
-            me.getSelectionModel().deselectAll();
-        }
-
-        me.textField.focus();
-    },
-    
-    onPreviousClick: function() {
-        var me = this,
-            idx;
-            
-        if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
-            me.currentIndex = me.indexes[idx - 1] || me.indexes[me.indexes.length - 1];
-            me.getSelectionModel().select(me.currentIndex);
-         }
-    },
-    
-    onNextClick: function() {
-        var me = this,
-            idx;
-            
-        if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
-           me.currentIndex = me.indexes[idx + 1] || me.indexes[0];
-           me.getSelectionModel().select(me.currentIndex);
-        }
-   },
-    
-    caseSensitiveToggle: function(checkbox, checked) {
-        this.caseSensitive = checked;
-        this.onTextFieldChange();
-    },
+	        me.textField.focus();
+	    },
+	    
+	    onPreviousClick: function() {
+	        var me = this,
+	            idx;
+	            
+	        if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
+	            me.currentIndex = me.indexes[idx - 1] || me.indexes[me.indexes.length - 1];
+	            me.getSelectionModel().select(me.currentIndex);
+	            me.getView().focusRow(me.currentIndex);
+	         }
+	    },
+	    
+	    onNextClick: function() {
+	        var me = this,
+	            idx;
+	        if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
+	           me.currentIndex = me.indexes[idx + 1] || me.indexes[0];
+	           me.getSelectionModel().select(me.currentIndex);
+	           me.getView().focusRow(me.currentIndex);
+	        }
+	   },
+	   
+	   caseSensitiveToggle: function(checkbox, checked) {
+	       this.caseSensitive = checked;
+	       this.onTextFieldChange();
+	   },
     
 //    features: [{
 //    	ftype: 'summary',

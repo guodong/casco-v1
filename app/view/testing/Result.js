@@ -3,6 +3,8 @@ Ext.define('casco.view.testing.Result', {
     xtype: 'testing.result',
 
     bodyPadding: 0,
+    bufferedRenderer: false, //Solution:Uncaught TypeError: Failed to execute 'insertBefore' on 'Node': parameter 1 is not of type 'Node'.
+    
     plugins: {
         ptype: 'cellediting',
         clicksToEdit: 1
@@ -191,30 +193,81 @@ Ext.define('casco.view.testing.Result', {
 		    }
 		}];
 		me.tbar = [{
-            text: 'Edit checklog',
-            glyph: 0xf0e8,
-            width: 120,
-            scope:this,
-            handler : function() {
-	            var view=me.getView();
-				var selection =view.getSelectionModel().getSelection()[0];
-				console.log(selection.get('tc').tag);
-				if(!selection){Ext.Msg.alert("请选择TC");return;}
-				window.open('/ace-builds/editor.html?type=python&tc_id='+selection.get('tc_id')+'&tc_tag='+selection.get('tc').tag); 
+			xtype: 'combobox',
+			displayField: 'value',
+			valueField: 'id',
+			emptyText: 'Edit TestScripts',
+			queryModel: 'local',
+			editable: false,
+			store: Ext.create('Ext.data.Store',{
+				fields: ['id', 'value'],
+				data: [{'id':'EC', 'value':'Edit checklog'},
+				       {'id':'ER', 'value':'Edit robot'},
+				       {'id':'GT', 'value':'Generate TestScript'}]
+			}),
+			listeners:{
+				select: function(combo,rd){
+					switch(rd.id){
+					case 'EC':
+						var view=me.getView();
+						var selection =view.getSelectionModel().getSelection()[0];
+//						console.log(selection.get('tc').tag);
+						if(!selection){
+							Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择TC !</b></div>');
+							combo.setValue(combo.emptyText);
+							return;
+							}
+						window.open('/ace-builds/editor.html?type=python&tc_id='+selection.get('tc_id')+'&tc_tag='+selection.get('tc').tag); 
+						combo.setValue(combo.emptyText);
+						break;
+					case 'ER':
+						var view=me.getView();
+						var selection =view.getSelectionModel().getSelection()[0];
+						if(!selection){
+							Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择TC !</b></div>');
+							combo.clearValue();
+							return;
+							}
+						window.open('/ace-builds/editor.html?type=robot&tc_id='+selection.get('tc_id')+'&tc_tag='+selection.get('tc').tag); 
+						combo.clearValue();
+						break;
+					case 'GT':
+						console.log(me.getView().getStore().getData().length);
+						var view=me.getView();
+						var dd=view.getStore().getData();
+						if(!dd.length){
+							Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择Testjob !</b></div>');
+							combo.clearValue();
+							return;
+						}
+//						window.open(API+'testjob/export_pro?job_id='+me.job.get('id'));
+//						combo.clearValue();
+						break;
+					default:
+						break;
+					}
+				}
+			}
+		},{
+			text: 'Export Result',
+//			glyph: 0xf019,
+//			scope: this,
+			xtype: 'combobox',
+            editable: false,
+            displayField: 'name',
+            valueField: 'id',
+            store: me.tmpstore,
+            queryMode: 'local',
+			//itemId:'switcher',	//ManagerController
+            emptyText: 'Export Results',
+            listeners: {
+            	select:  function(combo, record) {
+				combo.setValue(combo.emptyText);
+				window.open(API+'testjob/export?job_id='+me.job.get('id')+'&tmp_id='+record.get('id'));
+            	return;
+				},
             }
-        },{
-            text: 'Edit robot',
-            glyph: 0xf0e8,
-            width: 110,
-            scope:this,
-            handler : function() {
-	            var view=me.getView();
-				var selection =view.getSelectionModel().getSelection()[0];
-				if(!selection){Ext.Msg.alert("请选择TC");return;}
-				window.open('/ace-builds/editor.html?type=robot&tc_id='+selection.get('tc_id')+'&tc_tag='+selection.get('tc').tag); 
-	          //  me.getView().refresh();
-            }
-        },{
+		},{
 			text: 'Save',
 			id: 'testing-save-btn',
 			glyph: 0xf0c7,
@@ -235,6 +288,8 @@ Ext.define('casco.view.testing.Result', {
 					method: 'post',
 					jsonData: {results: out},
 					success: function(){
+//						me.getView().refresh();
+						me.store.reload();
 						Ext.Msg.alert('Success', 'Saved successfully.')
 					}
 				});
@@ -254,36 +309,189 @@ Ext.define('casco.view.testing.Result', {
 				});
 				Ext.getCmp('joblist').getStore().reload();
 			}
-		},{
-			text: 'Export Result',
-			glyph: 0xf019,
-			scope: this,
-			xtype: 'combobox',
-            editable: false,
-            displayField: 'name',
-            valueField: 'id',
-            store: me.tmpstore,
-            queryMode: 'local',
-			//itemId:'switcher',	//ManagerController
-            emptyText: 'Switch Template',
+		},'->',{
+            xtype: 'textfield',
+//            fieldLabel: 'Search',  
+            labelWidth: 50,
+            name: 'searchField',
+            emptyText: 'Search',
+            //hideLabel: true,
+            width: 200,
             listeners: {
-            	select:  function(combo, record) {
-				combo.setValue(combo.emptyText);
-				window.open(API+'testjob/export?job_id='+me.job.get('id')+'&tmp_id='+record.get('id'));
-            	return;
-				},
+                change: {
+                    fn: me.onTextFieldChange,
+                    scope: this,
+                    buffer: 500
+                }
             }
-		},{
-			text: 'Export Project',
-			glyph: 0xf019,
-			scope: this,
-			handler: function() {
-				window.open(API+'testjob/export_pro?job_id='+me.job.get('id'));
-            	return;
-			}
-		}];
+       }, {
+           xtype: 'button',
+           text: '&lt;',
+           tooltip: 'Find Previous Row',
+           handler: me.onPreviousClick,
+           scope: me
+       },{
+           xtype: 'button',
+           text: '&gt;',
+           tooltip: 'Find Next Row',
+           handler: me.onNextClick,
+           scope: me
+       }];
+		
+		me.bbar = [{
+			 xtype: 'statusbar',
+			 defaultText:me.defaultStatusText,
+			name:'searchStatusBar'
+		 }];
+		
     	this.callParent();
     },
+    
+    /*
+     * Live Search Module Cofigures
+     */	
+        searchValue: null, //search value initialization
+        indexes: [], //The row indexes where matching strings are found. (used by previous and next buttons)
+        searchRegExp: null, //The generated regular expression used for searching.
+        caseSensitive: false, //Case sensitive mode.
+        regExpMode: false, //Regular expression mode.
+        tagsRe:/<[^>]*>/gm,  //detects html tag gm 参数
+    	tagsProtect:'\x0f',  //DEL ASCII code
+        matchCls: 'x-livesearch-match', //@cfg {String} matchCls  The matched string css classe.
+        defaultStatusText: 'Nothing Found',	 
+    	
+    	 afterRender: function() {
+    	        var me = this;
+    	        me.callParent(arguments);
+    	        me.textField = me.down('textfield[name=searchField]');
+    	        me.statusBar = me.down('statusbar[name=searchStatusBar]');
+    	    },
+    	
+    	focusTextField: function(view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+            if (e.getKey() === e.S) {
+                e.preventDefault();
+                this.textField.focus();
+            }
+        },
+    	
+    	getSearchValue: function() {
+            var me = this,
+                value = me.textField.getValue();
+            if (value === '') {
+                return null;
+            }
+            if (!me.regExpMode) {
+                value = Ext.String.escapeRegex(value);
+            } else {
+                try {
+                    new RegExp(value);
+                } catch (error) {
+                    me.statusBar.setStatus({
+                        text: error.message,
+                        iconCls: 'x-status-error'
+                    });
+                    return null;
+                }
+                // this is stupid
+                if (value === '^' || value === '$') {
+                    return null;
+                }
+            }
+            return value;
+        },
+        
+        onTextFieldChange: function() {
+            var me = this,
+                count = 0,
+                view = me.view,
+                cellSelector = view.cellSelector,
+                innerSelector = view.innerSelector;
+            view.refresh();
+            // reset the statusbar
+            me.statusBar.setStatus({
+                text: me.defaultStatusText,
+                iconCls: ''
+            });
+            me.searchValue = me.getSearchValue();
+            me.indexes = [];
+            me.currentIndex = null;
+            if (me.searchValue !== null) {
+                me.searchRegExp = new RegExp(me.getSearchValue(), 'g' + (me.caseSensitive ? '' : 'i'));
+                me.store.each(function(record, idx) {
+                    var td = Ext.fly(view.getNode(idx)).down(cellSelector),
+                        cell, matches, cellHTML;
+//                    console.log(td);
+                    while (td) {
+                        cell = td.down(innerSelector);
+                        matches = cell.dom.innerHTML.match(me.tagsRe);
+                        cellHTML = cell.dom.innerHTML.replace(me.tagsRe, me.tagsProtect);
+                        
+                        // populate indexes array, set currentIndex, and replace wrap matched string in a span
+                        cellHTML = cellHTML.replace(me.searchRegExp, function(m) {
+                           count += 1;
+                           if (Ext.Array.indexOf(me.indexes, idx) === -1) {
+                               me.indexes.push(idx);
+                           }
+                           if (me.currentIndex === null) {
+                               me.currentIndex = idx;
+                           }
+                           return '<span class="' + me.matchCls + '">' + m + '</span>';
+                        });
+                        // restore protected tags
+                        Ext.each(matches, function(match) {
+                           cellHTML = cellHTML.replace(me.tagsProtect, match); 
+                        });
+                        // update cell html
+                        cell.dom.innerHTML = cellHTML;
+                        td = td.next();
+                    }
+                }, me);
+
+                // results found
+                if (me.currentIndex !== null) {
+//                	console.log(me.currentIndex);
+                    me.getSelectionModel().select(me.currentIndex);
+//                    Ext.fly(me.getView().getNode(me.currentIndex)).scrollInteView();
+                    me.getView().focusRow(me.currentIndex);
+                    me.statusBar.setStatus({
+                        text: count + ' matche(s) found.',
+                        iconCls: 'x-status-valid'
+                    });
+                }
+            }
+
+            // no results found
+            if (me.currentIndex === null) {
+                me.getSelectionModel().deselectAll();
+            }
+
+            me.textField.focus();
+        },
+        
+        onPreviousClick: function() {
+            var me = this,
+                idx;
+                
+            if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
+                me.currentIndex = me.indexes[idx - 1] || me.indexes[me.indexes.length - 1];
+                me.getSelectionModel().select(me.currentIndex);
+                me.getView().focusRow(me.currentIndex);
+             }
+        },
+        
+        onNextClick: function() {
+            var me = this,
+                idx;
+            if ((idx = Ext.Array.indexOf(me.indexes, me.currentIndex)) !== -1) {
+               me.currentIndex = me.indexes[idx + 1] || me.indexes[0];
+               me.getSelectionModel().select(me.currentIndex);
+               me.getView().focusRow(me.currentIndex);
+            }
+       },
+        
+   /*
+    * Batch editing Module realize
+    */	       
 	showHeaderMenu: function (menu) {
         var me = this;
 		//console.log(menu,menu.activeHeader);

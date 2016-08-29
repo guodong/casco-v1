@@ -25,12 +25,9 @@ Ext.define('casco.view.matrix.MatrixController', {
 		Ext.MessageBox.wait('正在处理,请稍候...', 'Create Verification');
 		var form = this.lookupReference('ver_create_form');
 		var meta = form.getValues();
-		console.log(meta);
 		rsvsd = Ext.getCmp('parent_doc').getStore();
-		console.log(rsvsd);
 		var rsvss = [];
 		rsvsd.each(function(v){
-			console.log(v);
 			var obj = {
 				parent_document_id: v.get('id'),
 				parent_version_id: v.get('version_id')
@@ -42,7 +39,6 @@ Ext.define('casco.view.matrix.MatrixController', {
 		var job = Ext.create('casco.model.Verification',meta);
 		job.save({
 			callback: function(record,operation){
-				console.log(record.data.success);
 				if(record.data.success){
 				var tabs=Ext.getCmp('matrixpanel');
 				var childs=tabs.items;

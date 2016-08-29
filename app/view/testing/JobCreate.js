@@ -121,7 +121,9 @@ Ext.define('casco.view.testing.JobCreate', {
 			height: 400,
 			store: Ext.create('casco.store.Tcs'),
 			selModel: {
-				selType: 'checkboxmodel',
+				type: 'checkboxmodel', //selType->type after 5.1.0
+//				allowBlank: false, //至少选一条 save still excute?
+//				blankText: '请选择测试用例',
 				checkOnly: true
 			},
 			columns: [{
