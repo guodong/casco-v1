@@ -100,13 +100,6 @@ Ext.define('casco.view.vat.VatView',{
 							});
 							tab_json.push({title:'本阶段分配给其他阶段的', xtype: 'tabpanel',items:tmps,'closable':true});
 						}
-//						tab_json.push({
-//							'xtype': 'tc_vat_relations',
-//							'title': vatres_data.data.vat_build_name+':'+vatres_data.data.tc_doc_name,
-//							'id': 'vatrelations'+val_id+vatres_data.data.tc_version_id,
-//							'relations': vatres_data.get('tc_vat'),
-//							'closable': true
-//							});
 						if(vatres_data.get('vat_tc')!=[]){
 							var tmps=[];
 							Ext.Array.each(vatres_data.get('vat_tc'),function(v){
@@ -191,18 +184,58 @@ Ext.define('casco.view.vat.VatView',{
 				win.show();
 			}
 		},'-',{
-			 text: 'Export VAT',
-			 glyph: 0xf080,
-			 scope: this,
-			 handler:function(){
-				var view=me.getView();
-				var selection =view.getSelectionModel().getSelection()[0];
-				if (!selection) {
-				 Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
+			xtype: 'combobox',
+			displayField: 'value',
+			valueField: 'id',
+			emptyText: 'Export Vats',
+			queryModel: 'local',
+			editable: false,
+			store: Ext.create('Ext.data.Store',{
+				fields: ['id', 'value'],
+				data: [{'id':'Assign', 'value':'本阶段分配给其他阶段的'},
+				       {'id':'Assigned', 'value':'其他阶段分配给本阶段的'}]
+			}),
+			listeners:{
+				select: function(combo,rd){
+					switch(rd.id){
+					case 'Assign':
+						var view=me.getView();
+						var selection =view.getSelectionModel().getSelection()[0];
+						if (!selection) {
+						 Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
+						 combo.clearValue();
+				         return;
+						}
+			            window.open(API+'vat/export_all?vat_build_id='+selection.get('id')+'&type='+rd.id);
+						combo.setValue(combo.emptyText);
+						break;
+					case 'Assigned':
+						var view=me.getView();
+						var selection =view.getSelectionModel().getSelection()[0];
+						if (!selection) {
+						 Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
+						 combo.clearValue();
+				         return;
+						}
+			            window.open(API+'vat/export_all?vat_build_id='+selection.get('id')+'&type='+rd.id);
+						combo.setValue(combo.emptyText);
+						break;
+//					case 'All':
+//						var view=me.getView();
+//						var selection =view.getSelectionModel().getSelection()[0];
+//						if (!selection) {
+//						 Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
+//						 combo.clearValue();
+//				         return;
+//						}
+//			            window.open(API+'vat/export_all?vat_build_id='+selection.get('id')+'&type='+rd.id);
+//						combo.setValue(combo.emptyText);
+//						break;
+					default:
+						break;
+					}
 				}
-	           window.open(API+'vat/export_all?vat_build_id='+selection.get('id'));
-	           return;
-			 }
+			}
 		}];
 		
 		function getPreview(value,metadata,record){ //record-rsversions
