@@ -29,9 +29,6 @@ Ext.define('casco.view.tc.TcController', {
 			});
 			i++;
 		});
-		//data.column=data.column.substring(0,data.column.length-1);
-		//data.column+='"test steps:"'+JSON.stringify(data.steps)+'"';
-		console.log(data.column);
 		data.steps=JSON.stringify(data.steps);
 		tc.set(data);
 		tc.save({

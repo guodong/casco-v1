@@ -10,7 +10,6 @@ Ext.define('casco.view.rs.RsDetails', {
     
     width:900,
     height:650,
-//    autoScroll:true,
     resizable: true,
     maximizable: true,
 //  header:false,
@@ -31,10 +30,8 @@ Ext.define('casco.view.rs.RsDetails', {
 			me.store.add([me.rs]);
 			me.vat.setData(me.rs.getData().vat);
 		};
-	//	console.log(me.store);
 		
 		me.vatstrstore = Ext.create('casco.store.Vatstrs');
-//		me.vatstrstore = new casco.store.Vatstrs();	//same
 		me.vatstrstore.load({
     		params: {
     			project_id: me.project.get('id')
@@ -43,7 +40,6 @@ Ext.define('casco.view.rs.RsDetails', {
 		console.log(me.vatstrstore);
 		
 		me.addVat = function(record){
-			//console.log(record);
 			if(!record.data.leaf){
 				return;
 			};
@@ -76,18 +72,9 @@ Ext.define('casco.view.rs.RsDetails', {
 				document_id: me.document_id,
 				project: me.project,
 				rs: me.rs,
-//				console.log(me.rs.get('tag')),
-//				itag: me.rs.get('tag'),
-//				proxy: {
-//	    			extraParams: {
-//	    				itag: me.rs.get('tag')
-//	    			}
-//	    		}
 				listeners: {
 					itemdblclick: function(view, record, item, index, e, eOpts){
 						me.addVat(record);
-//						var me = this;
-//			        	if(!record.get('leaf')) return;
 			        	
 					}
 				}
@@ -119,28 +106,19 @@ Ext.define('casco.view.rs.RsDetails', {
                 	me.vat.each(function(s){
             			vat.push(s.getData());
             		});
-            		  
             		  var column='';
-            		  //console.log(me.down('form').getValues());
-            		  //可以不用很low的拼接,可以push2array2join
             		  var my_rs=Ext.create('casco.model.Rs',{id:me.status?rs.get('id'):null});
             		  Ext.Object.each(me.down('form').getValues(), function(key, value, myself){
-            		  	
-            		  	if(key!='id'&&key!='tag'){column+='"'+key+'":"'+value+'",';}
+            		  if(key!='id'&&key!='tag'){column+='"'+key+'":"'+value+'",';}
             	      else if(key=='tag'){my_rs.set('tag',value);}
-            		  	
             		  });
-            		  
-            		  my_rs.set('column',column.substr(0,column.length-1));
-            		
+            		my_rs.set('column',column.substr(0,column.length-1));
                 	my_rs.set('vat', vat);
                 	my_rs.set('version_id',me.version_id);
                 	my_rs.save({
                 		callback: function(record, operation, success){
                           rs.set(me.down('form').getValues());
                           rs.set('vat',vat);
-
-                          //me.up('gridpanel').store.reload();
                           if(!me.status){
                         	  t = Ext.ComponentQuery.query("#tab-" + me.document_id)[0];
     						  t.store.reload();
@@ -149,12 +127,7 @@ Ext.define('casco.view.rs.RsDetails', {
                               me.pointer.getView().refresh();
                           }
                           Ext.Msg.alert('更新成功');
-                        	//暂时修改前端对象吧
                           me.destroy();  
-													//var t = Ext.ComponentQuery.query("#tab-" + me.document_id)[0];
-													//t.store.reload();
-                        	
-              		     
                 		}
                 	});
                 	
@@ -189,7 +162,6 @@ Ext.define('casco.view.rs.RsDetails', {
 				xtype: 'gridpanel',
 				fieldLabel: 'gridpanel',
 				id:'inpanel',
-			 //   columns:me.columns,
 				store:me.store,
 				editable: true,
 				forceFit:true,
@@ -198,7 +170,6 @@ Ext.define('casco.view.rs.RsDetails', {
 			},{
 				xtype: 'grid',
 				fieldLabel: 'Vat',
-				//hidden:true,
 			    plugins: {
 			        ptype: 'cellediting',
 			        clicksToEdit: 2
@@ -219,10 +190,7 @@ Ext.define('casco.view.rs.RsDetails', {
 			    store: me.vat
 			}]
 		}],
-					 
-     
-    console.log(me.columns);
-	  
+				  
 	  Ext.Array.each(me.columns, function(name, index, countriesItSelf) {
 		  if(name.dataIndex == 'tag') return;
 		Ext.Array.insert(me.items[2].items,1,

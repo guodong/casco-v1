@@ -206,12 +206,10 @@ Ext.define('casco.view.rs.Rs', {
 		};
 
 		me.listeners = {
-
 			afterrender:function(){
 			me.getEl().swallowEvent(['mousedown', 'mouseup', 'headerclick','click','beforefocus','contextmenu', 'focus','mouseover', 'mouseout','dblclick', 'mousemove', 'focusmove','focuschange', 'focus','focusin','focusenter']);
 			},
 			reconfigure:function(){
-			console.log('heheda');
 			me.getEl().swallowEvent(['mousedown', 'mouseup', 'headerclick','click','beforefocus','contextmenu', 'focus','mouseover', 'mouseout','dblclick', 'mousemove', 'focusmove','focuschange', 'focus','focusin','focusenter']);
 			},
 			itemcontextmenu :function(view,record,item,index,e){
@@ -248,7 +246,7 @@ Ext.define('casco.view.rs.Rs', {
 					pointer:me,
 					document_id: me.document_id,
 					project:me.project,
-					columns:me.columns,
+					columns:me.columns
 				});
 				win.down('form').loadRecord(record);
 				win.show();
