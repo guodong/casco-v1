@@ -10,7 +10,7 @@ Ext.define('casco.view.rs.Rs', {
 	           'casco.view.rs.RsDetails',
 	           ],
 	           
-	forceFit:true,
+//	forceFit:true,
 	columnLines:true,
 		
 	initComponent: function() {

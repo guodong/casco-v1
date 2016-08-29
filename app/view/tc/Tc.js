@@ -5,7 +5,7 @@ Ext.define('casco.view.tc.Tc', {
     viewModel : 'main', 	//Binding
     allowDeselect: true, 	// single时，可取消选定
     
-    forceFit:true,
+//    forceFit:true,
     columnLines:true,
     
     initComponent: function(){

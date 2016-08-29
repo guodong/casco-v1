@@ -141,7 +141,7 @@ Ext.define('casco.view.report.ReportCover', {
                     });
 			var right_grid = new Ext.grid.GridPanel(
 				 {
-                        store: Ext.create('Ext.data.Store',{r}),
+//                        store: Ext.create('Ext.data.Store',{r}),
                         columns:[
                     {
                         text: 'vat',

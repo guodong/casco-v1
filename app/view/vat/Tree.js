@@ -6,13 +6,13 @@ Ext.define('casco.view.vat.Tree', {
     listeners: {
         itemdblclick: function(view, record, item, index, e, eOpts){
         	var me = this;
-			//console.log(me.getView().up().project);
+//			console.log(record.data);
         	if(!record.get('leaf')) return;
     		var tabs = Ext.getCmp('vatpanel');
 			var tab = tabs.child('#tab-vat-'+ record.data.id); //doc_id
 //			var child_id = casco.model.Document;
 			if(!tab){
-			tabs.removeAll();
+//			tabs.removeAll();
 			tab = tabs.add({
 				id: 'tab-vat-'+record.data.id,
 				xtype: 'vat.view',
