@@ -5,7 +5,7 @@ Ext.define('casco.view.tc.Tc', {
     viewModel : 'main', 	//Binding
     allowDeselect: true, 	// single时，可取消选定
     
-    forceFit:true,
+//    forceFit:true,
     columnLines:true,
     
     initComponent: function(){
@@ -136,7 +136,7 @@ Ext.define('casco.view.tc.Tc', {
     	   margin: '0 12px 0 0',
     	   handler: me.caseSensitiveToggle,
     	   scope: me
-       },'  Case sensitive'];
+       },'  区分大小写'];
         
         me.bbar = [{
 			 xtype: 'statusbar',

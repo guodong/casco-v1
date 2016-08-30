@@ -133,7 +133,13 @@ Ext.define('casco.view.matrix.ChildMatrix', {
          tooltip: 'Find Next Row',
          handler: me.onNextClick,
          scope: me
-     }];
+     },{
+  	   xtype: 'checkbox',
+	   hideLabel: true,
+	   margin: '0 12px 0 0',
+	   handler: me.caseSensitiveToggle,
+	   scope: me
+   },'  区分大小写'];
 
 		me.self_op=function(the,newValue,oldValue){       
 		 var rows=me.getSelectionModel().getSelection();
@@ -501,7 +507,12 @@ Ext.define('casco.view.matrix.ChildMatrix', {
                me.getSelectionModel().select(me.currentIndex);
                me.getView().focusRow(me.currentIndex);
             }
-       }
+       },
+       
+       caseSensitiveToggle: function(checkbox, checked) {
+	       this.caseSensitive = checked;
+	       this.onTextFieldChange();
+	   },
 	
 //    features: [{
 //    	ftype: 'summary',

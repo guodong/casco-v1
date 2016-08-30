@@ -79,40 +79,44 @@ Ext.define('casco.view.vat.VatView',{
 							vat_build_id: val_id
 						}
 					});
-					vatres.on('load',function(){ //Stor加载
+					vatres.on('load',function(){ //Store加载
 						var vatres_data = vatres.getData().items[0];
-//						console.log(vatres_data.get('parent_vat'));
+//						console.log(vatres_data.get('vat_tc'));
 						if(vatres_data.get('parent_vat')!=[]){
+							var tmps=[];
 							Ext.Array.each(vatres_data.get('parent_vat'),function(v){
+//								console.log(v);
 								var tmp={
 									'xtype': 'tc_vat_relations',
-									'title': 'P-'+vatres_data.data.vat_build_name+':'+v[0].rs_doc_name,
+//									'title': v[0].rs_doc_name+'_'+vatres_data.data.vat_build_name,
+									'title': v[0].rs_doc_name,
 									'id': 'vatrelations-p'+val_id+v[0].rs_version_id,
 									'relations': v,
-									'closable': true
+									'vatbuild_id': val_id,
+									'rs_version_id': v[0].rs_version_id,
+									'closable': true,
 								};
-								tab_json.push(tmp);
+								tmps.push(tmp);
 							});
+							tab_json.push({title:'本阶段分配给其他阶段的', xtype: 'tabpanel',items:tmps,'closable':true});
 						}
-//						tab_json.push({
-//							'xtype': 'tc_vat_relations',
-//							'title': vatres_data.data.vat_build_name+':'+vatres_data.data.tc_doc_name,
-//							'id': 'vatrelations'+val_id+vatres_data.data.tc_version_id,
-//							'relations': vatres_data.get('tc_vat'),
-//							'closable': true
-//							});
 						if(vatres_data.get('vat_tc')!=[]){
+							var tmps=[];
 							Ext.Array.each(vatres_data.get('vat_tc'),function(v){
 //								console.log(v[0].rs_doc_name);
 								var tmp={
 									'xtype': 'vat_tc_relations',
-									'title': vatres_data.data.vat_build_name+':'+v[0].rs_doc_name,
+//									'title': v[0].rs_doc_name+'_'+vatres_data.data.vat_build_name,
+									'title': v[0].rs_doc_name,
 									'id': 'vatrelations'+val_id+v[0].rs_version_id,
 									'relations': v,
+									'vatbuild_id': val_id,
+									'rs_version_id': v[0].rs_version_id,
 									'closable': true
 								};
-								tab_json.push(tmp);
+								tmps.push(tmp);
 							});
+							tab_json.push({title:'其他阶段分配给本阶段的', xtype: 'tabpanel',items:tmps,'closable':true});
 						}
 						
 						var create_tab=function(record){ //写个递归方便多了啊
@@ -153,7 +157,7 @@ Ext.define('casco.view.vat.VatView',{
 				win.down('form').loadRecord(vv);
 				win.show();
 			}
-		},{
+		},'-',{
 			text: 'Delete Vat',
 			glyph: 0xf068,
 			scope: this,
@@ -169,15 +173,68 @@ Ext.define('casco.view.vat.VatView',{
 						}
 					}}, this);
 			}
-		},{
+		},'-',{
 			text: 'Export Relations',
-			glyph: 0xf080,
+			glyph: 0xf1c3,
 			scope: this,
 			handler: function(){
 				var win=Ext.create('widget.vat.twowayrelation',{
 					project: me.project,
 				});
 				win.show();
+			}
+		},'-',{
+			xtype: 'combobox',
+			displayField: 'value',
+			valueField: 'id',
+			emptyText: 'Export Vats',
+			queryModel: 'local',
+			editable: false,
+			store: Ext.create('Ext.data.Store',{
+				fields: ['id', 'value'],
+				data: [{'id':'Assign', 'value':'本阶段分配给其他阶段的'},
+				       {'id':'Assigned', 'value':'其他阶段分配给本阶段的'}]
+			}),
+			listeners:{
+				select: function(combo,rd){
+					switch(rd.id){
+					case 'Assign':
+						var view=me.getView();
+						var selection =view.getSelectionModel().getSelection()[0];
+						if (!selection) {
+						 Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
+						 combo.clearValue();
+				         return;
+						}
+			            window.open(API+'vat/export_all?vat_build_id='+selection.get('id')+'&type='+rd.id);
+						combo.setValue(combo.emptyText);
+						break;
+					case 'Assigned':
+						var view=me.getView();
+						var selection =view.getSelectionModel().getSelection()[0];
+						if (!selection) {
+						 Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
+						 combo.clearValue();
+				         return;
+						}
+			            window.open(API+'vat/export_all?vat_build_id='+selection.get('id')+'&type='+rd.id);
+						combo.setValue(combo.emptyText);
+						break;
+//					case 'All':
+//						var view=me.getView();
+//						var selection =view.getSelectionModel().getSelection()[0];
+//						if (!selection) {
+//						 Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
+//						 combo.clearValue();
+//				         return;
+//						}
+//			            window.open(API+'vat/export_all?vat_build_id='+selection.get('id')+'&type='+rd.id);
+//						combo.setValue(combo.emptyText);
+//						break;
+					default:
+						break;
+					}
+				}
 			}
 		}];
 		

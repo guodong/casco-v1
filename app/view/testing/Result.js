@@ -96,7 +96,7 @@ Ext.define('casco.view.testing.Result', {
 			text: 'tc',
 			dataIndex: 'tag',
 			sortable : true,
-			width: 200
+			width: 150
 		}, {
 			text: 'description',
 			dataIndex: 'tc',
@@ -114,7 +114,7 @@ Ext.define('casco.view.testing.Result', {
 		}, {
 			text: "begin at",
 			dataIndex: "begin_at",
-			width: 180,
+			width: 150,
 			editor: {
 				editable: false,
 				disabledCls: '',
@@ -134,7 +134,7 @@ Ext.define('casco.view.testing.Result', {
 		}, {
 			text: "end at",
 			dataIndex: "end_at",
-			width: 180,
+			width: 150,
 			editor: {
 				editable: false,
 				disabledCls: '',
@@ -240,8 +240,8 @@ Ext.define('casco.view.testing.Result', {
 							combo.clearValue();
 							return;
 						}
-//						window.open(API+'testjob/export_pro?job_id='+me.job.get('id'));
-//						combo.clearValue();
+						window.open(API+'testjob/export_pro?job_id='+me.job.get('id'));
+						combo.clearValue();
 						break;
 					default:
 						break;
@@ -505,7 +505,6 @@ Ext.define('casco.view.testing.Result', {
         var me = this,
             menuItem;
         while (menuItem = me.customMenuItemsCache.pop()) {
-			console.log(menuItem);
             menu.remove(menuItem.getItemId(), false);
         }
     },

@@ -64,6 +64,11 @@ Ext.define('casco.view.vat.Vat', {
             title: '',
 			id:'vatpanel',
 			reference: 'rightpanel',
+//			plugin: Ext.create('Ext.ux.TabCloseMenu', {  
+//                closeTabText : '关闭当前页',  
+//                closeOthersTabsText : '关闭其他页',  
+//                closeAllTabsText : '关闭所有页'  
+//            }), 
             items:[{
                 title: 'Overview',
                 html: '<iframe id="draw" src="/draw/noedit.html?'+me.project.get('id')+'" style="width:100%;height:100%;border:0"></iframe>'

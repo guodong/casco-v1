@@ -121,7 +121,7 @@ Ext.define('casco.view.vat.TwoWayRelation', {
 			},
 			items: ['->', {
 				text: 'Export',
-				glyph: 0xf080,
+				glyph: 0xf1c3,
 				handler: function(){
 					var self = this;var obj=null;
 					var form = me.down('form').getForm();

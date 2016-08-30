@@ -54,7 +54,7 @@ Ext.define('casco.view.rs.RsDetails', {
 			title:'Vat Edit',
 			split: true,
 			collapsible:true,
-			collapsed:true,
+			collapsed:false,
 			width:400,
 			layout:{
 				type:'border'
