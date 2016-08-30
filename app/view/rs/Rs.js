@@ -162,7 +162,7 @@ Ext.define('casco.view.rs.Rs', {
     	   margin: '0 12px 0 0',
     	   handler: me.caseSensitiveToggle,
     	   scope: me
-       },'  Case sensitive'];			
+       },'  区分大小写'];			
 		 
 		 me.bbar = [{
 			 xtype: 'statusbar',

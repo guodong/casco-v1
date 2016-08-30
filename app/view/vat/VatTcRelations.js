@@ -60,7 +60,7 @@ Ext.define('casco.view.vat.VatTcRelations',{
 		
 		me.tbar=[{
             text: 'Export Excel',
-            glyph: 0xf080,
+            glyph: 0xf1c3,
             scope: this,
             handler: function () {
                 window.open(API + 'vat/assigned?vat_build_id='+me.vatbuild_id + '&rs_version_id=' +me.rs_version_id);  
@@ -99,7 +99,7 @@ Ext.define('casco.view.vat.VatTcRelations',{
     	   margin: '0 12px 0 0',
     	   handler: me.caseSensitiveToggle,
     	   scope: me
-       },'  Case sensitive'];
+       },'  区分大小写'];
 		
 		me.bbar = [{
 			 xtype: 'statusbar',

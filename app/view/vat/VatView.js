@@ -94,7 +94,7 @@ Ext.define('casco.view.vat.VatView',{
 									'relations': v,
 									'vatbuild_id': val_id,
 									'rs_version_id': v[0].rs_version_id,
-									'closable': true
+									'closable': true,
 								};
 								tmps.push(tmp);
 							});
@@ -175,7 +175,7 @@ Ext.define('casco.view.vat.VatView',{
 			}
 		},'-',{
 			text: 'Export Relations',
-			glyph: 0xf080,
+			glyph: 0xf1c3,
 			scope: this,
 			handler: function(){
 				var win=Ext.create('widget.vat.twowayrelation',{
