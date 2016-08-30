@@ -12,7 +12,6 @@ Ext.define('casco.view.rs.RsDetails', {
     height:650,
     resizable: true,
     maximizable: true,
-//  header:false,
     title:'Rs View',
     
     modal:true,
@@ -24,8 +23,6 @@ Ext.define('casco.view.rs.RsDetails', {
 		var me = this;
 		me.store=Ext.create('casco.store.Rss');
 		me.vat = Ext.create('casco.store.Vats');
-		console.log(me.rs);
-//		me.store.add([me.rs]);
 		if(me.rs){
 			me.store.add([me.rs]);
 			me.vat.setData(me.rs.getData().vat);
