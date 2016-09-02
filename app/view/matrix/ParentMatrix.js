@@ -9,6 +9,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 // mode:'MULTI',
 //		selType: "checkboxmodel" ,    // 5.1.0之后就不赞成使用这种方式了。。。
 		type: 'checkboxmodel',
+//		type: 'spreadsheet',
 		checkOnly: false
 	},
 // columnLines:true,
@@ -265,8 +266,9 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 					store:Ext.create('Ext.data.Store', {
 					fields: ['name', 'value'],
 					data : [{"name":"Not complete", "value":"Not complete"},{"name":"Wrong coverage", "value":"Wrong coverage"},
-					{"name":"logic or description mistake in Child requirement", "value":"logic or description mistake in Child requirement"},
+					{"name":"logic or description mistake in Child requirement", "value":"logic or description mistake"},
 					{"name":"Other", "value":"Other"}]}),
+//					disabled: ,
 			    }
 			  },
 			  {text:'Verif. Assesst',dataIndex:'Verif_Assesst',width:110,sortable:true,
@@ -290,13 +292,35 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 					store:Ext.create('Ext.data.Store', {
 					fields: ['name', 'value'],
 					data : [{"name":"NA", "value":"NA"},{"name":"OK", "value":"OK"},{"name":"NOK", "value":"NOK"}]}),
-					listeners: {
-						select: function(combo,record,index){
-//							console.log(combo,record,index);
-							
-						}
-					}
-			    }
+//					listeners: {
+//						select: function(c,re){
+//							var grid = c.up().grid;
+//							console.log(grid);
+//							var record = grid.getSelectionModel().getSelection()[0];
+//						    var rowIndex = grid.store.indexOf(record);
+//						    var gridColumns = grid.headerCt.getGridColumns();
+//							for (var i = 0; i < gridColumns.length; i++) {
+//								if (gridColumns[i].dataIndex == this.dataIndex) {
+//									var colIndex=i;break; 
+//								}   
+//							}
+//							
+////							var defect = grid.getCellSelectionModel();
+//							var defect = c.up().getView().getCellSelector('Defect Type');
+//							console.log(defect);
+//							var editor = grid.editingPlugin;
+//							editor.startEditByPosition({
+//								row: rowIndex,
+//								column: colIndex,
+//							  });
+//							
+//							console.log(colIndex); 
+//						    console.log(grid);
+////							console.log(c.up().grid.columns); //理论上，应该遍历查找colIndex,但表格固定就可以不用
+//						    
+//						},
+//					},
+			   }
 			  },
 			  {text:'Verif Assest justifiaction',dataIndex:'Verif Assest justifiaction',header:'Verif Assest justifiaction',width:175,sortable:true,editor:{xtype:'textfield'},
 			  customMenu:[
