@@ -57,8 +57,7 @@ Ext.define('casco.view.testing.Job', {
 			dataIndex: 'status',
 			renderer: function(v){
 				return v==0?'<span style="color:red">testing</span>':'<span style="color: green">submited</span>';
-			},
-//			width: 200
+			}
 		}, {
 			text: 'last_modified',
 			dataIndex: 'user',

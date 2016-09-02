@@ -1,5 +1,5 @@
 Ext.define('casco.view.report.ReportWindow', {
-    extend: 'Ext.window.Window',
+    extend: 'Ext.grid.Panel',
     xtype: 'reportwindow',
     width: 900,
     height: 500,
@@ -19,7 +19,7 @@ Ext.define('casco.view.report.ReportWindow', {
                 {label: 'failed', value: -1},
             ]
         });
-        var vats = me.record.get('vats'), vatstr = [];
+        var vats = me.record?me.record.get('vats'):null, vatstr = [];
         Ext.Array.each(JSON.parse(vats),
             function (item, index) {
                 vatstr.push(item);
@@ -29,9 +29,9 @@ Ext.define('casco.view.report.ReportWindow', {
             auteLoad: true, //此处设置为自动加载
             data: vatstr,
             model: 'casco.model.ReportField',
-            p_id: r.get('id')
+            p_id: r?r.get('id'):null
         });
-        console.log(right_store.getData());
+        // console.log(right_store.getData());
         me.items = [{
             title: 'Vat=>Result',
             region: 'east',     // 所在的位置

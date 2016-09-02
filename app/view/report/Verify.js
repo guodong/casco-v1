@@ -17,7 +17,7 @@ Ext.define('casco.view.report.Verify', {
 		store.load({
 	      scope: this,
           callback: function(records, operation, success) {
-		  if(!records||records!=[]){
+		  if(!records||records.length==0){
 		  Ext.destroy(me);
 		  }
 		  }
