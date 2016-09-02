@@ -1,10 +1,8 @@
 Ext.define('casco.view.testing.Result', {
     extend: 'Ext.grid.Panel',
     xtype: 'testing.result',
-
     bodyPadding: 0,
     bufferedRenderer: false, //Solution:Uncaught TypeError: Failed to execute 'insertBefore' on 'Node': parameter 1 is not of type 'Node'.
-    
     plugins: {
         ptype: 'cellediting',
         clicksToEdit: 1

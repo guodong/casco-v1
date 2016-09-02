@@ -1,16 +1,11 @@
 Ext.define('casco.view.report.ReportWindow', {
-    extend: 'Ext.grid.Panel',
+	extend: 'Ext.panel.Panel',
     xtype: 'reportwindow',
-    width: 900,
-    height: 500,
-    fit: true,
     layout: 'border',
     initComponent: function () {
 
         var me = this;
-        var r = me.record;
         me.store = new casco.store.ReportCovers();
-        me.store.load({params: {p_id: me.record ? me.record.get('id') : null}});
         var resultStore = Ext.create('Ext.data.Store', {
             model: 'casco.model.Result',
             data: [
@@ -19,26 +14,14 @@ Ext.define('casco.view.report.ReportWindow', {
                 {label: 'failed', value: -1},
             ]
         });
-        var vats = me.record?me.record.get('vats'):null, vatstr = [];
-        Ext.Array.each(JSON.parse(vats),
-            function (item, index) {
-                vatstr.push(item);
-            }
-        );
-        var right_store = new Ext.data.JsonStore({
-            auteLoad: true, //此处设置为自动加载
-            data: vatstr,
-            model: 'casco.model.ReportField',
-            p_id: r?r.get('id'):null
-        });
-        // console.log(right_store.getData());
         me.items = [{
             title: 'Vat=>Result',
             region: 'east',     // 所在的位置
             xtype: 'gridpanel',
             width: '50%',
-            split: true,        
-            store: right_store,
+            split: true,  
+			id:'right_store',
+            store: new Ext.data.JsonStore({}),
             scrollable: true,
             columns: [
                 {
@@ -154,20 +137,16 @@ Ext.define('casco.view.report.ReportWindow', {
                 handler : function(){
 				var datas=[],data=[];
 				var ans=Ext.create('casco.model.ReportVats');
-				right_store.each(function(record){
+				Ext.getCmp('right_store').store.each(function(record){
 				data.push(record.getData());
 				});
-				//datas[vats.store.p_id]=data;
-				datas.push({key:right_store.p_id,value:data});
+				datas.push({key:Ext.getCmp('right_store').store.p_id,value:data});
 				me.store.sync();
 				ans.set('datas',datas);
 				ans.save({callback:function(){
-				console.log(me.pointer);
-				//me.pointer.reconfigure(me.pointer.store, me.pointer.columns);
-                me.pointer.store.reload();
 				//me.down('gridpanel').getView().refresh();
+				me.up('panel').down('cover').store.reload();
 				Ext.Msg.alert('保存成功!');
-				me.destroy();
 				}});
 				}
 			},{
