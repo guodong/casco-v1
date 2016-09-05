@@ -70,28 +70,6 @@ Ext.define('casco.view.manage.Userlist', {
         }
 	   
 	},
-//	{
-//	   text:"Privileges",
-//		hidden: localStorage.role == 'staff' ? true: false,  //用户权限
-//		width: 220,
-//        renderer: function(val,meta,rec) {
-//            var id = Ext.id();
-//            Ext.defer(function() {
-//               Ext.widget('button', {
-//                  renderTo: id,
-//                  text: 'Edit Documents Privileges',
-//                  glyph: 0xf040,
-//                  //scale: 'small',
-//                  handler: function() {	  
-//					  var win = Ext.create('casco.view.manage.UserDocuments', {user:rec});
-//                      win.show();
-//                  }
-//               });
-//            }, 50);	  //？？？为什么设定延迟
-//            return Ext.String.format('<div id="{0}"></div>', id);
-//         }
-//
-//	},
 	{
 		text: "islock",
 		dataIndex: "islock",

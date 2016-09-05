@@ -2,17 +2,14 @@ Ext.define('casco.view.rs.Rs', {
 	extend: 'Ext.grid.Panel',
 	xtype: 'rs',
 	viewModel: 'main',
-	
 	requires: [
 	           'casco.store.Versions',
 	           'casco.store.Rss',
 	           'casco.view.rs.RsImport',
 	           'casco.view.rs.RsDetails',
 	           ],
-	           
-//	forceFit:true,
 	columnLines:true,
-		
+	selModel: new Ext.selection.CheckboxModel({checkOnly:true}),
 	initComponent: function() {
 		var me = this;
 		me.versions = new casco.store.Versions();
@@ -35,14 +32,11 @@ Ext.define('casco.view.rs.Rs', {
 							version_id: latest_v.get('id')
 						},
 					    callback:function(){
-                            
 					    me.columns=me.store_rs.getAt(0).get('columModle'); 
-					 
 					    me.ds = new Ext.data.JsonStore({
 										  data: (me.store_rs.getAt(0).get('data')),
 										  fields:(me.store_rs.getAt(0).get('fieldsNames'))
 						});
-                     
                         me.store_rs.setData(me.ds.getData());
 						me.reconfigure(me.store_rs,me.columns);
 
@@ -77,7 +71,6 @@ Ext.define('casco.view.rs.Rs', {
 					  fields:me.json.fieldsNames
 					 });
 					 me.columns=me.json.columModle;
-				//	 console.log(me.columns);
 					 me.store.setData(me.ds.getData());
                      me.reconfigure(me.store,me.columns); //用columns 对grid panel 重载
 					
@@ -105,15 +98,6 @@ Ext.define('casco.view.rs.Rs', {
 				win.show();
 				}   
 		},
-//		'-',{
-//			text: 'View Graph',
-//			glyph: 0xf0e8,
-//			scope: this,
-//			handler: function() {
-//				window.open('/draw/graph.html?document_id='+me.document_id);
-//			},
-//			hidden: true
-//		},
 		'-',{
 			text: 'View Statistics',
 			glyph: 0xf080,
@@ -128,6 +112,14 @@ Ext.define('casco.view.rs.Rs', {
             width: 110,
             handler : function() {
             	var win=Ext.create('casco.view.manage.Versions',{'document_id':me.document.id,'edit':1});win.show();
+            }
+        },'-',{
+            text: '批量编辑Vat',
+            glyph: 0xf05a,
+			border:true,
+            width: 110,
+            handler : function() {
+            	var win=Ext.create('casco.view.rs.MultiVats',{'project':me.project,'father':me});win.show();
             }
         },'->',{
             xtype: 'textfield',
@@ -215,13 +207,6 @@ Ext.define('casco.view.rs.Rs', {
 
 		me.listeners = {
 
-				afterrender:function(){
-				me.getEl().swallowEvent(['mousedown', 'mouseup', 'headerclick','click','beforefocus','contextmenu', 'focus','mouseover', 'mouseout','dblclick', 'mousemove', 'focusmove','focuschange', 'focus','focusin','focusenter']);
-				},
-				reconfigure:function(){
-				console.log('heheda');
-				me.getEl().swallowEvent(['mousedown', 'mouseup', 'headerclick','click','beforefocus','contextmenu', 'focus','mouseover', 'mouseout','dblclick', 'mousemove', 'focusmove','focuschange', 'focus','focusin','focusenter']);
-				},
 				itemcontextmenu :function(view,record,item,index,e){
 				e.stopEvent();
 				var grid=me;
@@ -246,7 +231,9 @@ Ext.define('casco.view.rs.Rs', {
 				},
 				celldblclick: function(a,b,c,record){
 					localStorage.tag = record.get('tag');
-					if(c==0){
+					console.log('列'+c);
+					if(c==0||c==1){
+
 						window.open('/draw/graph2.html#'+record.get('tag')+"&id="+record.get('id'));
 						return;
 					}

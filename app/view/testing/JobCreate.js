@@ -1,7 +1,6 @@
 Ext.define('casco.view.testing.JobCreate', {
 	extend: 'Ext.window.Window',
 	xtype: 'testing.jobcreate',
-
 	modal: true,
 	title: 'Create Job',
 	id: 'testing-job-create-window',
@@ -81,9 +80,6 @@ Ext.define('casco.view.testing.JobCreate', {
 						});
 						Ext.getCmp('vat_tc').setValue(r.get('tc_version').document.name+':'+r.get('tc_version').name);
 						Ext.getCmp('testing-job-rs').getStore().setData(r.get('rs_versions'));
-
-						//console.log(Ext.getCmp('testing-job-rs').getStore().getData());
-
 					}
 				}
 			},
@@ -121,9 +117,7 @@ Ext.define('casco.view.testing.JobCreate', {
 			height: 400,
 			store: Ext.create('casco.store.Tcs'),
 			selModel: {
-				type: 'checkboxmodel', //selType->type after 5.1.0
-//				allowBlank: false, //至少选一条 save still excute?
-//				blankText: '请选择测试用例',
+				type: 'checkboxmodel', 
 				checkOnly: true
 			},
 			columns: [{

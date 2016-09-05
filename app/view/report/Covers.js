@@ -1,193 +1,138 @@
-Ext.define('casco.view.report.Verify', {
-	extend: 'Ext.panel.Panel',
-	layout:'anchor',
-	xtype:'verify',
-	multiSelect : true,
-	requires: [],
-	initComponent: function() {
-		var me = this;
-		var store = Ext.create('casco.store.Verify', {
-    		proxy: {
-    			extraParams: {
-    			report_id:me.report.get('id'),
-				doc_id:me.doc_id?me.doc_id:null
-    			}
-    		}
-    	});
-		store.load({
-	      scope: this,
-          callback: function(records, operation, success) {
-		  if(!records||records.length==0){
-		  Ext.destroy(me);
-		  }
-		  }
-          });
-		var resultStore = Ext.create('Ext.data.Store', {
-        	model: 'casco.model.Result',
-            data : [
-	            {label: '<span style="color:blue">untested</span>', value: 0},
-                {label: '<span style="color:green">passed</span>', value: 1},
-                {label: '<span style="color:red">failed</span>', value: -1},
+Ext.override(Ext.grid.ColumnManager,{
+ getHeaderIndex: function(header) {
+	 //屌不屌?
+        if (header&&header.isGroupHeader) {
+            // Get the first header for the particular group header. The .getHeaderColumns API
+            // will sort out if it's to be just visible columns or all columns.
+            header = this.getHeaderColumns(header)[0];
+        }
+        return Ext.Array.indexOf(this.getColumns(), header);
+    }
+});
+Ext.define('casco.view.report.Cover', {
+    extend: 'Ext.grid.Panel',
+    xtype: 'cover',
+    collapsible: true,
+    animCollapse: false,
+    initComponent: function () {
+        var me = this;
+        me.store = new casco.store.ReportCover();
+        me.store.load({
+            params: {
+                report_id: me.report?me.report.get('id'):null  //其他参数？
+            },
+            synchronous: true
+        });
+        var resultStore = Ext.create('Ext.data.Store', {
+            model: 'casco.model.Result',
+            data: [
+                {label: 'untested', value: 0},
+                {label: 'passed', value: 1},
+                {label: 'failed', value: -1},
             ]
         });
-		me.store = store;
-		me.tbar = [{
-			text: 'Save',
-			glyph: 0xf0c7,
-			scope: this,
-			handler:function(){  
-			 var data=[];
-			 me.store.sync({
-			 callback: function(record, operation, success){
-             },
-			 failure: function(record, operation) {
-			  me.down('gridpanel').getView().refresh(); // 这一行重要哇我晕
-              Ext.Msg.alert('Failed','Save failed!');
-			 },
-			 success: function(record, operation) {
-			 me.down('gridpanel').getView().refresh();
-			 Ext.Msg.alert('Success', 'Saved successfully.');
-			 }
-			 }); 
-			
-			}
-		},{
-			text: 'Export',
-			glyph: 0xf1c3,
-			handler: function() {
-				console.log(me.doc_id);
-			 	window.open(API+'center/export_verify?report_id='+(me.report.get('id')||'')+'&doc_id='+(me.doc_id||''));
-            	return;
-			}
-		},'-',{
-		    text: 'Refresh',
-			glyph: 0xf021,
-		    handler: function() {
-				me.store.reload();
-			}
-		},'->',{
-            xtype: 'textfield',
-            labelWidth: 50,
-            name: 'searchField', 
-            emptyText: 'Search',
-            width: 200,
-            listeners: {
-                change: {
-                    fn: me.onTextFieldChange,
-                    scope: this,
-                    buffer: 500
-                }
+		me.columns = [
+            {
+                text: 'Parent Requirement Tag',
+                dataIndex: 'Parent Requirement Tag',
+                header: 'Parent Requirement Tag',
+                width: 400,
+                sortable: true
+            },
+            {
+                text: 'Parent Requirement Text',
+                dataIndex: 'Parent Requirement Text',
+                header: 'Parent Requirement Text',
+                width: 350,
+                sortable: true
+            },
+             {
+                xtype: 'gridcolumn',
+                dataIndex: 'result',
+                fit:true,
+                renderer: function (value, metaData, record, rowIndex, colIndex, store, view) {
+                    return resultStore.findRecord('value', value).get('label');
+                },
+                text: 'Result',
+                typeAhead: false
+            }];
+        me.listeners={
+            celldblclick: function(a,b,c,record){
+				me.up('panel').down('reportwindow').record=record;
+				me.up('panel').down('reportwindow').store.load({params: {p_id: record ? record.get('id') : null}});
+				var vats = record?record.get('vats'):null, vatstr = [];
+				Ext.Array.each(JSON.parse(vats),
+					function (item, index) {
+						vatstr.push(item);
+					}
+				);
+				var right_store = new Ext.data.JsonStore({
+					auteLoad: true, //此处设置为自动加载
+					data: vatstr,
+					model: 'casco.model.ReportField',
+					p_id: record?record.get('id'):null
+				});
+				//Ext.getCmp('right_store').store=right_store;
+				Ext.getCmp('right_store').reconfigure(right_store);
             }
-       }, {
-           xtype: 'button',
-           text: '&lt;',
-           tooltip: 'Find Previous Row',
-           handler: me.onPreviousClick,
-           scope: me
-       },{
-           xtype: 'button',
-           text: '&gt;',
-           tooltip: 'Find Next Row',
-           handler: me.onNextClick,
-           scope: me
-       },{
-    	   xtype: 'checkbox',
-    	   hideLabel: true,
-    	   margin: '0 12px 0 0',
-    	   handler: me.caseSensitiveToggle,
-    	   scope: me
-       },'  区分大小写'];
-		
-		me.bbar = [{
+        },
+        me.tbar = [{
+            text: 'Export',
+            glyph: 0xf1c3,
+            scope: this,
+            handler: function () {
+                window.open(API + 'reportcover/export?report_id=' + me.report.get('id'));  //?URL
+                return;
+            }
+        },
+            '-',
+            {
+                text: 'Refresh',
+                glyph: 0xf021,
+                handler: function () {
+                    me.store.reload();
+                }
+            },
+            {text: '需求覆盖状态', xtype: 'label', margin: '0 50'},
+            '->',{
+                xtype: 'textfield',
+                labelWidth: 50,
+                name: 'searchField', 
+                emptyText: 'Search',
+                width: 200,
+                listeners: {
+                    change: {
+                        fn: me.onTextFieldChange,
+                        scope: this,
+                        buffer: 500
+                    }
+                }
+           }, {
+               xtype: 'button',
+               text: '&lt;',
+               tooltip: 'Find Previous Row',
+               handler: me.onPreviousClick,
+               scope: me
+           },{
+               xtype: 'button',
+               text: '&gt;',
+               tooltip: 'Find Next Row',
+               handler: me.onNextClick,
+               scope: me
+           },{
+        	   xtype: 'checkbox',
+        	   hideLabel: true,
+        	   margin: '0 12px 0 0',
+        	   handler: me.caseSensitiveToggle,
+        	   scope: me
+           },'  区分大小写'];
+        
+        me.bbar = [{
 			 xtype: 'statusbar',
 			 defaultText:me.defaultStatusText,
 			name:'searchStatusBar'
 		 }];
-		
-	var north_columns=[
-	{
-		text: "Req ID",
-		dataIndex: "id",
-		hidden:true
-	}, 
-	{
-		text: "Req ID",
-		dataIndex: "tag",
-		width: 120
-	}, 
-	{
-		text: "Description",
-		dataIndex: "description",
-		width: 120
-	},
-	{
-		    xtype: 'gridcolumn',
-		    dataIndex: 'result',
-			width: 120,
-		    renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
-		        return resultStore.findRecord('value', value).get('label');
-		    },
-		    text: 'Result',
-			typeAhead:false, 
-		    editor: {
-		        xtype: 'combobox',
-				disabledCls: '',
-		        queryMode: 'local',
-				displayField: 'label',
-				valueField: 'value',
-				editable: false,
-				readOnly: true,
-		        store: resultStore,
-		        listeners: {
-		        	select: function(combo, r){
-	        		/*	var rd = me.getSelectionModel().getSelection()[0];
-		        		if(r.get('value') != 0){
-		        			rd.set('exec_at', Ext.Date.format(new Date(), 'Y-m-d H:i:s'));
-		        		}
-	        			Ext.each(rd.get('tc').steps, function(step){
-	        				step.result = r.get('value');
-	        			});
-	        			Ext.getCmp('testing-step-panel').down('grid').reconfigure();
-						*/
-		        	}
-		        }
-		    }
-		}, {
-		text: "Test case ID",
-		dataIndex: "test_case",
-		width: 120
-	}, {
-		text: "Comment",
-		dataIndex: "comment",
-		editor:{xtype:'textfield'},
-		width: 120
-	}];
-	
-     me.items = [{
-			xtype: 'gridpanel',
-			forceFit:true,
-			title:'',
-			plugins: {
-			ptype: 'cellediting',
-			clicksToEdit: 1
-			},
-			selModel:new Ext.selection.Model({mode:"MULTI"}),
-			columns:north_columns,
-			anchor:'100%, 100%',
-			forceFit:true,
-			region:'north',
-			//height:'%60',
-			store:store,
-			collapsable: true
-		}];
-	  me.callParent();
-	},
-	
-    listeners : {
-        itemdblclick: function(dv, record, item, index, e) {
-        	//if(localStorage.role == 'staff') return;  //用户权限
-			Ext.Msg.alert('Warning','不可编辑!');
-        }
+        this.callParent();
     },
     
     /*
@@ -336,6 +281,7 @@ Ext.define('casco.view.report.Verify', {
        caseSensitiveToggle: function(checkbox, checked) {
            this.caseSensitive = checked;
            this.onTextFieldChange();
-       },
+       }
 
-});
+
+})

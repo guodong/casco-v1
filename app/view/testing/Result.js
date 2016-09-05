@@ -1,10 +1,8 @@
 Ext.define('casco.view.testing.Result', {
     extend: 'Ext.grid.Panel',
     xtype: 'testing.result',
-
     bodyPadding: 0,
     bufferedRenderer: false, //Solution:Uncaught TypeError: Failed to execute 'insertBefore' on 'Node': parameter 1 is not of type 'Node'.
-    
     plugins: {
         ptype: 'cellediting',
         clicksToEdit: 1
@@ -87,9 +85,13 @@ Ext.define('casco.view.testing.Result', {
 		 if(rows!=undefined){
 		 Ext.Array.each(rows,function(item){
 		 item.set(newValue);
+		 Ext.each(item.get('tc').steps, function(step){
+		 step.result=newValue.result;
 		 });
-		  me.getView().refresh();
-		 }
+		 Ext.getCmp('testing-step-panel').down('grid').reconfigure();
+		 });
+		  // me.getView().refresh();
+		 }//if
 		}
 		me.customMenuItemsCache = [];
 		me.columns = [{
@@ -250,15 +252,12 @@ Ext.define('casco.view.testing.Result', {
 			}
 		},{
 			text: 'Export Result',
-//			glyph: 0xf019,
-//			scope: this,
 			xtype: 'combobox',
             editable: false,
             displayField: 'name',
             valueField: 'id',
             store: me.tmpstore,
             queryMode: 'local',
-			//itemId:'switcher',	//ManagerController
             emptyText: 'Export Results',
             listeners: {
             	select:  function(combo, record) {

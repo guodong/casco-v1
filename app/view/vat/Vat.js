@@ -53,11 +53,6 @@ Ext.define('casco.view.vat.Vat', {
             title: '',
 			id:'vatpanel',
 			reference: 'rightpanel',
-//			plugin: Ext.create('Ext.ux.TabCloseMenu', {  
-//                closeTabText : '关闭当前页',  
-//                closeOthersTabsText : '关闭其他页',  
-//                closeAllTabsText : '关闭所有页'  
-//            }), 
             items:[{
             	'xtype': 'vat.view',
 				'title': 'Vat Build Lists',

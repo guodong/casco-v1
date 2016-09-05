@@ -84,7 +84,6 @@ Ext.define('casco.view.vat.VatCreate', {
 			id: 'vat-view-rs',
 			region: 'center',
 			store: rsdocs,
-//			columnLines: true,
 			plugins: {
 		        ptype: 'cellediting',
 		        clicksToEdit: 1,
@@ -104,7 +103,6 @@ Ext.define('casco.view.vat.VatCreate', {
 				text: 'Version',
 				dataIndex: 'version_id',
 				renderer: function(v, md, record){
-//					console.log(record);
 					var versions = record.get('versions');
 					if(versions.length == 0) return;
 					if(!v){

@@ -12,7 +12,6 @@ Ext.define('casco.view.vat.VatTcRelations',{
 		var me = this;
 		me.store=Ext.create('Ext.data.Store');
 		me.store.loadData(me.relations);
-		
 		me.columns = [{
 			text: 'Req-Tag',
 			dataIndex: 'rs_tag_name',
