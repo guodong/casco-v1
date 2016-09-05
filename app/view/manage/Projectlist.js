@@ -38,15 +38,15 @@ Ext.define('casco.view.manage.Projectlist', {
 	columns: [{
 		text: "name",
 		dataIndex: "name",
-		width: 130
+		width: 150
 	},{
 		text: "description",
 		dataIndex: "description",
-		width: 130
+		width: 200
 	},{
 		text: "participants",
 		dataIndex: "participants",
-		width: 130,
+		flex: 1,
 		renderer: function(ps){
 			var users = [];
 			for(var i in ps){
@@ -55,15 +55,15 @@ Ext.define('casco.view.manage.Projectlist', {
 			return users.join(',');
 		}
 	}, {
-		text:"Documents",
+		text:"Edit Docs",
 		hidden: localStorage.role == 'staff' ? true: false,  //用户权限
-		width: 150,
+		width: 100,
         renderer: function(val,meta,rec) {
             var id = Ext.id();
             Ext.defer(function() {
                Ext.widget('button', {
                   renderTo: id,
-                  text: 'Edit Documents',
+//                  text: 'Edit Documents',
                   glyph: 0xf040,
                   scale: 'small',
                   handler: function() {
@@ -75,14 +75,34 @@ Ext.define('casco.view.manage.Projectlist', {
             return Ext.String.format('<div id="{0}" style="margin-left:auto;margin-right:auto"></div>', id);
          }
       },{
-    	  text:"Build",
-		  width:130,
+    	  text: 'Edit Vat',
+    	  hidden: localStorage.role == 'staff' ? true: false,  //用户权限
+    	  width: 100,
+    	  renderer: function(val,meta,rec){
+    		  var id = Ext.id();
+    		  Ext.defer(function(){
+    			  Ext.widget('button',{
+    				  renderTo: id,
+//    				  text: 'Edit Vat',
+    				  glyph: 0xf040,
+    				  scale: 'small',
+    				  handler: function(){
+    					  var win = Ext.create('casco.view.manage.VatlistWindow',{project: rec});
+    					  win.show();
+    				  }
+    			  });
+    		  },50);
+    		  return Ext.String.format('<div id="{0}"></div>', id);
+    	  }
+      },{
+    	  text:"Edit Build",
+		  width:100,
           renderer:function(val,meta,rec){
 		  var id=Ext.id();
 		   Ext.defer(function(){
 			  Ext.widget('button', {
 			      renderTo:id,
-			      text:'View   Build',
+//			      text:'Edit Build',
 				  glyph: 0xf040,
                   scale: 'small',
                   handler: function() {
@@ -97,14 +117,13 @@ Ext.define('casco.view.manage.Projectlist', {
           }
 	  },{
 		text:"statistics",
-		width: 110,
+		width: 130,
         renderer: function(val,meta,rec) {
             var id = Ext.id();
-			 
             Ext.defer(function() {
                Ext.widget('button', {
                   renderTo: id,
-                  text: 'Statistic',
+//                  text: 'Statistic',
                   scale: 'small',
                   glyph: 0xf0ce,
                   handler: function() {

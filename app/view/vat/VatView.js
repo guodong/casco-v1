@@ -13,14 +13,14 @@ Ext.define('casco.view.vat.VatView',{
 	
     initComponent: function(){
     	var me = this;
-    	var p_id=me.id;
     	me.store = new casco.store.Vats();
     	me.store.load({
     		params: {
     			project_id: me.project.get('id'),
-				document_id:me.document.data.id
     		}
     	});
+    	console.log(me.store.getData());
+//    	var tcdocs = 
 		
 		var chioces = Ext.create('Ext.data.Store', {
 		fields: ['abbr', 'name'],
@@ -32,32 +32,20 @@ Ext.define('casco.view.vat.VatView',{
 		});
 		
 		me.columns = [{
-			text : 'name',
+			text : 'Name',
 			dataIndex: 'name'
 		},{
-			text: 'description',
+			text: 'Description',
 			dataIndex: 'description'
-		},{
-			text : 'tc',
-			dataIndex : 'tc_version',
-			renderer : function(v) {
-				return v?v.document.name:'';
-			}
 		}, {
-			text : 'tc version',
-			dataIndex : 'tc_version',
-			renderer : function(v) {
-				return v?v.name:'';
-			}
-		}, {
-			text: 'rs:version',
-			dataIndex: 'rs_versions',
+			text: 'Doc Version',
+			dataIndex: 'doc_versions',
 			flex: 1,
 			renderer: function(value,metadata,record){ //value-rs_versions(current cell); metadata-cell metadata; record-Ext.data.Model
 				return getPreview(value,metadata,record);
 			}
 		}, {
-			text: 'created at',
+			text: 'Created At',
 			dataIndex: 'created_at',
 			width: 150
 		},{
@@ -67,8 +55,14 @@ Ext.define('casco.view.vat.VatView',{
 			renderer:function(val_id,metaData,rec){ //data value from current cell,column_cell,vat_build_data
 			 var id = Ext.id();
              Ext.defer(function(e) {	//延迟调用 miliseconds
-               	Ext.create('Ext.button.Button', {
-				text: 'Show Relation',
+               	Ext.create('Ext.form.ComboBOx', {
+               		store: states,
+    				queryMode: 'local',
+    				displayField: 'name',
+    				valueField: 'abbr',
+                    glyph: 0xf0ce,
+    				val_id:val_id,//依赖注入,组件扩展性很好哇
+    			    emptyText: 'Switch View',
 				renderTo: id,
 				handler: function(){
 //					console.log(rec);
@@ -240,14 +234,15 @@ Ext.define('casco.view.vat.VatView',{
 		
 		function getPreview(value,metadata,record){ //record-rsversions
 			var tmp = [];
-//			tmp.push("RS文档版本信息：");
-			var rsvs = record.data.rs_versions;
-			for(var i in rsvs){
-				var str = "["+rsvs[i].document.name + "-" + rsvs[i].name+"]";
+			var docvs = record.data.doc_versions;
+			for(var i in docvs){
+				var str = "["+docvs[i].document.name + "-" + docvs[i].name+"]";
 				tmp.push(str);
 			}
 			var value = tmp.join('  ');
-		    metadata.tdAttr = 'data-qtip="' + "RS文档信息:  <br/>"+value + '"' ; //提示信息
+			if(value){
+				metadata.tdAttr = 'data-qtip="' + "文档版本信息:  <br/>"+value + '"' ; //提示信息
+			}
 		    return value;
 		};
 		

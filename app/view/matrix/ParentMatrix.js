@@ -24,9 +24,19 @@ Ext.define('casco.view.matrix.ParentMatrix', {
            ]
 		});
 		me.stack=[];
-        me.selModel=me.selModel?me.selModel:'';		// 赋值作用？？？
         me.child_type=me.verification.get('child_version').document.type;
 		me.matrix = new casco.store.ParentMatrix();
+		console.dir(me.matrix);
+//		me.matrix.load({
+//			params:{
+//				id: me.verification.get('id'),
+//				parent_v_id:me.parent_v_id
+//			}
+//		});
+//		me.store=Ext.create('Ext.data.Store');
+//		console.dir(me.matrix.getData().items[0]);
+//		me.store.setData(me.matrix.getData());
+//		console.dir(me.store);
 		me.matrix.load({
 			params:{
 				id: me.verification.get('id'),
@@ -35,30 +45,33 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			synchronous: true,		// 同步作用 ？？？
 			callback: function(record){
 				me.columns=me.columns_store;
-				me.ds = new Ext.data.JsonStore({
-							  data: record[0].get('data'),
-							  fields:record[0].get('fieldsNames')
-				});
-				me.matrix.setData(me.ds.getData());
+				console.dir(record[0]);  //或者转化成JSON
+				console.log(record[0].get('columModle'));
+//				me.ds = new Ext.data.JsonStore({
+//							  data: record[0].get('data'),
+//							  fields:record[0].get('fieldsNames')
+//				});
+//				console.log(me.ds);
+				me.matrix.setData(record[0].get('data'));
 				Ext.Array.forEach(record[0].get('columModle'),function(item){	// 具体参见动态列的实现
 					var column = Ext.create('Ext.grid.column.Column', {  
 						text: item['header']+' (P)//(C)',
 						width:140,  
 						dataIndex: item['dataIndex']  
 					});  
-					me.columns.push(column);
+					Ext.Array.include(me.columns,column);
+//					me.columns.push(column);
 				});
-				me.store.setData(me.matrix.getData());
 			me.reconfigure(me.matrix,me.columns);
+			me.store.setData(me.matrix.getData());
 			me.customMenuItemsCache = [];
+			console.log(me.getView().getHeaderCt());
 			me.headerCt.on('menucreate', function (cmp, menu) {
             menu.on('beforeshow', me.showHeaderMenu, me);
 			}, me);
-
-			
-            
-		    }// callback
+		  }// callback
 		});  
+		
 		 
 		 me.plugins=[{
 		        ptype: 'cellediting',
@@ -74,22 +87,61 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 			text: 'Save',
 			glyph: 0xf080,
 			scope: this,
-			handler:function(){  
-             if(me.verification.get('status')==0){Ext.Msg.alert('','已提交，不可编辑');return;}
-			 var data=[];
-			// 血的教训，早知道就用这了... me.matrix.sync();
-			 me.matrix.sync({
-			 callback: function(record, operation, success){
-             },
-			 failure: function(record, operation) {
-			  me.getView().refresh(); // 这一行重要哇我晕
-              Ext.Msg.alert('Failed','Save failed!');
-			 },
-			 success: function(record, operation) {
-			 me.getView().refresh();Ext.Msg.alert('Success', 'Saved successfully.');
-			 }
-			 }); 
+			handler:function(){
+				var out = [];
+				if(me.verification.get('status')==0){Ext.Msg.alert('','已提交，不可编辑');return;}
+				var updates = me.matrix.getUpdatedRecords();
+				console.log(updates);
+				updates.forEach(function(record){
+					out.push(record.getData());
+				})
+//				console.log(out);
+				Ext.Ajax.request({
+					url: API + '/parentmatrix/updateall',
+					method: 'post',
+					jsonData: {results: out},
+					success: function(){
+						me.matrix.reload();
+						console.log(me.getView().getHeaderCt());
+//						me.reconfigure(me.matrix);
+						me.getView().refresh();
+						Ext.Msg.alert('Success', 'Saved successfully.')
+					}
+				});
+					
+				
+					
+//				me.getStore().each(function(record){
+//					out.push({id: r.get('id'), begin_at: r.get('begin_at'), end_at: r.get('end_at'), result: r.get('result'), cr:r.get('cr'), steps: steps});
+//				});
+//				Ext.Ajax.request({
+//					url: API + '/result/updateall',
+//					method: 'post',
+//					jsonData: {results: out},
+//					success: function(){
+////						me.getView().refresh();
+//						me.store.reload();
+//						Ext.Msg.alert('Success', 'Saved successfully.')
+//					}
+//				});
 			}
+			
+//			handler:function(){  
+//             if(me.verification.get('status')==0){Ext.Msg.alert('','已提交，不可编辑');return;}
+//			 var data=[];
+//			// 血的教训，早知道就用这了... me.matrix.sync();
+//			 me.matrix.sync({
+//			 callback: function(record, operation, success){
+//             },
+//			 failure: function(record, operation) {
+//			  me.getView().refresh(); // 这一行重要哇我晕
+//              Ext.Msg.alert('Failed','Save failed!');
+//			 },
+//			 success: function(record, operation) {
+//			 me.getView().refresh();Ext.Msg.alert('Success', 'Saved successfully.');
+//			 }
+//			 }); 
+//			}
 		},'-',{text: 'Export',
 			glyph: 0xf080,
 			scope: this,
@@ -316,7 +368,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 //							
 //							console.log(colIndex); 
 //						    console.log(grid);
-////							console.log(c.up().grid.columns); //理论上，应该遍历查找colIndex,但表格固定就可以不用
+//							console.log(c.up().grid.columns); //理论上，应该遍历查找colIndex,但表格固定就可以不用
 //						    
 //						},
 //					},

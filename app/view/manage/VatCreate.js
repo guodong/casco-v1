@@ -1,24 +1,37 @@
-Ext.define('casco.view.vat.VatCreate', {
+Ext.define('casco.view.manage.VatCreate', {
 	extend: 'Ext.window.Window',
-//	xtype: 'vat.vatcreate',
+	requires: ['casco.view.vat.VatController'],
+	xtype: 'vat.vatcreate',
 	modal: true,
 	controller: 'vat',
 	
-	title: 'Create Vat View',
+	title: 'Create Vat Build',
 	id: 'vat-view-create-window',
 	layout: {
 		type: 'border'
 	},
-	height: 400,
-	width: 700,
+	height: 500,
+	width: 800,
 	
 	initComponent: function() {
 		var me = this;
 		me.rs_versions = [];
-		var tcvs = Ext.create('casco.store.Versions');
-		tcvs.load({
+		console.log(me.project.get('id'));
+		var docs = Ext.create('casco.store.Documents');
+		docs.load({
+			params: {project_id: me.project.id},
+		});
+		docs.filter(new Ext.util.Filter({
+			filterFn: function(item){
+				return item.getData().type!='folder'; //过滤掉folder
+			}
+		}));
+		console.log(docs);
+		var tcdocs = Ext.create('casco.store.Documents');
+		tcdocs.load({
 			params:{
-				document_id: me.document.get('id')
+				project_id: me.project.get('id'),
+				type: 'tc'
 			}
 		});
 		var rsdocs = Ext.create('casco.store.Documents');
@@ -36,7 +49,7 @@ Ext.define('casco.view.vat.VatCreate', {
 			split: true,
 			reference: 'vat_view_create_form',
 			bodyPadding: '10',
-			width: 300,
+			width: 200,
 			items: [{
 				xtype: 'hiddenfield',
 				name: 'project_id',
@@ -44,34 +57,12 @@ Ext.define('casco.view.vat.VatCreate', {
 			},{
 				xtype: 'textfield',
 				fieldLabel: 'Name',
+				labelAlign: 'top',
 				name: 'name',
 				msgTarget: 'under',
 				allowBlank:false, 
-				blankText:"请输入自定义名称"
+				blankText:"请输入Vat Build名称"
 			}, {
-				xtype: 'textfield',
-				fieldLabel: 'Tc Doc',
-				name: 'tc',
-				value: me.document.data.name
-			}, {
-				fieldLabel: 'Tc Version',
-				name: 'tc_version_id',
-				store: tcvs,
-				id: 'tc-version',
-				xtype: 'combobox',
-				allowBlank: false,
-				editable: false,
-				queryMode: 'local',
-				displayField: 'name',
-				valueField: 'id',
-				listeners: {
-					select: function(f, r, i) {
-						var grid = Ext.getCmp('vat-view-rs');
-						me.vat.rs_versions = grid.getStore();
-						console.log(me.vat);
-					}
-				}
-			},{
 				xtype: 'textarea',
 				fieldLabel: 'Description',
 				labelAlign:'top',
@@ -81,9 +72,11 @@ Ext.define('casco.view.vat.VatCreate', {
 			}]
 		}, {
 			xtype: 'grid',
-			id: 'vat-view-rs',
-			region: 'center',
-			store: rsdocs,
+			id: 'vat-view-tc',
+			region: 'east',
+			store: tcdocs,
+			width: 300, //important to avoid layout run failed
+			split: true,
 //			columnLines: true,
 			plugins: {
 		        ptype: 'cellediting',
@@ -92,17 +85,70 @@ Ext.define('casco.view.vat.VatCreate', {
 		            beforeedit: function(editor, e) {
 		            	var combo = e.grid.columns[e.colIdx].getEditor(e.record);
 		            	var st = Ext.create('casco.store.Versions', {data: e.record.get('versions')});
+		            	console.log(st);
 		            	combo.setStore(st);
 		            }
 		        }
 		    },
 		    columns: [{
-				text: 'Rs doc',
+				text: 'Tc Docs',
 				dataIndex: 'name',
-				width: 250
+				width: 150
 			}, {
 				text: 'Version',
 				dataIndex: 'version_id',
+				width: 150,
+				renderer: function(v, md, record){
+					console.log(record);
+					var versions = record.get('versions');
+					if(versions.length == 0) return;
+					if(!v){
+						record.set('version_id', versions[0].id);
+						return versions[0].name;
+					}
+					for(var i in versions){
+						if(v == versions[i].id){
+							return versions[i].name;
+						}
+					}
+				},
+				editor: {
+			        xtype: 'combobox',
+			        queryMode: 'local',
+					displayField: 'name',
+					valueField: 'id',
+					editable: false
+			    }
+			}]
+		
+		},{
+			xtype: 'grid',
+			id: 'vat-view-rs',
+			region: 'center',
+			store: rsdocs,
+			width: 300,
+//			columnLines: true,
+			plugins: {
+		        ptype: 'cellediting',
+		        clicksToEdit: 1,
+		        listeners: {
+		            beforeedit: function(editor, e) {
+		            	console.log(e);
+		            	var combo = e.grid.columns[e.colIdx].getEditor(e.record);
+		            	var st = Ext.create('casco.store.Versions', {data: e.record.get('versions')});
+		            	console.log(st);
+		            	combo.setStore(st);
+		            }
+		        }
+		    },
+		    columns: [{
+				text: 'Rs Docs',
+				dataIndex: 'name',
+				width: 150
+			}, {
+				text: 'Version',
+				dataIndex: 'version_id',
+				flex: 1,
 				renderer: function(v, md, record){
 //					console.log(record);
 					var versions = record.get('versions');

@@ -35,29 +35,18 @@ Ext.define('casco.view.vat.Vat', {
     
     initComponent: function(){
     	var me = this;
-        me.store = Ext.create('casco.store.TreeDocuments', {
-    		proxy: {
-    			extraParams: {
-    				project_id: me.project?me.project.get('id'):''
-    			}
-    		}
-    	});
+        me.store = Ext.create('casco.store.Vats');
+        me.store.load({
+        	params: {
+        		project_id: me.project.get('id'),
+        	}
+        });
+        console.log(me.store);
     	me.items = [{
             region: 'north',
             xtype: 'vat_top',
             reference:'top',
             project: me.project
-        },{
-            xtype: 'vat_tree',
-            store: me.store,
-            title: me.project.get('name'),
-            project: me.project,
-            region: 'west',
-            width: 150,
-            split: true,
-            collapsible: true,
-            editable: false,
-            bodyPadding: 0
         },{
             region: 'center',
             xtype: 'tabpanel',
@@ -70,8 +59,11 @@ Ext.define('casco.view.vat.Vat', {
 //                closeAllTabsText : '关闭所有页'  
 //            }), 
             items:[{
-                title: 'Overview',
-                html: '<iframe id="draw" src="/draw/noedit.html?'+me.project.get('id')+'" style="width:100%;height:100%;border:0"></iframe>'
+            	'xtype': 'vat.view',
+				'title': 'Vat Build Lists',
+				'id': 'vatlist'+me.project.get('id'),
+				'project': me.project,
+//				'closable': false
             }]
         }];
     	this.callParent();

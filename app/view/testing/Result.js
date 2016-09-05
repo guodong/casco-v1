@@ -283,6 +283,7 @@ Ext.define('casco.view.testing.Result', {
 					});
 					out.push({id: r.get('id'), begin_at: r.get('begin_at'), end_at: r.get('end_at'), result: r.get('result'), cr:r.get('cr'), steps: steps});
 				});
+				console.log(out);
 				Ext.Ajax.request({
 					url: API + '/result/updateall',
 					method: 'post',

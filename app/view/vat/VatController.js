@@ -23,28 +23,34 @@ Ext.define('casco.view.vat.VatController', {
 	
 	createVat: function(){
 		var form = this.lookupReference('vat_view_create_form');
-		var meta = form.getValues(); //tc info
+		var meta = form.getValues(); //vatbuild_info
 		var rsvsd = Ext.getCmp('vat-view-rs').getStore(); //RS info
-		var rsvss = [];
+		var tcvsd = Ext.getCmp('vat-view-tc').getStore();
+		var docvs = [];
 		rsvsd.each(function(v){
 			var obj = {
-				rs_document_id: v.get('id'),
-				rs_version_id: v.get('version_id')
+				doc_document_id: v.get('id'),
+				doc_version_id: v.get('version_id'),
+				doc_type: 'rs',
 			}
-			rsvss.push(obj);//放入的是一个对象啊
+			docvs.push(obj);//放入的是一个对象啊
 		});
-		console.log(rsvss);
-		meta.rs_versions = rsvss;
+		tcvsd.each(function(v){
+			var obj = {
+				doc_document_id: v.get('id'),
+				doc_version_id: v.get('version_id'),
+				doc_type: 'tc',
+			}
+			docvs.push(obj);//放入的是一个对象啊
+		});
+		console.log(docvs);
+		meta.doc_versions = docvs;
 		var vat = Ext.create('casco.model.Vat', meta);
 		vat.save({
 			callback: function(record,operation){
 				if(record.data){
-					var tabs=Ext.getCmp('vatpanel');
-					var childs=tabs.items;
-					childs.each(function(record){
-						console.log(record);
-						record.store.reload();
-					});
+					var vatlist=Ext.getCmp('vat_list');
+					vatlist.store.reload();
 					Ext.Msg.alert('','创建成功!');
 				//Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
 				}else{
