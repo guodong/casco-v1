@@ -16,7 +16,6 @@ Ext.define('casco.view.manage.VatCreate', {
 	initComponent: function() {
 		var me = this;
 		me.rs_versions = [];
-		console.log(me.project.get('id'));
 		var docs = Ext.create('casco.store.Documents');
 		docs.load({
 			params: {project_id: me.project.id},
@@ -26,7 +25,6 @@ Ext.define('casco.view.manage.VatCreate', {
 				return item.getData().type!='folder'; //过滤掉folder
 			}
 		}));
-		console.log(docs);
 		var tcdocs = Ext.create('casco.store.Documents');
 		tcdocs.load({
 			params:{
@@ -41,7 +39,6 @@ Ext.define('casco.view.manage.VatCreate', {
 				type: 'rs'
 			}
 		});
-		console.log(rsdocs);
 		
 		me.items = [{
 			xtype: 'form',
@@ -99,7 +96,6 @@ Ext.define('casco.view.manage.VatCreate', {
 				dataIndex: 'version_id',
 				width: 150,
 				renderer: function(v, md, record){
-					console.log(record);
 					var versions = record.get('versions');
 					if(versions.length == 0) return;
 					if(!v){

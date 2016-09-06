@@ -47,7 +47,6 @@ Ext.define('casco.view.manage.Vatlist',{
 				var vv = Ext.create('casco.model.Vat',{
 					id: null
 				});
-				console.log(vv);
 				var win = Ext.create('widget.vat.vatcreate', {
 					project: me.project,
 					vat: vv

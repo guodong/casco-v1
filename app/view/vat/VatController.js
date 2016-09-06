@@ -21,45 +21,6 @@ Ext.define('casco.view.vat.VatController', {
 		location.reload();
 	},
 	
-	createVat: function(){
-		var form = this.lookupReference('vat_view_create_form');
-		var meta = form.getValues(); //vatbuild_info
-		var rsvsd = Ext.getCmp('vat-view-rs').getStore(); //RS info
-		var tcvsd = Ext.getCmp('vat-view-tc').getStore();
-		var docvs = [];
-		rsvsd.each(function(v){
-			var obj = {
-				doc_document_id: v.get('id'),
-				doc_version_id: v.get('version_id'),
-				doc_type: 'rs',
-			}
-			docvs.push(obj);//放入的是一个对象啊
-		});
-		tcvsd.each(function(v){
-			var obj = {
-				doc_document_id: v.get('id'),
-				doc_version_id: v.get('version_id'),
-				doc_type: 'tc',
-			}
-			docvs.push(obj);//放入的是一个对象啊
-		});
-		console.log(docvs);
-		meta.doc_versions = docvs;
-		var vat = Ext.create('casco.model.Vat', meta);
-		vat.save({
-			callback: function(record,operation){
-				if(record.data){
-					var vatlist=Ext.getCmp('vat_list');
-					vatlist.store.reload();
-					Ext.Msg.alert('','创建成功!');
-				//Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
-				}else{
-					Ext.Msg.alert('创建失败!',JSON.stringify(record.data.data));
-				}
-				Ext.getCmp('vat-view-create-window').destroy();
-			}//callback
-		});
-	},
 
 	manage : function() {
 		this.redirectTo('manage', true);

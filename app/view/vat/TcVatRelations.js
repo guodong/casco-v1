@@ -68,15 +68,17 @@ Ext.define('casco.view.vat.TcVatRelations',{
                 window.open(API + 'vat/assign?vat_build_id='+me.vatbuild_id+'&tc_version_id='+me.tc_version_id+ '&rs_version_id=' +me.rs_version_id);  
                 return;
             }
-        },{
-        	text: 'Export All',
-        	glyph: 0xf1c3,
-        	scope: this,
-        	handler: function(){
-        		window.open(API+'vat/export_all?vat_build_id='+me.vatbuild_id+'&type=Assign');
-        		return;
-        	}
-        },'->',{
+        },
+//        {
+//        	text: 'Export All',
+//        	glyph: 0xf1c3,
+//        	scope: this,
+//        	handler: function(){
+//        		window.open(API+'vat/export_all?vat_build_id='+me.vatbuild_id+'&type=Assign');
+//        		return;
+//        	}
+//        },
+        '->',{
             xtype: 'textfield',
             fieldLabel: 'Search',  
             labelWidth: 50,

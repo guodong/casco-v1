@@ -38,7 +38,6 @@ Ext.define('casco.view.manage.ManageController', {
 			}
 			docvs.push(obj);//放入的是一个对象啊
 		});
-		console.log(docvs);
 		meta.doc_versions = docvs;
 		var vat = Ext.create('casco.model.Vat', meta);
 		vat.save({
