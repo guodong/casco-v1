@@ -36,6 +36,7 @@ Ext.define('casco.view.vat.TcVatRelations',{
 			text: 'Vat',
 			dataIndex: 'rs_vat',
 			width: '25%',
+			flex: 1,
 			renderer: function(value,metadata,record){ 
 				if(value){
 					metadata.tdAttr = 'data-qtip="' + "Vat信息:  <br/>"+value + '"' ; //提示信息
@@ -60,13 +61,21 @@ Ext.define('casco.view.vat.TcVatRelations',{
 		}];
 		
 		me.tbar=[{
-            text: 'Export Excel',
+            text: 'Export',
             glyph: 0xf1c3,
             scope: this,
             handler: function () {
-                window.open(API + 'vat/assign?vat_build_id='+me.vatbuild_id + '&rs_version_id=' +me.rs_version_id);  
+                window.open(API + 'vat/assign?vat_build_id='+me.vatbuild_id+'&tc_version_id='+me.tc_version_id+ '&rs_version_id=' +me.rs_version_id);  
                 return;
             }
+        },{
+        	text: 'Export All',
+        	glyph: 0xf1c3,
+        	scope: this,
+        	handler: function(){
+        		window.open(API+'vat/export_all?vat_build_id='+me.vatbuild_id+'&type=Assign');
+        		return;
+        	}
         },'->',{
             xtype: 'textfield',
             fieldLabel: 'Search',  

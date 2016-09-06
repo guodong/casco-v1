@@ -3,7 +3,7 @@ Ext.define('casco.view.manage.VatCreate', {
 	requires: ['casco.view.vat.VatController'],
 	xtype: 'vat.vatcreate',
 	modal: true,
-	controller: 'vat',
+	controller: 'manage',
 	
 	title: 'Create Vat Build',
 	id: 'vat-view-create-window',

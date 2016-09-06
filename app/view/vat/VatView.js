@@ -10,6 +10,27 @@ Ext.define('casco.view.vat.VatView',{
 //    bodyPadding: 0,
 	forceFit:true,
 	columnLines: true,
+	plugins: {
+        ptype: 'cellediting',
+        clicksToEdit: 1,
+        listeners: {
+            beforeedit: function(editor, e) {
+            	var combo = e.grid.columns[e.colIdx].getEditor();
+            	console.log(e);
+            	var tcdocs = [];
+            	var doc_vers = e.record.get('doc_versions');
+				doc_vers.forEach(function(value,index,arr){
+					if(value.document.type == 'tc'){
+//						value.vat_build_id = e.record.id;
+						tcdocs.push(value);
+					}
+				});
+            	var st = Ext.create('casco.store.Versions', {data: tcdocs,});
+            	console.log(st);
+            	combo.setStore(st);
+            }
+        }
+    },
 	
     initComponent: function(){
     	var me = this;
@@ -19,8 +40,11 @@ Ext.define('casco.view.vat.VatView',{
     			project_id: me.project.get('id'),
     		}
     	});
-    	console.log(me.store.getData());
-//    	var tcdocs = 
+//    	console.log(me.store.getData().items);
+    	var tcdocs_store = Ext.create('Ext.data.Store',{
+    		loading: true,
+			fields: ['tc_version_id','tc_doc'],
+		});
 		
 		var chioces = Ext.create('Ext.data.Store', {
 		fields: ['abbr', 'name'],
@@ -49,172 +73,129 @@ Ext.define('casco.view.vat.VatView',{
 			dataIndex: 'created_at',
 			width: 150
 		},{
-			text:'view',
-			dataIndex:'id',
-			width:130,
-			renderer:function(val_id,metaData,rec){ //data value from current cell,column_cell,vat_build_data
-			 var id = Ext.id();
-             Ext.defer(function(e) {	//延迟调用 miliseconds
-               	Ext.create('Ext.form.ComboBOx', {
-               		store: states,
-    				queryMode: 'local',
-    				displayField: 'name',
-    				valueField: 'abbr',
-                    glyph: 0xf0ce,
-    				val_id:val_id,//依赖注入,组件扩展性很好哇
-    			    emptyText: 'Switch View',
-				renderTo: id,
-				handler: function(){
-//					console.log(rec);
-					var tab_json=[];
-					var vatres = Ext.create('casco.store.VatRelations');
-					vatres.load({
-						params: {
-							vat_build_id: val_id
-						}
-					});
-					vatres.on('load',function(){ //Store加载
-						var vatres_data = vatres.getData().items[0];
-//						console.log(vatres_data.get('vat_tc'));
-						if(vatres_data.get('parent_vat')!=[]){
-							var tmps=[];
-							Ext.Array.each(vatres_data.get('parent_vat'),function(v){
-//								console.log(v);
-								var tmp={
-									'xtype': 'tc_vat_relations',
-//									'title': v[0].rs_doc_name+'_'+vatres_data.data.vat_build_name,
-									'title': v[0].rs_doc_name,
-									'id': 'vatrelations-p'+val_id+v[0].rs_version_id,
-									'relations': v,
-									'vatbuild_id': val_id,
-									'rs_version_id': v[0].rs_version_id,
-									'closable': true,
-								};
-								tmps.push(tmp);
-							});
-							tab_json.push({title:'本阶段分配给其他阶段的', xtype: 'tabpanel',items:tmps,'closable':true});
-						}
-						if(vatres_data.get('vat_tc')!=[]){
-							var tmps=[];
-							Ext.Array.each(vatres_data.get('vat_tc'),function(v){
-//								console.log(v[0].rs_doc_name);
-								var tmp={
-									'xtype': 'vat_tc_relations',
-//									'title': v[0].rs_doc_name+'_'+vatres_data.data.vat_build_name,
-									'title': v[0].rs_doc_name,
-									'id': 'vatrelations'+val_id+v[0].rs_version_id,
-									'relations': v,
-									'vatbuild_id': val_id,
-									'rs_version_id': v[0].rs_version_id,
-									'closable': true
-								};
-								tmps.push(tmp);
-							});
-							tab_json.push({title:'其他阶段分配给本阶段的', xtype: 'tabpanel',items:tmps,'closable':true});
-						}
+			text:'Choose TC',
+//			dataIndex:'id',
+			width:150,
+			editor: {
+		        xtype: 'combobox',
+		        queryMode: 'local',
+				displayField: 'document.name',
+				valueField: 'id',
+//				vat_build_id: 'vat_build_id',
+				editable: false,
+				emptyText: 'Choose TC',
+				listeners: {
+					select: function(combo,rec){
+						console.log(rec.get('pivot'));
+
+//						console.log(rec);
+						var tab_json=[];
+						var vatres = Ext.create('casco.store.VatRelations');
+						vatres.load({
+							params: {
+								vat_build_id: rec.get('pivot').vat_build_id,
+								tc_version_id: rec.get('pivot').doc_version_id,
+							}
+						});
+						vatres.on('load',function(){ //Store加载
+							var vatres_data = vatres.getData().items[0];
+							var val_id = vatres_data.get('vat_build_id');
+							var tcdoc_name = vatres_data.get('tc_doc_name');
+							var tcdoc_version = vatres_data.get('tc_version_id');
+							console.log(tcdoc_version);
+							console.log(vatres_data.get('vat_build_id'));
+							if(vatres_data.get('parent_vat')!=[]){
+								var tmps=[];
+								Ext.Array.each(vatres_data.get('parent_vat'),function(v){
+//									console.log(v);
+									var tmp={
+										'xtype': 'tc_vat_relations',
+//										'title': v[0].rs_doc_name+'_'+vatres_data.data.vat_build_name,
+										'title': v[0].rs_doc_name,
+										'id': 'vatrelations-p'+val_id+v[0].rs_version_id,
+										'relations': v,
+										'vatbuild_id': val_id,
+										'tc_version_id': tcdoc_version,
+										'rs_version_id': v[0].rs_version_id,
+										'closable': true,
+									};
+									tmps.push(tmp);
+								});
+								tab_json.push({title:tcdoc_name+'_本阶段分配给其他阶段的', xtype: 'tabpanel',items:tmps,'closable':true});
+							}
+							if(vatres_data.get('vat_tc')!=[]){
+								var tmps=[];
+								Ext.Array.each(vatres_data.get('vat_tc'),function(v){
+//									console.log(v[0].rs_doc_name);
+									var tmp={
+										'xtype': 'vat_tc_relations',
+//										'title': v[0].rs_doc_name+'_'+vatres_data.data.vat_build_name,
+										'title': v[0].rs_doc_name,
+										'id': 'vatrelations'+val_id+v[0].rs_version_id,
+										'relations': v,
+										'vatbuild_id': val_id,
+										'tc_version_id': tcdoc_version,
+										'rs_version_id': v[0].rs_version_id,
+										'closable': true
+									};
+									tmps.push(tmp);
+								});
+								tab_json.push({title:tcdoc_name+'_其他阶段分配给本阶段的', xtype: 'tabpanel',items:tmps,'closable':true});
+							}
+							
+							var create_tab=function(record){ //写个递归方便多了啊
+								if(!record) return;
+								  if(Array.isArray(record)){
+									   Ext.Array.each(record,function(name,index){create_tab(name)});
+								   }else{
+									   var tabs= Ext.getCmp('vatpanel');
+									   var tab=tabs.child('#'+record.id);
+//									   console.log(record.id);
+									   if(!tab)tab=tabs.add(record);
+									   tabs.setActiveTab(tab);
+							   		}
+							  }
+						       create_tab(tab_json);
+						});
+					
 						
-						var create_tab=function(record){ //写个递归方便多了啊
-							if(!record) return;
-							  if(Array.isArray(record)){
-								   Ext.Array.each(record,function(name,index){create_tab(name)});
-							   }else{
-								   var tabs= Ext.getCmp('vatpanel');
-								   var tab=tabs.child('#'+record.id);
-//								   console.log(record.id);
-								   if(!tab)tab=tabs.add(record);
-								   tabs.setActiveTab(tab);
-						   		}
-						  }
-					       create_tab(tab_json);
-					});
-				},
-				});   
-            }, 50);
-            return Ext.String.format('<div style="color:0xf0ce" id="{0}" ></div>', id);
-			}//renderer
+						
+					}
+				}
+		    }
+		
+		},{
+			text: 'Export Vats',
+			
 		}];
 		
-		me.tbar = [{
-			text: 'Create Vat',
-			glyph: 0xf067,
-			scope: this,
-			handler: function() {
-				var vv = Ext.create('casco.model.Vat',{
-					id: null
-				});
-				var win = Ext.create('widget.vat.vatcreate', {
-					project: me.project,
-					document: me.document,
-					p_id:p_id?p_id:'',
-					vat: vv
-				});
-				win.down('form').loadRecord(vv);
-				win.show();
-			}
-		},'-',{
-			text: 'Delete Vat',
-			glyph: 0xf068,
-			scope: this,
-			handler: function() {
-				Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){   //confirm
-					if(choice == 'yes'){
-						var view=me.getView();
-						var selection =view.getSelectionModel().getSelection()[0];
-						if (selection) {
-							me.store.remove(selection);
-							selection.erase();
-							//view.refresh();
-						}
-					}}, this);
-			}
-		},'-',{
-			text: 'Export Relations',
-			glyph: 0xf1c3,
-			scope: this,
-			handler: function(){
-				var win=Ext.create('widget.vat.twowayrelation',{
-					project: me.project,
-				});
-				win.show();
-			}
-		},'-',{
-			xtype: 'combobox',
-			displayField: 'value',
-			valueField: 'id',
-			emptyText: 'Export Vats',
-			queryModel: 'local',
-			editable: false,
-			store: Ext.create('Ext.data.Store',{
-				fields: ['id', 'value'],
-				data: [{'id':'Assign', 'value':'本阶段分配给其他阶段的'},
-				       {'id':'Assigned', 'value':'其他阶段分配给本阶段的'}]
-			}),
-			listeners:{
-				select: function(combo,rd){
-					switch(rd.id){
-					case 'Assign':
-						var view=me.getView();
-						var selection =view.getSelectionModel().getSelection()[0];
-						if (!selection) {
-						 Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
-						 combo.clearValue();
-				         return;
-						}
-			            window.open(API+'vat/export_all?vat_build_id='+selection.get('id')+'&type='+rd.id);
-						combo.setValue(combo.emptyText);
-						break;
-					case 'Assigned':
-						var view=me.getView();
-						var selection =view.getSelectionModel().getSelection()[0];
-						if (!selection) {
-						 Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
-						 combo.clearValue();
-				         return;
-						}
-			            window.open(API+'vat/export_all?vat_build_id='+selection.get('id')+'&type='+rd.id);
-						combo.setValue(combo.emptyText);
-						break;
-//					case 'All':
+//		me.tbar = [{
+//			text: 'Export Relations',
+//			glyph: 0xf1c3,
+//			scope: this,
+//			hidden: true,
+//			handler: function(){
+//				var win=Ext.create('widget.vat.twowayrelation',{
+//					project: me.project,
+//				});
+//				win.show();
+//			}
+//		},'-',{
+//			xtype: 'combobox',
+//			displayField: 'value',
+//			valueField: 'id',
+//			emptyText: 'Export Vats',
+//			queryModel: 'local',
+//			editable: false,
+//			store: Ext.create('Ext.data.Store',{
+//				fields: ['id', 'value'],
+//				data: [{'id':'Assign', 'value':'本阶段分配给其他阶段的'},
+//				       {'id':'Assigned', 'value':'其他阶段分配给本阶段的'}]
+//			}),
+//			listeners:{
+//				select: function(combo,rd){
+//					switch(rd.id){
+//					case 'Assign':
 //						var view=me.getView();
 //						var selection =view.getSelectionModel().getSelection()[0];
 //						if (!selection) {
@@ -225,12 +206,34 @@ Ext.define('casco.view.vat.VatView',{
 //			            window.open(API+'vat/export_all?vat_build_id='+selection.get('id')+'&type='+rd.id);
 //						combo.setValue(combo.emptyText);
 //						break;
-					default:
-						break;
-					}
-				}
-			}
-		}];
+//					case 'Assigned':
+//						var view=me.getView();
+//						var selection =view.getSelectionModel().getSelection()[0];
+//						if (!selection) {
+//						 Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
+//						 combo.clearValue();
+//				         return;
+//						}
+//			            window.open(API+'vat/export_all?vat_build_id='+selection.get('id')+'&type='+rd.id);
+//						combo.setValue(combo.emptyText);
+//						break;
+////					case 'All':
+////						var view=me.getView();
+////						var selection =view.getSelectionModel().getSelection()[0];
+////						if (!selection) {
+////						 Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
+////						 combo.clearValue();
+////				         return;
+////						}
+////			            window.open(API+'vat/export_all?vat_build_id='+selection.get('id')+'&type='+rd.id);
+////						combo.setValue(combo.emptyText);
+////						break;
+//					default:
+//						break;
+//					}
+//				}
+//			}
+//		}];
 		
 		function getPreview(value,metadata,record){ //record-rsversions
 			var tmp = [];

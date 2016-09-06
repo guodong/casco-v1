@@ -73,6 +73,7 @@ Ext.define('casco.view.matrix.Verification', {
 			width:140,
 			renderer:function(val_id,metaData,rec){
 			 var id = Ext.id();	 
+			 console.log(states);
              Ext.defer(function() {
                	Ext.create('Ext.form.ComboBox', {
 				store: states,

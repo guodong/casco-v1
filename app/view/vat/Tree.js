@@ -12,7 +12,7 @@ Ext.define('casco.view.vat.Tree', {
 			var tab = tabs.child('#tab-vat-'+ record.data.id); //doc_id
 //			var child_id = casco.model.Document;
 			if(!tab){
-//			tabs.removeAll();
+			tabs.removeAll();
 			tab = tabs.add({
 				id: 'tab-vat-'+record.data.id,
 				xtype: 'vat.view',
