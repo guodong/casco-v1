@@ -17,9 +17,10 @@ Ext.define('casco.view.testing.JobCreate', {
 		vat.load({
 			params: {
 				project_id: me.project.get('id'),
-				type: 'tc'
+				type: 'tc',
 			}
 		});
+		
 		var vats = Ext.create('casco.store.Vats');
 		var builds = Ext.create('casco.store.Builds');
 		builds.load({
@@ -72,24 +73,34 @@ Ext.define('casco.view.testing.JobCreate', {
 				valueField: 'id',
 				listeners: {
 					select: function(f, r, i){
-						Ext.getCmp('testing-job-tc-grid').getStore().load({
-							params: {
-								version_id: r.get('tc_version_id'),
-								act:'stat'
-							}
-						});
-						Ext.getCmp('vat_tc').setValue(r.get('tc_version').document.name+':'+r.get('tc_version').name);
+						Ext.getCmp('vat_tc').getStore().setData(r.get('tc_versions'));
 						Ext.getCmp('testing-job-rs').getStore().setData(r.get('rs_versions'));
 					}
 				}
 			},
 			{	
 				fieldLabel: 'Tc Version',
-				name: 'tc_version_name',
-				msgTarget: 'under',
+				name: 'tc_version_id',
+				store: Ext.create('Ext.data.Store'),
 				id:'vat_tc',
-				xtype: 'textfield',
-				editable: false
+				xtype: 'combobox',
+				allowBlank: false,
+				editable: false,
+				queryMode: 'local',
+				displayField: 'document.name',
+				valueField: 'id',
+				displayTpl: new Ext.XTemplate('<tpl for=".">{document.name} - {name}</tpl>'),
+//				setValue(r.get('tc_version').document.name+':'+r.get('tc_version').name);
+				listeners: {
+					select: function(f, r, i){
+						Ext.getCmp('testing-job-tc-grid').getStore().load({
+							params: {
+								version_id: r.get('id'),
+								act:'stat'
+							}
+						});
+					}
+				}
 			}]
 		},  {
 			xtype: 'grid',

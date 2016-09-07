@@ -21,7 +21,7 @@ Ext.define('casco.view.testing.TestController', {
 		}
 //		console.log(tcs);
 		if(tcs.length==0){ //![]==false
-			Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>1请选择测试用例!</b></div>');
+			Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请选择测试用例!</b></div>');
 			return false;
 		}else{
 			meta.tcs = tcs;

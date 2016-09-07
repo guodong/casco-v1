@@ -44,7 +44,15 @@ Ext.define('casco.view.testing.Job', {
 				type: 'string',
 			}
 		},{
-			text: 'vat_version',
+			text: 'tc',
+			dataIndex: 'tc_version',
+			renderer: function(v){
+				if(!v) return;
+				var value = v.document.name +'-'+v.name;
+				return value;
+			},
+		},{
+			text: 'vat_build',
 			dataIndex: 'vatbuild',
 			renderer: function(value,metadata,record){ //value-rs_versions(current cell); metadata-cell metadata; record-Ext.data.Model
 				return getPreview(value,metadata,record);
@@ -74,7 +82,6 @@ Ext.define('casco.view.testing.Job', {
 			scope: this,
 			handler: function() {
 				var job = Ext.create('casco.model.Testjob');
-				console.log(job);
 				var win = Ext.create('widget.testing.jobcreate', {
 					project: me.project,
 					job: job
@@ -111,16 +118,13 @@ Ext.define('casco.view.testing.Job', {
 		
 		function getPreview(value,metadata,record){ //record-rsversions
 			var tmp = [];
-			var tcvs = record.data.vatbuild.tc_version;
-			var rsvs = record.data.vatbuild.rs_versions;
-			var str = "TC文档信息：" + tcvs.document.name + "-" + tcvs.name + "<br/>" + "RS文档信息：";
-			tmp.push(str);
-			for(var i in rsvs){
-				str = "[" + rsvs[i].document.name + "-" + rsvs[i].name + "]";
+			var docs = record.data.vatbuild.doc_versions;
+			for(var i in docs){
+				var str = "[" + docs[i].document.name + "-" + docs[i].name + "]";
 				tmp.push(str);
 			}
 			var value = tmp.join(' ');
-		    metadata.tdAttr = 'data-qtip="' + value + '\n"'  ; //提示信息
+		    metadata.tdAttr = 'data-qtip="'+ "文档版本信息:  <br/>" + value + '"'  ; //提示信息
 		    return record.data.vatbuild.name;
 		};
 		
