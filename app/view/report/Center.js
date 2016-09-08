@@ -43,11 +43,8 @@ Ext.define('casco.view.report.Center', {
 			renderer:function(value,metadata,record){
 				var tmp = [];
 				//请判断一下,到处都是bug
-				//console.log(record.get('testjob'));
-				//console.log(record.get('testjob').get('vatbuild').get('tc_version')||'');
-				//var tcvs = record.get('testjob').get('vatbuild').get('tc_version')||'';
 				var rsvs = record.get('docs')||[];
-				var str = "VAT信息："+((record.get('testjob')||'').vatbuild.name)+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"TC文档信息：" +  record.get('testjob').vatbuild.tc_version.document.name + "-" +   record.get('testjob').vatbuild.tc_version.name + "<br/>" + "RS文档信息：";
+				var str = "VAT信息："+((record.get('testjob')||'').vatbuild.name)+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+"TC文档信息：" +  record.get('testjob').tc_version.document.name + "-" +   record.get('testjob').tc_version.name + "<br/>" + "RS文档信息：";
 				tmp.push(str);
 				for(var i in rsvs){
 					str = "[" + rsvs[i].document.name + "-" + rsvs[i].name + "]";

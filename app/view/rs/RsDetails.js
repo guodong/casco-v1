@@ -1,24 +1,20 @@
 Ext.define('casco.view.rs.RsDetails', {
     extend: 'Ext.window.Window',
     alias: 'widget.rs.rsdetails',
-    
     requires: [
            'casco.store.Vatstrs',
            'casco.store.Vats',
            'casco.view.rs.vat.VatTree'
     ],
-    
     width:900,
     height:650,
     resizable: true,
     maximizable: true,
     title:'Rs View',
-    
     modal:true,
 	layout:{
 		type:'border'
 	},
-	
 	initComponent:function(){
 		var me = this;
 		me.store=Ext.create('casco.store.Rss');
@@ -27,15 +23,12 @@ Ext.define('casco.view.rs.RsDetails', {
 			me.store.add([me.rs]);
 			me.vat.setData(me.rs.getData().vat);
 		};
-		
 		me.vatstrstore = Ext.create('casco.store.Vatstrs');
 		me.vatstrstore.load({
     		params: {
     			project_id: me.project.get('id')
     			}
     	});
-		console.log(me.vatstrstore);
-		
 		me.addVat = function(record){
 			if(!record.data.leaf){
 				return;
@@ -44,9 +37,6 @@ Ext.define('casco.view.rs.RsDetails', {
 			if(Ext.Array.contains(me.vat,tmp))return;
 			me.vat.loadData([tmp], true);
 		};
-		console.log(me.store);
-
-		
 		me.items = [{
 			xtype: 'panel',
 			bodyPadding:'10',
@@ -72,7 +62,6 @@ Ext.define('casco.view.rs.RsDetails', {
 				listeners: {
 					itemdblclick: function(view, record, item, index, e, eOpts){
 						me.addVat(record);
-			        	
 					}
 				}
 			},{
@@ -103,12 +92,12 @@ Ext.define('casco.view.rs.RsDetails', {
                 	me.vat.each(function(s){
             			vat.push(s.getData());
             		});
-            		  var column='';
-            		  var my_rs=Ext.create('casco.model.Rs',{id:me.status?rs.get('id'):null});
-            		  Ext.Object.each(me.down('form').getValues(), function(key, value, myself){
-            		  if(key!='id'&&key!='tag'){column+='"'+key+'":"'+value+'",';}
-            	      else if(key=='tag'){my_rs.set('tag',value);}
-            		  });
+				  var column='';
+				  var my_rs=Ext.create('casco.model.Rs',{id:me.status?rs.get('id'):null});
+				  Ext.Object.each(me.down('form').getValues(), function(key, value, myself){
+				  if(key!='id'&&key!='tag'){column+='"'+key+'":"'+value+'",';}
+				  else if(key=='tag'){my_rs.set('tag',value);}
+				  });
             		my_rs.set('column',column.substr(0,column.length-1));
                 	my_rs.set('vat', vat);
                 	my_rs.set('version_id',me.version_id);
@@ -199,36 +188,6 @@ Ext.define('casco.view.rs.RsDetails', {
 	            allowBlank: true}]);//插入值即可
 		
         },this,true);
-        
-		//me.redoLayout();		
-	 
-//	    listeners: {
-//	        itemdblclick: function(view, record, item, index, e, eOpts){
-//	        	var me = this;
-//	        	if(!record.get('leaf')) return;
-//	    		var tabs = Ext.getCmp('workpanel');
-//	    		var tab = tabs.child('#tab-' + record.get('id'));
-//	    		if(tab){
-//	    			tabs.remove(tab);
-//	    		}
-//	    		var document = casco.model.Document;
-//	    		casco.model.Document.load(record.get('id'), {
-//	    			success: function(record){
-//	    				tab = tabs.add({
-//	    					id: 'tab-'+record.get('id'),
-//	    					xtype: record.get('type'),
-//	    					title: record.get('name'),
-//	    					document: record,
-//	    					closable: true,
-//	    					project: me.project
-//	    				});
-//	    				tabs.setActiveTab(tab);
-//	    			}
-//	    		});
-//
-//	    	}//itemdbclick
-//	    }
-//		
 		me.callParent();
 	}
 });

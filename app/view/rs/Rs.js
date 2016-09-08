@@ -89,12 +89,10 @@ Ext.define('casco.view.rs.Rs', {
 					listeners: {
 						scope: this
 					},
-					//version_id: me.down('combobox').getValue(),
 					document_id: me.document.id,
 					vstore:me.versions,
 					type: 'rs'
 				});
-				
 				win.show();
 				}   
 		},
@@ -119,7 +117,7 @@ Ext.define('casco.view.rs.Rs', {
 			border:true,
             width: 110,
             handler : function() {
-            	var win=Ext.create('casco.view.rs.MultiVats',{'project':me.project,'father':me});win.show();
+            	var win=Ext.create('casco.view.rs.MultiVats',{'project':me.project,'father':me,'version':me.curr_version});win.show();
             }
         },'->',{
             xtype: 'textfield',
@@ -168,13 +166,13 @@ Ext.define('casco.view.rs.Rs', {
 			if(btn=='yes'){
 				 var view=me.getView();
                  me.reconfigure(me.store,me.columns);
-						var selection =view.getSelectionModel().getSelection()[0];
-						var tc = Ext.create('casco.model.Rs',{id:selection.get('id')});
-				        tc.erase();
-						if (selection) {
-							me.store.remove(selection);
-							selection.erase();
-						}
+				var selection =view.getSelectionModel().getSelection()[0];
+				var tc = Ext.create('casco.model.Rs',{id:selection.get('id')});
+				tc.erase();
+				if (selection) {
+					me.store.remove(selection);
+					selection.erase();
+				}
 	            me.getView().refresh();
 			}
 			});
@@ -233,7 +231,6 @@ Ext.define('casco.view.rs.Rs', {
 					localStorage.tag = record.get('tag');
 					console.log('列'+c);
 					if(c==0||c==1){
-
 						window.open('/draw/graph2.html#'+record.get('tag')+"&id="+record.get('id'));
 						return;
 					}
@@ -326,7 +323,6 @@ Ext.define('casco.view.rs.Rs', {
             me.store.each(function(record, idx) {
                 var td = Ext.fly(view.getNode(idx)).down(cellSelector),
                     cell, matches, cellHTML;
-//                console.log(td);
                 while (td) {
                     cell = td.down(innerSelector);
                     matches = cell.dom.innerHTML.match(me.tagsRe);
