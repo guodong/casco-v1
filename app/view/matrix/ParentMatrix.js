@@ -13,64 +13,101 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 		checkOnly: false
 	},
 // columnLines:true,
+	
 	initComponent: function() {
 		var me = this;
-		me.column_store=Ext.create('Ext.data.Store', {
-         fields: ['name', 'value'],
-         data : [
-                 {"name":"NA", "value":"NA"},
-                 {"name":"OK", "value":"OK"},
-                 {"name":"空白", "value":"空白"}
-           ]
-		});
 		me.stack=[];
+//		me.columns = me.columns_store; //undefined why?
+		me.store=Ext.create('casco.store.ParentMatrix');
+		
         me.child_type=me.verification.get('child_version').document.type;
 		me.matrix = new casco.store.ParentMatrix();
-		console.dir(me.matrix);
-//		me.matrix.load({
-//			params:{
-//				id: me.verification.get('id'),
-//				parent_v_id:me.parent_v_id
-//			}
-//		});
-//		me.store=Ext.create('Ext.data.Store');
-//		console.dir(me.matrix.getData().items[0]);
-//		me.store.setData(me.matrix.getData());
-//		console.dir(me.store);
 		me.matrix.load({
 			params:{
 				id: me.verification.get('id'),
 				parent_v_id:me.parent_v_id
-			},
-			synchronous: true,		// 同步作用 ？？？
-			callback: function(record){
-				me.columns=me.columns_store;
-				console.dir(record[0]);  //或者转化成JSON
-				console.log(record[0].get('columModle'));
-//				me.ds = new Ext.data.JsonStore({
-//							  data: record[0].get('data'),
-//							  fields:record[0].get('fieldsNames')
-//				});
-//				console.log(me.ds);
-				me.matrix.setData(record[0].get('data'));
-				Ext.Array.forEach(record[0].get('columModle'),function(item){	// 具体参见动态列的实现
-					var column = Ext.create('Ext.grid.column.Column', {  
-						text: item['header']+' (P)//(C)',
-						width:140,  
-						dataIndex: item['dataIndex']  
-					});  
-					Ext.Array.include(me.columns,column);
-//					me.columns.push(column);
-				});
+			}
+		});
+		
+		me.matrix.on('load',function(){
+			var prec = me.matrix.getData().items;
+//			console.dir(prec[0]);
+			me.columns = me.columns_store;
+//			console.dir(me.columns);
+//			console.dir(me.matrix);
+			Ext.Array.forEach(prec[0].get('columModle'),function(item){	// 具体参见动态列的实现
+				var column = Ext.create('Ext.grid.column.Column', {  
+					text: item['header']+' (P)//(C)',
+					width:140,  
+					dataIndex: item['dataIndex']  
+				});  
+				me.columns.push(column);
+			});
+//			console.dir(me.columns);
+			me.matrix.setData(prec[0].get('data'));
+//			console.dir(me.matrix);
+//			console.dir(me.getView().getHeaderCt());
 			me.reconfigure(me.matrix,me.columns);
 			me.store.setData(me.matrix.getData());
+//			console.log(me.store);
+//			me.store.loadData(matrix.getData());
+//			console.log(me.getView().getHeaderCt());
 			me.customMenuItemsCache = [];
-			console.log(me.getView().getHeaderCt());
 			me.headerCt.on('menucreate', function (cmp, menu) {
             menu.on('beforeshow', me.showHeaderMenu, me);
 			}, me);
-		  }// callback
-		});  
+		});
+		
+//		me.store.load({
+//			params:{
+//				id: me.verification.get('id'),
+//				parent_v_id:me.parent_v_id
+//			},
+//			callback: function(record){
+//				me.matrix.setData(record[0].get('data'));
+//			}
+//		});
+		
+//		me.store.on('load',function(){
+//			me.store.setData(me.matrix.getData());
+//		});
+		
+		
+//		me.matrix.load({
+//			params:{
+//				id: me.verification.get('id'),
+//				parent_v_id:me.parent_v_id
+//			},
+//			synchronous: true,		// 同步作用 ？？？
+//			callback: function(record){
+//				me.columns=me.columns_store;
+//				console.dir(record[0]);  //或者转化成JSON
+//				console.log(record[0].get('columModle'));
+////				me.ds = new Ext.data.JsonStore({
+////							  data: record[0].get('data'),
+////							  fields:record[0].get('fieldsNames')
+////				});
+////				console.log(me.ds);
+//				me.matrix.setData(record[0].get('data'));
+//				Ext.Array.forEach(record[0].get('columModle'),function(item){	// 具体参见动态列的实现
+//					var column = Ext.create('Ext.grid.column.Column', {  
+//						text: item['header']+' (P)//(C)',
+//						width:140,  
+//						dataIndex: item['dataIndex']  
+//					});  
+//					Ext.Array.include(me.columns,column);
+////					me.columns.push(column);
+//				});
+//				console.log(me.getView().getHeaderCt());
+//			me.reconfigure(me.matrix,me.columns);
+//			me.store.setData(me.matrix.getData());
+//			me.customMenuItemsCache = [];
+//			
+//			me.headerCt.on('menucreate', function (cmp, menu) {
+//            menu.on('beforeshow', me.showHeaderMenu, me);
+//			}, me);
+//		  }// callback
+//		});  
 		
 		 
 		 me.plugins=[{
@@ -91,7 +128,7 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 				var out = [];
 				if(me.verification.get('status')==0){Ext.Msg.alert('','已提交，不可编辑');return;}
 				var updates = me.matrix.getUpdatedRecords();
-				console.log(updates);
+//				console.log(updates);
 				updates.forEach(function(record){
 					out.push(record.getData());
 				})
@@ -101,10 +138,10 @@ Ext.define('casco.view.matrix.ParentMatrix', {
 					method: 'post',
 					jsonData: {results: out},
 					success: function(){
-						me.matrix.reload();
-						console.log(me.getView().getHeaderCt());
-//						me.reconfigure(me.matrix);
 						me.getView().refresh();
+//						me.matrix.reload(); //reconfigure问题怎么解决啊
+//						console.log(me.getView().getHeaderCt());
+//						me.reconfigure(me.matrix);
 						Ext.Msg.alert('Success', 'Saved successfully.')
 					}
 				});
