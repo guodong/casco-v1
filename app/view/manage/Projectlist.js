@@ -123,7 +123,6 @@ Ext.define('casco.view.manage.Projectlist', {
             Ext.defer(function() {
                Ext.widget('button', {
                   renderTo: id,
-//                  text: 'Statistic',
                   scale: 'small',
                   glyph: 0xf0ce,
                   handler: function() {

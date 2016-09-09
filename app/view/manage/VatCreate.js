@@ -75,7 +75,6 @@ Ext.define('casco.view.manage.VatCreate', {
 			store: tcdocs,
 			width: 300, //important to avoid layout run failed
 			split: true,
-//			columnLines: true,
 			plugins: {
 		        ptype: 'cellediting',
 		        clicksToEdit: 1,
@@ -192,7 +191,6 @@ Ext.define('casco.view.manage.VatCreate', {
 				}
 			}]
 		}];
-
 		me.callParent();
 	}
 });
