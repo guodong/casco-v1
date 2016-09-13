@@ -3,7 +3,6 @@ Ext.define('casco.view.rs.MultiVats', {
 	xtype: 'multivats',
 	modal: true,
 	title: '批量编辑VAT',
-	height: 380,
 	width: 400,
 	initComponent: function() {
 		var me = this;
@@ -134,9 +133,9 @@ Ext.define('casco.view.rs.MultiVats', {
 			id: 'vat-rs',
 			region: 'center',
 			store: vats,
-			height:400,
+			//height:400,
 			multiSelect:true,
-			autoScroll: true,
+			scrollable: true,
 			selModel: new Ext.selection.CheckboxModel({checkOnly:true}),
 		    columns: [{
 				text: 'Doc',

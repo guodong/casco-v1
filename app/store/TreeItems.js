@@ -3,6 +3,7 @@ Ext.define('casco.store.TreeItems', {
     pageSize: 0,
     autoLoad : true,
     proxy: {
+		timeout:10000000,
         type: 'rest',
         url: API+'treeitem',
         reader: {
