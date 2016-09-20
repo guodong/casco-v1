@@ -66,6 +66,26 @@ Ext.define('casco.view.manage.Versions', {
          }
 			
 		},{
+			text: '统计结果',
+			glyph: 0xf080,
+			scope: this,
+			dataIndex:'id',
+			renderer: function(val,meta,rec) {
+            var id = Ext.id();
+            Ext.defer(function() {
+               Ext.widget('button', {
+                  renderTo: id,
+                  text: '统计',
+                  glyph: 0xf040,
+                  scale: 'small',
+                  handler: function() {
+                	window.open('/stat/tongji.htm#'+val);
+                  }
+               });
+            }, 50);
+			 return Ext.String.format('<div id="{0}"></div>', id);
+			}//renderer
+		},{
 			text :'创建时间',
 			dataIndex :'created_at',
 			width :'250'
