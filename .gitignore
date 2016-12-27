@@ -8,8 +8,6 @@
 /sass/example/bootstrap.json
 /*.log
 /*.bak
-/config.js
 /draw/common.js
-/.sencha
+/index.html
 /.idea
-/sencha-error*
