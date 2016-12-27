@@ -21,6 +21,7 @@ Ext.define('Ext.draw.TextMeasurer', {
     precise: Ext.isIE8,
 
     measureDivTpl: {
+        id: 'ext-draw-text-measurer',
         tag: 'div',
         style: {
             overflow: 'hidden',
@@ -49,7 +50,8 @@ Ext.define('Ext.draw.TextMeasurer', {
     },
 
     /**
-     * @private Measure the size of a text with specific font by using DOM to measure it.
+     * @private
+     * Measure the size of a text with specific font by using DOM to measure it.
      * Could be very expensive therefore should be used lazily.
      * @param {String} text
      * @param {String} font

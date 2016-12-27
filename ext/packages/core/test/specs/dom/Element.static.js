@@ -1,3 +1,5 @@
+/* global Ext, expect, xit */
+
 describe("Ext.Element.static", function() {
     var el, input, child1, child2, child3;
     
@@ -153,8 +155,8 @@ describe("Ext.Element.static", function() {
     describe("getViewSize", function() {
         it("should return the window height and width", function() {
             expect(Ext.Element.getViewSize()).toEqual({
-                width : window.innerWidth,
-                height: window.innerHeight
+                width: Ext.isIE8 ? document.documentElement.scrollWidth : window.innerWidth,
+                height: Ext.isIE8 ? document.documentElement.scrollHeight : window.innerHeight
             });
         });
     });
@@ -171,6 +173,17 @@ describe("Ext.Element.static", function() {
     
         todoIt("should return nothing", function() {
             expect(Ext.Element.fromPoint(-550000, -550000)).toBeNull();
+        });
+    });
+    
+    // Not sure how to test Ext.Element in an iframe given the current infrastructure
+    describe("top object identifiers", function() {
+        it("should assign incremental id to window", function() {
+            expect(window.id).toBe('ext-window-1');
+        });
+        
+        it("should assign incremental id to document", function() {
+            expect(document.id).toBe('ext-document-1');
         });
     });
 }, "/src/dom/Element.static.js");

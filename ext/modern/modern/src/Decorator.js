@@ -44,10 +44,14 @@ Ext.define('Ext.Decorator', {
     isDecorator: true,
 
     config: {
+        // @cmd-auto-dependency { aliasPrefix: 'widget.', typeProperty: 'xtype' }
         /**
-         * @cfg {Object} component The config object to factory the Component that this Decorator wraps around
+         * @cfg {Object} component
+         * The config object to factory the Component that this Decorator wraps around.
          */
-        component: {}
+        component: {
+            xtype: 'component'
+        }
     },
 
     statics: {
@@ -92,11 +96,25 @@ Ext.define('Ext.Decorator', {
         }
     },
 
+    getRefItems: function(deep) {
+        var c = this.getComponent(),
+            ret;
+
+        if (c) {
+            ret = [c];
+            if (deep && c.getRefItems) {
+                ret = ret.concat(c.getRefItems(deep));
+            }
+        }
+        return ret || [];
+
+    },
+
     /**
      * @private
      */
     applyComponent: function(config) {
-        return Ext.factory(config, Ext.Component);
+        return Ext.factory(config);
     },
 
     /**
@@ -178,7 +196,7 @@ Ext.define('Ext.Decorator', {
         this.getComponent().setDisabled(disabled);
     },
 
-    destroy: function() {
+    doDestroy: function() {
         Ext.destroy(this.getComponent());
         this.callParent();
     }

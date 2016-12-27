@@ -22,7 +22,7 @@
  *     // Wait 500ms before calling our function. If the user presses another key
  *     // during that 500ms, it will be cancelled and we'll wait another 500ms.
  *     Ext.get('myInputField').on('keypress', function() {
- *         task.{@link #delay}(500);
+ *         task.delay(500);
  *     });
  * 
  * Note that we are using a DelayedTask here to illustrate a point. The configuration
@@ -44,11 +44,12 @@ Ext.util.DelayedTask = function(fn, scope, args, cancelOnDelay, fireIdleEvent) {
 // @uses Ext.GlobalEvents
     var me = this,
         delay,
+        globalEvents = Ext.GlobalEvents,
         call = function() {
-            var globalEvents = Ext.GlobalEvents;
-            clearInterval(me.id);
             me.id = null;
-            fn.apply(scope, args || []);
+            if (!(scope && scope.destroyed)) {
+                fn.apply(scope, args || []);
+            }
             if (fireIdleEvent !== false && globalEvents.hasListeners.idle) {
                 globalEvents.fireEvent('idle');
             }
@@ -64,16 +65,18 @@ Ext.util.DelayedTask = function(fn, scope, args, cancelOnDelay, fireIdleEvent) {
     me.id = null;
 
     /**
+     * @method delay
      * By default, cancels any pending timeout and queues a new one.
      *
      * If the `cancelOnDelay` parameter was specified as `false` in the constructor, this does not cancel and
      * reschedule, but just updates the call settings, `newDelay`, `newFn`, `newScope` or `newArgs`, whichever are passed.
      *
-     * @param {Number} newDelay The milliseconds to delay
+     * @param {Number} newDelay The milliseconds to delay. `-1` means schedule for the next animation frame if supported.
      * @param {Function} newFn (optional) Overrides function passed to constructor
      * @param {Object} newScope (optional) Overrides scope passed to constructor. Remember that if no scope
-     * is specified, <code>this</code> will refer to the browser window.
+     * is specified, `this` will refer to the browser window.
      * @param {Array} newArgs (optional) Overrides args passed to constructor
+     * @return {Number} The timer id being used.
      */
     me.delay = function(newDelay, newFn, newScope, newArgs) {
         if (cancelOnDelay) {
@@ -85,9 +88,15 @@ Ext.util.DelayedTask = function(fn, scope, args, cancelOnDelay, fireIdleEvent) {
         fn    = newFn    || fn;
         scope = newScope || scope;
         args  = newArgs  || args;
+        me.delayTime = delay;
         if (!me.id) {
-            me.id = Ext.interval(call, delay);
+            if (delay === -1) {
+                me.id = Ext.Function.requestAnimationFrame(call);
+            } else {
+                me.id = Ext.defer(call, delay);
+            }
         }
+        return me.id;
     };
 
     /**
@@ -95,7 +104,11 @@ Ext.util.DelayedTask = function(fn, scope, args, cancelOnDelay, fireIdleEvent) {
      */
     me.cancel = function() {
         if (me.id) {
-            clearInterval(me.id);
+            if (me.delayTime === -1) {
+                Ext.Function.cancelAnimationFrame(me.id);
+            } else {
+                clearTimeout(me.id);
+            }
             me.id = null;
         }
     };

@@ -7,16 +7,27 @@
 Ext.define('Ext.util.translatable.Abstract', {
     extend: 'Ext.Evented',
 
+    mixins: [
+        'Ext.mixin.Factoryable'
+    ],
+
+    factoryConfig: {
+        type: 'translatable',
+        defaultType: 'csstransform'
+    },
+
     requires: ['Ext.fx.easing.Linear'],
 
     config: {
-        useWrapper: null,
-
         easing: null,
 
-        easingX: null,
+        easingX: {
+            duration: 300
+        },
 
-        easingY: null
+        easingY: {
+            duration: 300
+        }
     },
 
     /**
@@ -95,7 +106,11 @@ Ext.define('Ext.util.translatable.Abstract', {
         return this.factoryEasing(easing);
     },
 
-    doTranslate: Ext.emptyFn,
+    doTranslate: function(x, y) {
+        if (this.hasListeners.translate) {
+            this.fireEvent('translate', this, x, y);
+        }
+    },
 
     translate: function(x, y, animation) {
         if (animation) {
@@ -106,11 +121,11 @@ Ext.define('Ext.util.translatable.Abstract', {
             this.stopAnimation();
         }
 
-        if (!isNaN(x) && typeof x == 'number') {
+        if (!isNaN(x) && typeof x === 'number') {
             this.x = x;
         }
 
-        if (!isNaN(y) && typeof y == 'number') {
+        if (!isNaN(y) && typeof y === 'number') {
             this.y = y;
         }
         this.doTranslate(x, y);
@@ -119,7 +134,7 @@ Ext.define('Ext.util.translatable.Abstract', {
     translateAxis: function(axis, value, animation) {
         var x, y;
 
-        if (axis == 'x') {
+        if (axis === 'x') {
             x = value;
         }
         else {
@@ -174,8 +189,8 @@ Ext.define('Ext.util.translatable.Abstract', {
 
         var now = Ext.Date.now(),
             easing = animation.easing,
-            easingX = (typeof x == 'number') ? (animation.easingX || easing || me.getEasingX() || true) : null,
-            easingY = (typeof y == 'number') ? (animation.easingY || easing || me.getEasingY() || true) : null;
+            easingX = (typeof x === 'number') ? (animation.easingX || easing || me.getEasingX() || true) : null,
+            easingY = (typeof y === 'number') ? (animation.easingY || easing || me.getEasingY() || true) : null;
 
         if (easingX) {
             easingX = me.factoryEasing(easingX);
@@ -267,10 +282,14 @@ Ext.define('Ext.util.translatable.Abstract', {
         me.isAnimating = false;
 
         Ext.AnimationQueue.stop(me.doAnimationFrame, me);
-        me.fireEvent('animationend', me, me.x, me.y);
-        if (me.callback) {
-            me.callback.call(me.callbackScope);
-            me.callback = null;
+        
+        if (!me.destroying) {
+            me.fireEvent('animationend', me, me.x, me.y);
+            
+            if (me.callback) {
+                me.callback.call(me.callbackScope);
+                me.callback = null;
+            }
         }
     },
 
@@ -279,10 +298,17 @@ Ext.define('Ext.util.translatable.Abstract', {
     },
 
     destroy: function() {
-        if (this.isAnimating) {
-            this.stopAnimation();
+        var me = this;
+        
+        me.destroying = true;
+        
+        if (me.isAnimating) {
+            me.stopAnimation();
         }
 
-        this.callParent();
+        me.callParent();
+        
+        me.destroying = false;
+        me.destroyed = true;
     }
 });

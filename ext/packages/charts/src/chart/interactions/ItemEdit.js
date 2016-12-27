@@ -102,8 +102,8 @@ Ext.define('Ext.chart.interactions.ItemEdit', {
                 constrainPosition: true,
                 shrinkWrapDock: true,
                 autoHide: true,
-                offsetX: 10,
-                offsetY: 10
+                trackMouse: true,
+                mouseOffset: [20, 20]
             });
 
             tooltip = new Ext.tip.ToolTip(config);
@@ -130,6 +130,8 @@ Ext.define('Ext.chart.interactions.ItemEdit', {
             chart = me.getChart(),
             item = chart.getHighlightItem();
 
+        e.claimGesture();
+
         if (item) {
             chart.fireEvent('beginitemedit', chart, me, me.item = item);
 
@@ -153,10 +155,8 @@ Ext.define('Ext.chart.interactions.ItemEdit', {
             switch (type) {
                 case 'barSeries':
                     return me.onDragBar(e);
-                    break;
                 case 'scatterSeries':
                     return me.onDragScatter(e);
-                    break;
             }
         }
     },
@@ -326,10 +326,18 @@ Ext.define('Ext.chart.interactions.ItemEdit', {
             config = tooltip.config;
             chart = this.getChart();
             Ext.callback(config.renderer, null, [tooltip, item, target, e], 0, chart);
-            tooltip.show([
-                e.x + config.offsetX,
-                e.y + config.offsetY
-            ]);
+            // If trackMouse is set, a ToolTip shows by its pointerEvent
+            tooltip.pointerEvent = e;
+
+            if (tooltip.isVisible()) {
+                // After show handling repositions according
+                // to configuration. trackMouse uses the pointerEvent
+                // If aligning to an element, it uses a currentTarget
+                // flyweight which may be attached to any DOM element.
+                tooltip.realignToTarget();
+            } else {
+                tooltip.show();
+            }
         }
     },
 
@@ -372,6 +380,15 @@ Ext.define('Ext.chart.interactions.ItemEdit', {
             chart.fireEvent('enditemedit', chart, me, me.item, target);
         }
         me.highlight(me.item = null);
+    },
+
+    destroy: function () {
+        // Peek at the config, so we don't create one just to destroy it,
+        // if a user has set 'tooltip' config to 'false'.
+        var tooltip = this.getConfig('tooltip', true);
+
+        Ext.destroy(tooltip);
+        this.callParent();
     }
 
 });

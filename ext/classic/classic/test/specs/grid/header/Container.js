@@ -1,3 +1,5 @@
+/* global Ext, jasmine, expect */
+
 describe('Ext.grid.header.Container', function () {
     var createGrid = function (storeCfg, gridCfg) {
         store = Ext.create('Ext.data.Store', Ext.apply({
@@ -40,33 +42,45 @@ describe('Ext.grid.header.Container', function () {
     });
 
     describe('column menu showing', function() {
-        it('should show the menu on trigger click', function() {
+        it('should show the menu on trigger click on mouse platforms and longpress on touch platforms', function() {
             var col,
-                menu;
+                menu,
+                showSpy;
+
+            createGrid({}, {
+                renderTo: Ext.getBody()
+            });
+
+            col = grid.columns[0];
+            menu = col.getRootHeaderCt().getMenu();
+            showSpy = spyOnEvent(menu, 'show');
+
+            // Fire the real events depending on platform capabilities
+            if (jasmine.supportsTouch) {
+                Ext.testHelper.touchStart(col.el.dom);
+            } else {
+                jasmine.doFireMouseEvent(col.titleEl, 'mouseover', null, null, null, false, false, false, document.body);
+                jasmine.doFireMouseEvent(col.triggerEl.dom, 'click');
+            }
+
+            waitsForSpy(showSpy);
 
             runs(function() {
-                createGrid({}, {
-                    renderTo: Ext.getBody()
-                });
-
-                col = grid.columns[0];
-                col.triggerEl.show();
-                jasmine.fireMouseEvent(col.triggerEl.dom, 'click');
-
-                menu = col.activeMenu;
                 expect(menu.isVisible()).toBe(true);
                 expect(menu.containsFocus).toBeFalsy();
 
-                jasmine.fireMouseEvent(col.triggerEl.dom, 'mousedown');
+                jasmine.fireMouseEvent(col.titleEl, 'mousedown');
                 expect(menu.isVisible()).toBe(false);
-
+            });
+            
+            waitsForFocus(col);
+            
+            runs(function() {
                 // Opening the menu with down arrow focuses it
-                col.el.focus();
                 jasmine.fireKeyEvent(col.el.dom, 'keydown', Ext.event.Event.DOWN);
             });
-            waitsFor(function() {
-                return menu.isVisible() && menu.containsFocus;
-            });
+
+            waitsForFocus(menu);
         });
     });
 
@@ -273,6 +287,122 @@ describe('Ext.grid.header.Container', function () {
         it("should focus last column header on End key", function() {
             jasmine.syncPressKey(grid.headerCt.el, 'end');
             jasmine.expectFocused(grid.headerCt.gridVisibleColumns[1]);
+        });
+    });
+
+    describe('Disabling column hiding', function() {
+        beforeEach(function() {
+            createGrid();
+        });
+        
+        it('should disable hiding the last visible column', function() {
+            var menu,
+                col = grid.columns[0],
+                colItem,
+                colMenu,
+                nameItem,
+                emailItem;
+
+            // Open the header menu and mouseover the "Columns" item.
+            Ext.testHelper.showHeaderMenu(col);
+            
+            runs(function() {
+                menu = col.activeMenu;
+                colItem = menu.child('#columnItem');
+                jasmine.fireMouseEvent(colItem.el.dom, 'mouseover');
+                jasmine.fireMouseEvent(colItem.el.dom, 'click');
+            });
+
+            // Wait for the column show/hide menu to appear
+            waitsFor(function() {
+                colMenu = colItem.menu;
+                return colMenu && colMenu.isVisible();
+            }, 'column hiding menu to show');
+            
+            // Hide the "Name" column, leaving only the "Email" column visible
+            runs(function() {
+                nameItem = colMenu.child('[text=Name]');
+                emailItem = colMenu.child('[text=Email]');
+                jasmine.fireMouseEvent(nameItem.el.dom, 'click');
+            });
+
+            // The "Email" column is the last visible column, so its
+            // hide menu check item must be disabled.
+            waitsFor(function() {
+                return emailItem.disabled;
+            }, 'last column hiding item to be disabled');
+        });
+    });
+    
+    describe("reconfiguring parent grid", function() {
+        it("should enable tabIndex on its tab guards after adding columns", function() {
+            createGrid({}, { columns: [] });
+            
+            expect(grid.headerCt.el).not.toHaveAttr('tabIndex');
+            
+            grid.reconfigure(null, [
+                { header: 'Name',  dataIndex: 'name', width: 100 },
+                { header: 'Email', dataIndex: 'email', flex: 1 },
+                { header: 'Phone', dataIndex: 'phone', flex: 1, hidden: true }
+            ]);
+            
+            expect(grid.headerCt.tabGuardBeforeEl).toHaveAttr('tabIndex', '0');
+            expect(grid.headerCt.tabGuardAfterEl).toHaveAttr('tabIndex', '0');
+        });
+        
+        it("should disable tabIndex on its tab guards after removing all columns", function() {
+            createGrid();
+            
+            expect(grid.headerCt.tabGuardBeforeEl).toHaveAttr('tabIndex', '0');
+            expect(grid.headerCt.tabGuardAfterEl).toHaveAttr('tabIndex', '0');
+            
+            grid.reconfigure(null, []);
+            
+            expect(grid.headerCt.tabGuardBeforeEl).not.toHaveAttr('tabIndex');
+            expect(grid.headerCt.tabGuardAfterEl).not.toHaveAttr('tabIndex');
+        });
+    });
+
+    describe('grid panel', function(){
+        it('should be notified when adding a column header', function(){
+            createGrid({}, { columns: [] });
+
+            grid.headerCt.insert(0, [
+                { header: 'Name',  dataIndex: 'name', width: 100 },
+                { header: 'Email', dataIndex: 'email', flex: 1 },
+                { header: 'Phone', dataIndex: 'phone', flex: 1 }
+            ]);
+
+            var view = grid.getView(),
+                c0_0 = view.getCellByPosition({row:0,column:0}, true),
+                c0_1 = view.getCellByPosition({row:0,column:1}, true),
+                c0_2 = view.getCellByPosition({row:0,column:2}, true);
+
+            expect(c0_0).not.toBe(false);
+            expect(c0_1).not.toBe(false);
+            expect(c0_2).not.toBe(false);
+
+        });
+
+        // EXTJS-21400
+        it('should be notified when adding a group header', function(){
+            createGrid({}, { columns: [] });
+
+            grid.headerCt.insert(0, {header: 'test', columns: [
+                { header: 'Name',  dataIndex: 'name', width: 100 },
+                { header: 'Email', dataIndex: 'email', flex: 1 },
+                { header: 'Phone', dataIndex: 'phone', flex: 1 }
+            ]});
+
+            var view = grid.getView(),
+                c0_0 = view.getCellByPosition({row:0,column:0}, true),
+                c0_1 = view.getCellByPosition({row:0,column:1}, true),
+                c0_2 = view.getCellByPosition({row:0,column:2}, true);
+
+            expect(c0_0).not.toBe(false);
+            expect(c0_1).not.toBe(false);
+            expect(c0_2).not.toBe(false);
+
         });
     });
 });

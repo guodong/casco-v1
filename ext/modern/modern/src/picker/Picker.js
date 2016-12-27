@@ -90,15 +90,15 @@ Ext.define('Ext.picker.Picker', {
      * @event pick
      * Fired when a slot has been picked
      * @param {Ext.Picker} this This Picker.
-     * @param {Object} The values of this picker's slots, in `{name:'value'}` format.
-     * @param {Ext.Picker.Slot} slot An instance of Ext.Picker.Slot that has been picked.
+     * @param {Object} values The values of this picker's slots, in `{name:'value'}` format.
+     * @param {Ext.picker.Slot} slot An instance of Ext.Picker.Slot that has been picked.
      */
 
     /**
      * @event change
      * Fired when the value of this picker has changed the Done button has been pressed.
      * @param {Ext.picker.Picker} this This Picker.
-     * @param {Object} value The values of this picker's slots, in `{name:'value'}` format.
+     * @param {Object} values The values of this picker's slots, in `{name:'value'}` format.
      */
 
     /**
@@ -256,22 +256,24 @@ Ext.define('Ext.picker.Picker', {
         }
     },
 
+    floated: true,
+
     initialize: function() {
         var me = this,
             clsPrefix = Ext.baseCSSPrefix,
             innerElement = this.innerElement;
 
         //insert the mask, and the picker bar
-        this.mask = innerElement.createChild({
+        me.mask = innerElement.insertFirst({
             cls: clsPrefix + 'picker-mask'
         });
 
-        this.bar = this.mask.createChild({
+        me.bar = me.mask.createChild({
             cls: clsPrefix + 'picker-bar'
         });
 
         me.on({
-            scope   : this,
+            scope   : me,
             delegate: 'pickerslot',
             slotpick: 'onSlotPick'
         });
@@ -571,11 +573,11 @@ Ext.define('Ext.picker.Picker', {
         return this.getValue();
     },
 
-    destroy: function() {
+    doDestroy: function() {
         var me = this;
 
-        me.callParent();
         me.mask = me.bar = Ext.destroy(me.mask, me.bar);
+        
+        me.callParent();
     }
 });
-

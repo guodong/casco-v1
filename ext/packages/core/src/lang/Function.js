@@ -248,9 +248,19 @@ Ext.Function = (function() {
          * @return {Function} cloneFn
          */
         clone: function(method) {
-            return function() {
+            var newMethod, prop;
+            
+            newMethod = function() {
                 return method.apply(this, arguments);
             };
+            
+            for (prop in method) {
+                if (method.hasOwnProperty(prop)) {
+                    newMethod[prop] = method[prop];
+                }
+            }
+            
+            return newMethod;
         },
 
         /**
@@ -451,24 +461,25 @@ Ext.Function = (function() {
          * @return {Function} A function which invokes the passed function after buffering for the specified time.
          */
         createBuffered: function(fn, buffer, scope, args) {
-            var timerId;
+            var timerId,
+                result = function() {
+                    var callArgs = args || Array.prototype.slice.call(arguments, 0),
+                        me = scope || this;
 
-            return function() {
-                var callArgs = args || Array.prototype.slice.call(arguments, 0),
-                    me = scope || this;
-
-                if (timerId) {
-                    clearTimeout(timerId);
-                }
-
-                timerId = setTimeout(function(){
-                    if (Ext.elevateFunction) {
-                        Ext.elevateFunction(fn, me, callArgs);
-                    } else {
-                        fn.apply(me, callArgs);
+                    if (timerId) {
+                        clearTimeout(timerId);
                     }
-                }, buffer);
-            };
+
+                    timerId = result.timer = setTimeout(function(){
+                        if (Ext.elevateFunction) {
+                            Ext.elevateFunction(fn, me, callArgs);
+                        } else {
+                            fn.apply(me, callArgs);
+                        }
+                    }, buffer);
+                };
+
+            return result;
         },
 
         /**
@@ -682,6 +693,30 @@ Ext.Function = (function() {
                 return fn.apply(scope || this, arguments);
             });
         },
+        
+        interceptAfterOnce: function(object, methodName, fn, scope) {
+            var origMethod = object[methodName],
+                newMethod;
+            
+            newMethod = function() {
+                var ret;
+                
+                if (origMethod) {
+                    origMethod.apply(this, arguments);
+                }
+                
+                ret = fn.apply(scope || this, arguments);
+                
+                object[methodName] = origMethod;
+                object = methodName = fn = scope = origMethod = newMethod = null;
+                
+                return ret;
+            };
+            
+            object[methodName] = newMethod;
+            
+            return newMethod;
+        },
 
         makeCallback: function (callback, scope) {
             //<debug>
@@ -822,31 +857,36 @@ Ext.Function = (function() {
      *
      * @param {Number} id The id returned by `{@link Ext#asap}`.
      */
-    Ext.asapCancel = hasImmediate ? clearImmediate : clearTimeout;
+    Ext.asapCancel = hasImmediate ?
+        function(id) {
+            clearImmediate(id);
+        } : function(id) {
+            clearTimeout(id);
+        };
 
     /**
-     * @method
+     * @method defer
      * @member Ext
      * @inheritdoc Ext.Function#defer
      */
     Ext.defer = ExtFunction.defer;
 
     /**
-     * @method
+     * @method interval
      * @member Ext
      * @inheritdoc Ext.Function#interval
      */
     Ext.interval = ExtFunction.interval;
 
     /**
-     * @method
+     * @method pass
      * @member Ext
      * @inheritdoc Ext.Function#pass
      */
     Ext.pass = ExtFunction.pass;
 
     /**
-     * @method
+     * @method bind
      * @member Ext
      * @inheritdoc Ext.Function#bind
      */

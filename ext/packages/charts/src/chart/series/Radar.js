@@ -76,6 +76,8 @@ Ext.define('Ext.chart.series.Radar', {
         return 1;
     },
 
+    isStoreDependantColorCount: false,
+
     themeMarkerCount: function() {
         return 1;
     },
@@ -112,6 +114,17 @@ Ext.define('Ext.chart.series.Radar', {
     },
 
     updateRotation: function (rotation) {
+        // Overrides base class method.
+        var me = this,
+            chart = me.getChart(),
+            axes = chart.getAxes(),
+            i, ln, axis;
+
+        for (i = 0, ln = axes.length; i < ln; i++) {
+            axis = axes[i];
+            axis.setRotation(rotation);
+        }
+
         this.setStyle({
             rotationRads: rotation
         });
@@ -195,9 +208,9 @@ Ext.define('Ext.chart.series.Radar', {
         if (animation) {
             marker = sprite.getMarker('markers');
             if (marker) {
-                marker.getTemplate().fx.setConfig(animation);
+                marker.getTemplate().setAnimation(animation);
             }
-            sprite.fx.setConfig(animation);
+            sprite.setAnimation(animation);
         }
         return me.sprites;
     },

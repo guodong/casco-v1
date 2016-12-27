@@ -91,6 +91,14 @@ Ext.define('Ext.GlobalEvents', {
      */
 
     /**
+     * @event onlinechange
+     * Fires when the online status of the page changes. See {@link Ext#method-isOnline}
+     * @param {Boolean} online `true` if in an online state.
+     *
+     * @since 6.2.1
+     */
+
+    /**
      * @event removed
      * Fires when a Component is removed from a Container.
      * @param {Ext.Component} component
@@ -128,7 +136,7 @@ Ext.define('Ext.GlobalEvents', {
      * document regardless of whether some other handler tried to stop it.  An
      * example where this is useful is a menu that needs to be hidden whenever
      * there is a mousedown event on the document.
-     * @param {Ext.event.Event} The event object
+     * @param {Ext.event.Event} e The event object
      */
 
     /**
@@ -159,10 +167,20 @@ Ext.define('Ext.GlobalEvents', {
     },
 
     attachListeners: function() {
-        Ext.get(window).on('resize', this.fireResize, this, {
-            buffer: this.resizeBuffer
+        var me = this;
+
+        me.onlineState = Ext.isOnline();
+
+        Ext.getWin().on({
+            scope: me,
+            resize: {
+                fn: 'fireResize',
+                buffer: me.resizeBuffer
+            },
+            online: 'handleOnlineChange',
+            offline: 'handleOnlineChange'
         });
-        Ext.getDoc().on('mousedown', this.fireMouseDown, this);
+        Ext.getDoc().on('mousedown', 'fireMouseDown', me);
     },
 
     fireMouseDown: function(e) {
@@ -181,6 +199,14 @@ Ext.define('Ext.GlobalEvents', {
              me.curWidth = w;
              me.fireEvent('resize', w, h);
          }
+    },
+
+    handleOnlineChange: function() {
+        var online = Ext.isOnline();
+        if (online !== this.onlineState) {
+            this.onlineState = online;
+            this.fireEvent('onlinechange', online);
+        }
     }
 
 }, function(GlobalEvents) {
@@ -188,7 +214,7 @@ Ext.define('Ext.GlobalEvents', {
      * @member Ext
      * @method on
      * Shorthand for {@link Ext.GlobalEvents#addListener}.
-     * @inheritdoc Ext.util.Observable#addListener
+     * @inheritdoc Ext.mixin.Observable#addListener
      */
     Ext.on = function() {
         return GlobalEvents.addListener.apply(GlobalEvents, arguments);
@@ -196,11 +222,23 @@ Ext.define('Ext.GlobalEvents', {
 
     /**
      * @member Ext
-     * @method
+     * @method un
      * Shorthand for {@link Ext.GlobalEvents#removeListener}.
-     * @inheritdoc Ext.util.Observable#removeListener
+     * @inheritdoc Ext.mixin.Observable#removeListener
      */
     Ext.un = function() {
         return GlobalEvents.removeListener.apply(GlobalEvents, arguments);
+    };
+
+    /**
+     * @member Ext
+     * @method fireEvent
+     * Shorthand for {@link Ext.GlobalEvents#fireEvent}.
+     * @inheritdoc Ext.mixin.Observable#fireEvent
+     *
+     * @since 6.2.0
+     */
+    Ext.fireEvent = function() {
+        return GlobalEvents.fireEvent.apply(GlobalEvents, arguments);
     };
 });

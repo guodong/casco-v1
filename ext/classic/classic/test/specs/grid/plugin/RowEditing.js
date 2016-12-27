@@ -1,5 +1,16 @@
+/* global Ext, expect, jasmine */
+
 describe('Ext.grid.plugin.RowEditing', function () {
-    var store, plugin, grid, view, column;
+    var store, plugin, grid, view, column,
+        synchronousLoad = true,
+        proxyStoreLoad = Ext.data.ProxyStore.prototype.load,
+        loadStore = function() {
+            proxyStoreLoad.apply(this, arguments);
+            if (synchronousLoad) {
+                this.flushLoad.apply(this, arguments);
+            }
+            return this;
+        };
 
     function makeGrid(pluginCfg, gridCfg, storeCfg) {
         var gridPlugins = gridCfg && gridCfg.plugins,
@@ -44,8 +55,19 @@ describe('Ext.grid.plugin.RowEditing', function () {
         view = grid.view;
     }
 
+    beforeEach(function() {
+        // Override so that we can control asynchronous loading
+        Ext.data.ProxyStore.prototype.load = loadStore;
+    });
+
     afterEach(function () {
-        store = plugin = grid = view = column = Ext.destroy(grid);
+        // Undo the overrides.
+        Ext.data.ProxyStore.prototype.load = proxyStoreLoad;
+
+        waits(100);
+        runs(function() {
+            store = plugin = grid = view = column = Ext.destroy(grid);
+        });
     });
 
     describe('Widget column', function() {
@@ -74,15 +96,17 @@ describe('Ext.grid.plugin.RowEditing', function () {
             });
 
             var storeCount = store.getCount(),
-                cell = view.getCellByPosition({
-                    row: 0,
-                    column: 3
-                }, true);
+                editPos = new Ext.grid.CellContext(view).setPosition(0, 3),
+                cell = editPos.getCell(true);
 
             function onDeleteClick(btn) {
                 var rec = btn.getWidgetRecord();
                 store.remove(rec);
             }
+
+            // Programatically focus because simulated mousedown event does not focus, so
+            // The tabIndex will NOT be -1, so it will process as if mousedowning on an active widget.
+            view.getNavigationModel().setPosition(editPos);
 
             // First click should delete the record.
             // Second click - the dblclick - should not edit being on a focusable widget
@@ -113,6 +137,29 @@ describe('Ext.grid.plugin.RowEditing', function () {
 
             expect(plugin.editor).toBeDefined();
             expect(plugin.editing).toBe(true);
+        });
+
+        it('should work with spreadsheet selection', function() {
+            var selModel = selModel = new Ext.grid.selection.SpreadsheetModel({
+                dragSelect: true,
+                cellSelect: true,
+                columnSelect: true,
+                rowSelect: true,
+                checkboxSelect: false
+            }),
+            record, items;
+            makeGrid(undefined, {
+                selModel: selModel
+            });
+            
+            record = grid.store.getAt(0);
+            column = grid.columns[0];
+            expect(function() {
+                plugin.startEdit(record, column);
+            }).not.toThrow();
+
+            items = plugin.editor.items;
+            expect(items.getAt(1).getValue()).toBe('Lisa');
         });
     });
 
@@ -187,6 +234,8 @@ describe('Ext.grid.plugin.RowEditing', function () {
                 column = grid.columns[0];
 
                 plugin.startEdit(record, column);
+
+                waitsForFocus(plugin.getEditor());
             });
 
             afterEach(function () {
@@ -255,32 +304,76 @@ describe('Ext.grid.plugin.RowEditing', function () {
         });
 
         describe('adding new rows to the view', function () {
-            function addRecord() {
-                var record, el;
+            var viewEl, count, record, editor;
+
+            function addRecord(index) {
+                var el;
 
                 plugin.cancelEdit();
-                store.insert(store.getCount(), {name: 'Homer', email: 'homer@simpsons.com', phone: '555-222-1244'});
-                record = store.getAt(store.getCount() -1);
+                store.insert(index, {name: 'Homer', email: 'homer@simpsons.com', phone: '555-222-1244'});
+                record = store.getAt(index ? index - 1 : 0);
                 plugin.startEdit(record, 0);
+                editor = plugin.editor;
 
                 el = Ext.fly(view.getNode(record));
 
                 return new Ext.util.Point(el.getX(), el.getY());
             }
 
-            it('should be contained by and visible in the view', function () {
-                var viewEl;
+            afterEach(function () {
+                count = viewEl = record = editor = null;
+            });
 
+            it('should be contained by and visible in the view', function () {
                 makeGrid(null, {
                     height: 100
                 });
 
+                count = store.getCount();
                 viewEl = view.getEl();
 
-                expect(addRecord().isContainedBy(viewEl)).toBe(true);
-                expect(addRecord().isContainedBy(viewEl)).toBe(true);
-                expect(addRecord().isContainedBy(viewEl)).toBe(true);
-                expect(addRecord().isContainedBy(viewEl)).toBe(true);
+                // Add to the beginning.
+                expect(addRecord(0).isContainedBy(viewEl)).toBe(true);
+                expect(addRecord(0).isContainedBy(viewEl)).toBe(true);
+                expect(addRecord(0).isContainedBy(viewEl)).toBe(true);
+                expect(addRecord(0).isContainedBy(viewEl)).toBe(true);
+
+                // Add to the end.
+                expect(addRecord(count).isContainedBy(viewEl)).toBe(true);
+                expect(addRecord(count).isContainedBy(viewEl)).toBe(true);
+                expect(addRecord(count).isContainedBy(viewEl)).toBe(true);
+                expect(addRecord(count).isContainedBy(viewEl)).toBe(true);
+            });
+
+            describe('scrolling into view', function () {
+                function buffered(buffered) {
+                    describe('buffered renderer = ' + buffered, function () {
+                        beforeEach(function () {
+                            makeGrid(null, {
+                                buffered: buffered,
+                                height: 100
+                            });
+
+                            count = store.getCount();
+                            viewEl = view.getEl();
+                        });
+
+                        it('should scroll when adding to the beginning', function () {
+                            addRecord(0);
+                            expect(editor.isVisible()).toBe(true);
+                            expect(editor.context.record).toBe(record);
+                        });
+
+                        it('should scroll when adding to the end', function () {
+                            addRecord(store.getCount());
+                            expect(editor.isVisible()).toBe(true);
+                            expect(editor.context.record).toBe(record);
+                        });
+                    });
+                }
+
+                buffered(false);
+                buffered(true);
             });
         });
     });
@@ -697,6 +790,35 @@ describe('Ext.grid.plugin.RowEditing', function () {
 
                     expect(plugin.cancelEdit).toHaveBeenCalled();
                 });
+            });
+        });
+    });
+    
+    describe("button position", function() {
+        describe("not enough space to fit the editor", function() {
+            beforeEach(function() {
+                makeGrid({
+                    clicksToEdit: 1
+                }, {
+                    height: undefined
+                }, {
+                    data: [
+                        {'name': 'Lisa', 'email': 'lisa@simpsons.com', 'phone': '555-111-1224'},
+                        {'name': 'Bart', 'email': 'bart@simpsons.com', 'phone': '555-222-1234'}
+                    ]
+                });
+            });
+            
+            it("should position buttons at the bottom when editing first row", function() {
+                plugin.startEdit(store.getAt(0), grid.columns[0]);
+                
+                expect(plugin.editor.floatingButtons.el.hasCls('x-grid-row-editor-buttons-bottom')).toBe(true);
+            });
+            
+            it("should position buttons at the top when editing last row", function() {
+                plugin.startEdit(store.getAt(1), grid.columns[0]);
+                
+                expect(plugin.editor.floatingButtons.el.hasCls('x-grid-row-editor-buttons-top')).toBe(true);
             });
         });
     });

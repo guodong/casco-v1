@@ -547,8 +547,8 @@ Ext.define('Ext.layout.ContextItem', {
     /**
      * Adds x and y values from a props object to a styles object as "left" and "top" values.
      * Overridden to add the x property as "right" in rtl mode.
-     * @property {Object} styles A styles object for an Element
-     * @property {Object} props A ContextItem props object
+     * @param {Object} styles A styles object for an Element
+     * @param {Object} props A ContextItem props object
      * @return {Number} count The number of styles that were set.
      * @private
      */
@@ -787,7 +787,7 @@ Ext.define('Ext.layout.ContextItem', {
     flushAnimations: function() {
         var me = this,
             animateFrom = me.previousSize,
-            target, targetAnim, duration, animateProps, anim,
+            target, animQueue, targetAnim, duration, animateProps, anim,
             changeCount, j, propsLen, propName, oldValue, newValue;
 
         // Only animate if the Component has been previously layed out: first layout should not animate
@@ -809,7 +809,8 @@ Ext.define('Ext.layout.ContextItem', {
                 propName = animateProps[j];
                 oldValue = animateFrom[propName];
                 newValue = me.peek(propName);
-                if (oldValue !== newValue) {
+                
+                if (oldValue !== newValue && newValue != null) {
                     propName = me.translateProps[propName]||propName;
                     anim.from[propName] = oldValue;
                     anim.to[propName] = newValue;
@@ -829,7 +830,8 @@ Ext.define('Ext.layout.ContextItem', {
                     me.writeProps(anim.from);
                 }
                 me.el.animate(anim);
-                anim = Ext.fx.Manager.getFxQueue(me.el.id)[0];
+                animQueue = Ext.fx.Manager.getFxQueue(me.el.id);
+                anim = animQueue[animQueue.length - 1];
                 target.$layoutAnim = anim;
 
                 anim.on({
@@ -854,6 +856,15 @@ Ext.define('Ext.layout.ContextItem', {
                         }
                     }
                 });
+            }
+            // If no values were changed that could mean that the component
+            // started its lifecycle already collapsed and we simply don't have
+            // the proper expanded size. In such case we can't run the animation
+            // but still have to finish the expand sequence.
+            else {
+                if (me.isCollapsingOrExpanding === 2) {
+                    target.afterExpand(true);
+                }
             }
         }
     },
@@ -1503,7 +1514,7 @@ Ext.define('Ext.layout.ContextItem', {
      * value of `false` indicates that the value is already in the DOM.
      * @return {Number} The actual height after constraining.
      */
-    setHeight: function (height, dirty /*, private {Boolean} force */) {
+    setHeight: function (height, dirty) {
         var me = this,
             comp = me.target,
             ownerCtContext = me.ownerCtContext,
@@ -1554,7 +1565,7 @@ Ext.define('Ext.layout.ContextItem', {
      * value of `false` indicates that the value is already in the DOM.
      * @return {Number} The actual width after constraining.
      */
-    setWidth: function (width, dirty /*, private {Boolean} force */) {
+    setWidth: function (width, dirty) {
         var me = this,
             comp = me.target,
             ownerCtContext = me.ownerCtContext,
@@ -1664,7 +1675,7 @@ Ext.define('Ext.layout.ContextItem', {
             width = dirtyProps.width,
             height = dirtyProps.height,
             target = me.target,
-            hasWidth, hasHeight, isAbsolute, scrollbarSize, style, targetEl;
+            hasWidth, hasHeight, isAbsolute, scrollbarSize, style, targetEl, scroller;
 
         // Process non-style properties:
         if ('displayed' in dirtyProps) {
@@ -1700,6 +1711,19 @@ Ext.define('Ext.layout.ContextItem', {
             } else {
                 // we wrap an element, so convert x/y to styles:
                 styleCount += me.addPositionStyles(styles, dirtyProps);
+            }
+        }
+
+        // Handle overflow settings updated by layout
+        if ('overflowX' in dirtyProps) {
+            scroller = target.getScrollable();
+            if (scroller) {
+                scroller.setX(dirtyProps.overflowX);
+            }
+        }
+        if ('overflowY' in dirtyProps) {
+            if (scroller || (scroller = target.getScrollable())) {
+               scroller.setY(dirtyProps.overflowY);
             }
         }
 
@@ -1896,7 +1920,7 @@ Ext.define('Ext.layout.ContextItem', {
             return this.callParent(arguments);
         },
 
-        setHeight: function (height, dirty, /* private */force) {
+        setHeight: function (height, dirty, force) {
             if (!force && this.wrapsComponent) {
                 this.checkAuthority('height');
             }
@@ -1904,7 +1928,7 @@ Ext.define('Ext.layout.ContextItem', {
             return this.callParent(arguments);
         },
 
-        setWidth: function (width, dirty, /* private */force) {
+        setWidth: function (width, dirty, force) {
             if (!force && this.wrapsComponent) {
                 this.checkAuthority('width');
             }
@@ -1938,6 +1962,10 @@ Ext.define('Ext.layout.ContextItem', {
         columnsChanged:         faux,
         rowHeights:             faux,
         viewOverflowY:          faux,
+
+        // Scroller state set by layouts
+        overflowX:              faux,
+        overflowY:              faux,
 
         left:                   px,
         top:                    px,

@@ -1,3 +1,7 @@
+/**
+ * @class Ext.list.TreeItem
+ */
+
 @function add-if ($value1, $value2) {
     @if $value1 == null or $value2 == null {
         @return null;
@@ -83,6 +87,10 @@
     $item-text-font-size: null,
     $item-text-overflow: null,
 
+    $item-icon-over-transition: null,
+    $item-text-over-transition: null,
+    $item-expander-over-transition: null,
+
     $row-indicator-selected-color: null,
     $row-indicator-selected-over-color: null, 
     $row-indicator-over-color: null,
@@ -126,7 +134,7 @@
             background-color: $row-selected-background-color;
         }
 
-        > .#{$prefix}treelist-row:hover {
+        > .#{$prefix}treelist-row-over {
             background-color: $row-selected-over-background-color;
         }
     }
@@ -154,8 +162,8 @@
         }
     }
 
-    .#{$prefix}treelist-item-icon,
-    .#{$prefix}treelist-item-tool,
+    .#{$prefix}treelist-item-icon:before,
+    .#{$prefix}treelist-item-tool:before, // only size the glyph pseudo-el on a tool
     .#{$prefix}treelist-item-expander {
         line-height: $item-line-height;
 
@@ -164,7 +172,21 @@
                 line-height: $item-line-height-big;
             }
         }
+    }
+
+    .#{$prefix}treelist-item-icon,
+    .#{$prefix}treelist-item-tool,
+    .#{$prefix}treelist-item-expander {
         text-align: center;
+
+        // Loading status may use a background image.
+        background-repeat: no-repeat;
+        background-position: 0 center;
+    }
+
+    .#{$prefix}treelist-item-loading .#{$prefix}treelist-item-icon {
+        background-image: theme-background-image('tree/loading', 'gif');
+        color: transparent;
     }
 
     .#{$prefix}treelist-item-icon,
@@ -241,7 +263,7 @@
     }
 
     @if $row-indicator-width != null {
-        .#{$prefix}treelist-row:hover:before, 
+        .#{$prefix}treelist-row-over:before,
         .#{$prefix}treelist-item-selected > .#{$prefix}treelist-row:before {
             content: " ";
             position: absolute;
@@ -252,11 +274,11 @@
             height: 100%;
         }
 
-        .#{$prefix}treelist-row:hover:before {
+        .#{$prefix}treelist-row-over:before {
             background-color: $row-indicator-over-color;
         }
 
-        .#{$prefix}treelist-item-selected > .#{$prefix}treelist-row:hover:before {
+        .#{$prefix}treelist-item-selected > .#{$prefix}treelist-row-over:before {
             background-color: $row-indicator-selected-over-color;
         }
 
@@ -294,7 +316,7 @@
             width: 0;
         }
 
-        > .#{$prefix}treelist-row:hover {
+        > .#{$prefix}treelist-row-over {
             background-color: $toolstrip-background-color;
 
             > * > .#{$prefix}treelist-item-text {
@@ -320,36 +342,36 @@
     }
 
     &.#{$prefix}treelist-highlight-path {
-        .#{$prefix}treelist-item:hover > * {
+        .#{$prefix}treelist-item-over > * > * {
             > .#{$prefix}treelist-item-icon {
                 color: $item-icon-over-color;
-                transition: color 0.5s;
+                transition: $item-icon-over-transition;
             }
             > .#{$prefix}treelist-item-text {
                 color: $item-text-over-color;
-                transition: color 0.5s;
+                transition: $item-text-over-transition;
             }
             > .#{$prefix}treelist-item-expander {
                 color: $item-expander-over-color;
-                transition: color 0.5s;
+                transition: $item-expander-over-transition;
             }
         }
     }
 
-    .#{$prefix}treelist-row:hover {
+    .#{$prefix}treelist-row-over {
         background-color: $row-over-background-color;
 
         > * > .#{$prefix}treelist-item-icon {
             color: $item-icon-over-color;
-            transition: color 0.5s;
+            transition: $item-icon-over-transition;
         }
         > * > .#{$prefix}treelist-item-text {
             color: $item-text-over-color;
-            transition: color 0.5s;
+            transition: $item-text-over-transition;
         }
         > * > .#{$prefix}treelist-item-expander {
             color: $item-expander-over-color;
-            transition: color 0.5s;
+            transition: $item-expander-over-transition;
         }
     }
 
@@ -441,6 +463,10 @@
     $item-text-font-size: null,
     $item-text-overflow: null,
 
+    $item-icon-over-transition: null,
+    $item-text-over-transition: null,
+    $item-expander-over-transition: null,
+
     $row-indicator-selected-color: null,
     $row-indicator-selected-over-color: null, 
     $row-indicator-over-color: null,
@@ -455,10 +481,11 @@
     //
     .#{$prefix}treelist-#{$ui} {
         background-color: $background-color;
-        background-position-x: $item-icon-width;
+        // Some browsers (FF, IE) don't support reading background-position-x
+        background-position: $item-icon-width 0%;
         @if $enable-big {
             .x-big & {
-                background-position-x: $item-icon-width-big;
+                background-position: $item-icon-width-big 0%;
             }
         }
 
@@ -512,6 +539,10 @@
             $item-text-font-size: $item-text-font-size,
             $item-text-overflow: $item-text-overflow,
 
+            $item-icon-over-transition: $item-icon-over-transition,
+            $item-text-over-transition: $item-text-over-transition,
+            $item-expander-over-transition: $item-expander-over-transition,
+
             $row-indicator-selected-color: $row-indicator-selected-color,
             $row-indicator-selected-over-color: $row-indicator-selected-over-color, 
             $row-indicator-over-color: $row-indicator-over-color,
@@ -530,10 +561,11 @@
 //
 .#{$prefix}treelist {
     background-color: $treelist-background-color;
-    background-position-x: $treelist-item-icon-width;
+    // Some browsers (FF, IE) don't support reading background-position-x
+    background-position: $treelist-item-icon-width 0%;
     @if $enable-big {
         .x-big & {
-            background-position-x: $treelist-item-icon-width-big;
+            background-position: $treelist-item-icon-width-big 0%;
         }
     }
     overflow: hidden;
@@ -657,6 +689,10 @@
     $item-text-over-color: $treelist-item-text-over-color,
     $item-text-font-size: $treelist-item-text-font-size,
     $item-text-overflow: $treelist-item-text-overflow,
+
+    $item-icon-over-transition: $item-icon-over-transition,
+    $item-text-over-transition: $item-text-over-transition,
+    $item-expander-over-transition: $item-expander-over-transition,
 
     $row-indicator-selected-color: $treelist-row-indicator-selected-color,
     $row-indicator-selected-over-color: $treelist-row-indicator-selected-over-color, 

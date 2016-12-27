@@ -581,8 +581,6 @@ if (!document.createElement('canvas').getContext) {
    * be associated with
    * @private
    */
-  //
-
   function CanvasRenderingContext2D_(canvasElement) {
     this.m_ = createMatrixIdentity();
 
@@ -1104,7 +1102,6 @@ if (!document.createElement('canvas').getContext) {
     copyState(this, o);
     this.aStack_.push(o);
     this.mStack_.push(this.m_);
-    this.m_ = matrixMultiply(createMatrixIdentity(), this.m_);
   };
 
   contextPrototype.restore = function() {

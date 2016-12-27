@@ -75,7 +75,8 @@ describe('Ext.util.Renderable', function(){
 
     describe('Using existing el', function() {
         var viewport,
-            previousNodes;
+            previousNodes,
+            existingElement;
 
         beforeEach(function() {
             // The content of the body is being checked by this test so we have to empty it
@@ -92,6 +93,8 @@ describe('Ext.util.Renderable', function(){
         });
         afterEach(function() {
             viewport.destroy();
+            
+            existingElement = Ext.destroy(existingElement);
             
             // Restore previous state of document
             document.body.appendChild(previousNodes);
@@ -147,9 +150,11 @@ describe('Ext.util.Renderable', function(){
                         '</UL>',
                     '</DIV> ',
                     '<DIV id=test-panel> ',
-                        '<DIV id=test-panel-body> ',
-                            '<DIV id=test-panel-outerCt> ',
-                                '<DIV id=test-panel-innerCt>test</DIV>',
+                        '<DIV id=test-panel-bodyWrap> ',
+                            '<DIV id=test-panel-body> ',
+                                '<DIV id=test-panel-outerCt> ',
+                                    '<DIV id=test-panel-innerCt>test</DIV>',
+                                '</DIV>',
                             '</DIV>',
                         '</DIV>',
                     '</DIV>'
@@ -165,9 +170,11 @@ describe('Ext.util.Renderable', function(){
                         '</ul>',
                     '</div>',
                     '<div id="test-panel">',
-                        '<div id="test-panel-body">',
-                            '<div id="test-panel-outerCt">',
-                                '<div id="test-panel-innerCt">test</div>',
+                        '<div id="test-panel-bodyWrap">',
+                            '<div id="test-panel-body">',
+                                '<div id="test-panel-outerCt">',
+                                    '<div id="test-panel-innerCt">test</div>',
+                                '</div>',
                             '</div>',
                         '</div>',
                     '</div>'
