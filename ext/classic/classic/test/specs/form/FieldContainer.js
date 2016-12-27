@@ -61,6 +61,48 @@ describe("Ext.form.FieldContainer", function() {
         });
     });
 
+    describe("using box layout", function() {
+        it("should add its layout's targetCls to its containerEl", function() {
+            makeComponent({
+                renderTo: Ext.getBody(),
+                layout: 'hbox',
+                items: [{
+                    xtype: 'textfield',
+                    fieldLabel: 'SomeLabel'
+                }]
+            });
+            expect(component.containerEl.hasCls(component.layout.targetCls)).toBe(true);
+        });
+
+        it("should wrap it's items width", function() {
+            var panel, textfield, displayfield;
+
+            makeComponent({
+                renderTo: null,
+                layout: 'hbox',
+                items: [{
+                    xtype: 'textfield',
+                    fieldLabel: 'Email'
+                },{
+                    xtype: 'displayfield',
+                    value: 'foo'
+                }]
+            });
+
+            panel = Ext.widget('panel',{
+                renderTo: document.body,
+                layout: 'vbox',
+                items: [component]
+            });
+
+            textfield = panel.down('textfield');
+            displayfield = panel.down('displayfield');
+
+            expect(component.getWidth()).toBe(textfield.getWidth() + displayfield.getWidth());
+            expect(component.getWidth()).toBeGreaterThan(0);
+            panel.destroy();
+        });
+    });
 
     describe('combineLabels', function() {
         it("should combine the labels of its sub-fields", function() {

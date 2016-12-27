@@ -1,6 +1,13 @@
+/* global MockAjaxManager, Ext, expect, spyOn, jasmine */
+
 describe("Ext.LoadMask", function(){
-    var mask, target;
+    var mask, target, mockComplete;
     
+    beforeEach(function(){
+        MockAjaxManager.addMethods();    
+    });
+    
+
     function makeTarget(targetCfg) {
         target = Ext.widget(targetCfg && targetCfg.xtype || 'component', Ext.apply({
             width: 100,
@@ -20,6 +27,7 @@ describe("Ext.LoadMask", function(){
     afterEach(function(){
         Ext.destroy(target, mask);
         mask = target = null;
+        MockAjaxManager.removeMethods();
     });
     
     describe("mask options", function(){
@@ -99,7 +107,7 @@ describe("Ext.LoadMask", function(){
                 createMask({
                     useMsg: false
                 }).show();
-                expect(mask.msgEl.isVisible()).toBe(false);
+                expect(mask.msgWrapEl.isVisible()).toBe(false);
             }); 
             
             it("should should still show the mask even when useMsg: false", function(){
@@ -298,6 +306,55 @@ describe("Ext.LoadMask", function(){
                     expect(mask.isVisible()).toBe(false);
                 });
             });
+
+            describe("disable/enable", function() {
+                it("should not show the loadMask when loading a store if the mask is disabled", function() {
+                    var menu, menuItem, panelMask, store,
+                    panel = new Ext.grid.Panel({
+                        renderTo: document.body,
+                        title: 'Test focus',
+                        height: 300,
+                        width: 600,
+                        store: {
+                            asynchronousLoad: false,
+                            proxy: {
+                                type : 'ajax',
+                                url : 'foo'
+                            }
+                        },
+                        loadMask: true,
+                        columns: [{
+                            text: 'Columns one',
+                            width: 200
+                        }, {
+                            text: 'Column two',
+                            flex: 1
+                        }]
+                    });
+
+                    store = panel.store;
+                    store.load();
+                    
+                    waitsFor(function() {
+                        panelMask = panel.view.loadMask;
+                        return panelMask.isLoadMask;
+                    },'Store not loaded');
+
+                    runs(function() {
+                        spyOn(panelMask, 'show').andCallThrough();
+                        expect(panelMask.show.callCount).toBe(0);
+                        
+                        panelMask.setDisabled(true);
+                        store.load();
+                        panelMask.setDisabled(false);
+                        
+                        store.load();
+                        expect(panelMask.show.callCount).toBe(1);
+                        panel.destroy();
+                       
+                    });
+                });
+            });
             
             describe("expand/collapse", function(){
                 beforeEach(function(){
@@ -339,7 +396,7 @@ describe("Ext.LoadMask", function(){
             describe("focus handling", function() {
                 var waitForFocus = jasmine.waitForFocus,
                     expectFocused = jasmine.expectFocused,
-                    fooBtn, barBtn;
+                    fooBtn, barBtn, panel;
                 
                 beforeEach(function() {
                     target = new Ext.panel.Panel({
@@ -362,13 +419,73 @@ describe("Ext.LoadMask", function(){
                 });
                 
                 afterEach(function() {
-                    Ext.destroy(barBtn);
+                    Ext.destroy(barBtn, panel);
+                });
+
+                it('should not cause onFocusLeave consequences on show', function() {
+                    var menu, menuItem, panelMask, panelStore, col0;
+                    panel = new Ext.grid.Panel({
+                        renderTo: document.body,
+                        title: 'Test focus',
+                        height: 300,
+                        width: 600,
+                        store: {
+                            proxy: {
+                                type: 'ajax',
+                                url: 'foo'
+                            }
+                        },
+                        loadMask: true,
+                        columns: [{
+                            text: 'Columns one',
+                            width: 200,
+                            locked: true
+                        }, {
+                            text: 'Column two',
+                            flex: 1
+                        }]
+                    });
+                    panelStore = panel.store;
+                    col0 = panel.getVisibleColumnManager().getColumns()[0];
+
+                    Ext.testHelper.showHeaderMenu(col0);
+
+                    runs(function() {
+                        menu = col0.activeMenu;
+                        menuItem = menu.child(':first');
+                        menuItem.focus(false, true);
+                        waitsForFocus(menuItem);
+                    });
+                    
+
+                    runs(function() {
+                        // Show the mask and it should focus
+                        panelStore.fireEvent('beforeload', panelStore);
+                    });
+                    waitsFor(function() {
+                        panelMask = panel.view.loadMask;
+                        return panelMask && panelMask.isVisible();
+                    }, 'LoadMask to show');
+
+                    // That should NOT have disturbed the floating Menu which hides onFocusLeave
+                    runs(function() {
+                        expect(menu.isVisible()).toBe(true);
+                        expect(menuItem.hasFocus).toBe(true);
+                        panelStore.fireEvent('load', panelStore);
+                    });
+                    
+                    waitsFor(function() {
+                        return !panelMask.isVisible();
+                    }, 'LoadMask to hide');
+
+                    // Focus must revert back into the menu
+                    runs(function() {
+                        expect(menuItem.hasFocus).toBe(true);
+                    });
                 });
                 
                 it("should steal focus from within target on show", function() {
-                    runs(function() {
-                        mask.show();
-                    });
+                    mask.show();
                     
                     waitForFocus(mask);
                     
@@ -377,17 +494,13 @@ describe("Ext.LoadMask", function(){
                 
                 describe("restoring focus on hide", function() {
                     beforeEach(function() {
-                        runs(function() {
-                            mask.show();
-                        });
+                        mask.show();
                     
                         waitForFocus(mask);
                     });
                     
                     it("should go to previously focused element", function() {
-                        runs(function() {
-                            mask.hide();
-                        });
+                        mask.hide();
                     
                         waitForFocus(fooBtn);
                     
@@ -399,10 +512,8 @@ describe("Ext.LoadMask", function(){
                             renderTo: Ext.getBody(),
                             text: 'bar'
                         });
-                        
-                        runs(function() {
-                            barBtn.focus();
-                        });
+
+                        barBtn.focus();
                         
                         waitForFocus(barBtn);
                         
@@ -737,6 +848,58 @@ describe("Ext.LoadMask", function(){
             mask.show();
 
             expect(mask.el.shim.el).toBeNull();
+        });
+    });
+    
+    describe("detached owner", function() {
+        it("should not show", function() {
+            createMask();
+            
+            target.detachFromBody();
+            
+            mask.loading = true;
+            mask.maybeShow();
+            
+            expect(mask.isVisible()).toBe(false);
+        });
+    });
+    
+    describe("ARIA", function() {
+        beforeEach(function() {
+            createMask();
+        });
+        
+        it("should have progressbar role", function() {
+            expect(mask).toHaveAttr('role', 'progressbar');
+        });
+        
+        it("should not have aria-valuemin attribute", function() {
+            expect(mask).not.toHaveAttr('aria-valuemin');
+        });
+        
+        it("should not have aria-valuemax attribute", function() {
+            expect(mask).not.toHaveAttr('aria-valuemax');
+        });
+        
+        it("should not have aria-valuenow attribute", function() {
+            expect(mask).not.toHaveAttr('aria-valuenow');
+        });
+        
+        it("should not have aria-valuetext by default", function() {
+            expect(mask).not.toHaveAttr('aria-valuetext');
+        });
+        
+        it("should have aria-valuetext after show", function() {
+            mask.show();
+            
+            expect(mask).toHaveAttr('aria-valuetext', 'Loading...');
+        });
+        
+        it("should remove aria-valuetext if useMsg is false", function() {
+            mask.useMsg = false;
+            mask.show();
+            
+            expect(mask).not.toHaveAttr('aria-valuetext');
         });
     });
 });

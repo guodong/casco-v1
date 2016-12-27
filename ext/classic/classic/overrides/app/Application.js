@@ -1,5 +1,5 @@
 /**
- *
+ * @class Ext.app.Application
  */
 Ext.define('Ext.overrides.app.Application', {
     override: 'Ext.app.Application',
@@ -18,24 +18,41 @@ Ext.define('Ext.overrides.app.Application', {
     config: {
         /**
          * @cfg {Boolean} enableQuickTips
-         * True to automatically set up Ext.tip.QuickTip support.
-         * @member Ext.app.Application
+         * @deprecated 6.2.0 Use {@link #quickTips}.
          */
-        enableQuickTips: true
+        enableQuickTips: null
     },
 
-    applyMainView: function(value) {
-        var view = this.getView(value),
-            proto = view.prototype,
-            config, plugins;
+    /**
+     * @cfg {Boolean} quickTips
+     * True to automatically set up Ext.tip.QuickTip support.
+     *
+     * @since 6.2.0
+     */
+    quickTips: true,
+
+    updateEnableQuickTips: function(enableQuickTips) {
+        this.setQuickTips(enableQuickTips);
+    },
+
+    applyMainView: function(mainView) {
+        var view, proto, config, protoPlugins, configPlugins;
+
+        if (typeof mainView === 'string') {
+            view = this.getView(mainView);
+            config = {};
+        } else {
+            config = mainView;
+            view = Ext.ClassManager.getByConfig(mainView);
+        }
+        proto = view.prototype;
 
         if (!proto.isViewport) {
-            plugins = proto.plugins;
-            // Need to copy over any plugins defined on the prototype.
-            plugins = ['viewport'].concat(plugins ? Ext.Array.from(plugins, true) : []);
-            config = {
-                plugins: plugins
-            };
+            // Need to copy over any plugins defined on the prototype and on the config.
+            protoPlugins = Ext.Array.from(proto.plugins);
+            configPlugins = Ext.Array.from(config.plugins);
+            config = Ext.apply({}, config);
+            config.plugins = ['viewport'].concat(protoPlugins, configPlugins);
         }
 
         return view.create(config);
@@ -69,7 +86,7 @@ Ext.define('Ext.overrides.app.Application', {
         var me = this,
             autoCreateViewport = me.autoCreateViewport;
 
-        if (me.getEnableQuickTips()) {
+        if (me.getQuickTips()) {
             me.initQuickTips();
         }
 

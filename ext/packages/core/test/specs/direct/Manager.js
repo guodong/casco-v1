@@ -1,3 +1,5 @@
+/* global Ext, jasmine, expect, spyOn, provider */
+
 describe("Ext.direct.Manager", function() {
     var Manager = Ext.direct.Manager,
         provider, handler;
@@ -18,7 +20,7 @@ describe("Ext.direct.Manager", function() {
     });
     
     it("should init default varName", function() {
-        expect(Manager.getVarName()).toBe('Ext.app.REMOTING_API');
+        expect(Manager.getVarName()).toBe('Ext.REMOTING_API');
     });
     
     describe("handles Providers:", function() {
@@ -345,9 +347,13 @@ describe("Ext.direct.Manager", function() {
 
             Ext.undefine('test.Provider');
             Manager.providerClasses.test = provider = null;
-            test = undefined;
+            try {
+                delete Ext.global.test;
+            } catch (e) {
+                Ext.global.test = undefined;
+            }
             
-            delete Ext.app.REMOTING_API;
+            delete Ext.REMOTING_API;
         });
         
         describe("passing array", function() {
@@ -611,7 +617,8 @@ describe("Ext.direct.Manager", function() {
                 describe("failure", function() {
                     var error = [
                             'blerg',
-                            Ext.isIE     ? "ReferenceError: 'nonexistent' is undefined" :
+                            Ext.isIE8    ? "TypeError: 'nonexistent' is undefined" :
+                            Ext.isIE || Ext.isEdge     ? "ReferenceError: 'nonexistent' is undefined" :
                             Ext.isSafari ? "ReferenceError: Can't find variable: nonexistent" :
                                            "ReferenceError: nonexistent is not defined"
                         ];

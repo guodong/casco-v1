@@ -1,4 +1,4 @@
-/* global jasmine, describe, it, beforeEach, afterEach, expect, waitsFor, runs, xit, xdescribe */
+/* global jasmine, describe, it, beforeEach, afterEach, expect, waitsFor, runs, xit, xdescribe, Ext */
 
 /*
  Adapted from:
@@ -8,6 +8,7 @@
 describe('Ext.promise.Promise', function() {
     var Deferred = Ext.Deferred,
         ExtPromise = Ext.promise.Promise,
+        hasNativePromise = !!window.Promise,
         targetScope = {},
         deferred, promise, extLog;
 
@@ -30,17 +31,14 @@ describe('Ext.promise.Promise', function() {
     });
 
     function eventuallyResolvesTo(promise, value, equals) {
-        var done = false,
+        var doneSpy = jasmine.createSpy().andCallFake(function(v) {
+                result = v;
+            }),
             result;
 
-        promise.then(function(v) {
-            result = v;
-            done = true;
-        });
+        promise.then(doneSpy);
 
-        waitsFor(function() {
-            return done;
-        });
+        waitsForSpy(doneSpy);
 
         runs(function() {
             if (equals) {
@@ -216,6 +214,44 @@ describe('Ext.promise.Promise', function() {
         });
     });
 
+    describe('nesting promises', function() {
+        it('should resolve when returning a resolved deferred', function() {
+            promise = Deferred.resolved('initial').then(function(v) {
+                var other = new Deferred();
+                other.resolve(v + 'ok');
+                return other.promise;
+            });
+            eventuallyResolvesTo(promise, 'initialok');
+        });
+
+        if (hasNativePromise) {
+            it('should resolve when returning a resolved native', function() {
+                promise = Deferred.resolved('initial').then(function(v) {
+                    return Promise.resolve(v + 'ok');
+                });
+                eventuallyResolvesTo(promise, 'initialok');
+            });
+        }
+
+        it('should reject when returning a rejected deferred', function() {
+            promise = Deferred.resolved('initial').then(function(v) {
+                var other = new Deferred();
+                other.reject(v + 'ok');
+                return other.promise;
+            });
+            eventuallyRejectedWith(promise, 'initialok');
+        });
+
+        if (hasNativePromise) {
+            it('should resolve when returning a rejected native', function() {
+                promise = Deferred.resolved('initial').then(function(v) {
+                    return Promise.reject(v + 'ok');
+                });
+                eventuallyRejectedWith(promise, 'initialok');
+            });
+        }
+    });
+
     describe('Promise.is()', function() {
         describe('returns true for a Promise or then()-able', function() {
             it('Promise', function() {
@@ -230,6 +266,13 @@ describe('Ext.promise.Promise', function() {
 
                 expect(ExtPromise.is(promise)).toBe(true);
             });
+
+            if (hasNativePromise) {
+                it('returns true for a native Promise', function() {
+                    var p = new Promise(function() {});
+                    expect(ExtPromise.is(p)).toBe(true);
+                });
+            }
         });
 
         describe('returns false for non-promises', function() {
@@ -2207,55 +2250,58 @@ describe('Ext.promise.Promise', function() {
         describe('with a progress handler', function() {
             var progressHandler;
             describe('attaches a progress handler that will be called on progress updates', function() {
-                it('called with progress update when updated', function(done) {
+                it('called with progress update when updated', function() {
                     progressHandler = jasmine.createSpy();
                     deferred = new Deferred();
                     promise = deferred.promise;
 
                     promise.then(null, null, progressHandler);
 
-                    Ext.asap(function() {
-                        deferred.update('progress');
+                    deferred.update('progress');
+                    
+                    waitsForSpy(progressHandler);
+                    runs(function() {
                         expect(progressHandler.callCount).toBe(1);
                         expect(progressHandler.calls[0].args).toEqual(['progress']);
-                        done();
                     });
                 });
 
-                it('called with progress update in specified scope when updated', function(done) {
+                it('called with progress update in specified scope when updated', function() {
                     progressHandler = jasmine.createSpy();
                     deferred = new Deferred();
                     promise = deferred.promise;
 
                     promise.then(null, null, progressHandler, targetScope);
 
-                    Ext.asap(function() {
-                        deferred.update('progress');
+                    deferred.update('progress');
+                    
+                    waitsForSpy(progressHandler);
+                    runs(function() {
                         expect(progressHandler.callCount).toBe(1);
                         expect(progressHandler.calls[0].args).toEqual(['progress']);
                         expect(progressHandler.calls[0].scope).toBe(targetScope);
-                        done();
                     });
                 });
             });
 
             describe('propagates transformed progress updates that originate from this Promise', function() {
-                it('propagates progress updates to subsequent Promises in the chain if a progress handler is omitted', function(done) {
+                it('propagates progress updates to subsequent Promises in the chain if a progress handler is omitted', function() {
                     progressHandler = jasmine.createSpy();
                     deferred = new Deferred();
                     promise = deferred.promise;
 
                     promise.then().then(null, null, progressHandler);
 
-                    Ext.asap(function() {
-                        deferred.update('progress');
+                    deferred.update('progress');
+                    
+                    waitsForSpy(progressHandler);
+                    runs(function() {
                         expect(progressHandler.callCount).toBe(1);
                         expect(progressHandler.calls[0].args).toEqual(['progress']);
-                        done();
                     });
                 });
 
-                it('propagates transformed progress updates to subsequent Promises in the chain if a progress handler transforms the progress update', function(done) {
+                it('propagates transformed progress updates to subsequent Promises in the chain if a progress handler transforms the progress update', function() {
                     //var deferred, progressHandler, promise, transformedProgressHandler, transformedTransformedProgressHandler;
 
                     //progressHandler = sinon.stub().returns('transformed progress');
@@ -2273,8 +2319,10 @@ describe('Ext.promise.Promise', function() {
                         then(null, null, transformedProgressHandler).
                         then(null, null, transformedTransformedProgressHandler);
 
-                    Ext.asap(function() {
-                        deferred.update('progress');
+                    deferred.update('progress');
+                    
+                    waitsForSpy(progressHandler);
+                    runs(function() {
 
                         expect(progressHandler.callCount).toBe(1);
                         expect(progressHandler.calls[0].args).toEqual(['progress']);
@@ -2285,8 +2333,6 @@ describe('Ext.promise.Promise', function() {
                         expect(transformedTransformedProgressHandler.callCount).toBe(1);
                         expect(transformedTransformedProgressHandler.calls[0].args).
                             toEqual(['transformed transformed progress']);
-
-                        done();
                     });
                 });
             });
@@ -2295,7 +2341,7 @@ describe('Ext.promise.Promise', function() {
         describe('with parameters specified via a configuration object', function() {
             describe('attaches an onResolved callback to this Promise that will be called when it resolves', function() {
                 describe('when only a success handler is specified', function() {
-                    it('called with resolved value when resolved', function(done) {
+                    it('called with resolved value when resolved', function() {
                         var onResolved = jasmine.createSpy();
 
                         promise = Deferred.resolved('resolved value');
@@ -2304,14 +2350,15 @@ describe('Ext.promise.Promise', function() {
                             success: onResolved
                         });
 
-                        Ext.asap(function() {
+                        waitsForSpy(onResolved);
+
+                        runs(function() {
                             expect(onResolved.callCount).toBe(1);
                             expect(onResolved.calls[0].args).toEqual(['resolved value']);
-                            done();
                         });
                     });
 
-                    it('called with resolved value in the specified scope when resolved', function(done) {
+                    it('called with resolved value in the specified scope when resolved', function() {
                         var onResolved = jasmine.createSpy();
 
                         promise = Deferred.resolved('resolved value');
@@ -2321,17 +2368,18 @@ describe('Ext.promise.Promise', function() {
                             scope: targetScope
                         });
 
-                        Ext.asap(function() {
+                        waitsForSpy(onResolved);
+
+                        runs(function() {
                             expect(onResolved.callCount).toBe(1);
                             expect(onResolved.calls[0].args).toEqual(['resolved value']);
                             expect(onResolved.calls[0].scope).toBe(targetScope);
-                            done();
                         });
                     });
                 });
 
                 describe('when success, failure and progress handlers are specified', function() {
-                    it('called with resolved value when resolved', function(done) {
+                    it('called with resolved value when resolved', function() {
                         var onResolved = jasmine.createSpy();
                         var onRejected = jasmine.createSpy();
                         var onProgress = jasmine.createSpy();
@@ -2344,18 +2392,18 @@ describe('Ext.promise.Promise', function() {
                             progress: onProgress
                         });
 
-                        Ext.asap(function() {
+                        waitsForSpy(onResolved);
+
+                        runs(function() {
                             expect(onResolved.callCount).toBe(1);
                             expect(onResolved.calls[0].args).toEqual(['resolved value']);
 
                             expect(onRejected.callCount).toBe(0);
                             expect(onProgress.callCount).toBe(0);
-
-                            done();
                         });
                     });
 
-                    it('called with resolved value in the specified scope when resolved', function(done) {
+                    it('called with resolved value in the specified scope when resolved', function() {
                         var onResolved = jasmine.createSpy();
                         var onRejected = jasmine.createSpy();
                         var onProgress = jasmine.createSpy();
@@ -2369,14 +2417,15 @@ describe('Ext.promise.Promise', function() {
                             scope: targetScope
                         });
 
-                        Ext.asap(function() {
+                        waitsForSpy(onResolved);
+
+                        runs(function() {
                             expect(onResolved.callCount).toBe(1);
                             expect(onResolved.calls[0].args).toEqual(['resolved value']);
                             expect(onResolved.calls[0].scope).toBe(targetScope);
 
                             expect(onRejected.callCount).toBe(0);
                             expect(onProgress.callCount).toBe(0);
-                            done();
                         });
                     });
                 });
@@ -2384,7 +2433,7 @@ describe('Ext.promise.Promise', function() {
 
             describe('attaches an onRejected callback to this Promise that will be called when it rejects', function() {
                 describe('when only a failure handler is specified', function() {
-                    it('called with rejection reason when rejected', function(done) {
+                    it('called with rejection reason when rejected', function() {
                         var onRejected = jasmine.createSpy();
 
                         promise = Deferred.rejected('rejection reason');
@@ -2393,14 +2442,15 @@ describe('Ext.promise.Promise', function() {
                             failure: onRejected
                         });
 
-                        Ext.asap(function() {
+                        waitsForSpy(onRejected);
+
+                        runs(function() {
                             expect(onRejected.callCount).toBe(1);
                             expect(onRejected.calls[0].args).toEqual(['rejection reason']);
-                            done();
                         });
                     });
 
-                    it('called with rejection reason in specified scope when rejected', function(done) {
+                    it('called with rejection reason in specified scope when rejected', function() {
                         var onRejected = jasmine.createSpy();
 
                         promise = Deferred.rejected('rejection reason');
@@ -2410,18 +2460,18 @@ describe('Ext.promise.Promise', function() {
                             scope: targetScope
                         });
 
-                        Ext.asap(function() {
+                        waitsForSpy(onRejected);
+
+                        runs(function() {
                             expect(onRejected.callCount).toBe(1);
                             expect(onRejected.calls[0].args).toEqual(['rejection reason']);
                             expect(onRejected.calls[0].scope).toBe(targetScope);
-
-                            done();
                         });
                     });
                 });
 
                 describe('when success, failure and progress handlers are specified', function() {
-                    it('called with rejection reason when rejected', function(done) {
+                    it('called with rejection reason when rejected', function() {
                         var onResolved = jasmine.createSpy();
                         var onRejected = jasmine.createSpy();
                         var onProgress = jasmine.createSpy();
@@ -2434,18 +2484,19 @@ describe('Ext.promise.Promise', function() {
                             progress: onProgress
                         });
 
-                        Ext.asap(function() {
+                        waitsForSpy(onRejected);
+
+                        runs(function() {
                             expect(onResolved.callCount).toBe(0);
 
                             expect(onRejected.callCount).toBe(1);
                             expect(onRejected.calls[0].args).toEqual(['rejection reason']);
 
                             expect(onProgress.callCount).toBe(0);
-                            done();
                         });
                     });
 
-                    it('called with rejection reason in specified scope when rejected', function(done) {
+                    it('called with rejection reason in specified scope when rejected', function() {
                         var onProgress, onRejected, onResolved;
 
                         onResolved = jasmine.createSpy();
@@ -2458,15 +2509,15 @@ describe('Ext.promise.Promise', function() {
                             progress: onProgress,
                             scope: targetScope
                         });
-                        Ext.asap(function() {
-                            expect(onResolved.callCount).toBe(0);
 
+                        waitsForSpy(onRejected);
+
+                        runs(function() {
                             expect(onRejected.callCount).toBe(1);
                             expect(onRejected.calls[0].args).toEqual(['rejection reason']);
                             expect(onRejected.calls[0].scope).toBe(targetScope);
 
                             expect(onProgress.callCount).toBe(0);
-                            done();
                         });
                     });
                 });
@@ -2474,7 +2525,7 @@ describe('Ext.promise.Promise', function() {
 
             describe('attaches an onProgress callback to this Promise that will be called when it resolves', function() {
                 describe('when only a progress handler is specified', function() {
-                    it('called with progress update when updated', function(done) {
+                    it('called with progress update when updated', function() {
                         var onProgress = jasmine.createSpy();
 
                         deferred = new Deferred();
@@ -2484,17 +2535,16 @@ describe('Ext.promise.Promise', function() {
                             progress: onProgress
                         });
 
-                        Ext.asap(function() {
-                            deferred.update('progress');
+                        deferred.update('progress');
+                        waitsForSpy(onProgress);
 
+                        runs(function() {
                             expect(onProgress.callCount).toBe(1);
                             expect(onProgress.calls[0].args).toEqual(['progress']);
-
-                            done();
                         });
                     });
 
-                    it('called with progress update in specified scope when updated', function(done) {
+                    it('called with progress update in specified scope when updated', function() {
                         var onProgress = jasmine.createSpy();
 
                         deferred = new Deferred();
@@ -2505,20 +2555,19 @@ describe('Ext.promise.Promise', function() {
                             scope: targetScope
                         });
 
-                        Ext.asap(function() {
-                            deferred.update('progress');
+                        deferred.update('progress');
+                        waitsForSpy(onProgress);
 
+                        runs(function() {
                             expect(onProgress.callCount).toBe(1);
                             expect(onProgress.calls[0].args).toEqual(['progress']);
                             expect(onProgress.calls[0].scope).toBe(targetScope);
-
-                            done();
                         });
                     });
                 });
 
                 describe('when success, failure and progress handlers are specified', function() {
-                    it('called with progress update when updated', function(done) {
+                    it('called with progress update when updated', function() {
                         var onResolved = jasmine.createSpy();
                         var onRejected = jasmine.createSpy();
                         var onProgress = jasmine.createSpy();
@@ -2532,19 +2581,18 @@ describe('Ext.promise.Promise', function() {
                             progress: onProgress
                         });
 
-                        Ext.asap(function() {
-                            deferred.update('progress');
+                        deferred.update('progress');
+                        waitsForSpy(onProgress);
 
+                        runs(function() {
                             expect(onProgress.callCount).toBe(1);
                             expect(onProgress.calls[0].args).toEqual(['progress']);
-
                             expect(onResolved.callCount).toBe(0);
                             expect(onRejected.callCount).toBe(0);
-                            done();
                         });
                     });
 
-                    it('called with progress update in specified scope when updated', function(done) {
+                    it('called with progress update in specified scope when updated', function() {
                         var onResolved = jasmine.createSpy();
                         var onRejected = jasmine.createSpy();
                         var onProgress = jasmine.createSpy();
@@ -2559,17 +2607,15 @@ describe('Ext.promise.Promise', function() {
                             scope: targetScope
                         });
 
-                        Ext.asap(function() {
-                            deferred.update('progress');
+                        deferred.update('progress');
+                        waitsForSpy(onProgress);
 
+                        runs(function() {
                             expect(onResolved.callCount).toBe(0);
                             expect(onRejected.callCount).toBe(0);
-
                             expect(onProgress.callCount).toBe(1);
                             expect(onProgress.calls[0].args).toEqual(['progress']);
                             expect(onProgress.calls[0].scope).toBe(targetScope);
-
-                            done();
                         });
                     });
                 });
@@ -2580,8 +2626,7 @@ describe('Ext.promise.Promise', function() {
     describe('otherwise()', function() {
         describe('attaches a callback that will be called if this Promise is rejected', function() {
             describe('with parameters specified via function arguments', function() {
-                it('called if rejected', function(done) {
-                    var me = this;
+                it('called if rejected', function() {
                     var onRejected = jasmine.createSpy();
                     var error = new Error('error message');
 
@@ -2589,67 +2634,54 @@ describe('Ext.promise.Promise', function() {
 
                     promise.otherwise(onRejected);
 
-                    promise.then(null, function() {
-                        try {
+                    waitsForSpy(onRejected);
+                    runs(function() {
+                        promise.then(null, function() {
                             expect(onRejected.callCount).toBe(1);
                             expect(onRejected.calls[0].args.length).toBe(1);
                             expect(onRejected.calls[0].args[0]).toBe(error);
-
-                            done();
-                        } catch (e) {
-                            me.fail(e);
-                            done();
-                        }
+                        });
                     });
                 });
 
-                it('called in specified scope if rejected', function(done) {
-                    var me = this;
+                it('called in specified scope if rejected', function() {
                     var onRejected = jasmine.createSpy();
                     var error = new Error('error message');
 
                     promise = Deferred.rejected(error);
 
                     promise.otherwise(onRejected, targetScope);
-
-                    promise.then(null, function() {
-                        try {
-                            expect(onRejected.callCount).toBe(1);
-                            expect(onRejected.calls[0].args.length).toBe(1);
-                            expect(onRejected.calls[0].args[0]).toBe(error);
-                            expect(onRejected.calls[0].scope).toBe(targetScope);
-
-                            done();
-                        } catch (e) {
-                            me.fail(e);
-                            done();
-                        }
+                    
+                    waitsForSpy(onRejected);
+                    
+                    runs(function() {
+                        expect(onRejected.callCount).toBe(1);
+                        expect(onRejected.calls[0].args.length).toBe(1);
+                        expect(onRejected.calls[0].args[0]).toBe(error);
+                        expect(onRejected.calls[0].scope).toBe(targetScope);
                     });
                 });
 
-                it('not called if resolved', function(done) {
-                    var me = this;
+                it('not called if resolved', function() {
                     var onRejected = jasmine.createSpy();
+                    var onResolved = jasmine.createSpy();
 
                     promise = Deferred.resolved('value');
 
                     promise.otherwise(onRejected);
 
-                    promise.then(function() {
-                        try {
-                            expect(onRejected.callCount).toBe(0);
-                            done();
-                        } catch (e) {
-                            me.fail(e);
-                            done();
-                        }
+                    promise.then(onResolved);
+
+                    waitsForSpy(onResolved);
+                    
+                    runs(function() {
+                        expect(onRejected.callCount).toBe(0);
                     });
                 });
             });
 
             describe('with parameters specified via a configuration object', function() {
-                it('called if rejected', function(done) {
-                    var me = this;
+                it('called if rejected', function() {
                     var onRejected = jasmine.createSpy();
                     var error = new Error('error message');
 
@@ -2659,23 +2691,17 @@ describe('Ext.promise.Promise', function() {
                         fn: onRejected
                     });
 
-                    promise.then(null, function() {
-                        try {
-                            expect(onRejected.callCount).toBe(1);
-                            expect(onRejected.calls[0].args.length).toBe(1);
-                            expect(onRejected.calls[0].args[0]).toBe(error);
-
-                            done();
-                        } catch (e) {
-                            me.fail(e);
-                            done();
-                        }
+                    waitsForSpy(onRejected);
+                    runs(function() {
+                        expect(onRejected.callCount).toBe(1);
+                        expect(onRejected.calls[0].args.length).toBe(1);
+                        expect(onRejected.calls[0].args[0]).toBe(error);
                     });
                 });
 
-                it('called in specified scope if rejected', function(done) {
-                    var me = this;
+                it('called in specified scope if rejected', function() {
                     var onRejected = jasmine.createSpy();
+                    var onFailure = jasmine.createSpy();
                     var error = new Error('error message');
 
                     promise = Deferred.rejected(error);
@@ -2684,41 +2710,34 @@ describe('Ext.promise.Promise', function() {
                         fn: onRejected,
                         scope: targetScope
                     });
+                    
+                    promise.then(null, onFailure);
 
-                    promise.then(null, function() {
-                        try {
-                            expect(onRejected.callCount).toBe(1);
-                            expect(onRejected.calls[0].args.length).toBe(1);
-                            expect(onRejected.calls[0].args[0]).toBe(error);
-                            expect(onRejected.calls[0].scope).toBe(targetScope);
-
-                            done();
-                        } catch (e) {
-                            me.fail(e);
-                            done();
-                        }
+                    waitsForSpy(onFailure);
+                    
+                    runs(function() {
+                        expect(onRejected.callCount).toBe(1);
+                        expect(onRejected.calls[0].args.length).toBe(1);
+                        expect(onRejected.calls[0].args[0]).toBe(error);
+                        expect(onRejected.calls[0].scope).toBe(targetScope);
                     });
                 });
 
-                it('not called if resolved', function(done) {
-                    var me = this;
+                it('not called if resolved', function() {
                     var onRejected = jasmine.createSpy();
+                    var onResolved = jasmine.createSpy();
 
                     promise = Deferred.resolved('value');
 
                     promise.otherwise({
                         fn: onRejected
                     });
+                    promise.then(onResolved);
 
-                    promise.then(function() {
-                        try {
-                            expect(onRejected.callCount).toBe(0);
-
-                            done();
-                        } catch (e) {
-                            me.fail(e);
-                            done();
-                        }
+                    waitsForSpy(onResolved);
+                    
+                    runs(function() {
+                        expect(onRejected.callCount).toBe(0);
                     });
                 });
             });
@@ -2774,87 +2793,74 @@ describe('Ext.promise.Promise', function() {
     describe('always()', function() {
         describe('attaches a callback to this Promise that will be called when it resolves or rejects', function() {
             describe('with parameters specified via function arguments', function() {
-                it('called with no parameters when resolved', function(done) {
-                    var me = this;
+                it('called with no parameters when resolved', function() {
                     var onComplete = jasmine.createSpy();
+                    var onResolve = jasmine.createSpy();
 
                     promise = Deferred.resolved('value');
 
                     promise.always(onComplete);
+                    promise.then(onResolve);
 
-                    promise.then(function() {
-                        try {
-                            expect(onComplete.callCount).toBeGT(0);
-                            done();
-                        } catch (e) {
-                            me.fail(e);
-                            done();
-                        }
+                    waitsForSpy(onResolve);
+                    runs(function() {
+                        expect(onComplete.callCount).toBeGT(0);
                     });
                 });
 
-                it('called with no parameters in the specified scope when resolved', function(done) {
-                    var me = this;
+                it('called with no parameters in the specified scope when resolved', function() {
                     var onComplete = jasmine.createSpy();
+                    var onResolve = jasmine.createSpy();
 
                     promise = Deferred.resolved('value');
 
                     promise.always(onComplete, targetScope);
+                    promise.then(onResolve);
 
-                    promise.then(function() {
-                        try {
-                            expect(onComplete.callCount).toBeGT(0);
-                            done();
-                        } catch (e) {
-                            me.fail(e);
-                            done();
-                        }
+                    waitsForSpy(onResolve);
+
+                    runs(function() {
+                        expect(onComplete.callCount).toBeGT(0);
                     });
                 });
 
-                it('called with no parameters when rejected', function(done) {
-                    var me = this;
+                it('called with no parameters when rejected', function() {
                     var onComplete = jasmine.createSpy();
+                    var onRejected = jasmine.createSpy();
 
                     promise = Deferred.rejected(new Error('error message'));
 
                     promise.always(onComplete);
+                    promise.then(null, onRejected);
 
-                    promise.then(null, function() {
-                        try {
-                            expect(onComplete.callCount).toBeGT(0);
-                            done();
-                        } catch (e) {
-                            me.fail(e);
-                            done();
-                        }
+                    waitsForSpy(onRejected);
+                    runs(function() {
+                        expect(onComplete.callCount).toBeGT(0);
                     });
                 });
 
-                it('called with no parameters in the specified scope when rejected', function(done) {
-                    var me = this;
+                it('called with no parameters in the specified scope when rejected', function() {
                     var onComplete = jasmine.createSpy();
+                    var onRejected = jasmine.createSpy();
 
                     promise = Deferred.rejected(new Error('error message'));
 
                     promise.always(onComplete, targetScope);
 
-                    promise.then(null, function() {
-                        try {
-                            expect(onComplete.callCount).toBeGT(0);
-                            done();
-                        } catch (e) {
-                            me.fail(e);
-                            done();
-                        }
+                    promise.then(null, onRejected);
+                    
+                    waitsForSpy(onRejected);
+                    
+                    runs(function() {
+                        expect(onComplete.callCount).toBeGT(0);
                     });
                 });
             });
 
             describe('with parameters specified via a configuration object', function() {
-                it('called with no parameters when resolved', function(done) {
-                    var me = this;
+                it('called with no parameters when resolved', function() {
                     var onComplete = jasmine.createSpy();
+                    var onResolved = jasmine.createSpy();
 
                     promise = Deferred.resolved('value');
 
@@ -2862,21 +2868,18 @@ describe('Ext.promise.Promise', function() {
                         fn: onComplete
                     });
 
-                    promise.then(function() {
-                        var error;
-                        try {
-                            expect(onComplete.callCount).toBeGT(0);
-                            done();
-                        } catch (e) {
-                            me.fail(e);
-                            done();
-                        }
+                    promise.then(onResolved);
+                    
+                    waitsForSpy(onResolved);
+                    
+                    runs(function() {
+                        expect(onComplete.callCount).toBeGT(0);
                     });
                 });
 
-                it('called with no parameters in the specified scope when resolved', function(done) {
-                    var me = this;
+                it('called with no parameters in the specified scope when resolved', function() {
                     var onComplete = jasmine.createSpy();
+                    var onResolved = jasmine.createSpy();
 
                     promise = Deferred.resolved('value');
 
@@ -2885,43 +2888,36 @@ describe('Ext.promise.Promise', function() {
                         scope: targetScope
                     });
 
-                    promise.then(function() {
-                        var error;
-                        try {
-                            expect(onComplete.callCount).toBeGT(0);
-                            done();
-                        } catch (e) {
-                            me.fail(e);
-                            done();
-                        }
+                    promise.then(onResolved);
+                    
+                    waitsForSpy(onResolved);
+                    
+                    runs(function() {
+                        expect(onComplete.callCount).toBeGT(0);
                     });
                 });
 
-                it('called with no parameters when rejected', function(done) {
-                    var me = this;
+                it('called with no parameters when rejected', function() {
                     var onComplete = jasmine.createSpy();
+                    var onFailure = jasmine.createSpy();
 
                     promise = Deferred.rejected(new Error('error message'));
 
                     promise.always({
                         fn: onComplete
                     });
+                    promise.then(null, onFailure);
+                    
+                    waitsForSpy(onFailure);
 
-                    promise.then(null, function() {
-                        var error;
-                        try {
-                            expect(onComplete.callCount).toBeGT(0);
-                            done();
-                        } catch (e) {
-                            me.fail(e);
-                            done();
-                        }
+                    runs(function() {
+                        expect(onComplete.callCount).toBeGT(0);
                     });
                 });
 
-                it('called with no parameters in the specified scope when rejected', function(done) {
-                    var me = this;
+                it('called with no parameters in the specified scope when rejected', function() {
                     var onComplete = jasmine.createSpy();
+                    var onFailure = jasmine.createSpy();
 
                     promise = Deferred.rejected(new Error('error message'));
 
@@ -2929,16 +2925,11 @@ describe('Ext.promise.Promise', function() {
                         fn: onComplete,
                         scope: targetScope
                     });
+                    promise.then(null, onFailure);
 
-                    promise.then(null, function() {
-                        var error;
-                        try {
-                            expect(onComplete.callCount).toBeGT(0);
-                            done();
-                        } catch (e) {
-                            me.fail(e);
-                            done();
-                        }
+                    waitsForSpy(onFailure);
+                    runs(function() {
+                        expect(onComplete.callCount).toBeGT(0);
                     });
                 });
             });
@@ -2958,7 +2949,6 @@ describe('Ext.promise.Promise', function() {
             });
 
             xit('if the originating Promise resolves, ignores and later rethrows Error thrown by callback', function(done) {
-                var me = this;
                 function onComplete () {
                     throw new Error('callback error message');
                 }
@@ -4182,7 +4172,7 @@ describe('Ext.promise.Promise', function() {
                     eventuallyResolvesTo(promise, 'abcd', true);
                 });
 
-                it('Array of three functions with an initial value', function() {
+                it('Array of three functions with an initial value and scope', function() {
                     var fns = [verifyScope(createAppenderFn('b'), targetScope), verifyScope(createAppenderFn('c'), targetScope), verifyScope(createAppenderFn('d'), targetScope)];
 
                     promise = Deferred.pipeline(fns, 'a', targetScope);
@@ -4292,7 +4282,7 @@ describe('Ext.promise.Promise', function() {
                     eventuallyResolvesTo(promise, 'abcd', true);
                 });
 
-                it('Promise of an Array of three functions with an initial value', function() {
+                it('Promise of an Array of three functions with an initial value and scope', function() {
                     var fns = [verifyScope(createAppenderFn('b'), targetScope), verifyScope(createAppenderFn('c'), targetScope), verifyScope(createAppenderFn('d'), targetScope)];
 
                     promise = Deferred.pipeline(Deferred.resolved(fns), 'a', targetScope);

@@ -1,5 +1,6 @@
+/* global jasmine, Ext, expect, xit, xdescribe */
+
 describe("Ext.Function", function() {
-    
     var _setTimeout,
         _clearTimeout,
         timeouts,
@@ -35,6 +36,9 @@ describe("Ext.Function", function() {
             clearedTimeoutIds = undefined;
             window.setTimeout = _setTimeout;
             window.clearTimeout = _clearTimeout;
+        },
+        fakeScope = {
+            foo: 'baz'
         };
 
     
@@ -174,6 +178,17 @@ describe("Ext.Function", function() {
             expect(result).toBe('bar');
             expect(fn).toHaveBeenCalledWith('foo');
         });
+        
+        it("should clone own properies on the given function", function() {
+            var fn = function() {},
+                clone;
+            
+            fn.$prop = 'foo';
+            
+            clone = Ext.Function.clone(fn);
+            
+            expect(clone.$prop).toEqual('foo');
+        });
     });
 
     describe("createInterceptor", function() {
@@ -267,7 +282,7 @@ describe("Ext.Function", function() {
                 };
                  interceptor = Ext.Function.createInterceptor(interceptedFn, interceptorFn);
                 expect(interceptor()).toBe('Original');
-            })
+            });
         });
     });
     
@@ -289,7 +304,7 @@ describe("Ext.Function", function() {
        });
        it("should use the specified scope as 'this'", function() {
            var scope = { x: 'foo' },
-               fn = jasmine.createSpy().andCallFake(function() { this.x = 'bar' }),
+               fn = jasmine.createSpy().andCallFake(function() { this.x = 'bar'; }),
                delayedFn = Ext.Function.createDelayed(fn, 2, scope);
            delayedFn();
            expect(fn).not.toHaveBeenCalled();
@@ -384,7 +399,9 @@ describe("Ext.Function", function() {
         });
 
         it("should return a timeout number", function() {
-            expect(typeof Ext.defer(function() {}, 10) === 'number').toBe(true);
+            var timer = Ext.defer(function() {}, 10);
+            expect(typeof timer === 'number').toBe(true);
+            clearTimeout(timer);
         });
     });
 
@@ -532,7 +549,7 @@ describe("Ext.Function", function() {
             var monologue = {
                     phrases: [],
                     addPhrase: function(phrase) {
-                        this.phrases.push(phrase)
+                        this.phrases.push(phrase);
                     }
                 },
                 addMeToo = jasmine.createSpy().andCallFake(function(phrase) {
@@ -551,7 +568,7 @@ describe("Ext.Function", function() {
             var monologue = {
                     phrases: [],
                     addPhrase: function(phrase) {
-                        this.phrases.push(phrase)
+                        this.phrases.push(phrase);
                     }
                 },
                 transcription = {
@@ -568,6 +585,39 @@ describe("Ext.Function", function() {
             expect(transcription.phrases).toEqual(['He said: I like you', 'He said: I love you']);
             expect(transcriptPhrase).toHaveBeenCalledWith('I like you');
             expect(transcriptPhrase).toHaveBeenCalledWith('I love you');
+        });
+    });
+    
+    describe('asap', function() {
+        it('should call the passed function', function() {
+            var called = false;
+
+            Ext.asap(function(){
+                called = true;
+            });
+
+            // Wait for it to have called the function; it's supposed to be called immediately upon exit from the
+            // calling event handler.
+            waitsFor(function() {
+                return called;
+            }, 'the asap function to call the passed function');
+        });
+        it('should not call the passed function if asapCancel called', function() {
+            var called = false,
+                timer;
+
+            timer = Ext.asap(function(){
+                called = true;
+            });
+            Ext.asapCancel(timer);
+
+            // We expect nothing to happen, so there's nothing to wait for.
+            // Wait for the most pessmistic time to allow aany erroneous call to occur.
+            waits(150);
+
+            runs(function() {
+                expect(called).toBe(false);
+            });
         });
     });
 });

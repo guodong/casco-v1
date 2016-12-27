@@ -87,7 +87,7 @@ Ext.define('Ext.chart.series.Polar', {
 
     constructor: function (config) {
         var me = this,
-            configurator = me.getConfigurator(),
+            configurator = me.self.getConfigurator(),
             configs = configurator.configs,
             p;
 
@@ -142,6 +142,8 @@ Ext.define('Ext.chart.series.Polar', {
         return count;
     },
 
+    isStoreDependantColorCount: true,
+
     getDefaultSpriteConfig: function () {
         return {
             type: this.seriesType,
@@ -154,11 +156,12 @@ Ext.define('Ext.chart.series.Polar', {
     },
 
     applyRotation: function (rotation) {
-        return Ext.draw.sprite.AttributeParser.angle(rotation);
+        return Ext.draw.sprite.AttributeParser.angle(Ext.draw.Draw.rad(rotation));
     },
 
     updateRotation: function (rotation) {
         var sprites = this.getSprites();
+
         if (sprites && sprites[0]) {
             sprites[0].setAttributes({
                 baseRotation: rotation

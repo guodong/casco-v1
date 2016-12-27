@@ -23,8 +23,8 @@ Ext.define('casco.view.rs.RsImport', {
 			},
 			callback:function(records, operation, success){
 			// 必须要同步才能取值
-			if(records[0].getData().responseText!=""){
-			//用loadRecord多好
+			//console.log(records[0]);
+			if(records[0].getData().headers){
 			headers=me.versions.getAt(0).get('headers');
 			regrex=me.versions.getAt(0).get('regrex');
 			//me.down('form').loadRecord(me.versions.getAt(0));
@@ -181,9 +181,7 @@ Ext.define('casco.view.rs.RsImport', {
 				handler : function() {
 					var self = this;var obj=null;
 					var form = this.up('form').getForm();
-					console.log(form);
-					// Ext.Msg.alert('Test',);
-					if(me.aflag) form.findField('isNew').setValue(1);
+					if(me.aflag) {form.findField('isNew').setValue(1);}
 					if (form.isValid()) {
 						// ajax请求
 						setTimeout(function ask_signal(){
@@ -215,11 +213,11 @@ Ext.define('casco.view.rs.RsImport', {
 											     synchronous: true,
 					                             scope:this,
 										         callback:function(){
-												  Ext.Ajax.request({
+												  /*Ext.Ajax.request({
 												  url: API + 'version/export',
 												  method: 'get',
 												  params:{id:versions.getAt(0).get('id')}
-												  });//ajax
+												  });*/
 								                  Ext.Msg.alert('导入结果!',(versions.getAt(0).get('result')));
 												 }
 												 });//load

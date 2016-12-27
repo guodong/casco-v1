@@ -9,7 +9,12 @@ Ext.define('casco.view.rs.Rs', {
 	           'casco.view.rs.RsDetails',
 	           ],
 	columnLines:true,
-	selModel: new Ext.selection.CheckboxModel({checkOnly:true}),
+	selModel: {
+        injectCheckbox: 0,
+        mode: "MULTI",     //"SINGLE"/"SIMPLE"/"MULTI"
+        checkOnly: true     //只能通过checkbox选择
+    },
+	selType: "checkboxmodel",
 	initComponent: function() {
 		var me = this;
 		me.versions = new casco.store.Versions();

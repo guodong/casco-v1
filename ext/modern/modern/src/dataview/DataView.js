@@ -169,6 +169,16 @@ Ext.define('Ext.dataview.DataView', {
      */
 
     /**
+     * @event itemtouchcancel
+     * Fires whenever an item touch is cancelled
+     * @param {Ext.dataview.DataView} this
+     * @param {Number} index The index of the item touched
+     * @param {Ext.Element/Ext.dataview.component.DataItem} target The element or DataItem touched
+     * @param {Ext.data.Model} record The record associated to the item
+     * @param {Ext.event.Event} e The event object
+     */
+
+    /**
      * @event itemtap
      * Fires whenever an item is tapped
      * @param {Ext.dataview.DataView} this
@@ -219,8 +229,28 @@ Ext.define('Ext.dataview.DataView', {
      */
 
     /**
+     * @event itemmouseenter
+     * Fires whenever the mouse pointer moves over an item
+     * @param {Ext.dataview.DataView} this
+     * @param {Number} index The index of the item
+     * @param {Ext.Element/Ext.dataview.component.DataItem} target The element or DataItem
+     * @param {Ext.data.Model} record The record associated to the item
+     * @param {Ext.event.Event} e The event object
+     */
+
+    /**
+     * @event itemmouseleave
+     * Fires whenever the mouse pointer leaves an item
+     * @param {Ext.dataview.DataView} this
+     * @param {Number} index The index of the item
+     * @param {Ext.Element/Ext.dataview.component.DataItem} target The element or DataItem
+     * @param {Ext.data.Model} record The record associated to the item
+     * @param {Ext.event.Event} e The event object
+     */
+
+    /**
      * @event select
-     * @preventable doItemSelect
+     * @preventable
      * Fires whenever an item is selected
      * @param {Ext.dataview.DataView} this
      * @param {Ext.data.Model} record The record associated to the item
@@ -228,7 +258,7 @@ Ext.define('Ext.dataview.DataView', {
 
     /**
      * @event deselect
-     * @preventable doItemDeselect
+     * @preventable
      * Fires whenever an item is deselected
      * @param {Ext.dataview.DataView} this
      * @param {Ext.data.Model} record The record associated to the item
@@ -237,7 +267,7 @@ Ext.define('Ext.dataview.DataView', {
 
     /**
      * @event refresh
-     * @preventable doRefresh
+     * @preventable
      * Fires whenever the DataView is refreshed
      * @param {Ext.dataview.DataView} this
      */
@@ -257,6 +287,17 @@ Ext.define('Ext.dataview.DataView', {
      * @event move
      */
 
+    eventedConfig: {
+        /**
+         * @cfg {Ext.data.Store/Object} store
+         * Can be either a Store instance or a configuration object that will be turned into a Store. The Store is used
+         * to populate the set of items that will be rendered in the DataView. See the DataView intro documentation for
+         * more information about the relationship between Store and DataView.
+         * @accessor
+         */
+        store: null
+    },
+
     config: {
         /**
          * @cfg layout
@@ -266,25 +307,10 @@ Ext.define('Ext.dataview.DataView', {
          */
 
         /**
-         * @cfg {Ext.data.Store/Object} store
-         * Can be either a Store instance or a configuration object that will be turned into a Store. The Store is used
-         * to populate the set of items that will be rendered in the DataView. See the DataView intro documentation for
-         * more information about the relationship between Store and DataView.
-         * @accessor
-         */
-        store: null,
-
-        /**
          * @cfg {Object[]} data
          * @inheritdoc
          */
         data: null,
-
-        /**
-         * @cfg baseCls
-         * @inheritdoc
-         */
-        baseCls: Ext.baseCSSPrefix + 'dataview',
 
         /**
          * @cfg {String} emptyText
@@ -304,25 +330,11 @@ Ext.define('Ext.dataview.DataView', {
         itemTpl: '<div>{text}</div>',
 
         /**
-         * @cfg {String} pressedCls
-         * The CSS class to apply to an item on the view while it is being pressed.
-         * @accessor
-         */
-        pressedCls: 'x-item-pressed',
-
-        /**
          * @cfg {String} itemCls
          * An additional CSS class to apply to items within the DataView.
          * @accessor
          */
         itemCls: null,
-
-        /**
-         * @cfg {String} selectedCls
-         * The CSS class to apply to an item on the view while it is selected.
-         * @accessor
-         */
-        selectedCls: 'x-item-selected',
 
         /**
          * @cfg {String} triggerEvent
@@ -428,6 +440,14 @@ Ext.define('Ext.dataview.DataView', {
         scrollToTopOnRefresh: true
     },
 
+    classCls: Ext.baseCSSPrefix + 'dataview',
+    hoveredCls: Ext.baseCSSPrefix + 'hovered',
+    selectedCls: Ext.baseCSSPrefix + 'selected',
+    pressedCls: Ext.baseCSSPrefix + 'pressed',
+    inlineCls: Ext.baseCSSPrefix + 'inline',
+    noWrapCls: Ext.baseCSSPrefix + 'nowrap',
+    emptyTextCls: Ext.baseCSSPrefix + 'empty-text',
+
     defaultBindProperty: 'store',
 
     constructor: function(config) {
@@ -470,21 +490,27 @@ Ext.define('Ext.dataview.DataView', {
         refresh: 'refresh',
         add: 'onStoreAdd',
         remove: 'onStoreRemove',
+        clear: 'onStoreClear',
         update: 'onStoreUpdate'
     },
 
     initialize: function() {
         this.callParent();
         var me = this,
-            container,
-            triggerEvent = me.getTriggerEvent();
+            triggerEvent = me.getTriggerEvent(),
+            container;
 
         me.on(me.getTriggerCtEvent(), me.onContainerTrigger, me);
 
-        container = me.container = this.add(new Ext.dataview[me.getUseComponents() ? 'component' : 'element'].Container({
-            baseCls: this.getBaseCls()
-        }));
+        if (me.getUseComponents()) {
+            container = new Ext.dataview.component.Container();
+        } else {
+            container = new Ext.dataview.element.Container();
+        }
+
+        me.container = me.add(container);
         container.dataview = me;
+        me.itemSelector = me.itemSelector || container.itemSelector;
 
         if (triggerEvent) {
             me.on(triggerEvent, me.onItemTrigger, me);
@@ -493,12 +519,15 @@ Ext.define('Ext.dataview.DataView', {
         container.on({
             itemtouchstart: 'onItemTouchStart',
             itemtouchend: 'onItemTouchEnd',
+            itemtouchcancel: 'onItemTouchCancel',
             itemtap: 'onItemTap',
             itemtaphold: 'onItemTapHold',
             itemtouchmove: 'onItemTouchMove',
             itemsingletap: 'onItemSingleTap',
             itemdoubletap: 'onItemDoubleTap',
             itemswipe: 'onItemSwipe',
+            itemmouseover: 'onItemMouseOver',
+            itemmouseout: 'onItemMouseOut',
             scope: me
         });
 
@@ -509,7 +538,8 @@ Ext.define('Ext.dataview.DataView', {
             else {
                 me.on({
                     painted: 'refresh',
-                    single: true
+                    single: true,
+                    scope: me
                 });
             }
         }
@@ -522,19 +552,15 @@ Ext.define('Ext.dataview.DataView', {
         return config;
     },
 
-    updateInline: function(newInline, oldInline) {
-        var baseCls = this.getBaseCls();
-        if (oldInline) {
-            this.removeCls([baseCls + '-inlineblock', baseCls + '-nowrap']);
-        }
-        if (newInline) {
-            this.addCls(baseCls + '-inlineblock');
-            if (Ext.isObject(newInline) && newInline.wrap === false) {
-                this.addCls(baseCls + '-nowrap');
-            }
-            else {
-                this.removeCls(baseCls + '-nowrap');
-            }
+    updateInline: function(inline) {
+        var me = this,
+            inlineCls = me.inlineCls,
+            noWrapCls = me.noWrapCls;
+
+        me.toggleCls(inlineCls, !!inline);
+
+        if (inline) {
+            me.toggleCls(noWrapCls, inline.wrap === false);
         }
     },
 
@@ -563,8 +589,8 @@ Ext.define('Ext.dataview.DataView', {
     },
 
     // apply to the selection model to maintain visual UI cues
-    onItemTrigger: function(me, index) {
-        if (!this.destroyed) {
+    onItemTrigger: function(me, index, target, record, e) {
+        if (!e.stopSelection && !this.destroyed) {
             this.selectWithEvent(this.getStore().getAt(index));
         }
     },
@@ -572,14 +598,15 @@ Ext.define('Ext.dataview.DataView', {
     doAddPressedCls: function(record) {
         var me = this,
             item = me.getItemAt(me.getStore().indexOf(record));
+
         if (Ext.isElement(item)) {
             item = Ext.get(item);
         }
         if (item) {
             if (item.isComponent) {
-                item.renderElement.addCls(me.getPressedCls());
+                item.renderElement.addCls(me.pressedCls);
             } else {
-                item.addCls(me.getPressedCls());
+                item.addCls(me.pressedCls);
             }
         }
     },
@@ -598,52 +625,22 @@ Ext.define('Ext.dataview.DataView', {
         if (record) {
             if (pressedDelay > 0) {
                 me.pressedTimeout = Ext.defer(me.doAddPressedCls, pressedDelay, me, [record]);
-            }
-            else {
+            } else {
                 me.doAddPressedCls(record);
             }
         }
     },
 
     onItemTouchEnd: function(container, target, index, e) {
-        var me = this,
-            store = me.getStore(),
-            record = store && store.getAt(index);
+        this.clearPressedCls('itemtouchend', target, index, e);
+    },
 
-        if (this.hasOwnProperty('pressedTimeout')) {
-            clearTimeout(this.pressedTimeout);
-            delete this.pressedTimeout;
-        }
-
-        if (record && target) {
-            if (target.isComponent) {
-                target.renderElement.removeCls(me.getPressedCls());
-            } else {
-                target.removeCls(me.getPressedCls());
-            }
-        }
-
-        me.fireEvent('itemtouchend', me, index, target, record, e);
+    onItemTouchCancel: function(container, target, index, e) {
+        this.clearPressedCls('itemtouchcancel', target, index, e);
     },
 
     onItemTouchMove: function(container, target, index, e) {
-        var me = this,
-            store = me.getStore(),
-            record = store && store.getAt(index);
-
-        if (me.hasOwnProperty('pressedTimeout')) {
-            clearTimeout(me.pressedTimeout);
-            delete me.pressedTimeout;
-        }
-
-        if (record && target) {
-            if (target.isComponent) {
-                target.renderElement.removeCls(me.getPressedCls());
-            } else {
-                target.removeCls(me.getPressedCls());
-            }
-        }
-        me.fireEvent('itemtouchmove', me, index, target, record, e);
+        this.clearPressedCls('itemtouchmove', target, index, e);
     },
 
     onItemTap: function(container, target, index, e) {
@@ -686,6 +683,38 @@ Ext.define('Ext.dataview.DataView', {
         me.fireEvent('itemswipe', me, index, target, record, e);
     },
 
+    onItemMouseOver: function(container, target, index, e) {
+        var me = this,
+            store, record;
+
+        if (me.mouseOverItem !== target) {
+            me.mouseOverItem = target;
+            store = me.getStore();
+            record = store && store.getAt(index);
+
+            target.addCls(me.hoveredCls);
+
+            me.fireEvent('itemmouseenter', me, index, target, record, e);
+        }
+    },
+
+    onItemMouseOut: function(container, target, index, e) {
+        var me = this,
+            relatedTarget = e.getRelatedTarget(me.itemSelector),
+            store, record;
+
+        if (target.dom !== relatedTarget) {
+            store = me.getStore();
+            record = store && store.getAt(index);
+
+            target.removeCls(me.hoveredCls);
+
+            me.fireEvent('itemmouseleave', me, index, target, record, e);
+
+            me.mouseOverItem = null;
+        }
+    },
+
     // invoked by the selection model to maintain visual UI cues
     onItemSelect: function(record, suppressEvent) {
         var me = this;
@@ -705,11 +734,11 @@ Ext.define('Ext.dataview.DataView', {
             }
             if (item) {
                 if (item.isComponent) {
-                    item.renderElement.removeCls(me.getPressedCls());
-                    item.renderElement.addCls(me.getSelectedCls());
+                    item.renderElement.removeCls(me.pressedCls);
+                    item.renderElement.addCls(me.selectedCls);
                 } else {
-                    item.removeCls(me.getPressedCls());
-                    item.addCls(me.getSelectedCls());
+                    item.removeCls(me.pressedCls);
+                    item.addCls(me.selectedCls);
                 }
             }
         }
@@ -737,9 +766,9 @@ Ext.define('Ext.dataview.DataView', {
 
         if (item) {
             if (item.isComponent) {
-                item.renderElement.removeCls([me.getPressedCls(), me.getSelectedCls()]);
+                item.renderElement.removeCls([me.pressedCls, me.selectedCls]);
             } else {
-                item.removeCls([me.getPressedCls(), me.getSelectedCls()]);
+                item.removeCls([me.pressedCls, me.selectedCls]);
             }
         }
     },
@@ -799,7 +828,7 @@ Ext.define('Ext.dataview.DataView', {
         if (oldStore && Ext.isObject(oldStore) && oldStore.isStore) {
             oldStore.un(bindEvents);
 
-            if (!me.destroyed) {
+            if (!me.destroying && !me.destroyed) {
                 me.onStoreClear();
             }
 
@@ -832,15 +861,17 @@ Ext.define('Ext.dataview.DataView', {
     },
 
     onBeforeLoad: function() {
-        var loadingText = this.getLoadingText();
-        if (loadingText && this.isPainted()) {
-            this.setMasked({
+        var me = this,
+            loadingText = me.getLoadingText();
+            
+        if (loadingText && me.isPainted()) {
+            me.setMasked({
                 xtype: 'loadmask',
                 message: loadingText
             });
         }
 
-        this.hideEmptyText();
+        me.hideEmptyText();
     },
 
     updateEmptyText: function(newEmptyText, oldEmptyText) {
@@ -855,7 +886,7 @@ Ext.define('Ext.dataview.DataView', {
         if (newEmptyText) {
             me.emptyTextCmp = me.add({
                 xtype: 'component',
-                cls: me.getBaseCls() + '-emptytext',
+                cls: me.emptyTextCls,
                 html: newEmptyText,
                 hidden: true
             });
@@ -889,8 +920,10 @@ Ext.define('Ext.dataview.DataView', {
             }
             return;
         }
-        if (container) {
+        if (me.initialized && container) {
             me.fireAction('refresh', [me], 'doRefresh');
+        } else {
+           me.onInitialized(me.refresh, me);
         }
     },
 
@@ -927,7 +960,8 @@ Ext.define('Ext.dataview.DataView', {
      * @return {Ext.dom.Element[]/Ext.dataview.component.DataItem[]} Array of Items.
      */
     getViewItems: function() {
-        return this.container.getViewItems();
+        var container = this.container;
+        return container ? container.getViewItems() : [];
     },
 
     doRefresh: function(me) {
@@ -994,10 +1028,10 @@ Ext.define('Ext.dataview.DataView', {
         }
     },
 
-    destroy: function() {
+    doDestroy: function() {
         var store = this.getStore(),
-            proxy = (store && store.getProxy()),
-            reader = (proxy && proxy.getReader());
+            proxy = (store && !store.destroyed && store.getProxy()),
+            reader = (proxy && !proxy.destroyed && proxy.getReader());
 
         if (reader) {
             // TODO: Use un() instead of clearListeners() when TOUCH-2723 is fixed.
@@ -1005,9 +1039,9 @@ Ext.define('Ext.dataview.DataView', {
             reader.clearListeners();
         }
 
-        this.callParent();
-
         this.setStore(null);
+        
+        this.callParent();
     },
 
     onStoreClear: function() {
@@ -1020,6 +1054,7 @@ Ext.define('Ext.dataview.DataView', {
     },
 
     /**
+     * @method
      * @private
      * @param {Ext.data.Store} store
      * @param {Ext.util.Grouper} grouper
@@ -1027,6 +1062,7 @@ Ext.define('Ext.dataview.DataView', {
     onStoreGroupChange: Ext.emptyFn,
 
     /**
+     * @method
      * @private
      * @param {Ext.data.Store} store
      * @param {Array} records
@@ -1042,14 +1078,15 @@ Ext.define('Ext.dataview.DataView', {
      * @private
      * @param {Ext.data.Store} store
      * @param {Array} records
-     * @param {Array} indices
+     * @param {Number} index
      */
-    onStoreRemove: function(store, records, indices) {
+    onStoreRemove: function(store, records, index) {
         var container = this.container,
             ln = records.length,
             i;
-        for (i = 0; i < ln; i++) {
-            container.moveItemsToCache(indices[i], indices[i]);
+
+        for (i = ln - 1; i >= 0; i--) {
+            container.moveItemsToCache(index + i, index + i);
         }
     },
 
@@ -1057,8 +1094,11 @@ Ext.define('Ext.dataview.DataView', {
      * @private
      * @param {Ext.data.Store} store
      * @param {Ext.data.Model} record
-     * @param {Number} newIndex
-     * @param {Number} oldIndex
+     * @param type
+     * @param modifiedFieldNames
+     * @param {Object} info
+     * @param {Number} info.newIndex
+     * @param {Number} info.oldIndex
      */
     onStoreUpdate: function(store, record, type, modifiedFieldNames, info) {
         var me = this,
@@ -1076,6 +1116,29 @@ Ext.define('Ext.dataview.DataView', {
                 // Bypassing setter because sometimes we pass the same record (different data)
                 container.updateListItem(record, item);
             }
+        }
+    },
+
+    privates: {
+        clearPressedCls: function(eventName, target, index, e) {
+            var me = this,
+                store = me.getStore(),
+                record = store && store.getAt(index);
+
+            if (me.hasOwnProperty('pressedTimeout')) {
+                clearTimeout(me.pressedTimeout);
+                delete me.pressedTimeout;
+        }
+
+            if (record && target) {
+                if (target.isComponent) {
+                    target.renderElement.removeCls(me.pressedCls);
+                } else {
+                    target.removeCls(me.pressedCls);
+                }
+            }
+
+            me.fireEvent(eventName, me, index, target, record, e);
         }
     }
 });

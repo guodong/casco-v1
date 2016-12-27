@@ -1,4 +1,8 @@
+/* global expect, Ext, jasmine, spyOn */
+
 describe('Ext.data.NodeInterface', function() {
+    var fakeScope = {};
+
     function spyOnEvent(object, eventName, fn) {
         var obj = {
             fn: fn || Ext.emptyFn
@@ -703,9 +707,9 @@ describe('Ext.data.NodeInterface', function() {
 
         describe("silent destroy", function() {
             it("should purge node listeners", function() {
-                spy = spyOn(leftChild.mixins.observable, "clearListeners").andCallThrough();
+                spy = spyOn(leftChild, "clearListeners").andCallThrough();
         
-                leftChild.destroy(true);
+                leftChild.destroy();
         
                 expect(spy).toHaveBeenCalled();
             });
@@ -906,7 +910,7 @@ describe('Ext.data.NodeInterface', function() {
         
             it("should stop when bubbleFn return false", function() {
                 bubbleFn.andCallFake(function(node) {
-                    if (node.getId() == 'left') {
+                    if (node.getId() === 'left') {
                         return false;
                     }
                 });
@@ -927,13 +931,13 @@ describe('Ext.data.NodeInterface', function() {
             });
         
             it("should call cascadeFn 4 times", function() {
-                rootNode.cascadeBy(cascadeFn);
+                rootNode.cascade(cascadeFn);
         
                 expect(cascadeFn.callCount).toEqual(4);
             });
         
             it("should call cascadeFn with node root, leftChild, spareNode, rightChild", function() {
-                rootNode.cascadeBy(cascadeFn);
+                rootNode.cascade(cascadeFn);
         
                 expect(cascadeFn.calls[0].args).toEqual([rootNode]);
                 expect(cascadeFn.calls[1].args).toEqual([leftChild]);
@@ -942,7 +946,7 @@ describe('Ext.data.NodeInterface', function() {
             });
         
             it("should call cascadeFn with a defined scope", function() {
-                rootNode.cascadeBy(cascadeFn, fakeScope);
+                rootNode.cascade(cascadeFn, fakeScope);
         
                 expect(cascadeFn.calls[0].object).toBe(fakeScope);
                 expect(cascadeFn.calls[1].object).toBe(fakeScope);
@@ -953,7 +957,7 @@ describe('Ext.data.NodeInterface', function() {
             it("should call cascadeFn with customs arguments", function() {
                 var customArgs = ['some', 'args'];
         
-                rootNode.cascadeBy(cascadeFn, rootNode, customArgs);
+                rootNode.cascade(cascadeFn, rootNode, customArgs);
         
                 expect(cascadeFn.calls[0].args).toEqual(customArgs);
                 expect(cascadeFn.calls[1].args).toEqual(customArgs);
@@ -963,12 +967,12 @@ describe('Ext.data.NodeInterface', function() {
         
             it("should stop at end of branch when cascadeFn return false", function() {
                 cascadeFn.andCallFake(function(node) {
-                    if (node.getId() == 'left') {
+                    if (node.getId() === 'left') {
                         return false;
                     }
                 });
         
-                rootNode.cascadeBy(cascadeFn);
+                rootNode.cascade(cascadeFn);
         
                 expect(cascadeFn.callCount).toEqual(3);
             });
@@ -1014,7 +1018,7 @@ describe('Ext.data.NodeInterface', function() {
         
             it("should stop when eachFn return false", function() {
                 eachFn.andCallFake(function(node) {
-                    if (node.getId() == 'left') {
+                    if (node.getId() === 'left') {
                         return false;
                     }
                 });
@@ -1092,7 +1096,7 @@ describe('Ext.data.NodeInterface', function() {
         
                 it("should find shallow children", function(){
                     child = rootNode.findChildBy(function(node) {
-                        return node.getId() == 'right';
+                        return node.getId() === 'right';
                     });
         
                     expect(child).toEqual(rightChild);
@@ -1100,7 +1104,7 @@ describe('Ext.data.NodeInterface', function() {
         
                 it("should not find deep children if deep is not specified", function(){
                     child = rootNode.findChildBy(function(node) {
-                        return node.getId() == 'spare';
+                        return node.getId() === 'spare';
                     });
         
                     expect(child).toBeNull();
@@ -1108,7 +1112,7 @@ describe('Ext.data.NodeInterface', function() {
         
                 it("should not find deep children if deep is false", function(){
                     child = rootNode.findChildBy(function(node) {
-                        return node.getId() == 'spare';
+                        return node.getId() === 'spare';
                     }, this, false);
         
                     expect(child).toBeNull();
@@ -1116,7 +1120,7 @@ describe('Ext.data.NodeInterface', function() {
         
                 it("should find deep children if deep is true", function(){
                     child = rootNode.findChildBy(function(node) {
-                        return node.getId() == 'spare';
+                        return node.getId() === 'spare';
                     }, this, true);
         
                     expect(child).toEqual(spareNode);
@@ -1202,6 +1206,7 @@ describe('Ext.data.NodeInterface', function() {
                     hrefTarget: '',
                     icon: '',
                     iconCls: '',
+                    glyph: '',
                     id: 1,
                     index: -1,
                     isFirst: false,
@@ -1240,6 +1245,7 @@ describe('Ext.data.NodeInterface', function() {
                     hrefTarget: '',
                     icon: '',
                     iconCls: '',
+                    glyph: '',
                     id: 2,
                     index: -1,
                     isFirst: false,
@@ -1274,8 +1280,10 @@ describe('Ext.data.NodeInterface', function() {
                     id: 4,
                     text: 'Child3'
                 }));
-                
-                var newNode = root.copy(undefined, true);
+
+                var session,
+                    newNode = root.copy(undefined, true);
+
                 expect(newNode.childNodes[0].getId()).toBe(2);
                 expect(newNode.childNodes[0].get('text')).toBe('Child1');
                 
@@ -1286,6 +1294,44 @@ describe('Ext.data.NodeInterface', function() {
                 newNode = newNode.childNodes[0];
                 expect(newNode.childNodes[0].getId()).toBe(4);
                 expect(newNode.childNodes[0].get('text')).toBe('Child3');
+
+                // Test new API (newId, session, deep)
+                newNode = root.copy(undefined, null, true);
+                expect(newNode.childNodes[0].getId()).toBe(2);
+                expect(newNode.childNodes[0].get('text')).toBe('Child1');
+                
+                newNode = newNode.childNodes[0];
+                expect(newNode.childNodes[0].getId()).toBe(3);
+                expect(newNode.childNodes[0].get('text')).toBe('Child2');
+                
+                newNode = newNode.childNodes[0];
+                expect(newNode.childNodes[0].getId()).toBe(4);
+                expect(newNode.childNodes[0].get('text')).toBe('Child3');
+                
+                // Test new API (newId, session, deep)
+                session = new Ext.data.Session();
+                newNode = root.copy(undefined, session, true);
+                expect(newNode.childNodes[0].getId()).toBe(2);
+                expect(newNode.childNodes[0].get('text')).toBe('Child1');
+                
+                // Copy must be in new session
+                expect(session.peekRecord(spec.TreeNode, newNode.id)).toBe(newNode);
+
+                newNode = newNode.childNodes[0];
+                expect(newNode.childNodes[0].getId()).toBe(3);
+                expect(newNode.childNodes[0].get('text')).toBe('Child2');
+                
+                newNode = newNode.childNodes[0];
+                expect(newNode.childNodes[0].getId()).toBe(4);
+                expect(newNode.childNodes[0].get('text')).toBe('Child3');
+
+                // Test new API (newId, session, [deep=false])
+                session = new Ext.data.Session();
+                newNode = root.copy(undefined, session);
+                expect(newNode.childNodes.length).toBe(0);
+
+                // Copy must be in new session
+                expect(session.peekRecord(spec.TreeNode, newNode.id)).toBe(newNode);                
             });
         });
         
@@ -1429,11 +1475,11 @@ describe('Ext.data.NodeInterface', function() {
             expect(node.modified).toBeNull();
 
             // Move from parent "TestRoot", index 0 to parent "OtherTestRoot", index 0
-            // Index should appear in modified object because it has moved parent
+            // Index should NOT appear in modified object because it has not changed.
+            // As per discussion with Don re https://sencha.jira.com/browse/EXTJS-20602
             root1.appendChild(node);
             expect(node.modified).toEqual({
-                parentId: 'TestRoot',
-                index: 0
+                parentId: 'TestRoot'
             });
 
             // Clears modified
@@ -1481,6 +1527,59 @@ describe('Ext.data.NodeInterface', function() {
             root1.appendChild(node1);
 
             Ext.undefine('spec.PersistentIndexTreeNode');
+        });
+    });
+
+    describe('Setting depth on descendant nodes when branch node added', function() {
+        it('should cascade the new depth to all leaf nodes upon add', function() {
+            var root = new spec.TreeNode({
+                    text: 'l0'
+                }),
+                l1_0 = new spec.TreeNode({
+                    text: 'l1_0'
+                }),
+                l1_0_1 = new spec.TreeNode({
+                    text: 'l1_0'
+                }),
+                l1_1 = new spec.TreeNode({
+                    text: 'l1'
+                }),
+                branch = new spec.TreeNode({
+                    text: 'l2'
+                }),
+                l3 = new spec.TreeNode({
+                    text: 'l3'
+                }),
+                l4 = new spec.TreeNode({
+                    text: 'l4'
+                });
+
+            // Create two detached branches
+            l1_0.appendChild(l1_0_1);
+            root.appendChild(l1_0);
+            root.appendChild(l1_1);
+            l3.appendChild(l4);
+            branch.appendChild(l3);
+
+            // Both branches will start at depth 0
+            expect(root.data.depth).toBe(0);
+            expect(l1_0.data.depth).toBe(1);
+            expect(l1_0_1.data.depth).toBe(2);
+            expect(l1_1.data.depth).toBe(1);
+            expect(branch.data.depth).toBe(0);
+            expect(l3.data.depth).toBe(1);
+            expect(l4.data.depth).toBe(2);
+
+            l1_1.appendChild(branch);
+            
+            // After adding the branch, it and its descendants will have been redepthed.
+            expect(root.data.depth).toBe(0);
+            expect(l1_0.data.depth).toBe(1);
+            expect(l1_0_1.data.depth).toBe(2);
+            expect(l1_1.data.depth).toBe(1);
+            expect(branch.data.depth).toBe(2);
+            expect(l3.data.depth).toBe(3);
+            expect(l4.data.depth).toBe(4);
         });
     });
 });

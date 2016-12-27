@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>测试需求统计</title>
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="highcharts.js"></script>
+<script type="text/javascript" src="../draw/common.js"></script>
+</head>
+<body>
+	<div id="hint" style="margin: 0 auto; text-align: center;">
+	<p>
+	<b><font style='color:red;size:10px;margin-top:center'>正在统计中,请耐心等待...</font><img src='hint.jpg'  /></b>
+	</p> 		
+	</div>
+	<div id="test" style="margin: 0 auto; text-align: center;">
+		<p>
+			<b>统计覆盖情况</b>
+		</p>
+		<div id="container1" style="width: 50%; float: left"></div>
+		<div id="container2" style="margin-left: 50%;"></div>
+	</div>
+	<script>
+		$(function() {
+			//图标属性-柱状图
+			var makeChart = function(data) {
+				var chart1 = new Highcharts.Chart(
+						{
+							chart: {
+								renderTo: 'container1',
+								type: 'column',
+							},
+							title: {
+								text: '柱状图-条数统计'
+							},
+							xAxis: {
+								categories: ['增添','修改', '未变化', '遗留']
+							},
+							yAxis: {
+								min: 0,
+								title: {
+									text: '数量(个)'
+								}
+							},
+							tooltip: {
+								headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+								pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>'
+										+ '<td style="padding:0"><b>{point.y}个</b></td></tr>',
+								footerFormat: '</table>',
+								shared: true,
+								useHTML: true
+							},
+							plotOptions: {
+								column: {
+									pointPadding: 0,
+									borderWidth: 50
+								}
+							},
+							credits: {
+								enabled: false
+							},
+							series: [{
+								name: '测试需求',
+								data: [['增添',data.add],['修改', data.modify],['未变化', data.unchanged], ['遗留', data.left]]
+							}]
+						});
+				//图标属性-饼图
+				var chart2 = new Highcharts.Chart(
+						{
+							chart: {
+								renderTo: 'container2',
+								type: 'pie',
+							},
+							title: {
+								text: '饼图-覆盖率'
+							},
+							tooltip: {
+								pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+							},
+							plotOptions: {
+								pie: {
+									allowPointSelect: true,
+									cursor: 'pointer',
+									dataLabels: {
+										enabled: true,
+										format: '<b>{point.name}</b>: {point.percentage:.1f}% ',
+									}
+								}
+							},
+							credits: {
+								enabled: false
+							},
+							series: [{
+								name: '统计',
+								data: [['增添',data.add],['修改', data.modify],['未变化', data.unchanged], ['遗留', data.left]]
+							}]
+						});
+			}
+			$.ajax({
+				type: 'get',
+				url: API + 'version/' + location.hash.substr(1),
+				dataType: "json",
+				success: function(item) {
+					//去除提示:
+					$("#hint").remove();
+					var data = {add:0,modify:0,unchanged:0,left:0};
+					//$.each(d, function(i, item) {
+							console.log(item);
+							data.add=item.add;
+							data.unchanged=item.unchanged;
+							data.left=item.left;
+							data.modify=item.modify;
+						
+					//});
+					makeChart(data);
+				}
+			});
+		});
+	</script>
+
+</body>
+</html>

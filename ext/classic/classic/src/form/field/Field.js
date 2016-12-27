@@ -189,6 +189,14 @@ Ext.define('Ext.form.field.Field', {
         me.initialValue = me.originalValue = me.lastValue = me.getValue();
     },
 
+    /**
+     * Cleans up values initialized by this Field mixin on the current instance. 
+     * Components using this mixin should call this method before being destroyed.
+     */
+    cleanupField : function() {
+        delete this._ownerRecord;
+    },
+
     // Fields can be editors, and some editors may not have a name property that maps
     // to its data index, so it's necessary in these cases to look it up by its dataIndex
     // property.  See EXTJSIV-11650.
@@ -251,7 +259,7 @@ Ext.define('Ext.form.field.Field', {
 
     /**
      * Returns the parameter(s) that would be included in a standard form submit for this field. Typically this will be
-     * an object with a single name-value pair, the name being this field's {@link #getName name} and the value being
+     * an object with a single name-value pair, the name being this field's {@link #method-getName name} and the value being
      * its current stringified value. More advanced field implementations may return more than one name-value pair.
      *
      * Note that the values returned from this method are not guaranteed to have been successfully {@link #validate
@@ -274,18 +282,20 @@ Ext.define('Ext.form.field.Field', {
     /**
      * Returns the value(s) that should be saved to the {@link Ext.data.Model} instance for this field, when {@link
      * Ext.form.Basic#updateRecord} is called. Typically this will be an object with a single name-value pair, the name
-     * being this field's {@link #getName name} and the value being its current data value. More advanced field
+     * being this field's {@link #method-getName name} and the value being its current data value. More advanced field
      * implementations may return more than one name-value pair. The returned values will be saved to the corresponding
      * field names in the Model.
      *
      * Note that the values returned from this method are not guaranteed to have been successfully {@link #validate
      * validated}.
      *
+     * @param {Boolean} includeEmptyText Whether or not to include empty text
+     * @param isSubmitting (private)
      * @return {Object} A mapping of submit parameter names to values; each value should be a string, or an array of
      * strings if that particular name has multiple values. It can also return null if there are no parameters to be
      * submitted.
      */
-    getModelData: function(includeEmptyText, /*private*/ isSubmitting) {
+    getModelData: function(includeEmptyText, isSubmitting) {
         var me = this,
             data = null;
         
@@ -313,6 +323,7 @@ Ext.define('Ext.form.field.Field', {
     },
     
     /**
+     * @method
      * Template method before a field is reset.
      * @protected
      */
@@ -342,11 +353,11 @@ Ext.define('Ext.form.field.Field', {
         var me = this,
             newVal, oldVal;
             
-        if (!me.suspendCheckChange) {
+        if (!me.suspendCheckChange && !me.destroying && !me.destroyed) {
             newVal = me.getValue();
             oldVal = me.lastValue;
                 
-            if (!me.destroyed && me.didValueChange(newVal, oldVal)) {
+            if (me.didValueChange(newVal, oldVal)) {
                 me.lastValue = newVal;
                 me.fireEvent('change', me, newVal, oldVal);
                 me.onChange(newVal, oldVal);
@@ -423,7 +434,9 @@ Ext.define('Ext.form.field.Field', {
     },
 
     /**
-     * @private Called when the field's dirty state changes.
+     * @method
+     * @private
+     * Called when the field's dirty state changes.
      * @param {Boolean} isDirty
      */
     onDirtyChange: Ext.emptyFn,
@@ -444,7 +457,7 @@ Ext.define('Ext.form.field.Field', {
             result;
 
         if (validationField) {
-            result = validationField.validate(value);
+            result = validationField.validate(value, null, null, this._ownerRecord);
             if (result !== true) {
                 errors.push(result);
             }
@@ -497,6 +510,14 @@ Ext.define('Ext.form.field.Field', {
     },
 
     /**
+     * @private 
+     */
+    setValidationField: function(value, record) {
+        this.callParent([value]);
+        this._ownerRecord = record;
+    },
+
+    /**
      * A utility for grouping a set of modifications which may trigger value changes into a single transaction, to
      * prevent excessive firing of {@link #change} events. This is useful for instance if the field has sub-fields which
      * are being updated as a group; you don't want the container field to check its own changed state for each subfield
@@ -507,9 +528,6 @@ Ext.define('Ext.form.field.Field', {
         try {
             this.suspendCheckChange++;
             fn();
-        }
-        catch (pseudo) {  //required with IE when using 'try'
-            throw pseudo;
         }
         finally {
             this.suspendCheckChange--;
@@ -539,6 +557,7 @@ Ext.define('Ext.form.field.Field', {
     },
 
     /**
+     * @method
      * Display one or more error messages associated with this field, using 
      * {@link Ext.form.Labelable#msgTarget} to determine how to display the messages and 
      * applying {@link Ext.form.Labelable#invalidCls} to the field's UI element.

@@ -1,5 +1,6 @@
 describe('Ext.menu.KeyNav', function () {
-    var menu;
+    var itNotTouch = jasmine.supportsTouch ? xit : it,
+        menu;
     
     function makeMenu(cfg) {
         menu = new Ext.menu.Menu(Ext.apply({
@@ -114,17 +115,24 @@ describe('Ext.menu.KeyNav', function () {
             node = childMenu = null;
         });
 
-        it('should only hide child menus', function () {
+        itNotTouch('should only hide child menus', function () {
             // Activate the menu item and expand its menu.
             node = menu.down('[text="Menu Two"]').el.dom;
             jasmine.fireMouseEvent(node, 'mouseover');
 
             // Do the keypress to test the API.
             childMenu = menu.down('menu');
-            node = childMenu.el.down('.x-menu-item-link', true);
-            jasmine.fireKeyEvent(node, 'keydown', 37);
 
-            expect(childMenu.hidden).toBe(true);
+            waitsFor(function() {
+                return childMenu.el;
+            });
+
+            runs(function() {
+                node = childMenu.el.down('.x-menu-item-link', true);
+                jasmine.fireKeyEvent(node, 'keydown', 37);
+
+                expect(childMenu.hidden).toBe(true);
+            });
         });
 
         describe('parent menu', function () {
@@ -136,21 +144,28 @@ describe('Ext.menu.KeyNav', function () {
                 expect(menu.hidden).toBe(false);
             });
 
-            it('should not hide (tests hiding child menu first)', function () {
+            itNotTouch('should not hide (tests hiding child menu first)', function () {
                 // Activate the menu item and expand its menu.
                 node = menu.down('[text="Menu Two"]').el.dom;
                 jasmine.fireMouseEvent(node, 'mouseover');
 
                 // Hide the child menu.
                 childMenu = menu.down('menu');
-                node = childMenu.el.down('.x-menu-item-link', true);
-                jasmine.fireKeyEvent(node, 'keydown', 37);
 
-                // Test the parent menu.
-                node = menu.el.down('.x-menu-item-link', true);
-                jasmine.fireKeyEvent(node, 'keydown', 37);
+                waitsFor(function() {
+                    return childMenu.el;
+                });
 
-                expect(menu.hidden).toBe(false);
+                runs(function() {
+                    node = childMenu.el.down('.x-menu-item-link', true);
+                    jasmine.fireKeyEvent(node, 'keydown', 37);
+
+                    // Test the parent menu.
+                    node = menu.el.down('.x-menu-item-link', true);
+                    jasmine.fireKeyEvent(node, 'keydown', 37);
+
+                    expect(menu.hidden).toBe(false);
+                });
             });
         });
     });

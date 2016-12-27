@@ -48,7 +48,7 @@ Ext.define('casco.view.report.ReportController', {
 				childs.each(function(record){
                    count++;
 				   if(count==1)return;
-                   record.store.reload();
+                   record.store&&record.store.reload();
 				});
 				Ext.Msg.alert('','创建成功!');
 				}else{

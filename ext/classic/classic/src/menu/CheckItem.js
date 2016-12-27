@@ -33,7 +33,7 @@ Ext.define('Ext.menu.CheckItem', {
     /**
      * @cfg {Function/String} checkHandler
      * Alternative for the {@link #checkchange} event.  Gets called with the same parameters.
-     * @declarativeHandler
+     * @controllable
      */
 
     /**
@@ -98,6 +98,8 @@ Ext.define('Ext.menu.CheckItem', {
     childEls: [
         'checkEl'
     ],
+
+    defaultBindProperty: 'checked',
     
     showCheckbox: true,
 
@@ -120,12 +122,15 @@ Ext.define('Ext.menu.CheckItem', {
      */
 
     initComponent: function() {
-        var me = this;
+        var me = this,
+            checked = me.checked;
+
+        me.checkedConfigure = checked;
         
         // coerce to bool straight away
-        me.checked = !!me.checked;
+        me.checked = !!checked;
 
-        me.callParent(arguments);
+        me.callParent();
 
         if (me.group) {
             Ext.menu.Manager.registerCheckable(me);
@@ -157,11 +162,24 @@ Ext.define('Ext.menu.CheckItem', {
     
     afterRender: function() {
         var me = this;
+        
         me.callParent();
+        
         me.checked = !me.checked;
+        me.initial = true;
         me.setChecked(!me.checked, true);
+        me.initial = false;
+        
         if (me.checkChangeDisabled) {
             me.disableCheckChange();
+        }
+        
+        // For reasons unknown, clicking a div inside anchor element might cause
+        // the anchor to be blurred in Firefox. We can't allow this to happen
+        // because blurring will cause focusleave which will hide the menu
+        // before click event fires. See https://sencha.jira.com/browse/EXTJS-18882
+        if (Ext.isGecko && me.checkEl) {
+            me.checkEl.on('mousedown', me.onMouseDownCheck);
         }
     },
     
@@ -196,11 +214,18 @@ Ext.define('Ext.menu.CheckItem', {
         }
         me.checkChangeDisabled = false;
     },
+    
+    onMouseDownCheck: function(e) {
+        e.preventDefault();
+    },
 
     onClick: function(e) {
         var me = this;
 
-        if (!me.disabled && !me.checkChangeDisabled && !(me.checked && me.group)) {
+        // If pointer type is touch, we should only toggle check status if there's no submenu or they tapped in the checkEl
+        // This is because there's no hover to invoke the submenu on touch devices, so a tap is needed to show it. That tap
+        // should not toggle unless it's on the checkbox.
+        if (!(me.disabled || me.checkChangeDisabled || me.checked && me.group || me.menu && "touch" === e.pointerType && !me.checkEl.contains(e.target))) {
             me.setChecked(!me.checked);
 
             // Clicked using SPACE or ENTER just un-checks.
@@ -209,12 +234,13 @@ Ext.define('Ext.menu.CheckItem', {
                 return false;
             }
         }
-        this.callParent([e]);
+        return me.callParent([e]);
     },
 
-    onDestroy: function() {
+    doDestroy: function() {
         Ext.menu.Manager.unregisterCheckable(this);
-        this.callParent(arguments);
+        
+        this.callParent();
     },
     
     setText: function(text) {
@@ -238,7 +264,8 @@ Ext.define('Ext.menu.CheckItem', {
             checkedCls = me.checkedCls,
             uncheckedCls = me.uncheckedCls,
             el = me.el,
-            ariaDom = me.ariaEl.dom;
+            ariaDom = me.ariaEl.dom,
+            checkedConfigure = me.checkedConfigure;
 
         if (me.checked !== checked && (suppressEvents || me.fireEvent('beforecheckchange', me, checked) !== false)) {
             if (el) {
@@ -256,7 +283,14 @@ Ext.define('Ext.menu.CheckItem', {
             }
 
             me.checked = checked;
+            me.checkedConfigure = checked;
             Ext.menu.Manager.onCheckChange(me, checked);
+
+            // Don't publish the state if we're initially setting the
+            // checked state and we didn't get configured with a value
+            if (!(me.initial && checkedConfigure == null)) {
+                me.publishState('checked', checked);
+            }
 
             if (!suppressEvents) {
                 Ext.callback(me.checkHandler, me.scope, [me, checked], 0, me);

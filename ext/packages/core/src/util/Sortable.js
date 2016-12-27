@@ -77,7 +77,7 @@ Ext.define("Ext.util.Sortable", {
                 // While we have not established a comparison value,
                 // loop through subsequent sorters asking for a comparison value
                 for (; !result && i < length; i++) {
-                    result = sorters[i].sort.call(this, r1, r2);
+                    result = sorters[i].sort.call(sorters[i], r1, r2);
                 }
                 return result;
             }: function() {
@@ -150,6 +150,7 @@ Ext.define("Ext.util.Sortable", {
      *     The number of sorters maintained is limited by the {@link #multiSortLimit} configuration.
      *
      * * `append` : This means that the new sorter becomes the last sorter.
+     * @param {Boolean} doSort True to sort using a generated sorter function that combines all of the Sorters passed
      * @return {Ext.util.Sorter[]} The new sorters.
      */
     sort: function(sorters, direction, insertionPosition, doSort) {

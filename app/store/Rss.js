@@ -12,5 +12,9 @@ Ext.define('casco.store.Rss', {
         writer: {
             type: 'json'
         }
-    }
+    },
+	sorters : [{
+        property : 'tag', // 指定要排序的列索引
+        direction : 'ASC' // 降序，  ASC：赠序
+    }]
 });

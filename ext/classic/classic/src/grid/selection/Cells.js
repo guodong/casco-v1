@@ -141,9 +141,11 @@ Ext.define('Ext.grid.selection.Cells', {
             var me = this,
                 view = me.view;
 
-            me.eachCell(function(cellContext) {
-                view.onCellDeselect(cellContext);
-            });
+            if (view.getVisibleColumnManager().getColumns().length) {
+                me.eachCell(function(cellContext) {
+                    view.onCellDeselect(cellContext);
+                });
+            }
             me.startCell = me.endCell = null;
         },
 
@@ -289,6 +291,15 @@ Ext.define('Ext.grid.selection.Cells', {
          */
         getColumnRange: function() {
             return [this.getFirstColumnIndex(), this.getLastColumnIndex()];
+        },
+
+        /**
+         * @private
+         * Called through {@link Ext.grid.selection.SpreadsheetModel#getLastSelected} by {@link Ext.panel.Table#updateBindSelection} when publishing the `selection` property.
+         * It should yield the last record selected.
+         */
+        getLastSelected: function() {
+            return this.view.dataSource.getAt(this.endCell.rowIdx);
         },
 
         /**

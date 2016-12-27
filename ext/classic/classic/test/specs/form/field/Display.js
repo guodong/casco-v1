@@ -1,29 +1,18 @@
 describe("Ext.form.field.Display", function() {
+    var component;
 
-    var component,
-        makeComponent;
-
-    beforeEach(function() {
-        makeComponent = function(config) {
-            config = config || {};
-            if (!config.name) {
-                config.name = 'fieldname';
-            }
-            if (!config.renderTo) {
-                config.renderTo = Ext.getBody();
-            }
-            component = new Ext.form.field.Display(config);
-        };
-    });
+    function makeComponent (config) {
+        config = Ext.apply({
+            name: 'fieldname',
+            renderTo: Ext.getBody()
+        }, config);
+        
+        component = new Ext.form.field.Display(config);
+    }
 
     afterEach(function() {
-        if (component && component.destroy) {
-            component.destroy();
-        }
-        component = null;
+        component = Ext.destroy(component);
     });
-
-
 
     it("should be registered as xtype 'displayfield'", function() {
         component = Ext.create("Ext.form.field.Display", {name: 'test'});
@@ -125,7 +114,7 @@ describe("Ext.form.field.Display", function() {
                 var o = {};
                 makeComponent({value: o});
                 expect(component.getValue()).toBe(o);
-            })
+            });
 
             it("should keep a numeric value", function() {
                 makeComponent({value: 50});
@@ -324,6 +313,25 @@ describe("Ext.form.field.Display", function() {
                 }
             });    
             expect(arg1).toBe('');
+        });
+
+        it("should be able to resolve to a controller", function() {
+            var controller = new Ext.app.ViewController();
+            controller.doIt = function() {
+                return 'ok';
+            };
+
+            var ct = new Ext.container.Container({
+                controller: controller,
+                renderTo: Ext.getBody(),
+                items: {
+                    xtype: 'displayfield',
+                    renderer: 'doIt'
+                }
+            });
+
+            expect(ct.items.first().inputEl.dom).hasHTML('ok');
+            ct.destroy();
         });
     });
 
