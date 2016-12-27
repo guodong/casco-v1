@@ -7,7 +7,7 @@
 
     <title>casco</title>
 	<script>
-	var API = 'http://localhost:8000/";
+	window.API = "http://localhost:8000/";
 	</script>
     <script type="text/javascript">
         var Ext = Ext || {}; // Ext namespace won't be defined yet...
