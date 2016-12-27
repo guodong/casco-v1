@@ -205,11 +205,7 @@
         {
             "path": "app.js",
             "bundle": true
-        },
-		{
-			"path": "config.js",
-			"bundle": true
-		}
+        }
     ],
 
     /**
