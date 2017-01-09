@@ -1,7 +1,7 @@
 Ext.define('casco.view.auth.LoginController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.login',
-    
+
     onKeyEnter: function(field,e){
 		if(e.getKey() == e.ENTER){
 			var form = field.up('form').getForm();
@@ -50,7 +50,7 @@ Ext.define('casco.view.auth.LoginController', {
 				}else{
 					localStorage.setItem("user", JSON.stringify(d.data));
 					me.getView().destroy();
-					
+
 					var store = Ext.create('casco.store.Projects');
 			    	store.load({
 			    		params:{
@@ -67,14 +67,14 @@ Ext.define('casco.view.auth.LoginController', {
 			}
 		});
     },
-    
+
     onSelectClick: function(){
     	var me = this;
     	var project_id = this.getView().down('combo').getValue();
     	this.redirectTo('project/'+project_id, true);
     	location.reload();
     },
-    
+
     onManage: function(){
     	this.redirectTo('manage', true);
     	location.reload();
