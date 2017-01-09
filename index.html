@@ -1,14 +1,27 @@
+
 <!DOCTYPE HTML>
 <html manifest="">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style>
+	.x-livesearch-match {
+    font-weight: bold;
+    background-color: yellow;
+	}
+	
+	.x-grid3-cell-text-visible .x-grid3-cell-inner{
+	overflow:visible;
+	padding:3px 3px 3px 5px;
+	white-space:normal;
+	}
+	
+	</style>
 
     <title>casco</title>
-	<script>
-	window.API = "http://localhost:8000/";
-	</script>
+
+    
     <script type="text/javascript">
         var Ext = Ext || {}; // Ext namespace won't be defined yet...
 
@@ -45,7 +58,10 @@
             //};
         };
     </script>
-    
+    <script>
+	 window.API = "http://localhost:8000/";
+	 //window.API = "http://localhost:8080/";
+	</script>
     
     <!-- The line below must be kept intact for Sencha Cmd to build your application -->
     <script id="microloader" data-app="e3a91c61-6f28-45cc-8274-7e6b85adfdaf" type="text/javascript" src="bootstrap.js"></script>
