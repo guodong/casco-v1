@@ -211,7 +211,6 @@ Ext.define('casco.view.rs.RsImport', {
                     me.filename = filename;
                     form.submit({// 为什么一直为false
                       url: FILEAPI + filename,
-                      params: {'name': me.aflag},
                       success: function(form, action) {
                         Ext.Msg.alert('Success', action.response.responseText);
                       },
@@ -251,6 +250,7 @@ Ext.define('casco.view.rs.RsImport', {
     pgs.show();
     var params = form.getValues();
     params.filename = this.filename;
+    params.name = me.aflag;
     Ext.Ajax.request({
       url: API + 'import',
       method: 'post',
