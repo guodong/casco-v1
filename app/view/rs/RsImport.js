@@ -211,8 +211,6 @@ Ext.define('casco.view.rs.RsImport', {
                     me.filename = filename;
                     form.submit({// 为什么一直为false
                       url: FILEAPI + filename,
-                      waitMsg: 'Uploading file...',
-                      params: {'name': me.aflag},
                       success: function(form, action) {
                         Ext.Msg.alert('Success', action.response.responseText);
                       },
@@ -252,6 +250,7 @@ Ext.define('casco.view.rs.RsImport', {
     pgs.show();
     var params = form.getValues();
     params.filename = this.filename;
+    params.name = me.aflag;
     Ext.Ajax.request({
       url: API + 'import',
       method: 'post',
@@ -265,7 +264,25 @@ Ext.define('casco.view.rs.RsImport', {
         winResult.store.loadData([d.data]);
         winResult.show();
         me.destroy();
-        return;
+        var tabs = Ext.getCmp('workpanel');
+        var tab = tabs.child('#tab-' + me.document.get('id'));
+        if (tab) {
+          tabs.remove(tab);
+        }
+        var document = casco.model.Document;
+        casco.model.Document.load(me.document.get('id'), {
+          success: function(record) {
+            tab = tabs.add({
+              id: 'tab-' + record.get('id'),
+              xtype: record.get('type'),
+              title: record.get('name'),
+              document: record,
+              closable: true,
+              project: me.project
+            });
+            tabs.setActiveTab(tab);
+          }
+        });
       }
     })
   }

@@ -4,8 +4,8 @@
 /build
 /bootstrap.css
 /bootstrap.js
-/classic.json
-/sass/example/bootstrap.json
+/classic.json*
+/sass/example/bootstrap.json*
 /*.log
 /*.bak
 /draw/common.js

@@ -97,6 +97,7 @@ Ext.define('casco.view.rs.Rs', {
             scope: this
           },
           document_id: me.document.id,
+          document: me.document,
           vstore: me.versions,
           type: 'rs'
         });
