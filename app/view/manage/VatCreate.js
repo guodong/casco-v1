@@ -65,7 +65,8 @@ Ext.define('casco.view.manage.VatCreate', {
 				labelAlign:'top',
 				name: 'description',
 				anchor: '100%',
-				grow: true
+				maxHeight: 50,
+				grow: true,
 			}]
 		}, {
 			xtype: 'grid',
