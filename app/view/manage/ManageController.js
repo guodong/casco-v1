@@ -57,19 +57,19 @@ Ext.define('casco.view.manage.ManageController', {
 
 	//用户管理
 	createuser: function () {
-		var view = this.getView();	//EditUser's View class,包括UI和User Data等
+		var view = this.getView();	
 		var self = this;
 		var form = this.lookupReference('useraddform');	 //获取对应的form表单
-
 		var user = view.user?view.user:Ext.create('casco.model.User');
 		user.set(form.getValues());
+		Ext.MessageBox.buttonText.ok = '确认';
 		user.save({
 			callback: function(){
-				Ext.Msg.alert('Message', 'User manage successfully.', function(){
+				Ext.Msg.alert('成功', '用户信息已更新！', function(){
 					//更新
 					var t = Ext.ComponentQuery.query("#tab-userlist")[0];	//Array[0]
 					//if(!view.user)t.store.add(user);//edit 就不对了的
-					if(t)t.store.reload();
+					if(t) t.store.reload();
 					Ext.ComponentQuery.query("#switcher")[0]&&Ext.ComponentQuery.query("#switcher")[0].store.reload();
 					form.up("window").destroy();
 				});
@@ -93,15 +93,17 @@ Ext.define('casco.view.manage.ManageController', {
 			}
 		});
 	},
+	
 	createmethod: function () {
 		var view = this.getView();
 		var self = this;
 		var form = this.lookupReference('methodaddform');
 		var method = view.method?view.method:Ext.create('casco.model.Testmethod');
 		method.set(form.getValues());
+		Ext.MessageBox.buttonText.ok = '确认';
 		method.save({
 			callback: function(){
-				Ext.Msg.alert('Message', 'Method manage successfully.', function(){
+				Ext.Msg.alert('成功', '测试方法已更新！', function(){
 					var t = Ext.ComponentQuery.query("#tab-testmethod")[0];//基于属性ID进行检索
 					if(!view.method)t.store.add(method);
 					form.up("window").destroy();//销毁整个窗口
@@ -109,6 +111,7 @@ Ext.define('casco.view.manage.ManageController', {
 			}
 		});
 	},
+	
 	createProject : function() {
 		var view = this.getView();
 		var project = view.project?view.project:Ext.create('casco.model.Project');

@@ -12,17 +12,16 @@ Ext.define('casco.view.manage.Top', {
     			user_id: JSON.parse(localStorage.user).id
     		}
     	});
-//    	console.log(me.project);
 		var states = Ext.create('Ext.data.Store', {
          fields: ['abbr', 'name'],
          data : [
-         {"abbr":"EditInfo", "name":"1"},
-		 {"abbr":"Logout", "name":"2"}
+         {"abbr":"修改信息", "name":"1"},
+		 {"abbr":"注销登录", "name":"2"}
            ]});
 
     	this.items = [{
             xtype: 'label',
-            html: 'CASCO TEST CENTER',
+            html: '卡斯柯测试平台',
             style: {'font-size':'27px','font-weight':'bold'}
         },'->',{
             xtype: 'combobox',
@@ -31,13 +30,14 @@ Ext.define('casco.view.manage.Top', {
             valueField: 'id',
             store: store,
             queryMode: 'local',
-			itemId:'switcher',	//ManageController使用
-            emptyText: 'Switch Project',
+			itemId:'switcher',	//ManageController
+            emptyText: '（切换工程）',
             listeners: {
             	select: 'switchProject'
             }
         },{
             xtype: 'combobox',
+            itemId: 'logoutBtn',
             editable: false,
             displayField: 'abbr',
             valueField: 'name',
@@ -46,7 +46,7 @@ Ext.define('casco.view.manage.Top', {
             queryMode: 'local',
             emptyText: JSON.parse(localStorage.user).realname,
             listeners: {
-            	select: 'editUser'
+            	select: 'editUser',
             }
         }];
     	this.callParent();
