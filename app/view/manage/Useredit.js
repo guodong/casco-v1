@@ -1,50 +1,44 @@
 Ext.define('casco.view.manage.Useredit', {
 	extend: 'Ext.window.Window',
-//	xtype: 'useredit',
 	alias:'widget.useredit',
 	requires: [],
-	controller: 'manage',	//ManageController.js
+	controller: 'manage',	
 	resizable: true,
 	maximizable: true,
 	modal: true,
-	title:'Edit User',
+	title:'个人信息修改',
 	width: 300,
 	initComponent: function() {
 		var me = this;
-	 	
-		me.projects = Ext.create('casco.store.Projects');  //？？？me.projects 与 pros_store 区别
+		me.projects = Ext.create('casco.store.Projects');  
 		if(me.user!=null){
 			me.projects.setData(me.user.get('projects'));
 		}
 		var pros_store=Ext.create('casco.store.Projects');
 		pros_store.load();
-      
-		//？？？考虑直接从数据库Role表中读取数据
 		var store = Ext.create('Ext.data.Store', {
          fields: ['name', 'value'],
          data : [
-         {"name":"Staff", "value":"0"},
-		 {"name":"Manager", "value":"1"},
+         {"name":"普通用户", "value":"0"},
+		 {"name":"管理员", "value":"1"},
            ]});
-		//var role = Ext.create('casco.store.Roles');  //报错 [Ext.create] Unrecognized class name / alias
-		
 		
 		Ext.apply(me, {
 			items: [{
 				xtype: 'form',
-				reference: 'useraddform',	//lookupReference
+				reference: 'useraddform',	
 				bodyPadding: '10',
 				items: [{
 					anchor: '100%',
-					fieldLabel: 'Account',
+					fieldLabel: '用户名',
 					name: 'account',
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'textfield',
-					allowBlank: false
+					allowBlank: false,
 				}, {
 					anchor: '100%',
-					fieldLabel: 'Realname',
+					fieldLabel: '姓名',
 					name: 'realname',
 					labelAlign: 'top',
 					msgTarget: 'under',
@@ -52,14 +46,14 @@ Ext.define('casco.view.manage.Useredit', {
 					allowBlank: false
 				}, {
 					anchor: '100%',
-					fieldLabel: 'Jobnumber',
+					fieldLabel: '工号',
 					name: 'jobnumber',
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'textfield'
 				}, {
 					anchor: '100%',
-					fieldLabel: 'Password',
+					fieldLabel: '密码',
 					name: 'password',
 					labelAlign: 'top',
 					msgTarget: 'under',
@@ -69,7 +63,7 @@ Ext.define('casco.view.manage.Useredit', {
 					//hidden: me.user?true:false
 				},{
 					anchor: '100%',
-					fieldLabel: 'Role',
+					fieldLabel: '用户权限',
 					name: 'role_id',
 					labelAlign: 'top',
 					msgTarget: 'under',
@@ -79,21 +73,11 @@ Ext.define('casco.view.manage.Useredit', {
                     valueField: 'value',
                     store: store,
                     queryMode: 'local',
-                    emptyText: me.user.get('role_id')=='0'?'Staff':'Manager',
-				},/*{
-					anchor: '100%',
-					fieldLabel: 'Role',
-					anchor: '100%',
-					fieldLabel: 'role_id',
-					name: 'role_id',
-					labelAlign: 'top',
-					msgTarget: 'under',
-					xtype: 'textfield',
-					allowBlank: false,
-                   
-				},*/{
+                    emptyText: me.user.get('role_id')=='0'?'普通用户':'管理员',
+                    hidden: me.isTop?true:false		
+				},{
     				anchor: '100%',
-					fieldLabel: 'Project',
+					fieldLabel: '参与项目',
 					name: 'project',
 					labelAlign: 'top',
 					msgTarget: 'under',
@@ -105,7 +89,8 @@ Ext.define('casco.view.manage.Useredit', {
 //                    store: me.projects,	//???如何
                     store: pros_store,
                     queryMode: 'local',
-                    emptyText: 'Select the Projects',
+                    emptyText: '请为其分配参与的项目',
+                    hidden: me.isTop?true:false,
 					listeners : {
 
 						  afterRender : function(combo) {
@@ -117,36 +102,39 @@ Ext.define('casco.view.manage.Useredit', {
 						 
 						  select : function(combo, record) {
                            //难道是程序自动加载的id
-						   console.log('all '+combo.getValue());
+//						   console.log('all '+combo.getValue());
 						
-						   console.log(combo.getSelection().data);
+						   console.log(combo.getSelection());
 						   //遍历来判断是否有值
-						   var flag=Ext.Array.contains(combo.getValue(),combo.getSelection().data.id);
-                           if(!flag){
-                            combo.addValue(combo.getSelection().data.id);
+						   if(!combo.getSelection()) combo.setValue = '';
+						   else{
+							   var flag=Ext.Array.contains(combo.getValue(),combo.getSelection().getData().id);
+	                           if(!flag){
+	                            combo.addValue(combo.getSelection().data.id);
+							   }
 						   }
+						   
 					       }//select
-                    
-
 					}//listeners
     			},{
 				   xtype:'checkboxfield',//
-				   fieldLabel:'Lock',
+				   fieldLabel:'停用',
 				   checked:me.user.get('islock')=='0'?false:true,
 				   name:'islock',
                    inputValue:'1',
 				   boxLabel:'选中停用账户',
 				   uncheckedValue:'0',
+				   hidden: me.isTop?true:false
 				}],
 				buttons: ['->', {
-					text: 'Save',
+					text: '保存',
 					formBind: true,
 					glyph: 0xf0c7,
 					listeners: {
 						click: 'createuser'
 					}
 				}, {
-					text: 'Cancel',
+					text: '取消',
 					glyph: 0xf112,
 					scope: me,
 					handler: this.destroy

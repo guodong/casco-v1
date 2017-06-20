@@ -7,19 +7,18 @@ Ext.define('casco.view.manage.Methodadd', {
 	resizable: true,
 	maximizable: true,
 	modal: true,
-	title: 'Add Method',
+	title: '测试方法',
 	width: 300,
 	initComponent: function() {
 		var me = this;
 		Ext.apply(me, {
-			
 			items: [{
 				xtype: 'form',
 				reference: 'methodaddform',
 				bodyPadding: '10',
 				items: [{
 					anchor: '100%',
-					fieldLabel: 'Name',
+					fieldLabel: '方法名称',
 					name: 'name',
 					labelAlign: 'top',
 					msgTarget: 'under',
@@ -27,14 +26,14 @@ Ext.define('casco.view.manage.Methodadd', {
 					allowBlank: false
 				}],
 				buttons: ['->', {
-					text: 'Save',
+					text: '保存',
 					formBind: true,
 					glyph: 0xf0c7,
 					listeners: {
 						click: 'createmethod'
 					}
 				}, {
-					text: 'Cancel',
+					text: '取消',
 					glyph: 0xf112,
 					scope: me,
 					handler: this.destroy

@@ -23,7 +23,7 @@ Ext.define('casco.view.manage.Manage', {
 			xtype: 'manage_top'
 		}, {
 			xtype: 'treepanel',
-			title: "Management",
+			title: "信息管理",
 			region: 'west',
 			width: 200,
 			split: true,
@@ -32,46 +32,33 @@ Ext.define('casco.view.manage.Manage', {
 			listeners: {
 				itemclick: 'seldoc'
 			},
-//			render:function(){
-//				if(JSON.parse(localStorage.user).role_id != '2')
-//					this.hide();
-//			},
-//			hide:function(){
-//				this.node.hide = true;
-//				if(this.wrap) this.wrap.style.display = "none";
-//			},
 			store: Ext.create('Ext.data.TreeStore', {  
 				root: {
 					expanded: true,
 					children: [{
-						text: "User Management",
+						text: "用户信息管理",
 						children: [{
-							text: "User List",
+							text: "用户列表",
 							leaf: true,
 							id: 'userlist'
 						}]
 					}, {
-						text: "Project Management",
+						text: "项目工程管理",
 						children: [{
-							text: "Project List",
+							text: "工程列表",
 							leaf: true,
 							id: 'projectlist'
 						}]
 					}, {
-						text: "System Management",
+						text: "系统信息管理",
 						children: [{
-							text: "Test Method",
+							text: "测试方法",
 							leaf: true,
 							id: 'testmethod'
 						}]
 					}]
 				}
 			})
-//			initEvents:function(){
-//				if(this.node){
-//					this.hide();
-//				}
-//			}
 		}, {
 			region: 'center',
 			reference: 'main',

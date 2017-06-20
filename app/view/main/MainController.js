@@ -25,21 +25,25 @@ Ext.define('casco.view.main.MainController', {
 	
 	//@Top.js
 	editUser:function(combo,record){
+		Ext.MessageBox.buttonText.yes = '是';
+		Ext.MessageBox.buttonText.no = '否';
 		if(record.get('name')=='1'){
 			combo.setValue(combo.emptyText);
 			var model= Ext.create('casco.model.User');
 			model.setId(JSON.parse(localStorage.user).id);
 			casco.model.User.load(JSON.parse(localStorage.user).id,{
 				callback:function(record, operation,ops){
-					var win = Ext.create('casco.view.manage.Useredit', {user:record});
+					var win = Ext.create('casco.view.manage.Useredit', {
+						user:record,
+						isTop: '1'
+							});
 					win.down('form').loadRecord(record);//动态填充表单
 					win.show();
 				}
 			});
 		}else if(record.get('name')=='2'){
-
-			Ext.Msg.confirm('Confirm', 'Are you sure to logout?', function(choice){if(choice == 'yes'){
-				var me = this;
+			var me = this;
+			Ext.Msg.confirm('确认', '确认注销登录？', function(choice){if(choice == 'yes'){
 				var view = this.getView();
 				Ext.Ajax.request({
 					url: API + 'logout',
@@ -47,7 +51,7 @@ Ext.define('casco.view.main.MainController', {
 					success: function(response){
 						var d = Ext.decode(response.responseText);
 						if(d.code != 0){
-							Ext.Msg.alert('Error', 'Logout failure.');
+							Ext.Msg.alert('注意', '登出失败！');
 						}else{
 							//首先清空localsotrage
 							localStorage.clear();
@@ -61,10 +65,12 @@ Ext.define('casco.view.main.MainController', {
 							me.getView().up(parent)?me.getView().up(parent).destroy():null;
 							me.redirectTo('selectProject', true);
 							location.reload();
-
 						}
 					}//success
 				});//request
+			}else{
+//				console.log(me.getView().getComponent('logoutBtn'));
+				me.getView().getComponent('logoutBtn').setValue('');
 			}}, this);//confirm
 		}//else
 	},
