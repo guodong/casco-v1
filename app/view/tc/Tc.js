@@ -86,6 +86,7 @@ Ext.define('casco.view.tc.Tc', {
           version_id: me.down('combobox').getValue(),
           document_id: me.document.id,
           document: me.document,
+          project: me.project,
           type: 'tc',
           vstore: me.versions,
         });

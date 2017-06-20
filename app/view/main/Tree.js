@@ -12,7 +12,7 @@ Ext.define('casco.view.main.Tree', {
       if (tab) {
         tabs.remove(tab);
       }
-      var document = casco.model.Document;
+      
       casco.model.Document.load(record.get('id'), {
         success: function(record) {
           tab = tabs.add({

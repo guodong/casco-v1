@@ -184,7 +184,6 @@ Ext.define('casco.view.rs.RsImport', {
         text: 'Import',
         handler: function() {
           var self = this;
-          var obj = null;
           var form = this.up('form').getForm();
           if (me.aflag) {
             form.findField('isNew').setValue(1);
@@ -255,8 +254,14 @@ Ext.define('casco.view.rs.RsImport', {
       url: API + 'import',
       method: 'post',
       params: params,
-      timeout: 300000,
+      timeout: 1000 * 60 *100,
+      failure: function(response, opts) {
+        pgs.destroy();
+        console.log(response);
+        Ext.Msg.alert('Error', 'An error occured: ' + response.responseText);
+      },
       success: function(response) {
+        var pjt = me.pjt;
         pgs.destroy();
         console.log(response);
         var d = Ext.decode(response.responseText);
@@ -269,7 +274,7 @@ Ext.define('casco.view.rs.RsImport', {
         if (tab) {
           tabs.remove(tab);
         }
-        var document = casco.model.Document;
+        
         casco.model.Document.load(me.document.get('id'), {
           success: function(record) {
             tab = tabs.add({
@@ -278,7 +283,7 @@ Ext.define('casco.view.rs.RsImport', {
               title: record.get('name'),
               document: record,
               closable: true,
-              project: me.project
+              project: pjt
             });
             tabs.setActiveTab(tab);
           }

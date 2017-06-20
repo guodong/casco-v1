@@ -98,6 +98,7 @@ Ext.define('casco.view.rs.Rs', {
           },
           document_id: me.document.id,
           document: me.document,
+          project: me.project,
           vstore: me.versions,
           type: 'rs'
         });
@@ -212,7 +213,8 @@ Ext.define('casco.view.rs.Rs', {
         rs: Ext.create('casco.model.Rs'),
         columns: me.columns,
         version_id: me.curr_version.get('id'),
-        tag_id: tag, project: me.project,
+        tag_id: tag, 
+        project: me.project,
         document_id: me.document.id
       });
       win.show();
