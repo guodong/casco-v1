@@ -150,7 +150,7 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 					click: 'createVerification'
 				}
 			}, {
-				text: 'Cancel',
+				text: '取消',
 				glyph: 0xf112,
 				scope: me,
 				handler: function(){

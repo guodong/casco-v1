@@ -151,7 +151,7 @@ Ext.define('casco.view.vat.TwoWayRelation', {
 					
 				}
 			}, {
-				text: 'Cancel',
+				text: '取消',
 				glyph: 0xf112,
 				scope: me,
 				handler: function(){

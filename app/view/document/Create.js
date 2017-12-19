@@ -16,7 +16,7 @@ Ext.define('casco.view.document.Create', {
 	controller: 'document',
 
 	modal: true,
-	title: 'Create Document',
+	title: '创建文档',
 	width: 300,
 
 	initComponent: function() {
@@ -29,13 +29,13 @@ Ext.define('casco.view.document.Create', {
 					background: '#eee'
 				},
 				items: ['->', {
-					text: 'Save',
+					text: '保存',
 					glyph: 0xf0c7,
 					listeners: {
 						click: 'createDocument'
 					}
 				}, {
-					text: 'Cancel',
+					text: '取消',
 					glyph: 0xf112,
 					scope: me,
 					handler: this.doHide

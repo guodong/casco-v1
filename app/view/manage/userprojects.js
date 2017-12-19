@@ -6,7 +6,7 @@ Ext.define('casco.view.manage.userprojects', {
 	resizable: true,
 	maximizable: true,
 	modal: true,
-	title: 'User Projects',
+	title: '用户工程',
 	width: 400,
 	height: 250,
 	initComponent: function() {
@@ -45,7 +45,7 @@ Ext.define('casco.view.manage.userprojects', {
 			}
 			*/
 			hidden: localStorage.role == 'staff' ? true: false,  //用户权限
-			text: 'Edit Projects',
+			text: '编辑工程',
 			glyph: 0xf067,
 			handler: function() {
 
@@ -53,7 +53,7 @@ Ext.define('casco.view.manage.userprojects', {
 			}
 	 	    },{
 			hidden: localStorage.role == 'staff' ? true: false,  //用户权限
-			text: 'Delete Projects',
+			text: '删除工程',
 			glyph: 0xf067,
 			handler: function() {
 		    Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){if(choice == 'yes'){
@@ -92,11 +92,11 @@ Ext.define('casco.view.manage.userprojects', {
 			anchor: '100%',
 			store: me.store,
 			columns: [{
-				text: 'ProjectName',
+				text: '工程名称',
 				dataIndex: 'name',
 				flex: 1
 			},{
-				text: 'Description',
+				text: '描述',
 				dataIndex: 'description',
 				flex: 1
 			}],
@@ -112,7 +112,7 @@ Ext.define('casco.view.manage.userprojects', {
 				background: '#eee'
 			},
 			items: ['->', {
-				text: 'Ok',
+				text: '确定',
 				glyph: 0xf112,
 				scope: me,
 				handler: this.destroy

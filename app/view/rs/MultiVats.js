@@ -161,7 +161,7 @@ Ext.define('casco.view.rs.MultiVats', {
 				background: '#eee'
 			},
 			items: ['->', {
-				text: 'Save',
+				text: '保存',
 				glyph: 0xf1c3,
 				handler: function(){
 					var self = this;var obj=null;
@@ -195,7 +195,7 @@ Ext.define('casco.view.rs.MultiVats', {
 
 				}
 			}, {
-				text: 'Cancel',
+				text: '取消',
 				glyph: 0xf112,
 				scope: me,
 				handler: function(){

@@ -5,7 +5,6 @@
 <title>测试需求统计</title>
 <script type="text/javascript" src="jquery.min.js"></script>
 <script type="text/javascript" src="highcharts.js"></script>
-<script type="text/javascript" src="../draw/common.js"></script>
 </head>
 <body>
 	<div id="hint" style="margin: 0 auto; text-align: center;">
@@ -21,6 +20,7 @@
 		<div id="container2" style="margin-left: 50%;"></div>
 	</div>
 	<script>
+			var API = "http://localhost:8000/";
 		$(function() {
 			//图标属性-柱状图
 			var makeChart = function(data) {

@@ -19,11 +19,11 @@ Ext.define('casco.view.manage.Vatlist',{
     	});
 		
 		me.columns = [{
-			text : 'Name',
+			text : '名称',
 			dataIndex: 'name',
 			width: 150
 		},{
-			text: 'Description',
+			text: '描述',
 			dataIndex: 'description',
 			width: 250
 		}, {
@@ -34,13 +34,13 @@ Ext.define('casco.view.manage.Vatlist',{
 				return getPreview(value,metadata,record);
 			}
 		}, {
-			text: 'Created At',
+			text: '创建时间',
 			dataIndex: 'created_at',
 			width: 150
 		}];
 		
 		me.tbar = [{
-			text: 'Create Vat',
+			text: '创建 Vat',
 			glyph: 0xf067,
 			scope: this,
 			handler: function() {
@@ -55,7 +55,7 @@ Ext.define('casco.view.manage.Vatlist',{
 				win.show();
 			}
 		},'-',{
-			text: 'Delete Vat',
+			text: '删除 Vat',
 			glyph: 0xf068,
 			scope: this,
 			handler: function() {

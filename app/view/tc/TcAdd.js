@@ -120,14 +120,14 @@ Ext.define('casco.view.tc.TcAdd', {
 		store: me.steps
 	}],
 	buttons: ['->', {
-		text: 'Save',
+		text: '保存',
 		formBind: true,
 		glyph: 0xf0c7,
 		listeners: {
 			click: 'createTc'
 		}
 	}, {
-		text: 'Cancel',
+		text: '取消',
 		glyph: 0xf112,
 		scope: me,
 		handler: this.destroy

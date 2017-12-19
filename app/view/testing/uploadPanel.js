@@ -50,7 +50,7 @@ Ext.define("casco.view.testing.uploadPanel",{
 			 me.store.reload(); 
 			},
 			items : [ '-', {
-				text :'Save',
+				text :'保存',
 				glyph: 0xf0c7,
 				handler : function(item,e) {
 					me.store.sync({
@@ -68,7 +68,7 @@ Ext.define("casco.view.testing.uploadPanel",{
 					 });
 				}
 			}/*, {
-				text :'Undo',
+				text :'取消',
 				glyph: 0xf0e2,
 				handler : function() {
 					me.store.rejectChanges();

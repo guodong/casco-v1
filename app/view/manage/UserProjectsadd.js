@@ -7,7 +7,7 @@ Ext.define('casco.view.manage.UserProjectsadd', {
 	resizable: true,
 	maximizable: true,
 	modal: true,
-	title: 'Add Projects to User',
+	title: '为用户添加工程',
 	width: 300,
 	initComponent: function() {
 		var me = this;
@@ -34,7 +34,7 @@ Ext.define('casco.view.manage.UserProjectsadd', {
 				bodyPadding: '10',
 				items: [{
 					anchor: '100%',
-					fieldLabel: 'name',
+					fieldLabel: '名称',
 					name: 'name',
 					labelAlign: 'top',
 					msgTarget: 'under',
@@ -42,7 +42,7 @@ Ext.define('casco.view.manage.UserProjectsadd', {
 					allowBlank: false
 				}, {
 					anchor: '100%',
-					fieldLabel: 'type',
+					fieldLabel: '类型',
 					name: 'type',
 					labelAlign: 'top',
 					msgTarget: 'under',
@@ -107,7 +107,7 @@ Ext.define('casco.view.manage.UserProjectsadd', {
 					xtype: 'textfield'
 				}, */ {
 					anchor: '100%',
-					fieldLabel: 'project_id',
+					fieldLabel: '工程编号',
 					name: 'project_id',
 					labelAlign: 'top',
 					msgTarget: 'under',
@@ -152,7 +152,7 @@ Ext.define('casco.view.manage.UserProjectsadd', {
 					allowBlank: false
 				},{
 					anchor: '100%',
-					fieldLabel: 'filename',
+					fieldLabel: '文件名',
 					name:'filename',
 					labelAlign: 'top',
 					msgTarget: 'under',
@@ -160,16 +160,16 @@ Ext.define('casco.view.manage.UserProjectsadd', {
 					allowBlank: false
 				}/*,{
 					anchor: '100%',
-					fieldLabel: 'created_at',
-					name: 'test_version',
+					fieldLabel: '创建时间',
+					name: 'created_at',
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'textfield',
 					allowBlank: false
 				},{
 					anchor: '100%',
-					fieldLabel: 'updated_at',
-					name: 'test_version',
+					fieldLabel: '更新时间',
+					name: 'updated_at',
 					labelAlign: 'top',
 					msgTarget: 'under',
 					xtype: 'textfield',
@@ -179,14 +179,14 @@ Ext.define('casco.view.manage.UserProjectsadd', {
     			     
     			],
 				buttons: ['->', {
-					text: 'Save',
+					text: '保存',
 					formBind: true,
 					glyph: 0xf0c7,
 					listeners: {
 						click: 'createDocument'
 					}
 				}, {
-					text: 'Cancel',
+					text: '取消',
 					glyph: 0xf112,
 					scope: me,
 					handler: this.destroy

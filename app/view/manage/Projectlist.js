@@ -11,7 +11,7 @@ Ext.define('casco.view.manage.Projectlist', {
 		me.store = store;
 		me.tbar = [{
 			hidden: localStorage.role == 'staff' ? true: false,
-			text: 'Create Project',
+			text: '点击添加',
 			glyph: 0xf067,
 			handler: function() {
 				var win = Ext.create('casco.view.manage.Projectadd', {store: store});
@@ -19,32 +19,37 @@ Ext.define('casco.view.manage.Projectlist', {
 			}
 		},{
 			hidden: localStorage.role == 'staff' ? true: false,
-			text: 'Delete Project',
+			text: '删除选中',
 			glyph: 0xf067,
 			handler: function() {
-				Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){   //confirm
-					if(choice == 'yes'){
-						var view=me.getView();
-						var selection =view.getSelectionModel().getSelection()[0];
-						if (selection) {
-							me.store.remove(selection);
-							selection.erase();
-						}
-				}}, this);
+				Ext.MessageBox.buttonText.yes = '是';
+				Ext.MessageBox.buttonText.no = '否';
+				var view=me.getView();
+				var selection =view.getSelectionModel().getSelection()[0];
+
+				if(selection){
+					Ext.Msg.confirm('确认', '确认删除选中工程?', function(choice){   //confirm
+						if(choice == 'yes'){
+								me.store.remove(selection);
+								selection.erase();
+					}}, this);
+				}else{
+					Ext.Msg.alert('注意','请先选中需要删除的工程！');
+				}
 			}
 		}];
 		me.callParent();
 	},
 	columns: [{
-		text: "name",
+		text: "名称",
 		dataIndex: "name",
 		width: 150
 	},{
-		text: "description",
+		text: "描述",
 		dataIndex: "description",
 		width: 200
 	},{
-		text: "participants",
+		text: "成员",
 		dataIndex: "participants",
 		flex: 1,
 		renderer: function(ps){
@@ -55,7 +60,7 @@ Ext.define('casco.view.manage.Projectlist', {
 			return users.join(',');
 		}
 	}, {
-		text:"Edit Docs",
+		text:"编辑文档",
 		hidden: localStorage.role == 'staff' ? true: false,  //用户权限
 		width: 100,
         renderer: function(val,meta,rec) {
@@ -75,7 +80,7 @@ Ext.define('casco.view.manage.Projectlist', {
             return Ext.String.format('<div id="{0}" style="margin-left:auto;margin-right:auto"></div>', id);
          }
       },{
-    	  text: 'Edit Vat',
+    	  text: '编辑Vat',
     	  hidden: localStorage.role == 'staff' ? true: false,  //用户权限
     	  width: 100,
     	  renderer: function(val,meta,rec){
@@ -95,7 +100,7 @@ Ext.define('casco.view.manage.Projectlist', {
     		  return Ext.String.format('<div id="{0}"></div>', id);
     	  }
       },{
-    	  text:"Edit Build",
+    	  text:"编辑Build",
 		  width:100,
           renderer:function(val,meta,rec){
 		  var id=Ext.id();
@@ -116,7 +121,7 @@ Ext.define('casco.view.manage.Projectlist', {
 
           }
 	  },{
-		text:"statistics",
+		text:"统计",
 		width: 130,
         renderer: function(val,meta,rec) {
             var id = Ext.id();

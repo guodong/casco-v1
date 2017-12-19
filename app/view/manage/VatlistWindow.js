@@ -9,7 +9,7 @@ Ext.define('casco.view.manage.VatlistWindow', {
     ],
 	modal: true,
     controller: 'manage',
-    title: 'View Vat Build',
+    title: '查看 Vat Build',
 	width: '80%',
 	height: '80%',
 	maximizable: true,

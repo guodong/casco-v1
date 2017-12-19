@@ -3148,7 +3148,7 @@ describe("Ext.panel.Panel", function() {
                         }
                     }, {
                         reference: 'cancelButton',
-                        text: 'Cancel',
+                        text: '取消',
                         listeners: {
                             click: 'onCancelButton'
                         }

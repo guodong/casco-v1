@@ -6,7 +6,7 @@ Ext.define('casco.view.manage.Participants', {
 	resizable: true,
 	maximizable: true,
 	modal: true,
-	title: 'Edit Participants',
+	title: '编辑成员',
 	width: 600,
 	height: 550,
 	autoScroll: true,
@@ -28,10 +28,10 @@ Ext.define('casco.view.manage.Participants', {
 	        split: true,
 	        collapsible: true,
 			autoScroll: true,
-			title: 'Avaliable Users',
+			title: '有效用户',
 		    columns: [
-				        { text: 'account',  dataIndex: 'account'},
-				        { text: 'realname',  dataIndex: 'realname', flex: 1},
+				        { text: '用户名',  dataIndex: 'account'},
+				        { text: '姓名',  dataIndex: 'realname', flex: 1},
 				        //{ text: 'jobnumber',  dataIndex: 'jobnumber'}
 		    ],
 		    listeners : {
@@ -46,17 +46,17 @@ Ext.define('casco.view.manage.Participants', {
 			xtype: 'grid',
 			region: 'center',
 			//itemId: 'sources',
-			title: 'Selected Users',
+			title: '选中用户',
 			id: 'selectedusers',
 			plugins: [Ext.create('Ext.grid.plugin.CellEditing', {clicksToEdit: 1})],
 		    columns: [
-				        { text: 'realname',  dataIndex: 'realname', flex: 1},
+				        { text: '姓名',  dataIndex: 'realname', flex: 1},
 				       {
 				            //xtype: 'gridcolumn',
 				            renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
 				                console.log(value)
 				            },  
-				            text: 'Role',
+				            text: '角色',
 				            dataIndex: 'role',
 				            editor: {
 				                xtype: 'combo',
@@ -96,7 +96,7 @@ Ext.define('casco.view.manage.Participants', {
 				background: '#eee'
 			},
 			items: ['->', {
-				text: 'Ok',
+				text: '确定',
 				glyph: 0xf112,
 				scope: me,
 				handler: this.destroy

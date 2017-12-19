@@ -131,7 +131,7 @@ Ext.define('casco.view.report.ReportWindow', {
 			region:'south',
 			split: true,
 			items: ['->',{
-                text: 'Save',
+                text: '保存',
                 glyph: 0xf0c7,
                 scope: me,
                 handler : function(){
@@ -152,7 +152,7 @@ Ext.define('casco.view.report.ReportWindow', {
 			},{
             	xtype:'tbspacer',
             },{
-                text: 'Cancel',
+                text: '取消',
                 glyph: 0xf112,
                 scope: me,
                 handler : this.destroy

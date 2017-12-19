@@ -36,7 +36,7 @@ Ext.define('casco.view.manage.Testmethod', {
 			}
 		}, '->', {
 	        xtype: 'textfield',
-	        fieldLabel: 'Search',
+	        fieldLabel: '搜索',
 	        labelWidth: 50,
 	        name: 'searchField',
 	        emptyText: '查找关键字',
@@ -52,13 +52,13 @@ Ext.define('casco.view.manage.Testmethod', {
 	      }, {
 	        xtype: 'button',
 	        text: '&lt;',
-	        tooltip: 'Find Previous Row',
+	        tooltip: '往前查找',
 	        handler: me.onPreviousClick,
 	        scope: me
 	      }, {
 	        xtype: 'button',
 	        text: '&gt;',
-	        tooltip: 'Find Next Row',
+	        tooltip: '往后查找',
 	        handler: me.onNextClick,
 	        scope: me
 	      }, {

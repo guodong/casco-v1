@@ -16,7 +16,7 @@ Ext.define('casco.view.manage.Versions', {
             saveBtnText: '保存',
             cancelBtnText: '取消',
             errorsText: '错误',
-            dirtyText: "你要确认或取消更改",
+            dirtyText: "请保存或取消更改",
 			listeners:{
 			 edit:function(editor, e) {
 				    // commit the changes right after editing finished
@@ -54,7 +54,7 @@ Ext.define('casco.view.manage.Versions', {
             Ext.defer(function() {
                Ext.widget('button', {
                   renderTo: id,
-                  text: 'result',
+                  text: '结果',
                   glyph: 0xf040,
                   scale: 'small',
                   handler: function() {
@@ -127,7 +127,7 @@ Ext.define('casco.view.manage.Versions', {
 			 me.store.reload(); 
 			},
 			items : [ '-', {
-				text :'Save',
+				text :'保存',
 				glyph : 0xf0c7,
 				handler : function(item,e) {
 					me.store.sync({
@@ -143,7 +143,7 @@ Ext.define('casco.view.manage.Versions', {
 					 });
 				}
 			}, {
-				text :'Undo',
+				text :'取消',
 				glyph: 0xf0e2,
 				handler : function() {
 					me.store.rejectChanges();
@@ -156,11 +156,11 @@ Ext.define('casco.view.manage.Versions', {
 			if(!grid.rowCtxMenu){
 			grid.rowCtxMenu=Ext.create('Ext.menu.Menu',{	
 			items:[{
-				text:'Insert Record',
+				text:'插入记录',
 				handler:onInsertRecord
 			},
 			{
-				text:'Delete Record',
+				text:'删除记录',
 				handler:onDelete
 			}]});
 			}//if

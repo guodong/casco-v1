@@ -32,7 +32,7 @@ Ext.define('casco.view.report.Verify', {
         });
 		me.store = store;
 		me.tbar = [{
-			text: 'Save',
+			text: '保存',
 			glyph: 0xf0c7,
 			scope: this,
 			handler:function(){  
@@ -69,7 +69,7 @@ Ext.define('casco.view.report.Verify', {
             xtype: 'textfield',
             labelWidth: 50,
             name: 'searchField', 
-            emptyText: 'Search',
+            emptyText: '搜索',
             width: 200,
             listeners: {
                 change: {
@@ -81,13 +81,13 @@ Ext.define('casco.view.report.Verify', {
        }, {
            xtype: 'button',
            text: '&lt;',
-           tooltip: 'Find Previous Row',
+           tooltip: '往前查找',
            handler: me.onPreviousClick,
            scope: me
        },{
            xtype: 'button',
            text: '&gt;',
-           tooltip: 'Find Next Row',
+           tooltip: '往后查找',
            handler: me.onNextClick,
            scope: me
        },{
@@ -202,7 +202,7 @@ Ext.define('casco.view.report.Verify', {
         tagsRe:/<[^>]*>/gm,  //detects html tag gm 参数
     	tagsProtect:'\x0f',  //DEL ASCII code
         matchCls: 'x-livesearch-match', //@cfg {String} matchCls  The matched string css classe.
-        defaultStatusText: 'Nothing Found',	 
+        defaultStatusText: '无匹配结果',	 
     	
     	 afterRender: function() {
     	        var me = this;
@@ -298,7 +298,7 @@ Ext.define('casco.view.report.Verify', {
 //                    Ext.fly(me.getView().getNode(me.currentIndex)).scrollInteView();
                     me.getView().focusRow(me.currentIndex);
                     me.statusBar.setStatus({
-                        text: count + ' matche(s) found.',
+                         text: count + ' 处匹配',
                         iconCls: 'x-status-valid'
                     });
                 }

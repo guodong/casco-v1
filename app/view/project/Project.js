@@ -19,7 +19,7 @@ Ext.define("casco.view.project.Project", {
 	            xtype: 'combobox',
 	            name: 'project_id',
 	            editable: false,
-	            fieldLabel: 'Choose Project',
+	            fieldLabel: '选择工程',
 	            queryMode: 'local',
 	            displayField: 'name',
 	            valueField: 'id',
@@ -27,7 +27,7 @@ Ext.define("casco.view.project.Project", {
 	            store: store
 	        }],
 	        buttons: [{
-	            text: 'Create Project',
+	            text: "新建工程",
 	            listeners: {
 	            	click: 'create'
 	            }

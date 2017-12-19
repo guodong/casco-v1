@@ -9,7 +9,7 @@ Ext.define('casco.view.manage.Vatstr', {
         'Ext.toolbar.TextItem',
     ],
 	columns: [{
-        text: 'Vat Option',
+        text: 'Vat 选项',
         width: '100%',
         sortable: true,
         resizable: false,
@@ -32,12 +32,12 @@ Ext.define('casco.view.manage.Vatstr', {
     	        dock: 'bottom',
     	        items: ['->',{
     	            glyph: 0xf067,
-    	            text: 'Add',
+    	            text: '添加',
     	            scope: me,
     	            handler: this.onAddClick,
     	        }, {
     	            glyph: 0xf068,
-    	            text: 'Delete',
+    	            text: '删除',
     	            disabled: true,
     	            itemId: 'delete',
     	            scope: me,

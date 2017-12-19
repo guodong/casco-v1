@@ -16,16 +16,16 @@ Ext.define('casco.view.main.Top', {
 		var states = Ext.create('Ext.data.Store', {
          fields: ['abbr', 'name'],
          data : [
-         {"abbr":"EditInfo", "name":"1"},
-		 {"abbr":"Logout", "name":"2"}
+         {"abbr":"修改信息", "name":"1"},
+		 {"abbr":"注销登录", "name":"2"}
            ]});
 
     	this.items = [{
             xtype: 'label',
-            html: 'CASCO TEST CENTER',
+            html: '卡斯柯测试平台',
             style: {'font-size':'27px','font-weight':'bold'}
         },'->',{
-            text: 'Manage',
+            text: '管理',
             xtype: 'button',
             handler: 'manage',
             hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false
@@ -34,7 +34,7 @@ Ext.define('casco.view.main.Top', {
         	xtype: 'button',
         	handler: 'vat'
         },{
-            text: 'Testing',
+            text: '测试',
             xtype: 'button',
             handler: 'testing'
         },{
@@ -42,7 +42,7 @@ Ext.define('casco.view.main.Top', {
             xtype: 'button',
             handler: 'matrix'
         },{
-            text: 'Report',
+            text: '报告',
             xtype: 'button',
             handler: 'report'
         },{
@@ -60,12 +60,13 @@ Ext.define('casco.view.main.Top', {
             store: store,
             queryMode: 'local',
 			itemId:'switcher',	//ManageController使用
-            emptyText: 'Switch Project',
+            emptyText: '（切换工程）',
             listeners: {
             	select: 'switchProject'
             }
         },{
             xtype: 'combobox',
+            itemId: 'logoutBtn',
             editable: false,
             displayField: 'abbr',
             valueField: 'name',

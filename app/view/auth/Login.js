@@ -7,7 +7,7 @@ Ext.define("casco.view.auth.Login",{
     ],
     
     controller: 'login',
-    title: 'Login Window',
+    title: '登录',
     closable: false,
     autoShow: true,
     
@@ -20,7 +20,7 @@ Ext.define("casco.view.auth.Login",{
     	        items: [{
     	            xtype: 'textfield',
     	            name: 'account',
-    	            fieldLabel: 'Account',
+    	            fieldLabel: '用户名',
     	            allowBlank: false,
     	            listeners:{
     	            	// add 'Enter' event
@@ -30,7 +30,7 @@ Ext.define("casco.view.auth.Login",{
     	            xtype: 'textfield',
     	            name: 'password',
     	            inputType: 'password',
-    	            fieldLabel: 'Password',
+    	            fieldLabel: '密码',
     	            allowBlank: false,
     	            listeners:{
     	            	// add 'Enter' event
@@ -38,7 +38,7 @@ Ext.define("casco.view.auth.Login",{
     	            }
     	        }],
     	        buttons: [{
-    	            text: 'Login',
+    	            text: '登录',
     	            formBind: true,
     	            listeners: {
     	                click: 'onLoginClick'

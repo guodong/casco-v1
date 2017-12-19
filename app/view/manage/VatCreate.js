@@ -53,7 +53,7 @@ Ext.define('casco.view.manage.VatCreate', {
 				value: me.project.get('id')
 			},{
 				xtype: 'textfield',
-				fieldLabel: 'Name',
+				fieldLabel: '名称',
 				labelAlign: 'top',
 				name: 'name',
 				msgTarget: 'under',
@@ -61,7 +61,7 @@ Ext.define('casco.view.manage.VatCreate', {
 				blankText:"请输入Vat Build名称"
 			}, {
 				xtype: 'textarea',
-				fieldLabel: 'Description',
+				fieldLabel: '描述',
 				labelAlign:'top',
 				name: 'description',
 				anchor: '100%',
@@ -142,7 +142,7 @@ Ext.define('casco.view.manage.VatCreate', {
 				dataIndex: 'name',
 				width: 150
 			}, {
-				text: 'Version',
+				text: '版本',
 				dataIndex: 'version_id',
 				flex: 1,
 				renderer: function(v, md, record){
@@ -176,13 +176,13 @@ Ext.define('casco.view.manage.VatCreate', {
 				background: '#eee'
 			},
 			items: ['->', {
-				text: 'Save',
+				text: '保存',
 				glyph: 0xf0c7,
 				listeners: {
 					click: 'createVat'
 				}
 			}, {
-				text: 'Cancel',
+				text: '取消',
 				glyph: 0xf112,
 				scope: me,
 				handler: function(){

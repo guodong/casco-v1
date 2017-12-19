@@ -27,7 +27,7 @@ Ext.define('casco.view.manage.Projectadd', {
     	    	reference: 'project_create_form',
     	    	items: [{
     	            anchor: '100%',
-    	            fieldLabel: 'Name',
+    	            fieldLabel: '名称',
     	            name: 'name',
     	            labelAlign: 'top',
     	            msgTarget: 'under',
@@ -35,7 +35,7 @@ Ext.define('casco.view.manage.Projectadd', {
     	            allowBlank: false
     	        },{
     	            anchor: '100%',
-    	            fieldLabel: 'Description',
+    	            fieldLabel: '描述',
     	            name: 'description',
     	            labelAlign: 'top',
     	            msgTarget: 'under',
@@ -44,14 +44,14 @@ Ext.define('casco.view.manage.Projectadd', {
     	        }, {
     				xtype: 'grid',//貌似后台发送数据是通过store的名字来命名的哦
     				region: 'center',
-    				fieldLabel: 'Participants',
+    				fieldLabel: '成员',
     				maxHeight: 200,
     				dockedItems: [{
     	    	        xtype: 'toolbar', 
     	    	        dock: 'bottom',
     	    	        items: ['->',{
     	    	            glyph: 0xf067,
-    	    	            text: 'Edit Participants',
+    	    	            text: '编辑成员',
     	    	            handler: function(){
     	    					var wd = Ext.create("casco.view.manage.Participants", {
     	    						participants: me.participants,
@@ -62,7 +62,7 @@ Ext.define('casco.view.manage.Projectadd', {
     	    	        }]
     	    	    }],
     			    columns: [
-    			        { text: 'Participants',  dataIndex: 'realname', flex: 1}
+    			        { text: '成员',  dataIndex: 'realname', flex: 1}
     			    ],
     			    store: me.participants
     			}, {
@@ -71,14 +71,14 @@ Ext.define('casco.view.manage.Projectadd', {
     				store: me.vatstrs
     			}],
     			buttons: ['->', {
-					text: 'Save',
+					text: '保存',
 					formBind: true,
 					glyph: 0xf0c7,
 					listeners: {
 						click: 'createProject'
 					}
 				}, {
-					text: 'Cancel',
+					text: '取消',
 					glyph: 0xf112,
 					scope: me,
 					handler: this.destroy

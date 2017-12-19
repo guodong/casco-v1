@@ -56,19 +56,19 @@ Ext.define('casco.view.manage.Buildlist', {
 	},
 	columns: [
 	{  
-		text:"id",
+		text:"编号",
 		dataIndex:"id",
 		 
 	    hidden:true
 	
 	},{
-		text: "Name",
+		text: "名称",
 		width:200,
 		anchor: '50%',
 		dataIndex: "name",
 		 
 	}, {
-		text: "created time",
+		text: "创建时间",
 		dataIndex: "created_at",
 	    width:200,
 		anchor: '50%', 

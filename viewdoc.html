@@ -4,16 +4,16 @@
 	<div id="box"></div>
 	<script>
 		function getPar(par) {
-			//»ñÈ¡µ±Ç°URL
+			//è·å–å½“å‰URL
 			var local_url = document.location.href;
-			//»ñÈ¡ÒªÈ¡µÃµÄget²ÎÊıÎ»ÖÃ
+			//è·å–è¦å–å¾—çš„getå‚æ•°ä½ç½®
 			var get = local_url.indexOf(par + "=");
 			if (get == -1) {
 				return false;
 			}
-			//½ØÈ¡×Ö·û´®
+			//æˆªå–å­—ç¬¦ä¸²
 			var get_par = local_url.slice(par.length + get + 1);
-			//ÅĞ¶Ï½ØÈ¡ºóµÄ×Ö·û´®ÊÇ·ñ»¹ÓĞÆäËûget²ÎÊı
+			//åˆ¤æ–­æˆªå–åçš„å­—ç¬¦ä¸²æ˜¯å¦è¿˜æœ‰å…¶ä»–getå‚æ•°
 			var nextPar = get_par.indexOf("&");
 			if (nextPar != -1) {
 				get_par = get_par.slice(0, nextPar);
@@ -30,7 +30,7 @@
 				//var src = 'http://192.100.212.33/files/'+d.filename+'.pdf';
 				var src=API+filename;
 				//var str = '<embed name="plugin" type="application/pdf" width="100%" height="100%" src="'+src+'"></embed>';
-				var str='<a href="'+src+'">'+'µã»÷ÏÂÔØ=>  '+filename+'</a>';
+				var str='<a href="'+src+'">'+'ç‚¹å‡»ä¸‹è½½=>  '+filename+'</a>';
 				box.innerHTML = str;
 				/*
 		$.ajax({

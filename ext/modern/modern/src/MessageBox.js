@@ -140,7 +140,7 @@ Ext.define('Ext.MessageBox', {
         OK    : {text: 'OK',     itemId: 'ok'},
         YES   : {text: 'Yes',    itemId: 'yes'},
         NO    : {text: 'No',     itemId: 'no'},
-        CANCEL: {text: 'Cancel', itemId: 'cancel'},
+        CANCEL: {text: '取消', itemId: 'cancel'},
 
         INFO    : Ext.baseCSSPrefix + 'msgbox-info',
         WARNING : Ext.baseCSSPrefix + 'msgbox-warning',
@@ -148,11 +148,11 @@ Ext.define('Ext.MessageBox', {
         ERROR   : Ext.baseCSSPrefix + 'msgbox-error',
 
         OKCANCEL: [
-            {text: 'Cancel', itemId: 'cancel'},
+            {text: '取消', itemId: 'cancel'},
             {text: 'OK',     itemId: 'ok'}
         ],
         YESNOCANCEL: [
-            {text: 'Cancel', itemId: 'cancel'},
+            {text: '取消', itemId: 'cancel'},
             {text: 'No',     itemId: 'no'},
             {text: 'Yes',    itemId: 'yes'}
         ],

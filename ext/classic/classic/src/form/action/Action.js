@@ -121,7 +121,7 @@ Ext.define('Ext.form.action.Action', {
      *     var fp = new Ext.form.Panel({
      *     ...
      *     buttons: [{
-     *         text: 'Save',
+     *         text: '保存',
      *         formBind: true,
      *         handler: function(){
      *             if(fp.getForm().isValid()){

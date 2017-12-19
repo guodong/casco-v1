@@ -23,7 +23,7 @@ Ext.define('casco.view.vat.Top', {
 
     	this.items = [{
             xtype: 'label',
-            html: 'CASCO TEST CENTER',
+            html: '卡斯柯测试平台',
             style: {'font-size':'27px','font-weight':'bold'}
         },'->',{
             text: 'Manage',

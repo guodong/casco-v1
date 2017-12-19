@@ -97,7 +97,7 @@
  *         },
  *         items: [{
  *             xtype: 'searchfield',
- *             fieldLabel: 'Search',
+ *             fieldLabel: '搜索',  
  *             name: 'query'
  *         }],
  *         renderTo: Ext.getBody()

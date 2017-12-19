@@ -32,7 +32,7 @@ Ext.define('Ext.grid.RowEditor', {
     saveBtnText: 'Update',
     //</locale>
     //<locale>
-    cancelBtnText: 'Cancel',
+    cancelBtntext: '取消',
     //</locale>
     //<locale>
     errorsText: 'Errors',
