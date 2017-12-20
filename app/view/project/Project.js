@@ -32,7 +32,7 @@ Ext.define("casco.view.project.Project", {
 	            	click: 'create'
 	            }
 	        },{
-	            text: 'OK',
+	            text: '确定',
 	            formBind: true,
 	            listeners: {
 	                click: 'onChooseProject'

@@ -28,20 +28,20 @@ Ext.define('casco.view.vat.VatView',{
 		
 		
 		me.columns = [{
-			text : 'Name',
+			text : '名称',
 			dataIndex: 'name'
 		},{
-			text: 'Description',
+			text: '描述',
 			dataIndex: 'description'
 		}, {
-			text: 'Doc Version',
+			text: '文档版本',
 			dataIndex: 'doc_versions',
 			flex: 1,
 			renderer: function(value,metadata,record){ //value-rs_versions(current cell); metadata-cell metadata; record-Ext.data.Model
 				return getPreview(value,metadata,record);
 			}
 		}, {
-			text: 'Created At',
+			text: '创建时间',
 			dataIndex: 'created_at',
 			width: 150
 		},{
@@ -52,7 +52,7 @@ Ext.define('casco.view.vat.VatView',{
 				 var id = Ext.id();
 	             Ext.defer(function() {	//延迟调用 miliseconds
 	               	Ext.create('Ext.button.Button', {
-					text: 'Show Relation',
+					text: '显示关系',
 					renderTo: id,
 					handler: function(){
 //						console.log(rec);
@@ -128,7 +128,7 @@ Ext.define('casco.view.vat.VatView',{
 		}];
 		
 		me.tbar = [{
-			text: 'Export Relations',
+			text: '导出关系',
 			glyph: 0xf1c3,
 			scope: this,
 			hidden: true,
@@ -158,7 +158,7 @@ Ext.define('casco.view.vat.VatView',{
 						var selection =view.getSelectionModel().getSelection()[0];
 						console.log(selection);
 						if (!selection) {
-						 Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
+						 Ext.Msg.alert('<b>注意</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
 						 combo.clearValue();
 				         return;
 						}
@@ -169,7 +169,7 @@ Ext.define('casco.view.vat.VatView',{
 						var view=me.getView();
 						var selection =view.getSelectionModel().getSelection()[0];
 						if (!selection) {
-						 Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
+						 Ext.Msg.alert('<b>注意</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
 						 combo.clearValue();
 				         return;
 						}
@@ -180,7 +180,7 @@ Ext.define('casco.view.vat.VatView',{
 //						var view=me.getView();
 //						var selection =view.getSelectionModel().getSelection()[0];
 //						if (!selection) {
-//						 Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
+//						 Ext.Msg.alert('<b>注意</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
 //						 combo.clearValue();
 //				         return;
 //						}

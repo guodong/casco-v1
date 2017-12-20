@@ -41,14 +41,14 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 				name: 'project_id',
 				value: me.project.get('id')
 			},{
-				fieldLabel: 'Version',
+				fieldLabel: '版本',
 				msgTarget: 'under',
 				name: 'version',
 				xtype: 'textfield'
 			},
 			{
 				xtype:'textfield',
-				fieldLabel:'Child Document',
+				fieldLabel:'子级文档',
 				name:'child_name',
 				value:me.child_doc.data.name,
 				editable:false,
@@ -71,7 +71,7 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 				}
 			},
 			{
-				fieldLabel: 'Child Version',
+				fieldLabel: '子级版本',
 				name: 'child_version_id',
 				store: Ext.create('casco.store.Versions'),
 				id: 'child-version',
@@ -82,7 +82,7 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 				displayField: 'name',
 				valueField: 'id',
 			},{
-			fieldLabel: 'description',
+			fieldLabel: '描述',
 			labelAlign:'top',
 			name: 'description',
 			xtype: 'textarea',
@@ -107,11 +107,11 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 		        }
 		    },
 		    columns: [{
-				text: 'Parent doc',
+				text: '父级文档',
 				dataIndex: 'name',
 				width:200
 			}, {
-				text: 'Parent Version',
+				text: '父级版本',
 				dataIndex: 'version_id',
 				width:200,
 				renderer: function(v, md, record){
@@ -144,7 +144,7 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 				background: '#eee'
 			},
 			items: ['->', {
-				text: 'Create Report',
+				text: '创建报告',
 				glyph: 0xf0c7,
 				listeners: {
 					click: 'createVerification'

@@ -81,7 +81,7 @@ Ext.define('Ext.picker.Month', {
     /**
      * @cfg {String} okText The text to display on the ok button.
      */
-    okText: 'OK',
+    oktext: '确定',
     //</locale>
 
     //<locale>

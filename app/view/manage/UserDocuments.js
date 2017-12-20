@@ -173,8 +173,8 @@ Ext.define('casco.view.manage.UserDocuments', {
 			// 	}//listener
 
 			// }]
-			
-			
+
+
 			/*,{
 			xtype: 'grid',
 			region: 'east
@@ -199,11 +199,11 @@ Ext.define('casco.view.manage.UserDocuments', {
 				                valueField: 'value',
 				                store: Ext.create('Ext.data.Store', {
 									fields : [ 'text', 'value' ],
-									data : [ {
-										"text" : "leader",
+										data : [ {
+										"text" : "负责人",
 										"value" : "leader"
 									}, {
-										"text" : "member",
+										"text" : "成员",
 										"value" : "member"
 									} ]
 								}),

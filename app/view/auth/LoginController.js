@@ -12,7 +12,7 @@ Ext.define('casco.view.auth.LoginController', {
 				success: function(response){
 					var d = Ext.decode(response.responseText);
 					if(d.code != 0){
-						Ext.Msg.alert('Error', d.data);
+						Ext.Msg.alert('错误', d.data);
 					}else{
 						localStorage.setItem("user", JSON.stringify(d.data));
 						field.up('login').destroy();
@@ -46,7 +46,7 @@ Ext.define('casco.view.auth.LoginController', {
 			success: function(response){
 				var d = Ext.decode(response.responseText);
 				if(d.code != 0){
-					Ext.Msg.alert('Error', d.data);
+					Ext.Msg.alert('错误', d.data);
 				}else{
 					localStorage.setItem("user", JSON.stringify(d.data));
 					me.getView().destroy();

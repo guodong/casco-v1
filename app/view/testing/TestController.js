@@ -21,14 +21,14 @@ Ext.define('casco.view.testing.TestController', {
 		}
 //		console.log(tcs);
 		if(tcs.length==0){ //![]==false
-			Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请选择测试用例!</b></div>');
+			Ext.Msg.alert('<b>注意</b>','<div style="text-align:center;"><b>请选择测试用例!</b></div>');
 			return false;
 		}else{
 			meta.tcs = tcs;
 			var job = Ext.create('casco.model.Testjob', meta);
 			job.save({
 				failure: function(){
-					Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请选择测试用例!</b></div>');
+					Ext.Msg.alert('<b>注意</b>','<div style="text-align:center;"><b>请选择测试用例!</b></div>');
 				},
 				success: function(){
 					Ext.getCmp('joblist').store.reload();//insert(0, job);//添加入数据的方式

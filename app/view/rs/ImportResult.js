@@ -6,7 +6,7 @@ Ext.define('casco.view.rs.ImportResult', {
     'casco.store.Versions'
   ],
   modal: true,
-  title: 'Document Import Result',
+  title: '文档导入结果',
   width: 750,
   height: 500,
   scrollable: true,
@@ -22,13 +22,13 @@ Ext.define('casco.view.rs.ImportResult', {
       xtype: 'grid',
       store: me.store,
       columns: [{
-        text: 'Added', dataIndex: 'added', flex: 1, width: '25%', renderer: me.rd
+        text: '添加', dataIndex: 'added', flex: 1, width: '25%', renderer: me.rd
       }, {
-        text: 'Deleted', dataIndex: 'deleted', width: '25%', renderer: me.rd
+        text: '删除', dataIndex: 'deleted', width: '25%', renderer: me.rd
       }, {
-        text: 'Updated', dataIndex: 'updated', width: '25%', renderer: me.rd
+        text: '更新', dataIndex: 'updated', width: '25%', renderer: me.rd
       }, {
-        text: 'Unupdated', dataIndex: 'unupdated', width: '25%', renderer: me.rd
+        text: '无更新', dataIndex: 'unupdated', width: '25%', renderer: me.rd
       }]
     }];
     me.callParent(arguments);
@@ -40,7 +40,7 @@ Ext.define('casco.view.rs.ImportResult', {
       str_arr.push(arr[i].tag);
       count++;
     }
-    var str = "total: "+count+"<br>";
+    var str = "总数: "+count+"<br>";
     str += str_arr.join('<br>');
     return str;
   }

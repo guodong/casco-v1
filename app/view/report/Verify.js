@@ -42,17 +42,17 @@ Ext.define('casco.view.report.Verify', {
              },
 			 failure: function(record, operation) {
 			  me.down('gridpanel').getView().refresh(); // 这一行重要哇我晕
-              Ext.Msg.alert('Failed','Save failed!');
+              Ext.Msg.alert('失败','保存失败');
 			 },
 			 success: function(record, operation) {
 			 me.down('gridpanel').getView().refresh();
-			 Ext.Msg.alert('Success', 'Saved successfully.');
+			 Ext.Msg.alert('成功', '保存成功。');
 			 }
 			 }); 
 			
 			}
 		},{
-			text: 'Export',
+			text: '导出',
 			glyph: 0xf1c3,
 			handler: function() {
 				console.log(me.doc_id);
@@ -60,7 +60,7 @@ Ext.define('casco.view.report.Verify', {
             	return;
 			}
 		},'-',{
-		    text: 'Refresh',
+		    text: '刷新',
 			glyph: 0xf021,
 		    handler: function() {
 				me.store.reload();
@@ -106,17 +106,17 @@ Ext.define('casco.view.report.Verify', {
 		
 	var north_columns=[
 	{
-		text: "Req ID",
+		text: "需求编号",
 		dataIndex: "id",
 		hidden:true
 	}, 
 	{
-		text: "Req ID",
+		text: "标签",
 		dataIndex: "tag",
 		width: 120
 	}, 
 	{
-		text: "Description",
+		text: "描述",
 		dataIndex: "description",
 		width: 120
 	},
@@ -127,7 +127,7 @@ Ext.define('casco.view.report.Verify', {
 		    renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
 		        return resultStore.findRecord('value', value).get('label');
 		    },
-		    text: 'Result',
+		    text: '结果',
 			typeAhead:false, 
 		    editor: {
 		        xtype: 'combobox',
@@ -153,11 +153,11 @@ Ext.define('casco.view.report.Verify', {
 		        }
 		    }
 		}, {
-		text: "Test case ID",
+		text: "测试用例编号",
 		dataIndex: "test_case",
 		width: 120
 	}, {
-		text: "Comment",
+		text: "备注",
 		dataIndex: "comment",
 		editor:{xtype:'textfield'},
 		width: 120
@@ -186,7 +186,7 @@ Ext.define('casco.view.report.Verify', {
     listeners : {
         itemdblclick: function(dv, record, item, index, e) {
         	//if(localStorage.role == 'staff') return;  //用户权限
-			Ext.Msg.alert('Warning','不可编辑!');
+			Ext.Msg.alert('注意','不可编辑!');
         }
     },
     

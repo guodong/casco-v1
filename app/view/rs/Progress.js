@@ -4,11 +4,11 @@ Ext.define('casco.view.rs.progress', {
   requires: [
   ],
   modal: true,
-  title: 'Loading...',
+  title: '加载中...',
   width: 500,
   frame: true,
   viewModel: 'main',
-  text: 'Loading...',
+  text: '加载中...',
 
   initComponent: function() {
     var me = this;

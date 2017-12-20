@@ -81,7 +81,7 @@ Ext.define('casco.view.matrix.InnerParentGrid', {
 					jsonData: {results: out},
 					success: function(){
 //						me.matrix.reload(); //reconfigure问题怎么解决啊
-						Ext.Msg.alert('Success', 'Saved successfully.')
+						Ext.Msg.alert('成功', '保存成功。')
 					}
 				});
 				

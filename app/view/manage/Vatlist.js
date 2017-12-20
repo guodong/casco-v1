@@ -40,7 +40,7 @@ Ext.define('casco.view.manage.Vatlist',{
 		}];
 		
 		me.tbar = [{
-			text: '创建 Vat',
+			text: '创建Vat',
 			glyph: 0xf067,
 			scope: this,
 			handler: function() {
@@ -55,20 +55,25 @@ Ext.define('casco.view.manage.Vatlist',{
 				win.show();
 			}
 		},'-',{
-			text: '删除 Vat',
+			text: '删除Vat',
 			glyph: 0xf068,
 			scope: this,
 			handler: function() {
-				Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){   //confirm
-					if(choice == 'yes'){
-						var view=me.getView();
-						var selection =view.getSelectionModel().getSelection()[0];
-						if (selection) {
-							me.store.remove(selection);
-							selection.erase();
-							//view.refresh();
-						}
-					}}, this);
+				Ext.MessageBox.buttonText.yes = '是';
+				Ext.MessageBox.buttonText.no = '否';
+				var view=me.getView();
+				var selection =view.getSelectionModel().getSelection()[0];
+				if(selection){
+					Ext.Msg.confirm('确认', '确认删除?', function(choice){   //confirm
+						if(choice == 'yes'){
+								me.store.remove(selection);
+								selection.erase();
+								//view.refresh();
+						}}, this);
+				}else{
+					Ext.Msg.alert('注意','请先选中需要删除的Vat！');
+				}
+			
 			}
 		}];
 		

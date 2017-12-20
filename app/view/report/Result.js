@@ -29,18 +29,18 @@ Ext.define('casco.view.report.Result', {
 			}
     	});
 		me.columns = [{
-			text: 'id',
+			text: '编号',
 			dataIndex: 'id',
 			hidden:true
 		},{
-			text: 'tag',
+			text: '标签',
 			dataIndex: 'tag',
 			width:300,
 			renderer: function(v) {
 				return v;
 			}
 		}, {
-			text: 'description',
+			text: '描述',
 			dataIndex: 'description',
 			flex:1,
 			width:1000,
@@ -54,7 +54,7 @@ Ext.define('casco.view.report.Result', {
 		    renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
 		        return resultStore.findRecord('value', value).get('label');
 		    },
-		    text: 'Result',
+		    text: '结果',
 		    editor: {
 		        xtype: 'combobox',
 				disabledCls: '',
@@ -89,7 +89,7 @@ Ext.define('casco.view.report.Result', {
             	return;
 			}
 		},{
-			text: 'Refresh',
+			text: '刷新',
 			glyph: 0xf021,
 			scope: this,
 			handler: function() {

@@ -80,8 +80,7 @@ Ext.define('casco.view.matrix.MatrixController', {
 				}
 			});
 		}else if(record.get('name')=='2'){
-
-			Ext.Msg.confirm('Confirm', 'Are you sure to logout?', function(choice){if(choice == 'yes'){
+			Ext.Msg.confirm('确认', '确认退出系统?',  function(choice){if(choice == 'yes'){
 				var me = this;
 				var view = this.getView();
 				Ext.Ajax.request({
@@ -90,7 +89,7 @@ Ext.define('casco.view.matrix.MatrixController', {
 					success: function(response){
 						var d = Ext.decode(response.responseText);
 						if(d.code != 0){
-							Ext.Msg.alert('Error', 'Logout failure.');
+							Ext.Msg.alert('注意', '登出失败。');
 						}else{
 							//首先清空localsotrage
 							localStorage.clear();
@@ -119,7 +118,7 @@ Ext.define('casco.view.matrix.MatrixController', {
 			tab = tabs.add({
 				id: 'tab-testing',
 				xtype: 'test',
-				title: 'Testing',
+				title: '测试',
 				closable: true,
 				project: this.getView().project
 			});

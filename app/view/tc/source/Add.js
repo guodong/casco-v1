@@ -62,7 +62,7 @@ Ext.define('casco.view.tc.source.Add', {
 				background: '#eee'
 			},
 			items: ['->', {
-				text: 'Ok',
+				text: '确定',
 				glyph: 0xf112,
 				scope: me,
 				handler: this.destroy

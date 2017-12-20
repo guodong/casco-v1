@@ -9,7 +9,7 @@ Ext.define('casco.view.manage.Projectadd', {
     resizable: true,
     maximizable: true,
     modal: true,
-    title: 'Project Info',
+    title: '工程信息',
     width: 300,
     controller: 'manage',
     initComponent: function(){

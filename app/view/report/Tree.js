@@ -21,8 +21,8 @@ Ext.define('casco.view.report.Tree', {
 			});
 			}else{tab.store.reload();}
 			tabs.setActiveTab(tab);
-    	},//itemdbclick
-		itemcontextmenu:'onCtxMenu'
+    	}//itemdbclick
+		//itemcontextmenu:'onCtxMenu'
     },//lsiteners
     displayField: 'name',
     rootVisible : false,

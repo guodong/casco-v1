@@ -32,7 +32,7 @@ Ext.define('casco.view.testing.Job', {
     	});
     	
 		me.columns = [{
-			text : 'name',
+			text : '名称',
 			dataIndex : 'name'
 		}, {
 			text : 'build',
@@ -44,7 +44,7 @@ Ext.define('casco.view.testing.Job', {
 				type: 'string',
 			}
 		},{
-			text: 'tc',
+			text: '测试用例',
 			dataIndex: 'tc_version',
 			renderer: function(v){
 				if(!v) return;
@@ -52,7 +52,7 @@ Ext.define('casco.view.testing.Job', {
 				return value;
 			},
 		},{
-			text: 'vat_build',
+			text: 'Vat',
 			dataIndex: 'vatbuild',
 			renderer: function(value,metadata,record){ //value-rs_versions(current cell); metadata-cell metadata; record-Ext.data.Model
 				return getPreview(value,metadata,record);
@@ -61,23 +61,23 @@ Ext.define('casco.view.testing.Job', {
 				type: 'string',
 			}
 		},{
-			text: 'status',
+			text: '状态',
 			dataIndex: 'status',
 			renderer: function(v){
-				return v==0?'<span style="color:red">testing</span>':'<span style="color: green">submited</span>';
+				return v==0?'<span style="color:red">测试中</span>':'<span style="color: green">已提交</span>';
 			}
 		}, {
-			text: 'last_modified',
+			text: '修改人',
 			dataIndex: 'user',
 			renderer: function(v){
 				return v?v.realname:'';
 			}
 		},{
-			text: 'created at',
+			text: '创建时间',
 			dataIndex: 'created_at',
 		}];
 		me.tbar = [{
-			text: 'Create Testjob',
+			text: '点击添加',
 			glyph: 0xf067,
 			scope: this,
 			handler: function() {
@@ -90,22 +90,27 @@ Ext.define('casco.view.testing.Job', {
 				win.show();
 			}
 		},{
-			text: 'Delete Testjob',
+			text: '删除选中',
 			glyph: 0xf068,
 			scope: this,
 			handler: function() {
-				Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){   //confirm
-					if(choice == 'yes'){
-						var view=me.getView();
-						var selection =view.getSelectionModel().getSelection()[0];
-						if (selection) {
-							me.store.remove(selection);
-							selection.erase();
-						}
+				Ext.MessageBox.buttonText.yes = '是';
+				Ext.MessageBox.buttonText.no = '否';
+				var view=me.getView();
+				var selection =view.getSelectionModel().getSelection()[0];
+
+				if(selection){
+					Ext.Msg.confirm('确认', '确认删除选中的Testjob?', function(choice){   //confirm
+						if(choice == 'yes'){
+								me.store.remove(selection);
+								selection.erase();
 					}}, this);
+				}else{
+					Ext.Msg.alert('注意','请先选中需要删除的Testjob！');
+				}
 			}
 		},{
-			text: 'Edit Templates',
+			text: '编辑模板',
 			glyph: 0xf093,
 			scope: me,
 			handler: function() {

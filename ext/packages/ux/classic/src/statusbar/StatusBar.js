@@ -28,7 +28,7 @@
  *     // Update the status bar later in code:
  *     var sb = Ext.getCmp('my-status');
  *     sb.setStatus({
- *         text: 'OK',
+ *         text: '确定',
  *         iconCls: 'ok-icon',
  *         clear: true // auto-clear after a set interval
  *     });

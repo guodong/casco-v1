@@ -6784,7 +6784,7 @@ Ext.define('Ext.Component', {
  *              ...
  *          },{
  *              xtype: 'button',
- *              text: 'OK',
+ *              text: '确定',
  *              listeners: {
  *                  click: function () {
  *                      // Get the Session this component has inherited (from
@@ -6819,7 +6819,7 @@ Ext.define('Ext.Component', {
  *              ...
  *          },{
  *              xtype: 'button',
- *              text: 'OK',
+ *              text: '确定',
  *              listeners: {
  *                  click: function () {
  *                      // Get the Session this component has inherited (from

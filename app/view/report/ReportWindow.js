@@ -25,7 +25,7 @@ Ext.define('casco.view.report.ReportWindow', {
             scrollable: true,
             columns: [
                 {
-                    text: 'vat',
+                    text: 'Vat',
                     dataIndex: 'tag',
                     sortable: true,
                     fit: true,
@@ -43,7 +43,7 @@ Ext.define('casco.view.report.ReportWindow', {
                     resizable: false
                 },
                 {
-                    text: 'vat_result', dataIndex: 'vat_result', width: 150, sortable: true,
+                    text: 'vat结果', dataIndex: 'vat_result', width: 150, sortable: true,
                     menuDisabled: true,
                     xtype: 'gridcolumn',
                     fit: true,
@@ -65,7 +65,7 @@ Ext.define('casco.view.report.ReportWindow', {
                     }//editor
                 },
                 {
-                    text: 'comment', dataIndex: 'comment', width: 150, sortable: true,
+                    text: '备注', dataIndex: 'comment', width: 150, sortable: true,
                     menuDisabled: true,
                     resizable: false,
                     fit: true,
@@ -92,7 +92,7 @@ Ext.define('casco.view.report.ReportWindow', {
             store: me.store,
             columns: [
                 {
-                    text: 'Child Requirement Tag',
+                    text: '子级需求标签',
                     dataIndex: 'Child Requirement Tag',
                     width: 150,
                     menuDisabled: true,
@@ -110,7 +110,7 @@ Ext.define('casco.view.report.ReportWindow', {
                     typeAhead: false
                 },
                 {
-                    text: 'Comment',
+                    text: '备注',
                     dataIndex: 'comment',
                     width: 200,
                     menuDisabled: true,

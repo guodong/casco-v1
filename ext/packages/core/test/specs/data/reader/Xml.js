@@ -479,7 +479,7 @@ describe("Ext.data.reader.Xml", function() {
             
             ajaxResponse.complete({
                 status: 200,
-                statusText: 'OK',
+                statustext: '确定',
                 responseText: responseText,
                 responseHeaders: {
                     "Content-type": "application/xml"
@@ -580,7 +580,7 @@ describe("Ext.data.reader.Xml", function() {
 
             ajaxResponse.complete({
                 status: 200,
-                statusText: 'OK',
+                statustext: '确定',
                 responseText: responseText
             });
 

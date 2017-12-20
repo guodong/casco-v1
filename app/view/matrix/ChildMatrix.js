@@ -62,17 +62,17 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			scope: this,
 			handler:function(){
 		     
-			 if(me.verification.get('status')==0){Ext.Msg.alert('','已提交，不可编辑');return;}
+			 if(me.verification.get('status')==0){Ext.Msg.alert('注意','已提交，不可编辑');return;}
 			 var data=[];
 			 me.matrix.sync({
 			 callback: function(record, operation, success){
              },
 			 failure: function(record, operation) {
 			  me.getView().refresh(); 
-              Ext.Msg.alert('Failed','Save failed!');
+              Ext.Msg.alert('失败','保存失败。');
 			 },
 			 success: function(record, operation) {
-			 me.getView().refresh();Ext.Msg.alert('Success', 'Saved successfully.');
+			 me.getView().refresh();Ext.Msg.alert('成功', '保存成功。');
 			 }
 			 });
 			 /*
@@ -92,7 +92,7 @@ Ext.define('casco.view.matrix.ChildMatrix', {
 			 },
 			 success: function(record, operation) {
 			 me.getView().refresh(); 
-			 Ext.Msg.alert('Success', 'Saved successfully.');
+			 Ext.Msg.alert('成功', '保存成功。');
 			 
 			 },
 			 });

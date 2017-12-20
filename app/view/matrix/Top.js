@@ -14,11 +14,8 @@ Ext.define('casco.view.matrix.Top', {
 		var states = Ext.create('Ext.data.Store', {
          fields: ['abbr', 'name'],
          data : [
-          
-         {"abbr":"EditInfo", "name":"1"},
-		 {"abbr":"Logout", "name":"2"}
-		
-        
+         {"abbr":"修改信息", "name":"1"},
+		 {"abbr":"注销登录", "name":"2"}
            ]});
 
     	this.items = [{
@@ -26,7 +23,7 @@ Ext.define('casco.view.matrix.Top', {
             html: '卡斯柯测试平台',
             style: 'font-size: 27px;'
         },'->',{
-            text: 'Manage',
+            text: '管理',
             xtype: 'button',
             handler: 'manage',
             hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false
@@ -35,11 +32,11 @@ Ext.define('casco.view.matrix.Top', {
         	xtype: 'button',
         	handler: 'vat'
         },{
-            text: 'Testing',
+            text: '测试',
             xtype: 'button',
             handler: 'testing'
         },{
-            text: 'Report',
+            text: '报告',
             xtype: 'button',
             handler: 'reporting'
         }/*,{
@@ -61,7 +58,7 @@ Ext.define('casco.view.matrix.Top', {
             store: store,
             queryMode: 'local',
 			itemId:'switcher',	//ManagerController
-            emptyText: 'Switch Project',
+            emptyText: '（切换工程）',
             listeners: {
             	select: 'switchProject'
             }

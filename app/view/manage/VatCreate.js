@@ -5,7 +5,7 @@ Ext.define('casco.view.manage.VatCreate', {
 	modal: true,
 	controller: 'manage',
 	
-	title: 'Create Vat Build',
+	title: '创建Vat',
 	id: 'vat-view-create-window',
 	layout: {
 		type: 'border'
@@ -58,7 +58,7 @@ Ext.define('casco.view.manage.VatCreate', {
 				name: 'name',
 				msgTarget: 'under',
 				allowBlank:false, 
-				blankText:"请输入Vat Build名称"
+				blankText:"请输入Vat名称"
 			}, {
 				xtype: 'textarea',
 				fieldLabel: '描述',
@@ -88,11 +88,11 @@ Ext.define('casco.view.manage.VatCreate', {
 		        }
 		    },
 		    columns: [{
-				text: 'Tc Docs',
+				text: '测试文档',
 				dataIndex: 'name',
 				width: 150
 			}, {
-				text: 'Version',
+				text: '版本',
 				dataIndex: 'version_id',
 				width: 150,
 				renderer: function(v, md, record){
@@ -138,7 +138,7 @@ Ext.define('casco.view.manage.VatCreate', {
 		        }
 		    },
 		    columns: [{
-				text: 'Rs Docs',
+				text: '需求文档',
 				dataIndex: 'name',
 				width: 150
 			}, {

@@ -85545,7 +85545,7 @@ Ext.define('Ext.MessageBox', {
     },
     statics: {
         OK: {
-            text: 'OK',
+            text: '确定',
             itemId: 'ok'
         },
         YES: {
@@ -85570,7 +85570,7 @@ Ext.define('Ext.MessageBox', {
                 itemId: 'cancel'
             },
             {
-                text: 'OK',
+                text: '确定',
                 itemId: 'ok'
             }
         ],

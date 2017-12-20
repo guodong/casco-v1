@@ -22,8 +22,8 @@ Ext.define('casco.view.matrix.Tree', {
 			});
 			}else{tab.store.reload();}
 			tabs.setActiveTab(tab);
-    	},//itemdbclick
-		itemcontextmenu:'onCtxMenu'
+    	}//itemdbclick
+		//itemcontextmenu:'onCtxMenu'
     },//lsiteners
     displayField: 'name',
     rootVisible : false,

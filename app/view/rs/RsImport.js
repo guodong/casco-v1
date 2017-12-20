@@ -6,7 +6,7 @@ Ext.define('casco.view.rs.RsImport', {
     'casco.store.Versions'
   ],
   modal: true,
-  title: 'Document Import',
+  title: '导入文档',
   width: 500,
   frame: true,
   id: 'import-window',
@@ -34,9 +34,9 @@ Ext.define('casco.view.rs.RsImport', {
           me.down('form').items.getAt(3).setValue(regrex);
         } else {
           if (me.type == "rs") {
-            me.down('form').items.getAt(1).setValue("description,implement,source,priority,contribute,category,allocation");
+            me.down('form').items.getAt(1).setValue("描述,实现,Source,优先级,贡献,分类,分配");
           }
-          else if (me.type = "tc") me.down('form').items.getAt(1).setValue("test case description,safety,source,test method,pre_condition,test steps");
+          else if (me.type = "tc") me.down('form').items.getAt(1).setValue("描述,安全性,Source,测试方法,前提,测试步骤");
         }
       }// callback
     });
@@ -49,7 +49,7 @@ Ext.define('casco.view.rs.RsImport', {
       items: [{
         // version_id在这里啊
         xtype: 'combobox',
-        fieldLabel: 'Version',
+        fieldLabel: '版本',
         name: 'version_id',
         labelWidth: 60,
         store: me.vstore,
@@ -59,7 +59,7 @@ Ext.define('casco.view.rs.RsImport', {
         editable: true,
         width: '100%',
         allowBlank: false,
-        blankText: 'Version不能为空，请输入或选择',
+        blankText: '版本不能为空，请输入或选择',
         msgTarget: 'side',
         lastQuery: '',
         listeners: {
@@ -75,10 +75,10 @@ Ext.define('casco.view.rs.RsImport', {
 //							Ext.Msg.alert('Error','Vesrion is NULL ！');
 //						else 
             if (input != '' && e.store.find('name', input) == -1) {
-              Ext.Msg.alert('Notice', '您创建了版本: ' + input + ' ,将在该版本中导入文档');
+              Ext.Msg.alert('注意', '您创建了版本: ' + input + ' ,将在该版本中导入文档');
               me.aflag = input;
             }
-            // else Ext.Msg.alert('Notice','Exist Version: '+
+            // else Ext.Msg.alert('注意','Exist Version: '+
             // input);
           }
         }
@@ -89,7 +89,7 @@ Ext.define('casco.view.rs.RsImport', {
          */
         {
           xtype: 'textfield',
-          fieldLabel: 'Columns',
+          fieldLabel: '列',
           name: 'column',
           labelWidth: 60,
           width: '100%',
@@ -118,7 +118,7 @@ Ext.define('casco.view.rs.RsImport', {
           }// listenres
         }, {
           xtype: 'checkboxfield',
-          fieldLabel: 'IsMerge',
+          fieldLabel: '合并单元格',
           checked: false,
           name: 'ismerge',
           hidden: me.type != 'tc' ? true : false,
@@ -157,14 +157,14 @@ Ext.define('casco.view.rs.RsImport', {
         }, {
           xtype: 'filefield',
           name: 'file',
-          fieldLabel: 'File',
+          fieldLabel: '文件',
           labelWidth: 60,
           msgTarget: 'side',
           allowBlank: false,
           blankText: '请选择需要导入的文档',
           anchor: 0,
           width: '100%',
-          buttonText: 'Select File'
+          buttonText: '选择文件'
         }, {
           xtype: 'hiddenfield',
           name: 'type',
@@ -181,7 +181,7 @@ Ext.define('casco.view.rs.RsImport', {
         }],
 
       buttons: [{
-        text: 'Import',
+        text: '导入',
         handler: function() {
           var self = this;
           var form = this.up('form').getForm();
@@ -200,7 +200,7 @@ Ext.define('casco.view.rs.RsImport', {
                   icon: Ext.MessageBox.INFO,
                   msg: '队列已有' + this.obj + '项任务正在进行,确定继续?',
                   width: 300,
-                  buttonText: {yes: 'Continue', cancel: 'Cancel'},
+                  buttonText: {yes: '继续', cancel: '取消'},
                   fn: function(buttonid) {
                     if (buttonid == 'cancel') {
                       self.up('window').destroy();
@@ -211,7 +211,7 @@ Ext.define('casco.view.rs.RsImport', {
                     form.submit({// 为什么一直为false
                       url: FILEAPI + filename,
                       success: function(form, action) {
-                        Ext.Msg.alert('Success', action.response.responseText);
+                        Ext.Msg.alert('成功', action.response.responseText);
                       },
                       failure: function(form, action) {
                         me.parseDocument();
@@ -241,10 +241,10 @@ Ext.define('casco.view.rs.RsImport', {
     var me = this;
     var form = this.down('form').getForm();
     var pgs = Ext.create('widget.rs.progress', {
-      text: 'Parsing file, please wait...'
+      text: '正在解析文档，请等待...'
     });
     pgs.down('progressbar').wait({
-      text: 'Parsing file, please wait...'
+      text: '正在解析文档，请等待...'
     });
     pgs.show();
     var params = form.getValues();
@@ -258,7 +258,7 @@ Ext.define('casco.view.rs.RsImport', {
       failure: function(response, opts) {
         pgs.destroy();
         console.log(response);
-        Ext.Msg.alert('Error', 'An error occured: ' + response.responseText);
+        Ext.Msg.alert('错误', '错误信息: ' + response.responseText);
       },
       success: function(response) {
         var pjt = me.pjt;

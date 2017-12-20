@@ -46,7 +46,7 @@ Ext.define('casco.view.tc.Tc', {
     me.tbar = [{
       xtype: 'combobox',
       id: 'docv-' + me.document.id,
-      fieldLabel: 'Version',
+      fieldLabel: '版本',
       labelWidth: 50,
       store: me.versions,
       displayField: 'name',
@@ -74,7 +74,7 @@ Ext.define('casco.view.tc.Tc', {
         }
       }
     }, '-', {
-      text: 'Import',
+      text: '导入',
       glyph: 0xf093,
       scope: this,
       width: 90,
@@ -93,14 +93,14 @@ Ext.define('casco.view.tc.Tc', {
         win.show();
       }
     }, '-', {
-      text: 'Export',
+      text: '导出',
       glyph: 0xf019,
       width: 90,
       handler: function() {
         window.open(API + 'tc/export?version_id=' + me.down('combobox').getValue());
       }
     }, '-', {
-      text: 'Versions',
+      text: '版本',
       glyph: 0xf05a,
       border: true,
       width: 110,
@@ -157,11 +157,11 @@ Ext.define('casco.view.tc.Tc', {
         if (!grid.rowCtxMenu) {
           grid.rowCtxMenu = Ext.create('Ext.menu.Menu', {
             items: [{
-              text: 'Insert Record',
+              text: '插入记录',
               handler: me.onInsertRecord,
               scope: me
             }, {
-              text: 'Delete Record',
+              text: '删除记录',
               handler: me.onDeleteRecord,
               scope: me
             }]
@@ -205,7 +205,7 @@ Ext.define('casco.view.tc.Tc', {
   //删除TC
   onDeleteRecord: function() {
     var me = this;
-    Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice) {
+    Ext.Msg.confirm('确认', '确认删除?', function(choice) {
       if (choice == 'yes') {
         var view = me.getView();		//Grid View
 //         me.reconfigure(me.store,me.columns);

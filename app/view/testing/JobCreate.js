@@ -2,7 +2,7 @@ Ext.define('casco.view.testing.JobCreate', {
 	extend: 'Ext.window.Window',
 	xtype: 'testing.jobcreate',
 	modal: true,
-	title: 'Create Job',
+	title: '创建Job',
 	id: 'testing-job-create-window',
 	controller: 'testing',
 	layout: {
@@ -34,7 +34,7 @@ Ext.define('casco.view.testing.JobCreate', {
 			split: true,
 			reference: 'job_create_form',
 			bodyPadding: '10',
-			width: 300,
+			width: 320,
 			items: [{
 				xtype: 'hiddenfield',
 				name: 'project_id',
@@ -44,7 +44,7 @@ Ext.define('casco.view.testing.JobCreate', {
 				name: 'user_id',
 				value: JSON.parse(localStorage.user).id
 			},{
-				fieldLabel: 'Name',
+				fieldLabel: '名称',
 				msgTarget: 'under',
 				allowBlank:false, 
 				blankText:"不能为空",
@@ -61,7 +61,7 @@ Ext.define('casco.view.testing.JobCreate', {
 				allowBlank: false,
 				store: builds
 			},{
-				fieldLabel: 'Vat Version',
+				fieldLabel: 'Vat版本',
 				name: 'vat_build_id',
 				store: vat,
 				id: 'vat_build_id',
@@ -79,7 +79,7 @@ Ext.define('casco.view.testing.JobCreate', {
 				}
 			},
 			{	
-				fieldLabel: 'Tc Version',
+				fieldLabel: '测试用例版本',
 				name: 'tc_version_id',
 				store: Ext.create('Ext.data.Store'),
 				id:'vat_tc',
@@ -108,14 +108,14 @@ Ext.define('casco.view.testing.JobCreate', {
 			region: 'center',
 			store: vats,
 		    columns: [{
-				text: 'Rs doc',
+				text: '需求文档',
 				dataIndex: 'document',
 				flex: 1,
 				renderer: function(v) {
 				return v.name;
 				}
 			}, {
-				text: 'Version',
+				text: '版本',
 				dataIndex: 'name',
 				renderer: function(v, md, record){
 				return v
@@ -132,20 +132,20 @@ Ext.define('casco.view.testing.JobCreate', {
 				checkOnly: true
 			},
 			columns: [{
-				text: 'tag',
+				text: '标签',
 				dataIndex: 'tc',
 				renderer: function(v) {
 				return v.tag;
 			}
 			},{
-				text: 'description',
+				text: '描述',
 				dataIndex: 'tc',
 				flex: 1,
 				renderer: function(v) {
 				return v.description;
 			}
 			}, {
-			text: "test method",
+			text: "测试方法",
 			dataIndex: "tc",
 			renderer: function(v) {
 				return v.testmethods;

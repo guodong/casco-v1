@@ -137,7 +137,7 @@ Ext.define('Ext.MessageBox', {
     },
 
     statics: {
-        OK    : {text: 'OK',     itemId: 'ok'},
+        OK    : {text: '确定',     itemId: 'ok'},
         YES   : {text: 'Yes',    itemId: 'yes'},
         NO    : {text: 'No',     itemId: 'no'},
         CANCEL: {text: '取消', itemId: 'cancel'},
@@ -149,7 +149,7 @@ Ext.define('Ext.MessageBox', {
 
         OKCANCEL: [
             {text: '取消', itemId: 'cancel'},
-            {text: 'OK',     itemId: 'ok'}
+            {text: '确定',     itemId: 'ok'}
         ],
         YESNOCANCEL: [
             {text: '取消', itemId: 'cancel'},

@@ -26,7 +26,7 @@ Ext.define('casco.view.document.FolderCreate', {
 	    	reference: 'documentfolder_create_form',
 	    	bodyPadding: '10',
 	    	items: [{
-	            fieldLabel: 'Name',
+	            fieldLabel: '名称',
 	            msgTarget: 'under',
 	            name: 'name',
 	            xtype: 'textfield'

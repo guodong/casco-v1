@@ -65,7 +65,7 @@ Ext.define('casco.view.vat.Vat', {
 			id:'vatpanel',
 			reference: 'rightpanel',
             items:[{
-                title: 'Overview',
+                title: '概览',
                 html: '<iframe id="draw" src="/draw/noedit.html?'+me.project.get('id')+'" style="width:100%;height:100%;border:0"></iframe>'
             }]
         }];
