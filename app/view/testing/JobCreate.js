@@ -10,7 +10,7 @@ Ext.define('casco.view.testing.JobCreate', {
 	},
 	height: 700,
 	width: 700,
-	initComponent: function() {
+	initComponent: function () {
 		var me = this;
 		me.rs_versions = [];
 		var vat = Ext.create('casco.store.Vats');
@@ -20,7 +20,7 @@ Ext.define('casco.view.testing.JobCreate', {
 				type: 'tc',
 			}
 		});
-		
+
 		var vats = Ext.create('casco.store.Vats');
 		var builds = Ext.create('casco.store.Builds');
 		builds.load({
@@ -39,15 +39,15 @@ Ext.define('casco.view.testing.JobCreate', {
 				xtype: 'hiddenfield',
 				name: 'project_id',
 				value: me.project.get('id')
-			},{
+			}, {
 				xtype: 'hiddenfield',
 				name: 'user_id',
 				value: JSON.parse(localStorage.user).id
-			},{
+			}, {
 				fieldLabel: '名称',
 				msgTarget: 'under',
-				allowBlank:false, 
-				blankText:"不能为空",
+				allowBlank: false,
+				blankText: "不能为空",
 				name: 'name',
 				xtype: 'textfield'
 			}, {
@@ -59,98 +59,101 @@ Ext.define('casco.view.testing.JobCreate', {
 				displayField: 'name',
 				valueField: 'id',
 				allowBlank: false,
+				blankText: "不能为空",
 				store: builds
-			},{
+			}, {
 				fieldLabel: 'Vat版本',
 				name: 'vat_build_id',
 				store: vat,
 				id: 'vat_build_id',
 				xtype: 'combobox',
 				allowBlank: false,
+				blankText: "不能为空",
 				editable: false,
 				queryMode: 'local',
 				displayField: 'name',
 				valueField: 'id',
 				listeners: {
-					select: function(f, r, i){
+					select: function (f, r, i) {
 						Ext.getCmp('vat_tc').getStore().setData(r.get('tc_versions'));
 						Ext.getCmp('testing-job-rs').getStore().setData(r.get('rs_versions'));
 					}
 				}
 			},
-			{	
+			{
 				fieldLabel: '测试用例版本',
 				name: 'tc_version_id',
 				store: Ext.create('Ext.data.Store'),
-				id:'vat_tc',
+				id: 'vat_tc',
 				xtype: 'combobox',
 				allowBlank: false,
+				blankText: "不能为空",
 				editable: false,
 				queryMode: 'local',
 				displayField: 'document.name',
 				valueField: 'id',
 				displayTpl: new Ext.XTemplate('<tpl for=".">{document.name} - {name}</tpl>'),
-//				setValue(r.get('tc_version').document.name+':'+r.get('tc_version').name);
+				//				setValue(r.get('tc_version').document.name+':'+r.get('tc_version').name);
 				listeners: {
-					select: function(f, r, i){
+					select: function (f, r, i) {
 						Ext.getCmp('testing-job-tc-grid').getStore().load({
 							params: {
 								version_id: r.get('id'),
-								act:'stat'
+								act: 'stat'
 							}
 						});
 					}
 				}
 			}]
-		},  {
+		}, {
 			xtype: 'grid',
 			id: 'testing-job-rs',
 			region: 'center',
 			store: vats,
-		    columns: [{
+			columns: [{
 				text: '需求文档',
 				dataIndex: 'document',
 				flex: 1,
-				renderer: function(v) {
-				return v.name;
+				renderer: function (v) {
+					return v.name;
 				}
 			}, {
 				text: '版本',
 				dataIndex: 'name',
-				renderer: function(v, md, record){
-				return v
+				renderer: function (v, md, record) {
+					return v
 				},
 			}]
-		},{
+		}, {
 			xtype: 'grid',
 			id: 'testing-job-tc-grid',
 			region: 'south',
 			height: 400,
 			store: Ext.create('casco.store.Tcs'),
 			selModel: {
-				type: 'checkboxmodel', 
+				type: 'checkboxmodel',
 				checkOnly: true
 			},
 			columns: [{
 				text: '标签',
 				dataIndex: 'tc',
-				renderer: function(v) {
-				return v.tag;
-			}
-			},{
+				renderer: function (v) {
+					return v.tag;
+				}
+			}, {
 				text: '描述',
 				dataIndex: 'tc',
 				flex: 1,
-				renderer: function(v) {
-				return v.description;
-			}
+				renderer: function (v) {
+					return v.description;
+				}
 			}, {
-			text: "测试方法",
-			dataIndex: "tc",
-			renderer: function(v) {
-				return v.testmethods;
-			}
-		}]
+				text: "测试方法",
+				dataIndex: "tc",
+				renderer: function (v) {
+					return v.testmethods;
+				}
+			}]
 		}];
 		me.dockedItems = [{
 			xtype: 'toolbar',
@@ -165,16 +168,16 @@ Ext.define('casco.view.testing.JobCreate', {
 					click: 'createJob'
 				}
 			}, {
-				text: '取消',
-				glyph: 0xf112,
-				scope: me,
-				handler: function(){
-					Ext.getCmp('testing-job-rs').destroy();
-					me.destroy();
-				}
-			}]
+					text: '取消',
+					glyph: 0xf112,
+					scope: me,
+					handler: function () {
+						Ext.getCmp('testing-job-rs').destroy();
+						me.destroy();
+					}
+				}]
 		}],
 
-		me.callParent();
+			me.callParent();
 	}
 });

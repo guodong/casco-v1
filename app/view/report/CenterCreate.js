@@ -46,6 +46,7 @@ Ext.define('casco.view.report.CenterCreate', {
 				id: 'child-version',
 				xtype: 'combobox',
 				allowBlank: false,
+				blankText: "不能为空",
 				editable: false,
 				queryMode: 'local',
 				displayField: 'name',

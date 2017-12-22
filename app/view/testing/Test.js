@@ -81,7 +81,8 @@ Ext.define('casco.view.testing.Test', {
     				displayField: 'name',
     				valueField: 'id',
     				store : tcdocs,
-    				allowBlank: false,
+					allowBlank: false,
+					blankText: "不能为空",
     				queryMode: 'local',
     				listeners: {
     					select: function(f, r, i) {
@@ -112,7 +113,8 @@ Ext.define('casco.view.testing.Test', {
     				name: 'tag',
     				id: 'test-tc-version',
     				xtype: 'combobox',
-    				allowBlank: false,
+					allowBlank: false,
+					blankText: "不能为空",
     				editable: false,
     				queryMode: 'local',
     				displayField: 'name',
@@ -138,7 +140,8 @@ Ext.define('casco.view.testing.Test', {
     				displayField: 'name',
     				valueField: 'id',
     				store : rsdocs,
-    				allowBlank: false,
+					allowBlank: false,
+					blankText: "不能为空",
     				queryMode: 'local',
     				listeners: {
     					select: function(f, r, i) {
@@ -163,7 +166,7 @@ Ext.define('casco.view.testing.Test', {
     				id: 'test-rs-version',
     				xtype: 'combobox',
     				allowBlank: false,
-    				allowBlank: false,
+    				blankText: "不能为空",
     				editable: false,
     				queryMode: 'local',
     				displayField: 'name',

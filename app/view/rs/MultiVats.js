@@ -32,6 +32,7 @@ Ext.define('casco.view.rs.MultiVats', {
 				id: 'vat_build_id',
 				xtype: 'combobox',
 				allowBlank: false,
+				blankText: "不能为空",
 				editable: false,
 				queryMode: 'local',
 				displayField: 'name',

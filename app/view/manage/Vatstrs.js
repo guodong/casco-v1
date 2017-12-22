@@ -7,7 +7,7 @@ Ext.define('casco.view.manage.Participants', {
 	maximizable: true,
 	modal: true,
 	title: '编辑成员',
-	width: 600,
+	width: 650,
 	height: 550,
 	autoScroll: true,
 	layout: {

@@ -23,7 +23,8 @@ Ext.define("casco.view.project.Project", {
 	            queryMode: 'local',
 	            displayField: 'name',
 	            valueField: 'id',
-	            allowBlank: false,
+				allowBlank: false,
+				blankText: "不能为空",
 	            store: store
 	        }],
 	        buttons: [{

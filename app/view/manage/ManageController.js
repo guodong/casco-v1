@@ -45,7 +45,7 @@ Ext.define('casco.view.manage.ManageController', {
 				if (record.data) {
 					var vatlist = Ext.getCmp('vat_list');
 					vatlist.store.reload();
-					Ext.Msg.alert('', '创建成功!');
+					Ext.Msg.alert('提示', '创建成功。');
 					//Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
 				} else {
 					Ext.Msg.alert('创建失败!', JSON.stringify(record.data.data));
@@ -60,12 +60,14 @@ Ext.define('casco.view.manage.ManageController', {
 		var view = this.getView();
 		var self = this;
 		var form = this.lookupReference('useraddform');	 //获取对应的form表单
+		var isCreate = !(view && view.user && view.user.id);
 		var user = view.user ? view.user : Ext.create('casco.model.User');
 		user.set(form.getValues());
 		Ext.MessageBox.buttonText.ok = '确认';
+		var message = isCreate ? '用户创建成功。' : '用户更新成功。';
 		user.save({
 			callback: function () {
-				Ext.Msg.alert('成功', '用户信息已更新！', function () {
+				Ext.Msg.alert('提示', message, function () {
 					//更新
 					var t = Ext.ComponentQuery.query("#tab-userlist")[0];	//Array[0]
 					//if(!view.user)t.store.add(user);//edit 就不对了的
@@ -103,7 +105,7 @@ Ext.define('casco.view.manage.ManageController', {
 		Ext.MessageBox.buttonText.ok = '确认';
 		method.save({
 			callback: function () {
-				Ext.Msg.alert('成功', '测试方法已更新！', function () {
+				Ext.Msg.alert('提示', '测试方法已更新。', function () {
 					var t = Ext.ComponentQuery.query("#tab-testmethod")[0];//基于属性ID进行检索
 					if (!view.method) t.store.add(method);
 					form.up("window").destroy();//销毁整个窗口
@@ -144,7 +146,6 @@ Ext.define('casco.view.manage.ManageController', {
 		});
 	},
 	createDocument: function () {
-
 		var view = this.getView();
 		var self = this;
 		var form = this.lookupReference('documentaddform');//获取对应的form表单
@@ -152,7 +153,7 @@ Ext.define('casco.view.manage.ManageController', {
 		doc.set(form.getValues());
 		doc.save({
 			callback: function () {
-				Ext.Msg.alert('成功', '文档保存成功', function () {
+				Ext.Msg.alert('提示', '文档保存成功。', function () {
 					form.up("window").destroy();
 					//重新刷新左边的树的结构
 					var t = Ext.ComponentQuery.query("#mtree")[0];
@@ -182,12 +183,29 @@ Ext.define('casco.view.manage.ManageController', {
 	onConfirmDelete: function (answer, value, cfg, button) {
 		if (answer != 'yes') return;
 		var menu = button.up(), node = menu.treeNode;
+		if (!node.id || node.id.indexOf('extModel') == 0) {
+			node.remove(true);
+			return;
+		}
+		node.getOwnerTree().setLoading(true, node);
 		var model = new casco.model.Document({ id: node.id });
-		model.erase();
-		node.remove(true);
+		model.erase({
+			waitMsg: '正在删除...',
+			success: function (record, operation) {
+				//Ext.Msg.alert('提示', '删除成功!');
+				node.getOwnerTree().setLoading(false, node);
+				node.remove(true);
+			},
+		});
+
+
+
 	},
 
 	onDelete: function (button) {
+
+		Ext.MessageBox.buttonText.yes = '是';
+		Ext.MessageBox.buttonText.no = '否';
 		var callback = Ext.bind(this.onConfirmDelete, undefined, [button], true);
 		Ext.Msg.confirm(
 			'确认',
@@ -196,7 +214,9 @@ Ext.define('casco.view.manage.ManageController', {
 	onAdd: function (button) {
 		console.log(button.itemId);
 		//console.log(Ext.getCmp('mtree').project.get('id'));
-		var mark = button.itemId; var global = this; var type; var text;
+		var mark = button.itemId;
+		var global = this;
+		var type; var text;
 		var menu = button.up().up(), node = menu ? menu.treeNode : '', view = menu ? menu.treeView : '', delay = view.expandDuration + 50, newNode, doCreate;
 		switch (mark) {
 			case 'edit_verisons'://Edit versions
@@ -212,19 +232,36 @@ Ext.define('casco.view.manage.ManageController', {
 			default://type='rs';text='New RS Document';
 		}
 		//console.log(button.up().up().treeView);
-		var menu = button.up().up(), node = menu.treeNode, view = menu.treeView, delay = view.expandDuration + 50, newNode, doCreate;
-		doCreate = function () {
+		var menu = button.up().up();
+		if (!menu || !menu.treeNode || !menu.treeView) {
+			return;
+		}
+		var node = menu.treeNode;
+		var view = menu.treeView;
+		var delay = view.expandDuration + 50;
+		var newNode = null;
+
+		var doCreate = function () {
 			//console.log(location.hash.substring(location.hash.lastIndexOf('/')+1));
-			newNode = node.appendChild({ name: text, type: type, fid: node.id, project_id: Ext.getCmp('mtree').project.get('id'), leaf: (type != 'folder') });
+			newNode = node.appendChild({
+				name: text,
+				type: type,
+				fid: node.id,
+				project_id: Ext.getCmp('mtree').project.get('id'),
+				leaf: (type != 'folder')
+			});
 		}
 		if (!node.isExpanded()) {
-			node.expand(false, Ext.callback(this.doCreate, this, [], delay));
+			//node.expand(false, Ext.callback(this.doCreate, this, [], delay));
+			node.expand(false, function () {
+				Ext.Msg.alert('提示', '目录已展开，请重新添加。');
+			});
+
 		} else {
 			doCreate();
 		}
 	},
 	onCtxMenu: function (view, record, element, index, evtObj) {
-
 		view.select(record);
 		evtObj.stopEvent();
 		if (!this.ctxMenu) {
@@ -301,6 +338,8 @@ Ext.define('casco.view.manage.ManageController', {
 			}
 		});
 		console.log(Ext.get(menu.treeEle).query('span'));
+		node.getOwnerTree().setLoading(true, node);
+
 		editor.startEdit(Ext.get(menu.treeEle).query('span')[0]);
 		editor.on('complete', function (this_g, value, startValue, eOpts) {
 			console.log(node);
@@ -316,6 +355,8 @@ Ext.define('casco.view.manage.ManageController', {
 			model.save({
 				callback: function (record, operation, success) {
 					node.setId(record.get('id'));
+					node.getOwnerTree().setLoading(false, node);
+					//Ext.Msg.alert('提示', '保存成功。');
 					//console.log( Ext.getCmp('draw'));
 					// Ext.getCmp('draw').items;
 					//Ext.getCmp('mtree').getStore().reload();
@@ -407,10 +448,8 @@ Ext.define('casco.view.manage.ManageController', {
 				user_id: Ext.getCmp('userdocs').user.get('id')
 			},
 			success: function () {
-				Ext.Msg.alert('成功', '保存成功。');
-
+				Ext.Msg.alert('提示', '保存成功。');
 				form.up("window").destroy();
-
 			}
 		});
 	}//save
