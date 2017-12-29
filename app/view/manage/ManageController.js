@@ -252,10 +252,11 @@ Ext.define('casco.view.manage.ManageController', {
 			});
 		}
 		if (!node.isExpanded()) {
+			Ext.Msg.alert('提示', '请先展开目录。');
 			//node.expand(false, Ext.callback(this.doCreate, this, [], delay));
-			node.expand(false, function () {
-				Ext.Msg.alert('提示', '目录已展开，请重新添加。');
-			});
+			// node.expand(false, function () {
+			// 	Ext.Msg.alert('提示', '目录已展开，请重新添加。');
+			// });
 
 		} else {
 			doCreate();
@@ -267,6 +268,7 @@ Ext.define('casco.view.manage.ManageController', {
 		if (!this.ctxMenu) {
 			this.ctxMenu = this.buildCtxMenu();
 		}
+
 		this.ctxMenu.treeNode = record;
 		this.ctxMenu.treeEle = element;
 		this.ctxMenu.treeView = view;
@@ -274,8 +276,15 @@ Ext.define('casco.view.manage.ManageController', {
 		var addItem = ctxMenu.getComponent('add');
 		var editItem = ctxMenu.getComponent('edit');
 		var deleteItem = ctxMenu.getComponent('delete');
+		if (record.isRoot() || record.parentNode.isRoot()) {
+			editItem.setVisible(false);
+			deleteItem.setVisible(false);
+		} else {
+			editItem.setVisible(true);
+			deleteItem.setVisible(true);
+		}
 		if (!record.isLeaf()) {
-			addItem.setText('添加文档');
+			addItem.setText('添加');
 			addItem.itemId = null;
 			addItem.treeNode = record;
 			addItem.treeView = view;

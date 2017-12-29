@@ -18,11 +18,13 @@ Ext.define('casco.view.tc.Tc', {
       params: {
         document_id: me.document.id
       },
+      synchronous: true,
       callback: function() {
-        me.down('combobox').select(me.versions.getAt(0)); 	//获取后台返回Version第1条记录 
+       
         var latest_v = me.versions.getCount() > 0 ? me.versions.getAt(0) : 0;
         me.curr_version = latest_v;
         if (latest_v) {
+          me.down('combobox').select(me.versions.getAt(0)); 	//获取后台返回Version第1条记录 
           me.store_tc.load({
             scope: this,
             synchronous: true,

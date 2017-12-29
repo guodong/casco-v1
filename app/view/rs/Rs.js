@@ -88,7 +88,7 @@ Ext.define('casco.view.rs.Rs', {
         }
       }
     }, '-', {
-      text: '导入文档',
+      text: '导入',
       glyph: 0xf093,
       scope: this,
       handler: function() {

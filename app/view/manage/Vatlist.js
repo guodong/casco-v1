@@ -27,7 +27,7 @@ Ext.define('casco.view.manage.Vatlist',{
 			dataIndex: 'description',
 			width: 250
 		}, {
-			text: 'Doc Version',
+			text: '文档版本',
 			dataIndex: 'doc_versions',
 			flex: 1,
 			renderer: function(value,metadata,record){ //value-rs_versions(current cell); metadata-cell metadata; record-Ext.data.Model
