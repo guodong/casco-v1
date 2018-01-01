@@ -41,7 +41,7 @@ Ext.define('casco.view.rs.RsDetails', {
 			xtype: 'panel',
 			bodyPadding: '10',
 			region: 'east',
-			title: '编辑Vat',
+			title: '编辑定版',
 			split: true,
 			collapsible: true,
 			collapsed: false,
@@ -161,7 +161,7 @@ Ext.define('casco.view.rs.RsDetails', {
 					clicksToEdit: 2
 				},
 				columns: [{
-					text: 'Vat',
+					text: '定版',
 					dataIndex: 'tag',
 					flex: 1
 				}, {

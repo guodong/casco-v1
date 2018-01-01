@@ -5,7 +5,7 @@ Ext.define('casco.view.manage.VatCreate', {
 	modal: true,
 	controller: 'manage',
 
-	title: '创建Vat',
+	title: '创建定版',
 	id: 'vat-view-create-window',
 	layout: {
 		type: 'border'

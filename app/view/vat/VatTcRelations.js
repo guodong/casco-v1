@@ -58,7 +58,7 @@ Ext.define('casco.view.vat.VatTcRelations',{
 		}];
 		
 		me.tbar=[{
-            text: 'Export',
+            text: '导出',
             glyph: 0xf1c3,
             scope: this,
             handler: function () {

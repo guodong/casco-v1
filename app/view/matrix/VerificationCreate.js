@@ -3,7 +3,7 @@ Ext.define('casco.view.matrix.VerificationCreate', {
 	xtype: 'matrix.create',
 
 	modal: true,
-	title: 'Create Verification Report Job',
+	title: '创建核验',
 	id: 'ver-create-window',
 	controller: 'matrix',
 	layout: {

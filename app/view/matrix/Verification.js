@@ -68,7 +68,7 @@ Ext.define('casco.view.matrix.Verification', {
 			width: 110
 
 		}, {
-			text: 'view',
+			text: '视图',
 			dataIndex: 'id',
 			width: 140,
 			renderer: function (val_id, metaData, rec) {
@@ -82,7 +82,7 @@ Ext.define('casco.view.matrix.Verification', {
 						valueField: 'abbr',
 						glyph: 0xf0ce,
 						val_id: val_id,//依赖注入,组件扩展性很好哇
-						emptyText: 'Switch View',
+						emptyText: '选择视图',
 						listeners: {
 							select: function (combo, irecord) {
 								me.switchView(combo, irecord, rec);
@@ -227,7 +227,7 @@ Ext.define('casco.view.matrix.Verification', {
 
 
 			me.tbar = [{
-				text: '创建Verification',
+				text: '创建核验',
 				glyph: 0xf067,
 				scope: this,
 				handler: function () {
@@ -242,7 +242,7 @@ Ext.define('casco.view.matrix.Verification', {
 					win.show();
 				}
 			}, '-', {
-				text: '删除Verification',
+				text: '删除核验',
 				glyph: 0xf068,
 				scope: this,
 				handler: function () {

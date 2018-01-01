@@ -124,7 +124,7 @@ Ext.define('casco.view.vat.TwoWayRelation', {
 				background: '#eee'
 			},
 			items: ['->', {
-				text: 'Export',
+				text: '导出',
 				glyph: 0xf1c3,
 				handler: function(){
 					var self = this;var obj=null;

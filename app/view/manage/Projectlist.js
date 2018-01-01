@@ -80,7 +80,7 @@ Ext.define('casco.view.manage.Projectlist', {
             return Ext.String.format('<div id="{0}" style="margin-left:auto;margin-right:auto"></div>', id);
          }
       },{
-    	  text: '编辑Vat',
+    	  text: '编辑定版',
     	  hidden: localStorage.role == 'staff' ? true: false,  //用户权限
     	  width: 100,
     	  renderer: function(val,meta,rec){

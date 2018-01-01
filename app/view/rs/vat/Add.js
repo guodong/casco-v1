@@ -62,7 +62,7 @@ Ext.define('casco.view.rs.vat.Add', {
 			collapsible: true,
 			autoScroll: true,
 			columns: [{
-				text: 'Vat',
+				text: '定版',
 				dataIndex: 'name',
 				flex: 1
 			}],
@@ -79,7 +79,7 @@ Ext.define('casco.view.rs.vat.Add', {
 			xtype: 'grid',
 			region: 'center',
 			columns: [{
-				text: 'Vat',
+				text: '定版',
 				dataIndex: 'tag',
 				flex: 1
 			},{

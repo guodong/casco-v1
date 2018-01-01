@@ -122,7 +122,7 @@ Ext.define('casco.view.rs.Rs', {
           win.show();
         }
       }, '-', {
-        text: '批量编辑Vat',
+        text: '批量编辑定版',
         glyph: 0xf05a,
         border: true,
         width: 150,

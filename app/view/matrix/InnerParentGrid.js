@@ -97,7 +97,7 @@ Ext.define('casco.view.matrix.InnerParentGrid', {
 				}]);
 			}
 		},'-',
-		{text: 'Export',
+		{text: '导出',
 			glyph: 0xf080,
 			scope: this,
 			handler:function(){

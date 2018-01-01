@@ -33,7 +33,7 @@ Ext.define('casco.view.vat.TcVatRelations',{
 			dataIndex: 'rs_version_name',
 			width: '15%'
 		},{
-			text: 'Vat',
+			text: '定版',
 			dataIndex: 'rs_vat',
 			width: '25%',
 			flex: 1,
@@ -61,7 +61,7 @@ Ext.define('casco.view.vat.TcVatRelations',{
 		}];
 		
 		me.tbar=[{
-            text: 'Export',
+            text: '导出',
             glyph: 0xf1c3,
             scope: this,
             handler: function () {

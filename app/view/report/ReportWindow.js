@@ -25,7 +25,7 @@ Ext.define('casco.view.report.ReportWindow', {
             scrollable: true,
             columns: [
                 {
-                    text: 'Vat',
+                    text: '定版',
                     dataIndex: 'tag',
                     sortable: true,
                     fit: true,

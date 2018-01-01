@@ -52,7 +52,7 @@ Ext.define('casco.view.testing.Job', {
 				return value;
 			},
 		},{
-			text: 'Vat',
+			text: '定版',
 			dataIndex: 'vatbuild',
 			renderer: function(value,metadata,record){ //value-rs_versions(current cell); metadata-cell metadata; record-Ext.data.Model
 				return getPreview(value,metadata,record);

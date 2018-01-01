@@ -2,7 +2,7 @@ Ext.define('casco.view.rs.MultiVats', {
 	extend: 'Ext.window.Window',
 	xtype: 'multivats',
 	modal: true,
-	title: '批量编辑Vat',
+	title: '批量编辑定版',
 	width: 400,
 	initComponent: function () {
 		var me = this;

@@ -67,7 +67,7 @@ Ext.define('casco.view.report.Center', {
 			dataIndex: 'created_at',
 			width: 110
 		}, {
-			text: 'view',
+			text: '视图',
 			dataIndex: 'id',
 			width: 140,
 			renderer: function (val_id, metaData, rec) {
@@ -79,7 +79,7 @@ Ext.define('casco.view.report.Center', {
 						displayField: 'name',
 						valueField: 'abbr',
 						val_id: val_id,//依赖注入,组件扩展性很好哇 report id
-						emptyText: 'Switch View',
+						emptyText: '选择视图',
 						listeners: {
 							select: function (combo, irecord) {
 								me.switchView(combo, irecord, rec);

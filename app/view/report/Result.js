@@ -82,7 +82,7 @@ Ext.define('casco.view.report.Result', {
 			width: 100,
 		}];
 		me.tbar = [{
-			text: 'Export',
+			text: '导出',
 			glyph: 0xf1c3,
 			handler: function() {
 			 	window.open(API+'/center/export_result?report_id='+(me.report.get('id')?me.report.get('id'):''));

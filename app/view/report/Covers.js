@@ -77,7 +77,7 @@ Ext.define('casco.view.report.Cover', {
             }
         },
         me.tbar = [{
-            text: 'Export',
+            text: '导出',
             glyph: 0xf1c3,
             scope: this,
             handler: function () {
@@ -87,7 +87,7 @@ Ext.define('casco.view.report.Cover', {
         },
             '-',
             {
-                text: 'Refresh',
+                text: '刷新',
                 glyph: 0xf021,
                 handler: function () {
                     me.store.reload();

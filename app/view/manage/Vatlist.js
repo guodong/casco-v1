@@ -40,7 +40,7 @@ Ext.define('casco.view.manage.Vatlist',{
 		}];
 		
 		me.tbar = [{
-			text: '创建Vat',
+			text: '创建定版',
 			glyph: 0xf067,
 			scope: this,
 			handler: function() {
@@ -55,7 +55,7 @@ Ext.define('casco.view.manage.Vatlist',{
 				win.show();
 			}
 		},'-',{
-			text: '删除Vat',
+			text: '删除定版',
 			glyph: 0xf068,
 			scope: this,
 			handler: function() {
@@ -71,7 +71,7 @@ Ext.define('casco.view.manage.Vatlist',{
 								//view.refresh();
 						}}, this);
 				}else{
-					Ext.Msg.alert('注意','请先选中需要删除的Vat！');
+					Ext.Msg.alert('注意','请先选中需要删除的定版！');
 				}
 			
 			}
