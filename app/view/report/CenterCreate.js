@@ -3,7 +3,7 @@ Ext.define('casco.view.report.CenterCreate', {
 	xtype: 'report.create',
 
 	modal: true,
-	title: 'Create Center Report Job',
+	title: '创建报告',//Create Center Report Job
 	id: 'ver-create-window',
 	controller: 'report',
 	layout: {
@@ -93,7 +93,7 @@ Ext.define('casco.view.report.CenterCreate', {
 				return v?v.name:'';
 			}
 		},{
-			text: 'Vat版本',
+			text: '定版',
 			dataIndex: 'vatbuild',
 			flex: 1,
 			renderer: function(v){

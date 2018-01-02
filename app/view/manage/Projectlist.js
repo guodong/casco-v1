@@ -10,7 +10,7 @@ Ext.define('casco.view.manage.Projectlist', {
 		store.load();
 		me.store = store;
 		me.tbar = [{
-			hidden: localStorage.role == 'staff' ? true: false,
+			hidden: localStorage.role == 'staff',
 			text: '点击添加',
 			glyph: 0xf067,
 			handler: function() {
@@ -18,7 +18,7 @@ Ext.define('casco.view.manage.Projectlist', {
 				win.show();
 			}
 		},{
-			hidden: localStorage.role == 'staff' ? true: false,
+			hidden: localStorage.role == 'staff',
 			text: '删除选中',
 			glyph: 0xf067,
 			handler: function() {
@@ -61,7 +61,7 @@ Ext.define('casco.view.manage.Projectlist', {
 		}
 	}, {
 		text:"编辑文档",
-		hidden: localStorage.role == 'staff' ? true: false,  //用户权限
+		hidden: localStorage.role == 'staff',  //用户权限
 		width: 100,
         renderer: function(val,meta,rec) {
             var id = Ext.id();
@@ -81,7 +81,7 @@ Ext.define('casco.view.manage.Projectlist', {
          }
       },{
     	  text: '编辑定版',
-    	  hidden: localStorage.role == 'staff' ? true: false,  //用户权限
+    	  hidden: localStorage.role == 'staff',  //用户权限
     	  width: 100,
     	  renderer: function(val,meta,rec){
     		  var id = Ext.id();

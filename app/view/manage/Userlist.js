@@ -14,7 +14,7 @@ Ext.define('casco.view.manage.Userlist', {
     //		var selModel=new Ext.selection.Model({mode:"MULTI"}); //与删除冲突
     //         me.selModel=selModel;
     me.tbar = ['-', {
-      //hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false,  //用户权限
+      //hidden: JSON.parse(localStorage.user).role_id == 0,  //用户权限
       text: '点击添加',
       glyph: 0xf067,	//resources
       xtype: 'buttontransparent',	//
@@ -23,7 +23,7 @@ Ext.define('casco.view.manage.Userlist', {
         win.show();
       }
     }, '-', {
-        //hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false,  //用户权限
+        //hidden: JSON.parse(localStorage.user).role_id == 0,  //用户权限
         text: '删除选中',
         glyph: 0xf068,
         handler: function () {

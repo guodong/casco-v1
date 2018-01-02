@@ -7,7 +7,7 @@ Ext.define('casco.view.tc.source.Add', {
 	resizable: true,
 	maximizable: true,
 	modal: true,
-	title: 'Add Tc Sources',
+	title: '添加Tc Sources',
 	width: 600,
 	height: 550,
 	autoScroll: true,

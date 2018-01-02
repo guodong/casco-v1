@@ -142,7 +142,7 @@ Ext.define('casco.view.vat.VatView',{
 			xtype: 'combobox',
 			displayField: 'value',
 			valueField: 'id',
-			emptyText: '导出 Vats',
+			emptyText: '导出定版',
 			queryModel: 'local',
 			editable: false,
 			store: Ext.create('Ext.data.Store',{
@@ -158,7 +158,7 @@ Ext.define('casco.view.vat.VatView',{
 						var selection =view.getSelectionModel().getSelection()[0];
 						console.log(selection);
 						if (!selection) {
-						 Ext.Msg.alert('<b>注意</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
+						 Ext.Msg.alert('<b>注意</b>','<div style="text-align:center;"><b>请先选择定版!</b></div>');
 						 combo.clearValue();
 				         return;
 						}
@@ -169,7 +169,7 @@ Ext.define('casco.view.vat.VatView',{
 						var view=me.getView();
 						var selection =view.getSelectionModel().getSelection()[0];
 						if (!selection) {
-						 Ext.Msg.alert('<b>注意</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
+						 Ext.Msg.alert('<b>注意</b>','<div style="text-align:center;"><b>请先选择定版!</b></div>');
 						 combo.clearValue();
 				         return;
 						}
@@ -180,7 +180,7 @@ Ext.define('casco.view.vat.VatView',{
 //						var view=me.getView();
 //						var selection =view.getSelectionModel().getSelection()[0];
 //						if (!selection) {
-//						 Ext.Msg.alert('<b>注意</b>','<div style="text-align:center;"><b>请先选择VAT版本 !</b></div>');
+//						 Ext.Msg.alert('<b>注意</b>','<div style="text-align:center;"><b>请先选择定版!</b></div>');
 //						 combo.clearValue();
 //				         return;
 //						}

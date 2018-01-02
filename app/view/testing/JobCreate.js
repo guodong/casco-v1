@@ -62,7 +62,7 @@ Ext.define('casco.view.testing.JobCreate', {
 				blankText: "不能为空",
 				store: builds
 			}, {
-				fieldLabel: 'Vat版本',
+				fieldLabel: '定版',
 				name: 'vat_build_id',
 				store: vat,
 				id: 'vat_build_id',

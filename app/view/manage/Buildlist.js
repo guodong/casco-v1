@@ -22,7 +22,7 @@ Ext.define('casco.view.manage.Buildlist', {
 		store.load();
 		me.store = store;
 		me.tbar = [{
-			//	hidden: localStorage.role == 'staff' ? true: false,  //用户权限
+			//	hidden: localStorage.role == 'staff',  //用户权限
 			text: '添加Build',
 			glyph: 0xf067,
 			handler: function () {
@@ -30,7 +30,7 @@ Ext.define('casco.view.manage.Buildlist', {
 				win.show();
 			}
 		}, {
-			//	hidden: localStorage.role == 'staff' ? true: false,  //用户权限
+			//	hidden: localStorage.role == 'staff',  //用户权限
 			text: '删除Build',
 			glyph: 0xf068,
 			handler: function () {

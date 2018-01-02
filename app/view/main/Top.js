@@ -21,6 +21,8 @@ Ext.define('casco.view.main.Top', {
             ]
         });
 
+        var matches = /[0-9a-zA-Z]+/ig.exec(location.hash);
+        var state = matches && matches[0] || null;
         this.items = [{
             xtype: 'label',
             html: '卡斯柯测试平台',
@@ -30,30 +32,35 @@ Ext.define('casco.view.main.Top', {
             xtype: 'button',
             handler: 'manage',
             hidden: JSON.parse(localStorage.user).role_id == 0,
-            disabled:true
+            disabled: state== 'manage'
         }, {
             text: '定版',
             xtype: 'button',
-            handler: 'vat'
+            handler: 'vat',
+            disabled: state== 'vat'
         }, {
             text: '测试',
             xtype: 'button',
-            handler: 'testing'
+            handler: 'testing',
+            disabled: state== 'testing'
         }, {
             text: '核验',
             xtype: 'button',
-            handler: 'matrix'
+            handler: 'matrix',
+            disabled:  state== 'matrix'
         }, {
             text: '报告',
             xtype: 'button',
-            handler: 'report'
+            handler: 'report',
+            disabled:  state== 'report'
         }, {
             text: 'Project Stat',
             xtype: 'button',
             handler: function () {
                 window.open("/prostat/projectstat-tmp.htm");
             },
-            hidden: localStorage.view !== 'manage'
+            hidden: localStorage.view !== 'manage',
+            disabled:  state== 'prostat'
         }, {
             xtype: 'combobox',
             editable: false,

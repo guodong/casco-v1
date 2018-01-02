@@ -25,7 +25,7 @@ Ext.define('casco.view.rs.MultiVats', {
 				name: 'project_id',
 				value: me.project.get('id')
 			}, {
-				fieldLabel: 'Vat版本',
+				fieldLabel: '定版',
 				name: 'vat_build_id',
 				store: vat,
 				region: 'north',
