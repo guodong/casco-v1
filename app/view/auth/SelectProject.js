@@ -7,7 +7,7 @@ Ext.define("casco.view.auth.SelectProject",{
     ],
     
     controller: 'login',
-    title: 'Select Project',
+    title: '选择工程',
     closable: false,
     autoShow: true,
     initComponent: function(){
@@ -30,17 +30,17 @@ Ext.define("casco.view.auth.SelectProject",{
 	            valueField: 'id',
 	            store: store,
 	            queryMode: 'local',
-	            emptyText: 'Select Project',
+	            emptyText: '选择工程',
 	            allowBlank: false
 	        }],
 	        buttons: [ {
-	            text: 'Manage',
-	            hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false,
+	            text: '管理',
+	            hidden: JSON.parse(localStorage.user).role_id == 0,
 	            listeners: {
 	                click: 'onManage'
 	            }
 	        },{
-	            text: 'Select',
+	            text: '选择',
 	            formBind: true,
 	            listeners: {
 	                click: 'onSelectClick'

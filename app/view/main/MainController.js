@@ -95,7 +95,7 @@ Ext.define('casco.view.main.MainController', {
 			tab = tabs.add({
 				id: 'tab-testing',
 				xtype: 'test',
-				title: 'Testing',
+				title: '测试',
 				closable: true,
 				project: this.getView().project
 			});

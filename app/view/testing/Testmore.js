@@ -26,7 +26,7 @@ Ext.define('casco.view.testing.Testmore', {
 				anchor: '100%'
 			}, {
 				xtype: 'textareafield',
-				fieldLabel: 'comment',
+				fieldLabel: '备注',
 				name: 'comment',
 				anchor: '100%'
 			}, {
@@ -35,7 +35,7 @@ Ext.define('casco.view.testing.Testmore', {
 				store: me.steps
 			}],
 			buttons: ['->', {
-				text: 'Ok',
+				text: '确定',
 				formBind: true,
 				glyph: 0xf0c7,
 				handler: function() {
@@ -46,7 +46,7 @@ Ext.define('casco.view.testing.Testmore', {
 					me.destroy();
 				}
 			}, {
-				text: 'Cancel',
+				text: '取消',
 				glyph: 0xf112,
 				scope: me,
 				handler: this.destroy

@@ -4,7 +4,7 @@ Ext.define('casco.view.testing.BuildCreate', {
     alias: 'widget.testing.buildcreate',
     
     modal: true,
-    title: 'Create Build Version',
+    title: '创建Build版本',
     width: 300,
     controller: 'manage',
     initComponent: function(){
@@ -14,7 +14,7 @@ Ext.define('casco.view.testing.BuildCreate', {
 	    	reference: 'build_create_form',
 	    	bodyPadding: '10',
 	    	items: [{
-	            fieldLabel: 'Name',
+	            fieldLabel: '名称',
 	            msgTarget: 'under',
 	            name: 'name',
 	            xtype: 'textfield'
@@ -31,13 +31,13 @@ Ext.define('casco.view.testing.BuildCreate', {
                 style: {background: '#eee'},
                 items: ['->',
                     {
-                        text: 'Save',
+                        text: '保存',
                         glyph: 0xf0c7,
                         listeners: {
                             click: 'createFolder'
                         }
                     },{
-                        text: 'Cancel',
+                        text: '取消',
                         glyph: 0xf112,
                         scope: me,
                         handler : this.doHide

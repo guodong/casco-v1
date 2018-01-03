@@ -7,7 +7,7 @@ Ext.define('casco.view.manage.Documentadd', {
 	resizable: true,
 	maximizable: true,
 	modal: true,
-	title: 'Add Document',
+	title: '添加文档',
 	width: 300,
 	initComponent: function() {
 		var me = this;
@@ -34,7 +34,7 @@ Ext.define('casco.view.manage.Documentadd', {
 				bodyPadding: '10',
 				items: [{
 					anchor: '100%',
-					fieldLabel: 'name',
+					fieldLabel: '名称',
 					name: 'name',
 					labelAlign: 'top',
 					msgTarget: 'under',
@@ -42,7 +42,7 @@ Ext.define('casco.view.manage.Documentadd', {
 					allowBlank: false
 				}, {
 					anchor: '100%',
-					fieldLabel: 'type',
+					fieldLabel: '类型',
 					name: 'type',
 					labelAlign: 'top',
 					msgTarget: 'under',
@@ -55,7 +55,7 @@ Ext.define('casco.view.manage.Documentadd', {
 	                allowBlank: false
 				}, {
 					anchor: '100%',
-					fieldLabel: 'project_id',
+					fieldLabel: '项目编号',
 					name: 'project_id',
 					labelAlign: 'top',
 					msgTarget: 'under',
@@ -76,14 +76,14 @@ Ext.define('casco.view.manage.Documentadd', {
 					allowBlank: false
 				}],
 				buttons: ['->', {
-					text: 'Save',
+					text: '保存',
 					formBind: true,
 					glyph: 0xf0c7,
 					listeners: {
 						click: 'createDocument'
 					}
 				}, {
-					text: 'Cancel',
+					text: '取消',
 					glyph: 0xf112,
 					scope: me,
 					handler: this.destroy

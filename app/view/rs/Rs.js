@@ -54,7 +54,7 @@ Ext.define('casco.view.rs.Rs', {
     me.tbar = [{
       xtype: 'combobox',
       id: 'docv-' + me.document.id,
-      fieldLabel: 'Version',
+      fieldLabel: '版本',
       labelWidth: 50,
       store: me.versions,
       displayField: 'name',
@@ -88,7 +88,7 @@ Ext.define('casco.view.rs.Rs', {
         }
       }
     }, '-', {
-      text: 'Import Doc',
+      text: '导入',
       glyph: 0xf093,
       scope: this,
       handler: function() {
@@ -106,14 +106,14 @@ Ext.define('casco.view.rs.Rs', {
       }
     },
       '-', {
-        text: 'View Statistics',
+        text: '查看统计',
         glyph: 0xf080,
         scope: this,
         handler: function() {
           window.open('/stat/cover.htm#' + me.curr_version.get('id'));
         }
       }, '-', {
-        text: 'Versions',
+        text: '版本',
         glyph: 0xf05a,
         border: true,
         width: 110,
@@ -122,10 +122,10 @@ Ext.define('casco.view.rs.Rs', {
           win.show();
         }
       }, '-', {
-        text: '批量编辑Vat',
+        text: '批量编辑定版',
         glyph: 0xf05a,
         border: true,
-        width: 110,
+        width: 150,
         handler: function() {
           var win = Ext.create('casco.view.rs.MultiVats', {
             'project': me.project,
@@ -136,10 +136,10 @@ Ext.define('casco.view.rs.Rs', {
         }
       }, '->', {
         xtype: 'textfield',
-        fieldLabel: 'Search',
+        fieldLabel: '搜索',  
         labelWidth: 50,
         name: 'searchField',
-        emptyText: 'Search',
+        emptyText: '搜索',
         hideLabel: true,
         width: 200,
         listeners: {
@@ -152,13 +152,13 @@ Ext.define('casco.view.rs.Rs', {
       }, {
         xtype: 'button',
         text: '&lt;',
-        tooltip: 'Find Previous Row',
+        tooltip: '往前查找',
         handler: me.onPreviousClick,
         scope: me
       }, {
         xtype: 'button',
         text: '&gt;',
-        tooltip: 'Find Next Row',
+        tooltip: '往后查找',
         handler: me.onNextClick,
         scope: me
       }, {
@@ -228,11 +228,11 @@ Ext.define('casco.view.rs.Rs', {
         if (!grid.rowCtxMenu) {
           grid.rowCtxMenu = Ext.create('Ext.menu.Menu', {
             items: [{
-              text: 'Insert Record',
+              text: '插入记录',
               handler: onInsertRecord,
             },
               {
-                text: 'Delete Record',
+                text: '删除记录',
                 handler: onDelete
               }]
           });
@@ -279,7 +279,7 @@ Ext.define('casco.view.rs.Rs', {
   tagsRe: /<[^>]*>/gm,  //detects html tag gm 参数
   tagsProtect: '\x0f',  //DEL ASCII code
   matchCls: 'x-livesearch-match', //@cfg {String} matchCls  The matched string css classe.
-  defaultStatusText: 'Nothing Found',
+  defaultStatusText: '无匹配结果',
 
   afterRender: function() {
     var me = this;
@@ -374,7 +374,7 @@ Ext.define('casco.view.rs.Rs', {
 //                Ext.fly(me.getView().getNode(me.currentIndex)).scrollInteView();
         me.getView().focusRow(me.currentIndex);
         me.statusBar.setStatus({
-          text: count + ' matche(s) found.',
+           text: count + ' 处匹配',
           iconCls: 'x-status-valid'
         });
       }

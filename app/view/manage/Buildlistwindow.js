@@ -6,8 +6,8 @@ Ext.define('casco.view.manage.Buildlistwindow', {
     resizable: true,
 	maximizable: true,
 	modal: true,
-	title: 'View Build',
-	width: 400,
+	title: '查看Build',
+	width: 405,
    
 	initComponent: function() {
 		    var me=this;

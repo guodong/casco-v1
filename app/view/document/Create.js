@@ -6,7 +6,7 @@ Ext.define('Type', {
 	}, {
 		name: 'type',
 		type: 'string'
-	}, ]
+	},]
 });
 Ext.define('casco.view.document.Create', {
 	extend: 'Ext.window.Window',
@@ -14,12 +14,10 @@ Ext.define('casco.view.document.Create', {
 	alias: 'widget.document.create',
 	uses: ['casco.view.document.DocumentController'],
 	controller: 'document',
-
 	modal: true,
-	title: 'Create Document',
+	title: '创建文档',
 	width: 300,
-
-	initComponent: function() {
+	initComponent: function () {
 		var me = this;
 		Ext.apply(me, {
 			dockedItems: [{
@@ -29,24 +27,24 @@ Ext.define('casco.view.document.Create', {
 					background: '#eee'
 				},
 				items: ['->', {
-					text: 'Save',
+					text: '保存',
 					glyph: 0xf0c7,
 					listeners: {
 						click: 'createDocument'
 					}
 				}, {
-					text: 'Cancel',
-					glyph: 0xf112,
-					scope: me,
-					handler: this.doHide
-				}]
+						text: '取消',
+						glyph: 0xf112,
+						scope: me,
+						handler: this.doHide
+					}]
 			}],
 			items: [{
 				xtype: 'form',
 				reference: 'document_create_form',
 				bodyPadding: '10',
 				items: [{
-					fieldLabel: 'Name',
+					fieldLabel: '名称',
 					msgTarget: 'under',
 					name: 'name',
 					xtype: 'textfield'
@@ -54,7 +52,7 @@ Ext.define('casco.view.document.Create', {
 					xtype: 'combobox',
 					name: 'type',
 					editable: false,
-					fieldLabel: 'Type',
+					fieldLabel: '类型',
 					queryMode: 'local',
 					displayField: 'text',
 					valueField: 'type',
@@ -73,21 +71,21 @@ Ext.define('casco.view.document.Create', {
 							id: 3,
 							type: 'tr',
 							text: '报告类'
-						}, ]
+						},]
 					}),
 					listeners: {
-//						select: function(f, r, i) {
-//							if(r.get('type') == 'rs'){
-//								me.down('#rsreg').show();
-//								me.down('#tcreg').hide();
-//							}else if(r.get('type') == 'tc'){
-//								me.down('#rsreg').hide();
-//								me.down('#tcreg').show();
-//							}else{
-//								me.down('#rsreg').hide();
-//								me.down('#tcreg').hide();
-//							}
-//						}
+						//						select: function(f, r, i) {
+						//							if(r.get('type') == 'rs'){
+						//								me.down('#rsreg').show();
+						//								me.down('#tcreg').hide();
+						//							}else if(r.get('type') == 'tc'){
+						//								me.down('#rsreg').hide();
+						//								me.down('#tcreg').show();
+						//							}else{
+						//								me.down('#rsreg').hide();
+						//								me.down('#tcreg').hide();
+						//							}
+						//						}
 					}
 				}, {
 					xtype: 'hiddenfield',
@@ -104,25 +102,25 @@ Ext.define('casco.view.document.Create', {
 						anchor: '100%'
 					},
 					items: [{
-						fieldLabel: 'tag',
+						fieldLabel: '标签',
 						name: 'rstag'
 					}, {
-						fieldLabel: 'description',
+						fieldLabel: '描述',
 						name: 'rsdescription'
 					}, {
-						fieldLabel: 'implement',
+						fieldLabel: '实现',
 						name: 'rsimplement'
 					}, {
-						fieldLabel: 'priority',
+						fieldLabel: '优先级',
 						name: 'rspriority'
 					}, {
-						fieldLabel: 'contribution',
+						fieldLabel: '贡献',
 						name: 'rscontribution'
 					}, {
-						fieldLabel: 'category',
+						fieldLabel: '类别',
 						name: 'rscategory'
 					}, {
-						fieldLabel: 'allocation',
+						fieldLabel: '分配',
 						name: 'rsallocation'
 					}]
 				}, {
@@ -136,13 +134,13 @@ Ext.define('casco.view.document.Create', {
 						anchor: '100%'
 					},
 					items: [{
-						fieldLabel: 'tag',
+						fieldLabel: '标签',
 						name: 'tag'
 					}, {
-						fieldLabel: 'description',
+						fieldLabel: '描述',
 						name: 'description'
 					}, {
-						fieldLabel: 'pre_condition',
+						fieldLabel: '前提',
 						name: 'pre_condition'
 					}]
 				}]
@@ -150,7 +148,7 @@ Ext.define('casco.view.document.Create', {
 		});
 		me.callParent(arguments);
 	},
-	doHide: function() {
+	doHide: function () {
 		this.destroy();
 	}
 });

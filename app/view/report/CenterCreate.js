@@ -3,7 +3,7 @@ Ext.define('casco.view.report.CenterCreate', {
 	xtype: 'report.create',
 
 	modal: true,
-	title: 'Create Center Report Job',
+	title: '创建报告',//Create Center Report Job
 	id: 'ver-create-window',
 	controller: 'report',
 	layout: {
@@ -34,18 +34,19 @@ Ext.define('casco.view.report.CenterCreate', {
 				name: 'project_id',
 				value: me.project.get('id')
 			}, {
-				fieldLabel: 'Version',
+				fieldLabel: '版本',
 				msgTarget: 'under',
 				name: 'version',
 				xtype: 'textfield'
 			},
 			{
-				fieldLabel: 'Testing name',
+				fieldLabel: '名称',
 				name: 'test_id',
 				store: test_job,
 				id: 'child-version',
 				xtype: 'combobox',
 				allowBlank: false,
+				blankText: "不能为空",
 				editable: false,
 				queryMode: 'local',
 				displayField: 'name',
@@ -58,7 +59,7 @@ Ext.define('casco.view.report.CenterCreate', {
 				}
 			},
 			{
-			fieldLabel: 'description',
+			fieldLabel: '描述',
 			labelAlign:'top',
 			name: 'description',
 			xtype: 'textarea',
@@ -83,7 +84,7 @@ Ext.define('casco.view.report.CenterCreate', {
 		        }
 		    },
 		    columns:  [{
-			text : 'name',
+			text : '名称',
 			dataIndex : 'name'
 		}, {
 			text : 'build',
@@ -92,7 +93,7 @@ Ext.define('casco.view.report.CenterCreate', {
 				return v?v.name:'';
 			}
 		},{
-			text: 'vat_version',
+			text: '定版',
 			dataIndex: 'vatbuild',
 			flex: 1,
 			renderer: function(v){
@@ -106,14 +107,14 @@ Ext.define('casco.view.report.CenterCreate', {
 				return v?v.name:'';
 			}
 		}, {
-			text: 'status',
+			text: '状态',
 			dataIndex: 'status',
 			renderer: function(v){
 				return v==0?'<span style="color:red">testing</span>':'<span style="color: green">submited</span>';
 			},
 			width: 200
 		}, {
-			text: 'created at',
+			text: '创建时间',
 			dataIndex: 'created_at',
 			width: 200
 		}]//columns
@@ -126,13 +127,13 @@ Ext.define('casco.view.report.CenterCreate', {
 				background: '#eee'
 			},
 			items: ['->', {
-				text: 'Create Report',
+				text: '创建报告',
 				glyph: 0xf0c7,
 				listeners: {
 					click: 'createReport'
 				}
 			}, {
-				text: 'Cancel',
+				text: '取消',
 				glyph: 0xf112,
 				scope: me,
 				handler: function(){

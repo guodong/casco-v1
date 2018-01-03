@@ -63,7 +63,7 @@ Ext.define('casco.view.main.Main', {
 			reference: 'rightpanel',
             id: 'workpanel',
             items:[{
-                title: 'Overview',
+                title: '概览',
                 html: '<iframe  src="/draw/noedit.html?'+me.project.get('id')+'" style="width:100%;height:100%;border:0"></iframe>'
             }]
         }];

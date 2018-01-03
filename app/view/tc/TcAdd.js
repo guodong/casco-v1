@@ -2,13 +2,13 @@ Ext.define('casco.view.tc.TcAdd', {
 	extend: 'Ext.window.Window',
 	alias: 'widget.tcadd',
 	requires: ['casco.view.document.DocTree', 'casco.view.tc.TcStep',
-	'casco.view.document.DocumentController',
-	'casco.view.tc.TcController',
-	'casco.view.tc.source.Add','casco.store.TcSteps','casco.store.Sources'],
+		'casco.view.document.DocumentController',
+		'casco.view.tc.TcController',
+		'casco.view.tc.source.Add', 'casco.store.TcSteps', 'casco.store.Sources'],
 	controller: 'tc',
 
 	modal: true,
-	title: 'TC Item',
+	title: '测试用例项',
 	width: 800,
 	height: 500,
 	autoScroll: true,
@@ -18,21 +18,21 @@ Ext.define('casco.view.tc.TcAdd', {
 		type: 'anchor'
 	},
 
-	initComponent: function() {
+	initComponent: function () {
 		var me = this;
 		console.log(me);
 		me.sources = Ext.create('casco.store.Sources');
 		me.steps = Ext.create('casco.store.TcSteps');
 		me.steps.load({
-			params:{
-				tc_id:me.tc?me.tc.get('id'):null
+			params: {
+				tc_id: me.tc ? me.tc.get('id') : null
 			}
 		});
-		if(me.tc){
-			var a=new Array();
-			var list=me.tc.get('source')?me.tc.get('source').split(','):null;
-			Ext.Array.each(list,function(name, index, countriesItSelf){   
-				a.push({tag:name});
+		if (me.tc) {
+			var a = new Array();
+			var list = me.tc.get('source') ? me.tc.get('source').split(',') : null;
+			Ext.Array.each(list, function (name, index, countriesItSelf) {
+				a.push({ tag: name });
 			});
 			me.sources.setData(a);
 		}
@@ -48,24 +48,24 @@ Ext.define('casco.view.tc.TcAdd', {
 			reference: 'TcAddform',
 			bodyPadding: 10,
 			items: [{
-				name : 'id',
-				xtype : 'hiddenfield',
+				name: 'id',
+				xtype: 'hiddenfield',
 			},/*{
 			name: 'version_id',
 			xtype: 'hiddenfield',
 			value: me.version_id
 			},*/{
-			anchor : '100%',
-			fieldLabel : 'Tag',
-			name : 'tag',
-			xtype : 'textfield',
-			allowBlank: false,
-			blankText: 'Tag不能为空，请输入Tag',
-			regex: /(\[.+\])/,
-			regexText: 'Tag格式错误，须包含[]且不为空',
-			msgTarget: 'side',
-			value: me.tag_id
-		}/*, {
+				anchor: '100%',
+				fieldLabel: '标签',
+				name: 'tag',
+				xtype: 'textfield',
+				allowBlank: false,
+				blankText: 'Tag不能为空，请输入Tag',
+				regex: /(\[.+\])/,
+				regexText: 'Tag格式错误，须包含[]且不为空',
+				msgTarget: 'side',
+				value: me.tag_id
+			}/*, {
 		anchor : '100%',
 		fieldLabel : 'Description',
 		name : 'description',
@@ -90,72 +90,85 @@ Ext.define('casco.view.tc.TcAdd', {
 		xtype : 'textarea',
 		maxHeight: 50,
 		allowBlank: true
-		}*/,{
-		xtype: 'grid',
-		fieldLabel: 'source',
-		dockedItems: [{
-			xtype: 'toolbar',
-			dock: 'bottom',
-			items: [{
-				glyph: 0xf067,
-				text: 'Edit Sources',
-				handler: function(){
-					var wd = Ext.create("casco.view.tc.source.Add", {
-						sources: me.sources,
-						document_id: me.document_id,
-						project: me.project
-					});
-					wd.show();
+		}*/, {
+				xtype: 'grid',
+				fieldLabel: 'Source',
+				dockedItems: [{
+					xtype: 'toolbar',
+					dock: 'bottom',
+					items: [{
+						glyph: 0xf067,
+						text: '编辑Sources',
+						handler: function () {
+							var wd = Ext.create("casco.view.tc.source.Add", {
+								sources: me.sources,
+								document_id: me.document_id,
+								project: me.project
+							});
+							wd.show();
+						}
+					}]
+				}],
+				columns: [
+					{ text: 'Source', dataIndex: 'tag', flex: 1 }
+				],
+				store: me.sources
+			}, {
+				xtype: 'tcstep',
+				reference: 'mgrid',
+				id: 'mgrid',
+				store: me.steps
+			}],
+			buttons: ['->', {
+				text: '保存',
+				formBind: true,
+				glyph: 0xf0c7,
+				listeners: {
+					click: 'createTc'
 				}
-			}]
-		}],
-		columns: [
-		{ text: 'source',  dataIndex: 'tag', flex: 1}
-		],
-		store: me.sources
-	}, {
-		xtype : 'tcstep',
-		reference : 'mgrid',
-		id: 'mgrid',
-		store: me.steps
-	}],
-	buttons: ['->', {
-		text: 'Save',
-		formBind: true,
-		glyph: 0xf0c7,
-		listeners: {
-			click: 'createTc'
-		}
-	}, {
-		text: 'Cancel',
-		glyph: 0xf112,
-		scope: me,
-		handler: this.destroy
-	}]
-}];
+			}, {
+					text: '取消',
+					glyph: 0xf112,
+					scope: me,
+					handler: this.destroy
+				}]
+		}];
 
 
-//	me.doLayout();思路很简单，如果列名有则就添加进去否则next
-var array= [];
-Ext.Array.each(me.items[0].items,function(name, index, countriesItSelf){ 	//me.items[0].items，表单项 4项
-	array.push(name.name);  
-});
+		//	me.doLayout();思路很简单，如果列名有则就添加进去否则next
+		var array = [];
+		Ext.Array.each(me.items[0].items, function (name, index, countriesItSelf) { 	//me.items[0].items，表单项 4项
+			array.push(name.name);
+		});
 
-//console.log(me.columns);	//DB tc.columns  dataIndex,header,width 
+		//console.log(me.columns);	//DB tc.columns  dataIndex,header,width 
+		var lables = {
+			tag: '标签',
+			description: '描述',
+			implement: '实现',
+			priority: '优先级',
+			contribution: '贡献',
+			category: '分类',
+			allocation: '分配'
+		};
+		Ext.Array.each(me.columns, function (name, index, countriesItSelf) {
+			//	console.log(name);
+			if (name.dataIndex == 'source' || name.dataIndex == "sources") return;		//过滤动态列中的source
+			var lable = lables[name.dataIndex] || name.dataIndex;
 
-Ext.Array.each(me.columns,function(name, index, countriesItSelf){
-//	console.log(name);
-	if(name.dataIndex=='source'||name.dataIndex=="sources") return;		//过滤动态列中的source
-	if(!Ext.Array.contains(array,name.dataIndex)){
-		Ext.Array.insert(me.items[0].items,2, 	//写入动态列
-		[{anchor : '100%',
-			fieldLabel : name.dataIndex,
-			name : name.dataIndex,
-			xtype : 'textarea',
-			maxHeight: 50,
-		allowBlank: true}]);//插入值即可
-	}},this,true);
+			if (!Ext.Array.contains(array, name.dataIndex)) {
+				Ext.Array.insert(me.items[0].items, 2, 	//写入动态列
+					[{
+						anchor: '100%',
+						fieldLabel: lable,
+						name: name.dataIndex,
+						xtype: 'textarea',
+						maxHeight: 50,
+						allowBlank: true
+					}]);//插入值即可
+			}
+		}, this, true);
 
-me.callParent(arguments);
-}
+		me.callParent(arguments);
+	}
 });

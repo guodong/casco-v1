@@ -47,7 +47,7 @@ Ext.define('casco.view.manage.Document', {
 			id:'workingpanel',
 	        reference: 'main',
 	        items:[{
-	            title: 'Main',
+	            title: '概览',
 	            html: '<iframe id="draw" src="/draw/index.html?'+me.project.id+'&_d='+Date.parse(new Date())+'" style="width:100%;height:100%;border:0"></iframe>'
 	           
 			}]

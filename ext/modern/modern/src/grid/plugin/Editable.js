@@ -59,7 +59,7 @@
  *                 items: [{
  *                     xtype: 'button',
  *                     ui: 'decline',
- *                     text: 'Cancel',
+ *                     text: '取消',
  *                     align: 'left',
  *                     action: 'cancel'
  *                 }, {
@@ -155,7 +155,7 @@ Ext.define('Ext.grid.plugin.Editable', {
             items: [{
                 xtype: 'button',
                 ui: 'decline',
-                text: 'Cancel',
+                text: '取消',
                 align: 'left',
                 action: 'cancel'
             }, {

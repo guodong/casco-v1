@@ -19,28 +19,28 @@ Ext.define('casco.view.manage.Vatlist',{
     	});
 		
 		me.columns = [{
-			text : 'Name',
+			text : '名称',
 			dataIndex: 'name',
 			width: 150
 		},{
-			text: 'Description',
+			text: '描述',
 			dataIndex: 'description',
 			width: 250
 		}, {
-			text: 'Doc Version',
+			text: '文档版本',
 			dataIndex: 'doc_versions',
 			flex: 1,
 			renderer: function(value,metadata,record){ //value-rs_versions(current cell); metadata-cell metadata; record-Ext.data.Model
 				return getPreview(value,metadata,record);
 			}
 		}, {
-			text: 'Created At',
+			text: '创建时间',
 			dataIndex: 'created_at',
 			width: 150
 		}];
 		
 		me.tbar = [{
-			text: 'Create Vat',
+			text: '创建定版',
 			glyph: 0xf067,
 			scope: this,
 			handler: function() {
@@ -55,20 +55,25 @@ Ext.define('casco.view.manage.Vatlist',{
 				win.show();
 			}
 		},'-',{
-			text: 'Delete Vat',
+			text: '删除定版',
 			glyph: 0xf068,
 			scope: this,
 			handler: function() {
-				Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice){   //confirm
-					if(choice == 'yes'){
-						var view=me.getView();
-						var selection =view.getSelectionModel().getSelection()[0];
-						if (selection) {
-							me.store.remove(selection);
-							selection.erase();
-							//view.refresh();
-						}
-					}}, this);
+				Ext.MessageBox.buttonText.yes = '是';
+				Ext.MessageBox.buttonText.no = '否';
+				var view=me.getView();
+				var selection =view.getSelectionModel().getSelection()[0];
+				if(selection){
+					Ext.Msg.confirm('确认', '确认删除?', function(choice){   //confirm
+						if(choice == 'yes'){
+								me.store.remove(selection);
+								selection.erase();
+								//view.refresh();
+						}}, this);
+				}else{
+					Ext.Msg.alert('注意','请先选中需要删除的定版！');
+				}
+			
 			}
 		}];
 		

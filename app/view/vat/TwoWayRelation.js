@@ -40,6 +40,7 @@ Ext.define('casco.view.vat.TwoWayRelation', {
 				id: 'parent-doc-id',
 				xtype: 'combobox',
 				allowBlank: false,
+				blankText: "不能为空",
 				editable: false,
 				queryMode: 'local',
 				displayField: 'name',
@@ -61,6 +62,7 @@ Ext.define('casco.view.vat.TwoWayRelation', {
 				id: 'parent-verison-id',
 				xtype: 'combobox',
 				allowBlank: false,
+				blankText: "不能为空",
 				editable: false,
 				queryMode: 'local',
 				displayField: 'name',
@@ -74,6 +76,7 @@ Ext.define('casco.view.vat.TwoWayRelation', {
 				id: 'child-doc-id',
 				xtype: 'combobox',
 				allowBlank: false,
+				blankText: "不能为空",
 				editable: false,
 				queryMode: 'local',
 				displayField: 'name',
@@ -95,6 +98,7 @@ Ext.define('casco.view.vat.TwoWayRelation', {
 				id: 'child-verison-id',
 				xtype: 'combobox',
 				allowBlank: false,
+				blankText: "不能为空",
 				editable: false,
 				queryMode: 'local',
 				displayField: 'name',
@@ -120,7 +124,7 @@ Ext.define('casco.view.vat.TwoWayRelation', {
 				background: '#eee'
 			},
 			items: ['->', {
-				text: 'Export',
+				text: '导出',
 				glyph: 0xf1c3,
 				handler: function(){
 					var self = this;var obj=null;
@@ -151,7 +155,7 @@ Ext.define('casco.view.vat.TwoWayRelation', {
 					
 				}
 			}, {
-				text: 'Cancel',
+				text: '取消',
 				glyph: 0xf112,
 				scope: me,
 				handler: function(){

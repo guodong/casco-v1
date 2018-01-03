@@ -121,7 +121,7 @@ Ext.define('Ext.grid.plugin.MultiSelection', {
         /**
          * The text of the button used to cancel the {@link #selectionColumn}.
          */
-        cancelText: 'Cancel',
+        canceltext: '取消',
 
         /**
          * The text of the button used to delete selected rows.

@@ -17,7 +17,7 @@
  *                 text: 'Save draft'
  *             },
  *             {
- *                 text: 'Cancel',
+ *                 text: '取消',
  *                 ui  : 'confirm'
  *             }
  *         ]

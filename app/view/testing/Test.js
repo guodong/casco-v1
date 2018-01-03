@@ -18,9 +18,9 @@ Ext.define('casco.view.testing.Test', {
 		var resultStore = Ext.create('Ext.data.Store', {
         	model: 'casco.model.Result',
             data : [
-	                {label: 'untested',   value: 0},
-	                {label: 'passed',   value: 1},
-	                {label: 'failed',   value: 2},
+	                {label: '未测试',   value: 0},
+	                {label: '通过',   value: 1},
+	                {label: '失败',   value: 2},
             ]
         });
 		me.loadgrid = function(){
@@ -53,7 +53,7 @@ Ext.define('casco.view.testing.Test', {
 			items: [{
 				columnWidth:0.25,   
                 items:[{
-    				fieldLabel: 'Build Version',
+    				fieldLabel: 'Build版本',
     				id: 'test-build-version',
     				name: 'build_id',
     				xtype: 'combobox',
@@ -77,11 +77,12 @@ Ext.define('casco.view.testing.Test', {
     				xtype: 'combobox',
     				name: 'document_id',
     				editable: false,
-    				fieldLabel: 'Tc Document',
+    				fieldLabel: '测试用例文档',
     				displayField: 'name',
     				valueField: 'id',
     				store : tcdocs,
-    				allowBlank: false,
+					allowBlank: false,
+					blankText: "不能为空",
     				queryMode: 'local',
     				listeners: {
     					select: function(f, r, i) {
@@ -108,11 +109,12 @@ Ext.define('casco.view.testing.Test', {
 				columnWidth:0.25,   
                 //layout:"form", 
                 items:[{
-    				fieldLabel: 'Tc Version',
+    				fieldLabel: '测试用例版本',
     				name: 'tag',
     				id: 'test-tc-version',
     				xtype: 'combobox',
-    				allowBlank: false,
+					allowBlank: false,
+					blankText: "不能为空",
     				editable: false,
     				queryMode: 'local',
     				displayField: 'name',
@@ -134,11 +136,12 @@ Ext.define('casco.view.testing.Test', {
     				name: 'document_id',
     				id: 'test-rs',
     				editable: false,
-    				fieldLabel: 'Rs Document',
+    				fieldLabel: '需求文档',
     				displayField: 'name',
     				valueField: 'id',
     				store : rsdocs,
-    				allowBlank: false,
+					allowBlank: false,
+					blankText: "不能为空",
     				queryMode: 'local',
     				listeners: {
     					select: function(f, r, i) {
@@ -158,12 +161,12 @@ Ext.define('casco.view.testing.Test', {
 				columnWidth:0.25,   
                 //layout:"form", 
                 items:[{
-    				fieldLabel: 'Rs Version',
+    				fieldLabel: '需求版本',
     				name: 'tag',
     				id: 'test-rs-version',
     				xtype: 'combobox',
     				allowBlank: false,
-    				allowBlank: false,
+    				blankText: "不能为空",
     				editable: false,
     				queryMode: 'local',
     				displayField: 'name',
@@ -195,7 +198,7 @@ Ext.define('casco.view.testing.Test', {
 			        }
 			    },
 				columns: [{
-					text: "tag",
+					text: "标签",
 					dataIndex: "tag",
 					width: 200
 				}, {
@@ -214,7 +217,7 @@ Ext.define('casco.view.testing.Test', {
 						return arr.join(', ');
 					}
 				}, {
-					text: "test method",
+					text: "测试方法",
 					dataIndex: "testmethods",
 					width: 100,
 					renderer: function(tm) {
@@ -225,7 +228,7 @@ Ext.define('casco.view.testing.Test', {
 						return str;
 					}
 				}, {
-					text: "exe time",
+					text: "执行时间",
 					dataIndex: "exe_at",
 					width: 140,
 					editor: {
@@ -242,7 +245,7 @@ Ext.define('casco.view.testing.Test', {
 				    renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
 				        return resultStore.findRecord('value', value).get('label');
 				    },
-				    text: 'Result',
+				    text: '结果',
 				    editor: {
 				        xtype: 'combobox',
 				        queryMode: 'local',

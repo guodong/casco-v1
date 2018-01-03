@@ -4,17 +4,18 @@ Ext.define('casco.view.main.Tree', {
   requires: ['casco.view.tc.Tc', 'casco.view.rs.Rs'],
 
   listeners: {
-    itemdblclick: function(view, record, item, index, e, eOpts) {
+    itemdblclick: function (view, record, item, index, e, eOpts) {
       var me = this;
       if (!record.get('leaf')) return;
-      var tabs = Ext.getCmp('workpanel');
+      var tabs = Ext.getCmp('workingpanel')||Ext.getCmp('workpanel');
+
       var tab = tabs.child('#tab-' + record.get('id'));
       if (tab) {
         tabs.remove(tab);
       }
-      
+
       casco.model.Document.load(record.get('id'), {
-        success: function(record) {
+        success: function (record) {
           tab = tabs.add({
             id: 'tab-' + record.get('id'),
             xtype: record.get('type'),
@@ -32,7 +33,7 @@ Ext.define('casco.view.main.Tree', {
   displayField: 'name',
   rootVisible: false,
 
-  initComponent: function() {
+  initComponent: function () {
     var me = this;
     this.store = Ext.create('casco.store.TreeDocuments', {
       proxy: {

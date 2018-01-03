@@ -886,7 +886,7 @@ Ext.theme.addShortcuts({
                 rowEditor: {
                     buttonUI: 'default-toolbar',
                     saveBtnText: 'Update',
-                    cancelBtnText: 'Cancel',
+                    cancelBtntext: '取消',
                     editingPlugin: {
                         completeEdit: Ext.emptyFn,
                         cancelEdit: Ext.emptyFn
@@ -901,7 +901,7 @@ Ext.theme.addShortcuts({
                 rowEditor: {
                     buttonUI: 'default-toolbar',
                     saveBtnText: 'Update',
-                    cancelBtnText: 'Cancel',
+                    cancelBtntext: '取消',
                     editingPlugin: {
                         completeEdit: Ext.emptyFn,
                         cancelEdit: Ext.emptyFn

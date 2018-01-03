@@ -12,9 +12,9 @@ Ext.define('casco.view.tc.TcStep', {
   id: 'mgrid',
   columns: [{
     xtype: 'rownumberer',
-    text: 'num',
+    text: '序号',
     dataIndex: 'num',
-    width: 50
+    width: 70
   }, {
     text: 'Actions',
     width: '45%',
@@ -28,7 +28,7 @@ Ext.define('casco.view.tc.TcStep', {
       grow: true
     }
   }, {
-    text: 'Expected Result',
+    text: '预期结果',
     flex: true,
     sortable: true,
     resizable: false,
@@ -50,12 +50,12 @@ Ext.define('casco.view.tc.TcStep', {
         dock: 'bottom',
         items: [{
           glyph: 0xf067,
-          text: 'Add',
+          text: '添加',
           scope: me,
           handler: this.onAddClick,
         }, {
           glyph: 0xf068,
-          text: 'Delete',
+          text: '删除',
           disabled: true,
           itemId: 'delete',
           scope: me,
@@ -86,7 +86,7 @@ Ext.define('casco.view.tc.TcStep', {
     });
   },
   onDeleteClick: function() {
-    Ext.Msg.confirm('Confirm', 'Are you sure to delete?', function(choice) {
+    Ext.Msg.confirm('确认', '确认删除?', function(choice) {
       if (choice == 'yes') {
         var selection = this.getView().getSelectionModel().getSelection()[0];
         if (selection) {

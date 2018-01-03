@@ -16,7 +16,7 @@ Ext.define('casco.view.document.FolderCreate', {
     controller: 'document',
     
     modal: true,
-    title: 'Create Folder',
+    title: '新建目录',
     width: 300,
     
     initComponent: function(){
@@ -26,7 +26,7 @@ Ext.define('casco.view.document.FolderCreate', {
 	    	reference: 'documentfolder_create_form',
 	    	bodyPadding: '10',
 	    	items: [{
-	            fieldLabel: 'Name',
+	            fieldLabel: '名称',
 	            msgTarget: 'under',
 	            name: 'name',
 	            xtype: 'textfield'
@@ -47,13 +47,13 @@ Ext.define('casco.view.document.FolderCreate', {
                 style: {background: '#eee'},
                 items: ['->',
                     {
-                        text: 'Save',
+                        text: '保存',
                         glyph: 0xf0c7,
                         listeners: {
                             click: 'createFolder'
                         }
                     },{
-                        text: 'Cancel',
+                        text: '取消',
                         glyph: 0xf112,
                         scope: me,
                         handler : this.doHide

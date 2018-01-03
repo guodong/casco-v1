@@ -27,14 +27,14 @@ Ext.define('casco.view.matrix.Summary', {
 		var selModel=new Ext.selection.Model({mode:"MULTI"});
         me.selModel=selModel;
 		me.tbar = [{
-			text: 'Export',
+			text: '导出',
 			glyph: 0xf067,
 			handler: function() {
 			 	window.open(API+'/verification/summary_export?v_id='+(me.verification.get('id')?me.verification.get('id'):''));
             	return;
 			}
 		},'-',{
-		    text: 'Refresh',
+		    text: '刷新',
 			glyph: 0xf067,
 		    handler: function() {
 				me.store.reload();
@@ -100,7 +100,7 @@ Ext.define('casco.view.matrix.Summary', {
      me.items = [{
 			xtype: 'gridpanel',
 			forceFit:true,
-			title:'Statistic of Completeness and traceability',
+			title:'完整性和可追溯性统计',
 			columns:north_columns,
 			anchor:'100%, 50%',
 			forceFit:true,
@@ -109,7 +109,7 @@ Ext.define('casco.view.matrix.Summary', {
 			store:store,
 			collapsable: true
 		}, {
-			title:'Defect statistic',
+			title:'缺陷统计',
 			region:'center',
 			xtype: 'gridpanel',
 			forceFit:true,

@@ -14,9 +14,9 @@ Ext.define('casco.view.testing.Step', {
     	var resultStore = Ext.create('Ext.data.Store', {
         	model: 'casco.model.Result',
             data : [
-	                {label: 'untested',   value: 0},
-	                {label: 'passed',   value: 1},
-	                {label: 'failed',   value: -1},
+	                {label: '未测试',   value: 0},
+	                {label: '通过',   value: 1},
+	                {label: '失败',   value: -1},
             ]
         });
     	me.items = [{
@@ -46,14 +46,14 @@ Ext.define('casco.view.testing.Step', {
     	    },
     		columns: [{
         		xtype: 'rownumberer',
-        		text: 'step',
+        		text: '序号',
         		width: 70
             },{
-                text: 'Actions',
+                text: '步骤',
                 width: '35%',
                 dataIndex: 'actions'
             },{
-                text: 'Expected Result',
+                text: '预期结果',
                 hidden: true,
                 dataIndex: 'expected_result'
             },{
@@ -63,7 +63,7 @@ Ext.define('casco.view.testing.Step', {
         	    renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
         	        return resultStore.findRecord('value', value).get('label');
         	    },
-        	    text: 'Result',
+        	    text: '结果',
         	    editor: {
         	        xtype: 'combobox',
     				disabledCls: '',
@@ -90,7 +90,7 @@ Ext.define('casco.view.testing.Step', {
     		        }
         	    }
         	},{
-        		text: 'comment',
+        		text: '备注',
         		dataIndex: 'comment',
                 flex: true,
         		editor: {

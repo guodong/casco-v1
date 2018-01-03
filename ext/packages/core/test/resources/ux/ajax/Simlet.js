@@ -53,7 +53,7 @@ Ext.define('Ext.ux.ajax.Simlet', function () {
         /**
          * @cfg {String} statusText
          */
-        statusText: 'OK',
+        statustext: '确定',
 
         constructor: function (config) {
             Ext.apply(this, config);

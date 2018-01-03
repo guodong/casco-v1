@@ -7,7 +7,7 @@ Ext.define('casco.view.rs.vat.Add', {
 	resizable: true,
 	maximizable: true,
 	modal: true,
-	title: 'Add Vat',
+	title: '添加Vat',
 	width: 600,
 	height: 550,
 	autoScroll: true,
@@ -62,7 +62,7 @@ Ext.define('casco.view.rs.vat.Add', {
 			collapsible: true,
 			autoScroll: true,
 			columns: [{
-				text: 'Vat',
+				text: '定版',
 				dataIndex: 'name',
 				flex: 1
 			}],
@@ -79,11 +79,11 @@ Ext.define('casco.view.rs.vat.Add', {
 			xtype: 'grid',
 			region: 'center',
 			columns: [{
-				text: 'Vat',
+				text: '定版',
 				dataIndex: 'tag',
 				flex: 1
 			},{
-				text:'comment',
+				text:'备注',
 				editable:true,
 			}],
 			store: me.vat,
@@ -101,7 +101,7 @@ Ext.define('casco.view.rs.vat.Add', {
 				background: '#eee'
 			},
 			items: ['->', {
-				text: 'Ok',
+				text: '确定',
 				glyph: 0xf112,
 				scope: me,
 				handler: this.destroy

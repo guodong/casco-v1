@@ -25,7 +25,7 @@ Ext.define('casco.view.testing.Result', {
         	Ext.getCmp('testing-step').store.loadData(record.get('tc').steps);
         }
     },
-	title: 'Testing result',
+	title: '测试结果',
 	store: Ext.create('casco.store.Results'),
 	scrollable: true,
 	job: Ext.create('casco.model.Testjob'),
@@ -34,9 +34,9 @@ Ext.define('casco.view.testing.Result', {
     	var resultStore = Ext.create('Ext.data.Store', {
         	model: 'casco.model.Result',
             data : [
-	                {label: 'untested', value: 0},
-	                {label: 'passed',   value: 1},
-	                {label: 'failed',   value: -1},
+	                {label: '未测试', value: 0},
+	                {label: '通过',   value: 1},
+	                {label: '失败',   value: -1},
             ]
         });
 		me.tmpstore = Ext.create('casco.store.TestJobTmp');
@@ -95,26 +95,26 @@ Ext.define('casco.view.testing.Result', {
 		}
 		me.customMenuItemsCache = [];
 		me.columns = [{
-			text: 'tc',
+			text: '测试用例',
 			dataIndex: 'tag',
 			sortable : true,
 			width: 150
 		}, {
-			text: 'description',
+			text: '描述',
 			dataIndex: 'tc',
 			flex:1,
 			renderer: function(v) {
 				return  v.description;
 			}
 		},  {
-			text: "test method",
+			text: "测试方法",
 			dataIndex: "tc",
 			width: 100,
 			renderer: function(v) {
 			return v.testmethods;
 			}
 		}, {
-			text: "begin at",
+			text: "开始时间",
 			dataIndex: "begin_at",
 			width: 150,
 			editor: {
@@ -134,7 +134,7 @@ Ext.define('casco.view.testing.Result', {
 				return value;
 			}
 		}, {
-			text: "end at",
+			text: "结束时间",
 			dataIndex: "end_at",
 			width: 150,
 			editor: {
@@ -161,7 +161,7 @@ Ext.define('casco.view.testing.Result', {
 		    renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
 		        return resultStore.findRecord('value', value).get('label');
 		    },
-		    text: 'Result',
+		    text: '结果',
 			customMenu:[{text:'批量编辑',menu:[{xtype:'radiogroup',columns:1,vertical:true,items: [  
                     { boxLabel: 'untested', name: 'result', inputValue: '0'},   
                     { boxLabel: 'passed', name:'result', inputValue:'1'},
@@ -198,14 +198,14 @@ Ext.define('casco.view.testing.Result', {
 			xtype: 'combobox',
 			displayField: 'value',
 			valueField: 'id',
-			emptyText: 'Edit TestScripts',
+			emptyText: '编辑测试脚本',
 			queryModel: 'local',
 			editable: false,
 			store: Ext.create('Ext.data.Store',{
 				fields: ['id', 'value'],
-				data: [{'id':'EC', 'value':'Edit checklog'},
-				       {'id':'ER', 'value':'Edit robot'},
-				       {'id':'GT', 'value':'Generate TestScript'}]
+				data: [{'id':'EC', 'value':'编辑checklog'},
+				       {'id':'ER', 'value':'编辑robot'},
+				       {'id':'GT', 'value':'生成测试脚本'}]
 			}),
 			listeners:{
 				select: function(combo,rd){
@@ -215,7 +215,7 @@ Ext.define('casco.view.testing.Result', {
 						var selection =view.getSelectionModel().getSelection()[0];
 //						console.log(selection.get('tc').tag);
 						if(!selection){
-							Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择TC !</b></div>');
+							Ext.Msg.alert('<b>注意</b>','<div style="text-align:center;"><b>请先选择测试用例!</b></div>');
 							combo.setValue(combo.emptyText);
 							return;
 							}
@@ -226,7 +226,7 @@ Ext.define('casco.view.testing.Result', {
 						var view=me.getView();
 						var selection =view.getSelectionModel().getSelection()[0];
 						if(!selection){
-							Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择TC !</b></div>');
+							Ext.Msg.alert('<b>注意</b>','<div style="text-align:center;"><b>请先选择TC !</b></div>');
 							combo.clearValue();
 							return;
 							}
@@ -238,7 +238,7 @@ Ext.define('casco.view.testing.Result', {
 						var view=me.getView();
 						var dd=view.getStore().getData();
 						if(!dd.length){
-							Ext.Msg.alert('<b>Attention</b>','<div style="text-align:center;"><b>请先选择Testjob !</b></div>');
+							Ext.Msg.alert('<b>注意</b>','<div style="text-align:center;"><b>请先选择Testjob !</b></div>');
 							combo.clearValue();
 							return;
 						}
@@ -251,14 +251,14 @@ Ext.define('casco.view.testing.Result', {
 				}
 			}
 		},{
-			text: 'Export Result',
+			text: '导出结果',
 			xtype: 'combobox',
             editable: false,
             displayField: 'name',
             valueField: 'id',
             store: me.tmpstore,
             queryMode: 'local',
-            emptyText: 'Export Results',
+            emptyText: '导出结果',
             listeners: {
             	select:  function(combo, record) {
 				combo.setValue(combo.emptyText);
@@ -267,7 +267,7 @@ Ext.define('casco.view.testing.Result', {
 				},
             }
 		},{
-			text: 'Save',
+			text: '保存',
 			id: 'testing-save-btn',
 			glyph: 0xf0c7,
 			handler: function() {
@@ -290,12 +290,12 @@ Ext.define('casco.view.testing.Result', {
 					success: function(){
 //						me.getView().refresh();
 						me.store.reload();
-						Ext.Msg.alert('Success', 'Saved successfully.')
+						Ext.Msg.alert('成功', '保存成功。')
 					}
 				});
 			}
 		},{
-			text: 'Submit',
+			text: '提交',
 			id: 'testing-submit-btn',
 			glyph: 0xf093,
 			scope: this,
@@ -304,17 +304,17 @@ Ext.define('casco.view.testing.Result', {
 				me.job.set('user_id',JSON.parse(localStorage.user).id);
 				me.job.save({
 					success: function(){
-						Ext.Msg.alert('Success', 'Submit successfully.')
+						Ext.Msg.alert('成功', '提交成功。')
 					}
 				});
 				Ext.getCmp('joblist').getStore().reload();
 			}
 		},'->',{
             xtype: 'textfield',
-//            fieldLabel: 'Search',  
+//            fieldLabel: '搜索',    
             labelWidth: 50,
             name: 'searchField',
-            emptyText: 'Search',
+            emptyText: '搜索',
             //hideLabel: true,
             width: 200,
             listeners: {
@@ -327,13 +327,13 @@ Ext.define('casco.view.testing.Result', {
        }, {
            xtype: 'button',
            text: '&lt;',
-           tooltip: 'Find Previous Row',
+           tooltip: '往前查找',
            handler: me.onPreviousClick,
            scope: me
        },{
            xtype: 'button',
            text: '&gt;',
-           tooltip: 'Find Next Row',
+           tooltip: '往后查找',
            handler: me.onNextClick,
            scope: me
        }];
@@ -358,7 +358,7 @@ Ext.define('casco.view.testing.Result', {
         tagsRe:/<[^>]*>/gm,  //detects html tag gm 参数
     	tagsProtect:'\x0f',  //DEL ASCII code
         matchCls: 'x-livesearch-match', //@cfg {String} matchCls  The matched string css classe.
-        defaultStatusText: 'Nothing Found',	 
+        defaultStatusText: '无匹配结果',	 
     	
     	 afterRender: function() {
     	        var me = this;
@@ -454,7 +454,7 @@ Ext.define('casco.view.testing.Result', {
 //                    Ext.fly(me.getView().getNode(me.currentIndex)).scrollInteView();
                     me.getView().focusRow(me.currentIndex);
                     me.statusBar.setStatus({
-                        text: count + ' matche(s) found.',
+                         text: count + ' 处匹配',
                         iconCls: 'x-status-valid'
                     });
                 }

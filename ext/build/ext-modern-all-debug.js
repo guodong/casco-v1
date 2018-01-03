@@ -85545,7 +85545,7 @@ Ext.define('Ext.MessageBox', {
     },
     statics: {
         OK: {
-            text: 'OK',
+            text: '确定',
             itemId: 'ok'
         },
         YES: {
@@ -85557,7 +85557,7 @@ Ext.define('Ext.MessageBox', {
             itemId: 'no'
         },
         CANCEL: {
-            text: 'Cancel',
+            text: '取消',
             itemId: 'cancel'
         },
         INFO: Ext.baseCSSPrefix + 'msgbox-info',
@@ -85566,17 +85566,17 @@ Ext.define('Ext.MessageBox', {
         ERROR: Ext.baseCSSPrefix + 'msgbox-error',
         OKCANCEL: [
             {
-                text: 'Cancel',
+                text: '取消',
                 itemId: 'cancel'
             },
             {
-                text: 'OK',
+                text: '确定',
                 itemId: 'ok'
             }
         ],
         YESNOCANCEL: [
             {
-                text: 'Cancel',
+                text: '取消',
                 itemId: 'cancel'
             },
             {
@@ -100094,7 +100094,7 @@ Ext.define('Ext.grid.plugin.Editable', {
                 {
                     xtype: 'button',
                     ui: 'decline',
-                    text: 'Cancel',
+                    text: '取消',
                     align: 'left',
                     action: 'cancel'
                 },
@@ -100241,7 +100241,7 @@ Ext.define('Ext.grid.plugin.MultiSelection', {
         
         triggerText: 'Select',
         
-        cancelText: 'Cancel',
+        canceltext: '取消',
         
         deleteText: 'Delete'
     },

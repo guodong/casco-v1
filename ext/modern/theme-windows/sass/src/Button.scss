@@ -168,7 +168,7 @@ $disabled-color: #999;
  *     @include sencha-button-ui('secondary', #99A4AE, 'glossy');
  *
  *     // JS
- *     var cancelBtn = new Ext.Button({text: 'Cancel', ui: 'secondary'});
+ *     var cancelBtn = new Ext.Button({text: '取消', ui: 'secondary'});
  *
  * @param {string} $ui-label The name of the UI being created.
  *   Can not included spaces or special punctuation (used in class names)

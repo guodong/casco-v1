@@ -62,7 +62,7 @@
      */
     "requires": [
         "font-awesome",
-        "DateTimeField",
+        //"DateTimeField",
         "ux"
     ],
 

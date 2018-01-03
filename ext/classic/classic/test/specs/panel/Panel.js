@@ -3142,13 +3142,13 @@ describe("Ext.panel.Panel", function() {
                 setupPanel({
                     buttons: [{
                         reference: 'okButton',
-                        text: 'OK',
+                        text: '确定',
                         listeners: {
                             click: 'onOkButton'
                         }
                     }, {
                         reference: 'cancelButton',
-                        text: 'Cancel',
+                        text: '取消',
                         listeners: {
                             click: 'onCancelButton'
                         }

@@ -7,7 +7,7 @@ Ext.define('casco.view.tc.source.Add', {
 	resizable: true,
 	maximizable: true,
 	modal: true,
-	title: 'Add Tc Sources',
+	title: '添加Tc Sources',
 	width: 600,
 	height: 550,
 	autoScroll: true,
@@ -62,7 +62,7 @@ Ext.define('casco.view.tc.source.Add', {
 				background: '#eee'
 			},
 			items: ['->', {
-				text: 'Ok',
+				text: '确定',
 				glyph: 0xf112,
 				scope: me,
 				handler: this.destroy

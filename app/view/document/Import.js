@@ -285,7 +285,7 @@ app.post('/postFile', function(req, res, next) {
 
   fs.writeFile(filename, filecontent, function(err) {
     if (err) throw err;
-    res.send("文件save successed!");
+    res.send("文件保存成功!");
   });
 
 });

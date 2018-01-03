@@ -42,6 +42,7 @@ Ext.define('casco.view.testing.Main', {
 			items: [{
 				xtype: 'testing.result',
 				id: 'result-main',
+				title: '测试结果',
 				width: '60%',
 				region: 'center',
 				project:me.project,
@@ -49,7 +50,7 @@ Ext.define('casco.view.testing.Main', {
 			}, {
 				xtype: 'testing.step',
 				id: 'testing-step-panel',
-				title: 'Step Detail',
+				title: '步骤信息',
 				width: '40%',
 				region: 'east',
 				split: true,

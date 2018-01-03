@@ -49,14 +49,16 @@ Ext.define('casco.view.manage.Manage', {
 							leaf: true,
 							id: 'projectlist'
 						}]
-					}, {
+					}
+				/*, {
 						text: "系统信息管理",
 						children: [{
 							text: "测试方法",
 							leaf: true,
 							id: 'testmethod'
 						}]
-					}]
+					} */
+				]
 				}
 			})
 		}, {

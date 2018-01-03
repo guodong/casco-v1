@@ -7,7 +7,7 @@ Ext.define('casco.view.manage.Statistics', {
 	resizable: true,
 	maximizable: true,
 	modal: true,
-	title: 'Statistics',
+	title: '统计',
 	width: 600,
 	initComponent: function() {
 		var me = this;
@@ -24,20 +24,20 @@ Ext.define('casco.view.manage.Statistics', {
 			store: docs,
 			title: project.name,
 			columns: [{
-				text: 'Document',
+				text: '文档',
 				dataIndex: 'name',
 				flex: 1
 			}, {
-				text: 'Num items',
+				text: '总数',
 				dataIndex: 'count'
 			}, {
-				text: 'Num passed',
+				text: '通过数量',
 				dataIndex: 'num_passed'
 			}, {
-				text: 'Num failed',
+				text: '失败数量',
 				dataIndex: 'num_failed'
 			}, {
-				text: 'Num norun',
+				text: '未运行数量',
 				dataIndex: 'num_norun'
 			}],
 			listeners: {

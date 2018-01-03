@@ -5,7 +5,7 @@ Ext.define('casco.view.testing.TemplateEdit',{
 	layout : 'fit',
 //	resizable :true,
 	modal : true,
-	title : 'Template Edit',
+	title : '编辑模板',
 	frame : true,
 	width : 750,
 	controller: 'testing',

@@ -3,7 +3,7 @@ Ext.define('casco.view.testing.TemplateImport',{
 	xtype : 'testing.templateimport',
 	require : ['casco.store.Testjobs'],
 	modal : true,
-	title : 'Template Import',
+	title : '导入模板',
 	width : 500,
 	frame : true,
 	controller: 'testing',
@@ -42,12 +42,12 @@ Ext.define('casco.view.testing.TemplateImport',{
 		}, {
 			xtype : 'filefield',
 			name : 'exceltpl',
-			fieldLabel : 'Template',
+			fieldLabel : '模板',
 			margin : '15 0 10 0',
-			labelWidth : 80,
+			labelWidth : 100,
 			allowBlank : false,
 			width : '100%',
-			buttonText : 'Select file'
+			buttonText : '选择文件'
 		},{
 			xtype : 'hiddenfield',
 			name : 'project_id',
@@ -55,7 +55,7 @@ Ext.define('casco.view.testing.TemplateImport',{
 			allowBlank : false
 		}],
 		buttons: ['->', {
-			text: 'Upload',
+			text: '上传',
 			formBind: true,
 			glyph: 0xf0c7,
 			handler: function()
@@ -64,9 +64,9 @@ Ext.define('casco.view.testing.TemplateImport',{
 			if (fp.getForm().isValid()) {  
 				fp.getForm().submit({  
 					url: API + '/testjob/import_tmp',
-					waitMsg: 'Uploading your template...',  
+					waitMsg: '正在上传模板...',  
 					success: function(fp, o) {  
-						msg('Success', o.data);  
+						msg('提示!', o.data);  
 					},
 					failure: function(fp, o) {
 						//表单跨域提价所以报错
@@ -80,7 +80,7 @@ Ext.define('casco.view.testing.TemplateImport',{
 			}  
 			} //handler
 		}, {
-			text: 'Reset',  
+			text: '重置',  
 			handler: function() { 
 				var fp=me.lookupReference('testjob_tmp');
 				fp.getForm().reset();  

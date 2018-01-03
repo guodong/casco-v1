@@ -29,18 +29,18 @@ Ext.define('casco.view.report.Result', {
 			}
     	});
 		me.columns = [{
-			text: 'id',
+			text: '编号',
 			dataIndex: 'id',
 			hidden:true
 		},{
-			text: 'tag',
+			text: '标签',
 			dataIndex: 'tag',
 			width:300,
 			renderer: function(v) {
 				return v;
 			}
 		}, {
-			text: 'description',
+			text: '描述',
 			dataIndex: 'description',
 			flex:1,
 			width:1000,
@@ -54,7 +54,7 @@ Ext.define('casco.view.report.Result', {
 		    renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
 		        return resultStore.findRecord('value', value).get('label');
 		    },
-		    text: 'Result',
+		    text: '结果',
 		    editor: {
 		        xtype: 'combobox',
 				disabledCls: '',
@@ -82,14 +82,14 @@ Ext.define('casco.view.report.Result', {
 			width: 100,
 		}];
 		me.tbar = [{
-			text: 'Export',
+			text: '导出',
 			glyph: 0xf1c3,
 			handler: function() {
 			 	window.open(API+'/center/export_result?report_id='+(me.report.get('id')?me.report.get('id'):''));
             	return;
 			}
 		},{
-			text: 'Refresh',
+			text: '刷新',
 			glyph: 0xf021,
 			scope: this,
 			handler: function() {
@@ -100,7 +100,7 @@ Ext.define('casco.view.report.Result', {
             xtype: 'textfield',
             labelWidth: 50,
             name: 'searchField', 
-            emptyText: 'Search',
+            emptyText: '搜索',
             width: 200,
             listeners: {
                 change: {
@@ -112,13 +112,13 @@ Ext.define('casco.view.report.Result', {
        }, {
            xtype: 'button',
            text: '&lt;',
-           tooltip: 'Find Previous Row',
+           tooltip: '往前查找',
            handler: me.onPreviousClick,
            scope: me
        },{
            xtype: 'button',
            text: '&gt;',
-           tooltip: 'Find Next Row',
+           tooltip: '往后查找',
            handler: me.onNextClick,
            scope: me
        },{
@@ -150,7 +150,7 @@ Ext.define('casco.view.report.Result', {
         tagsRe:/<[^>]*>/gm,  //detects html tag gm 参数
     	tagsProtect:'\x0f',  //DEL ASCII code
         matchCls: 'x-livesearch-match', //@cfg {String} matchCls  The matched string css classe.
-        defaultStatusText: 'Nothing Found',	 
+        defaultStatusText: '无匹配结果',	 
     	
     	 afterRender: function() {
     	        var me = this;
@@ -246,7 +246,7 @@ Ext.define('casco.view.report.Result', {
 //                    Ext.fly(me.getView().getNode(me.currentIndex)).scrollInteView();
                     me.getView().focusRow(me.currentIndex);
                     me.statusBar.setStatus({
-                        text: count + ' matche(s) found.',
+                         text: count + ' 处匹配',
                         iconCls: 'x-status-valid'
                     });
                 }

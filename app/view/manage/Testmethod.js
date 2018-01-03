@@ -9,7 +9,7 @@ Ext.define('casco.view.manage.Testmethod', {
 		store.load();
 		me.store = store;
 		me.tbar = ['-',{
-//			hidden: localStorage.role == 'staff' ? true: false,  //用户权限
+//			hidden: localStorage.role == 'staff',  //用户权限
 			text: '点击添加',
 			glyph: 0xf067,
 			handler: function() {
@@ -17,7 +17,7 @@ Ext.define('casco.view.manage.Testmethod', {
 				win.show();
 			}
 		},'-',{
-//			hidden: JSON.parse(localStorage.user).role_id == 0 ? true: false,  //用户权限
+//			hidden: JSON.parse(localStorage.user).role_id == 0,  //用户权限
 			text: '删除选中',
 			glyph: 0xf068,
 			handler: function() {
@@ -36,7 +36,7 @@ Ext.define('casco.view.manage.Testmethod', {
 			}
 		}, '->', {
 	        xtype: 'textfield',
-	        fieldLabel: 'Search',
+	        fieldLabel: '搜索',
 	        labelWidth: 50,
 	        name: 'searchField',
 	        emptyText: '查找关键字',
@@ -52,13 +52,13 @@ Ext.define('casco.view.manage.Testmethod', {
 	      }, {
 	        xtype: 'button',
 	        text: '&lt;',
-	        tooltip: 'Find Previous Row',
+	        tooltip: '往前查找',
 	        handler: me.onPreviousClick,
 	        scope: me
 	      }, {
 	        xtype: 'button',
 	        text: '&gt;',
-	        tooltip: 'Find Next Row',
+	        tooltip: '往后查找',
 	        handler: me.onNextClick,
 	        scope: me
 	      }, {
