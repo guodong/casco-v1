@@ -246,35 +246,28 @@ Ext.define('casco.view.matrix.Verification', {
 				glyph: 0xf068,
 				scope: this,
 				handler: function () {
-					var selection = view.getSelectionModel().getSelection()[0];
-					if (selection) {
-						me.store.remove(selection);
-						selection.erase(/*{
-					waitMsg : '正在删除......',
-					failure: function(record, operation) {
-						// do something if the erase failed
-						Ext.Msg.alert('删除失败!');
-					},
-					success: function(record, operation) {
-						Ext.Msg.alert('删除成功!');
-						// do something if the erase succeeded
-					},
-					callback: function(record, operation, success) {
-						// do something if the erase succeeded or failed
-					}
-					}*/);
-						//view.refresh();
-					
-					} else {
-						Ext.Msg.alert('注意', '请先选中需要删除的核验！');
-					}
-
 					Ext.Msg.confirm('确认', '确认删除?', function (choice) {   //confirm
 						if (choice == 'yes') {
 							var view = me.getView();
 							var selection = view.getSelectionModel().getSelection()[0];
 							if (selection) {
-						
+								me.store.remove(selection);
+								selection.erase(/*{
+							waitMsg : '正在删除......',
+							failure: function(record, operation) {
+								// do something if the erase failed
+								Ext.Msg.alert('删除失败!');
+							},
+							success: function(record, operation) {
+								Ext.Msg.alert('删除成功!');
+								// do something if the erase succeeded
+							},
+							callback: function(record, operation, success) {
+								// do something if the erase succeeded or failed
+							}
+							}*/);
+								//view.refresh();
+							}
 						}
 					}, this);
 				}
