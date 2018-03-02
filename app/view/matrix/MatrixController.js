@@ -112,7 +112,7 @@ Ext.define('casco.view.matrix.MatrixController', {
 		this.redirectTo('testing/' + this.getView().project.get('id'));
 		location.reload();
 		return;
-		var tabs = Ext.getCmp('workpanel');
+		var tabs = Ext.getCmp('workingpanel')||Ext.getCmp('workpanel');
 		var tab = tabs.child('#tab-testing');
 		if(!tab){
 			tab = tabs.add({

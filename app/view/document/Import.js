@@ -105,7 +105,7 @@ app.post('/parse', function(req, res, next) {
         var options = {
           hostname: global_hostname,
           port: global_port,
-          path: '/webservice2.asmx/resolve?' + content,
+          path: '/webservice.asmx/resolve?' + content,
           method: 'GET'
         }
 
@@ -173,7 +173,7 @@ app.post('/parse_bak', upload.single("file"), function(req, res, next) {
   var options = {
     hostname: global_hostname,
     port: global_port,
-    path: '/webservice2.asmx/resolve?' + content,
+    path: '/webservice.asmx/resolve?' + content,
     method: 'GET'
   }
 
@@ -217,7 +217,7 @@ app.post('/convert', upload.single("file"), function(req, res, next) {
   var options = {
     hostname: global_hostname,
     port: global_port,
-    path: '/webservice2.asmx/toPdf',
+    path: '/webservice.asmx/toPdf',
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',

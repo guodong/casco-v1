@@ -8,7 +8,7 @@
     <title>Casco</title>
 	<script>
 	window.API = "http://localhost:8000/";
-	window.FILEAPI = "http://192.100.110.96:8000/";
+	window.FILEAPI = "http://localhost/";
 	</script>
     <script type="text/javascript">
         var Ext = Ext || {}; // Ext namespace won't be defined yet...

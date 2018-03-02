@@ -273,7 +273,7 @@ Ext.define('casco.view.rs.RsImport', {
                 winResult.store.loadData([d.data]);
                 winResult.show();
                 me.destroy();
-                var tabs = Ext.getCmp('workpanel');
+                var tabs = Ext.getCmp('workingpanel')||Ext.getCmp('workpanel');
                 var tab = tabs.child('#tab-' + me.document.get('id'));
                 if (tab) {
                     tabs.remove(tab);

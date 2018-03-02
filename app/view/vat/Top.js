@@ -23,7 +23,7 @@ Ext.define('casco.view.vat.Top', {
         });
         var matches = /[0-9a-zA-Z]+/ig.exec(location.hash);
         var state = matches && matches[0] || null;
-        
+
         this.items = [{
             xtype: 'label',
             html: '卡斯柯测试平台',
@@ -33,27 +33,27 @@ Ext.define('casco.view.vat.Top', {
             xtype: 'button',
             handler: 'manage',
             hidden: JSON.parse(localStorage.user).role_id == 0,
-            disabled: state== 'manage'
+            disabled: state == 'manage'
         }, {
             text: '定版',
             xtype: 'button',
             handler: 'vat',
-            disabled: state== 'vat'
+            disabled: state == 'vat'
         }, {
             text: '测试',
             xtype: 'button',
             handler: 'testing',
-            disabled: state== 'testing'
+            disabled: state == 'testing'
         }, {
             text: '核验',
             xtype: 'button',
             handler: 'matrix',
-            disabled: state== 'matrix'
+            disabled: state == 'matrix'
         }, {
             text: '报告',
             xtype: 'button',
             handler: 'reporting',
-            disabled: state== 'reporting'
+            disabled: state == 'reporting'
         }/*,{
             text: 'Project',
             xtype: 'button',
@@ -65,7 +65,7 @@ Ext.define('casco.view.vat.Top', {
                 window.open("/prostat/projectstat-tmp.htm");
             },
             hidden: localStorage.view != 'manage',
-            disabled: state== 'prostat'
+            disabled: state == 'prostat'
         }, {
             xtype: 'combobox',
             editable: false,
