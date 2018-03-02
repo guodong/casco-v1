@@ -15,6 +15,14 @@ Ext.define('casco.view.rs.RsImport', {
 
     initComponent: function () {
         var me = this;
+        // window.addEventListener('message', function(event) { 
+        //     if (event.origin.indexOf(FILEAPI)>=0) { 
+        //         console.log(event.data); 
+        //         me.parseDocument();
+        //     } else { 
+        //         return; 
+        //     } 
+        // }); 
         var headers = null, regrex = null;
         // 获取最近一次的列名吧
         me.versions = new casco.store.Versions();
@@ -218,7 +226,7 @@ Ext.define('casco.view.rs.RsImport', {
                                                 Ext.Msg.alert('成功', action.response.responseText);
                                             },
                                             failure: function (form, action) {
-                                                me.parseDocument();
+                                               me.parseDocument();
                                             }// failure
                                         });// submit
                                     }// function
