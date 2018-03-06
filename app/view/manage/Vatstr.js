@@ -9,7 +9,7 @@ Ext.define('casco.view.manage.Vatstr', {
         'Ext.toolbar.TextItem',
     ],
     columns: [{
-        text: 'Vat 选项',
+        text: '标签',
         width: '100%',
         sortable: true,
         resizable: false,
