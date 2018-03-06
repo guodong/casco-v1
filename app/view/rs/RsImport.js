@@ -47,7 +47,7 @@ Ext.define('casco.view.rs.RsImport', {
                         me.down('form').items.getAt(1).setValue("description,implement,source,priority,contribute,category,allocation");
                     }
                     else if (me.type = "tc") {
-                        me.down('form').items.getAt(1).setValue("描述,安全性,Source,测试方法,前提,测试步骤");
+                        me.down('form').items.getAt(1).setValue("test case description,safety,source,test method,pre_condition,test steps");
                     }
                 }
             }// callback
@@ -220,13 +220,20 @@ Ext.define('casco.view.rs.RsImport', {
                                         }
                                         var filename = Math.random() + '.doc';
                                         me.filename = filename;
+                                        document.domain = document.domain;
+
                                         form.submit({// 为什么一直为false
                                             url: FILEAPI + filename,
+                                            method: 'POST',
+                                            params: {
+                                                domain: document.domain
+                                            },
+                                            cors: true,
                                             success: function (form, action) {
                                                 Ext.Msg.alert('成功', action.response.responseText);
                                             },
                                             failure: function (form, action) {
-                                               me.parseDocument();
+                                                me.parseDocument(action.result);
                                             }// failure
                                         });// submit
                                     }// function
@@ -249,7 +256,7 @@ Ext.define('casco.view.rs.RsImport', {
         this.hide();
     },
 
-    parseDocument: function () {
+    parseDocument: function (result) {
         var me = this;
         var form = this.down('form').getForm();
         var pgs = Ext.create('widget.rs.progress', {
@@ -260,7 +267,8 @@ Ext.define('casco.view.rs.RsImport', {
         });
         pgs.show();
         var params = form.getValues();
-        params.filename = this.filename;
+        var savedFile = result.url.replace("/", "");
+        params.filename = savedFile; //this.filename;
         params.name = me.aflag;
         Ext.Ajax.request({
             url: API + 'import',
@@ -281,7 +289,7 @@ Ext.define('casco.view.rs.RsImport', {
                 winResult.store.loadData([d.data]);
                 winResult.show();
                 me.destroy();
-                var tabs = Ext.getCmp('workingpanel')||Ext.getCmp('workpanel');
+                var tabs = Ext.getCmp('workingpanel') || Ext.getCmp('workpanel');
                 var tab = tabs.child('#tab-' + me.document.get('id'));
                 if (tab) {
                     tabs.remove(tab);
