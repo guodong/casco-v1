@@ -54,7 +54,46 @@ Ext.define('casco.view.manage.ManageController', {
 			}//callback
 		});
 	},
-
+	saveVat: function () {
+		var view = this.getView();
+		var form = this.lookupReference('vat_view_create_form');
+		var meta = form.getValues(); //vatbuild_info
+		var rsvsd = Ext.getCmp('vat-view-rs').getStore(); //RS info
+		var tcvsd = Ext.getCmp('vat-view-tc').getStore();
+		var docvs = [];
+		rsvsd.each(function (v) {
+			var obj = {
+				doc_document_id: v.get('id'),
+				doc_version_id: v.get('version_id'),
+				doc_type: 'rs',
+			}
+			docvs.push(obj);//放入的是一个对象啊
+		});
+		tcvsd.each(function (v) {
+			var obj = {
+				doc_document_id: v.get('id'),
+				doc_version_id: v.get('version_id'),
+				doc_type: 'tc',
+			}
+			docvs.push(obj);//放入的是一个对象啊
+		});
+		meta.doc_versions = docvs;
+		var vat = view.vat;
+		vat.set(form.getValues());
+		vat.save({
+			callback: function (record, operation) {
+				if (record.data) {
+					var vatlist = Ext.getCmp('vat_list');
+					vatlist.store.reload();
+					Ext.Msg.alert('提示', '保存成功。');
+					//Ext.getCmp('joblist').store.insert(0, job);//添加入数据的方式
+				} else {
+					Ext.Msg.alert('保存失败!', JSON.stringify(record.data.data));
+				}
+				Ext.getCmp('vat-view-create-window').destroy();
+			}//callback
+		});
+	},
 	//用户管理
 	createuser: function () {
 		var view = this.getView();
@@ -82,12 +121,13 @@ Ext.define('casco.view.manage.ManageController', {
 	createFolder: function () {//build
 		var view = this.getView();
 		var self = this;
+		var operation = view.build  ? '更新' : '创建';
 		var form = this.lookupReference('build_create_form');//获取对应的form表单
 		var build = view.build ? view.build : Ext.create('casco.model.Build');
 		build.set(form.getValues());
 		build.save({
 			callback: function () {
-				Ext.Msg.alert('Message', 'Build manage successfully.', function () {
+				Ext.Msg.alert('提示',operation + '成功。', function () {
 					var t = Ext.ComponentQuery.query("#build_list")[0];
 					if (!view.user) t.store.add(build);
 					form.up("window").destroy();

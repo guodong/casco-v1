@@ -4,7 +4,7 @@ Ext.define('casco.view.testing.BuildCreate', {
     alias: 'widget.testing.buildcreate',
     
     modal: true,
-    title: '创建Build版本',
+    title: '创建/编辑Build版本',
     width: 300,
     controller: 'manage',
     initComponent: function(){

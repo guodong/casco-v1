@@ -92,5 +92,20 @@ Ext.define('casco.view.manage.Vatlist',{
 		};
 		
     	this.callParent();
-    }
+	},
+	listeners: {
+		itemdblclick: function (dv, record, item, index, e) {
+			
+			if (localStorage.role == 'staff') return;  //用户权限
+			var win = Ext.create('casco.view.manage.VatCreate', { user: record,
+				status: 1,
+				vat: record,
+				pointer: this,
+				project: this.project,
+				columns: this.columns
+			 });//这里初始化的什么玩意
+			win.down('form').loadRecord(record);
+			win.show();
+		}
+	}
 })
