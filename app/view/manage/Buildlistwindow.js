@@ -8,7 +8,7 @@ Ext.define('casco.view.manage.Buildlistwindow', {
 	modal: true,
 	title: '查看Build',
 	width: 405,
-   
+    controller: 'manage',
 	initComponent: function() {
 		    var me=this;
 		  	Ext.apply(me, {

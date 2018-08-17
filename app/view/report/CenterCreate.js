@@ -28,7 +28,7 @@ Ext.define('casco.view.report.CenterCreate', {
 			split: true,
 			reference: 'ver_create_form',
 			bodyPadding: '10',
-			width: 300,
+			width: 320,
 			items: [{
 				xtype: 'hiddenfield',
 				name: 'project_id',
@@ -40,7 +40,7 @@ Ext.define('casco.view.report.CenterCreate', {
 				xtype: 'textfield'
 			},
 			{
-				fieldLabel: '名称',
+				fieldLabel: 'Test Job',
 				name: 'test_id',
 				store: test_job,
 				id: 'child-version',

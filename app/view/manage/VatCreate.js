@@ -5,7 +5,7 @@ Ext.define('casco.view.manage.VatCreate', {
 	modal: true,
 	controller: 'manage',
 
-	title: '创建定版',
+	title: '创建/编辑定版',
 	id: 'vat-view-create-window',
 	layout: {
 		type: 'border'
@@ -168,7 +168,7 @@ Ext.define('casco.view.manage.VatCreate', {
 				}
 			}]
 		}];
-
+		var evtName = me.status ? "saveVat" : "createVat";
 		me.dockedItems = [{
 			xtype: 'toolbar',
 			dock: 'bottom',
@@ -179,7 +179,7 @@ Ext.define('casco.view.manage.VatCreate', {
 				text: '保存',
 				glyph: 0xf0c7,
 				listeners: {
-					click: 'createVat'
+					click: evtName
 				}
 			}, {
 					text: '取消',

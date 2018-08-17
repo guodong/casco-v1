@@ -193,8 +193,8 @@ Ext.define('casco.view.rs.RsDetails', {
 			Ext.Array.insert(me.items[2].items, 1,
 				[{
 					anchor: '100%',
-					fieldLabel: name.dataIndex,
-					name: lable,
+					fieldLabel: lable,
+					name: name.dataIndex,
 					xtype: 'textarea',
 					grow: true,
 					allowBlank: true

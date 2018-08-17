@@ -78,7 +78,13 @@ Ext.define('casco.view.manage.Buildlist', {
 	listeners: {
 		itemdblclick: function (dv, record, item, index, e) {
 			if (localStorage.role == 'staff') return;  //用户权限
-			var win = Ext.create('casco.view.testing.BuildCreate', { user: record });//这里初始化的什么玩意
+			var win = Ext.create('casco.view.testing.BuildCreate', { user: record,
+				status: 1,
+				build: record,
+				pointer: this,
+				project: this.project,
+				columns: this.columns
+			});//这里初始化的什么玩意
 			win.down('form').loadRecord(record);
 			win.show();
 		}
