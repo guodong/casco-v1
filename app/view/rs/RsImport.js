@@ -218,7 +218,8 @@ Ext.define('casco.view.rs.RsImport', {
                                             self.up('window').destroy();
                                             return;
                                         }
-                                        var filename = Math.random() + '.doc';
+                                        //var filename = Math.random() + '.doc';
+                                        var filename = ((+new Date())) + '.doc';
                                         me.filename = filename;
                                         document.domain = document.domain;
 
@@ -267,7 +268,8 @@ Ext.define('casco.view.rs.RsImport', {
         });
         pgs.show();
         var params = form.getValues();
-        var savedFile = result.url.replace("/", "");
+        //var savedFile = result.url.replace("/", "");
+        var savedFile = this.filename;
         params.filename = savedFile; //this.filename;
         params.name = me.aflag;
         Ext.Ajax.request({
