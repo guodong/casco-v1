@@ -292,8 +292,8 @@ Ext.define('casco.view.manage.ManageController', {
 			});
 		}
 		if (!node.isExpanded()) {
-			Ext.Msg.alert('提示', '请先展开目录。');
-			//node.expand(false, Ext.callback(this.doCreate, this, [], delay));
+			//Ext.Msg.alert('提示', '请先展开目录。');
+			node.expand(false, Ext.callback(doCreate, this, [], delay));
 			// node.expand(false, function () {
 			// 	Ext.Msg.alert('提示', '目录已展开，请重新添加。');
 			// });
