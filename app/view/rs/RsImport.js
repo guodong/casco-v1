@@ -46,8 +46,8 @@ Ext.define('casco.view.rs.RsImport', {
                     if (me.type == "rs") {
                         me.down('form').items.getAt(1).setValue("description,implement,source,priority,contribute,category,allocation");
                     }
-                    else if (me.type = "tc") {
-                        me.down('form').items.getAt(1).setValue("test case description,safety,source,test method,pre_condition,test steps");
+                    else if (me.type == "tc") {
+                        me.down('form').items.getAt(1).setValue("description,safety,source,test_method,pre_condition,test_steps");
                     }
                 }
             }// callback
